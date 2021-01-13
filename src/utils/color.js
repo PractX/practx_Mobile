@@ -34,7 +34,7 @@ export const ColorList = [
     background_1: '#323646',
     card: '#050e08',
     text: '#fefeff',
-    text_1: '#a3a3a3',
+    text_1: '#9298ad',
     text_2: '#9298ad',
     text_4: '#aaaaaa',
     btn_hover: '#0b1d12',

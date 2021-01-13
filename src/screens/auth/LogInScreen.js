@@ -14,29 +14,24 @@ import {
   Alert,
   AccessibilityInfo,
 } from 'react-native';
-import { Button, Text, Content, CheckBox, Icon } from 'native-base';
-import { useScrollToTop } from '@react-navigation/native';
+import { Icon, Button } from 'react-native-elements';
+import { Text, Content, CheckBox } from 'native-base';
+import { useScrollToTop, useTheme } from '@react-navigation/native';
 
 // import * as Actions from '../redux/auth/actions';
 
 import { LOGO } from '../../../assets/images';
+import { normalize } from 'react-native-elements';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
 
-const theme = {
-  background: '#1e1f36',
-  highlight: '#ff0000',
-  text: '#fff',
-  text2: '#aaa',
-  text3: '#555',
-};
-
 const LogInScreen = ({ navigation }) => {
   const [remember, setRemember] = useState(true);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const ref = React.useRef(null);
+  const { colors } = useTheme();
   useScrollToTop(ref);
   // const dispatch = useDispatch();
 
@@ -46,25 +41,27 @@ const LogInScreen = ({ navigation }) => {
 
   return (
     <Content>
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={{ width: '80%' }}>
           <Animatable.View animation="pulse">
             <Image style={styles.logo} source={LOGO} resizeMode="contain" />
 
-            <View style={{ alignItems: 'center', marginTop: 20 }}>
+            <View style={{ alignItems: 'center', marginTop: 10 }}>
               <Text
                 style={{
-                  fontSize: 25,
-                  fontFamily: 'SofiaProBold',
+                  fontSize: normalize(28),
+                  fontFamily: 'SofiaProSemiBold',
                   color: 'white',
                 }}>
                 Welcome Backs
               </Text>
 
-              <Text style={styles.topText}>
-                Enter your email and Password for
+              <Text style={[styles.topText, { color: colors.text_1 }]}>
+                Enter your Email & Password for
               </Text>
-              <Text style={styles.topText}>Login into practx</Text>
+              <Text style={[styles.topText, { color: colors.text_1 }]}>
+                Login into practx
+              </Text>
             </View>
           </Animatable.View>
 
@@ -79,11 +76,22 @@ const LogInScreen = ({ navigation }) => {
               }}>
               {({ handleChange, handleBlur, handleSubmit, values }) => (
                 <View>
-                  <View style={styles.formField}>
+                  <View
+                    style={[
+                      styles.formField,
+                      {
+                        backgroundColor: colors.background_1,
+                      },
+                    ]}>
                     <Icon
-                      type="FontAwesome"
-                      name="envelope-o"
-                      style={styles.formIcons}
+                      name={'mail'}
+                      type={'feather'}
+                      color={colors.text_1}
+                      size={normalize(19)}
+                      style={[
+                        styles.formIcons,
+                        { color: colors.text_1, alignSelf: 'center' },
+                      ]}
                     />
 
                     <TextInput
@@ -91,28 +99,39 @@ const LogInScreen = ({ navigation }) => {
                       autoCompleteType="username"
                       textContentType="username"
                       placeholder="Email"
-                      placeholderTextColor={theme.text3}
-                      style={styles.formTextInput}
+                      placeholderTextColor={colors.text_1}
+                      style={[styles.formTextInput, { color: colors.text_1 }]}
                       onChangeText={handleChange('email')}
                       onBlur={handleBlur('email')}
                       value={values.email}
                     />
                   </View>
 
-                  <View style={styles.formField}>
+                  <View
+                    style={[
+                      styles.formField,
+                      {
+                        backgroundColor: colors.background_1,
+                      },
+                    ]}>
                     <Icon
-                      type="FontAwesome"
-                      name="lock"
-                      style={styles.formIcons}
+                      name={'lock-outline'}
+                      type={'material-community'}
+                      color={colors.text_1}
+                      size={normalize(19)}
+                      style={[
+                        styles.formIcons,
+                        { color: colors.text_1, alignSelf: 'center' },
+                      ]}
                     />
                     <TextInput
                       autoCapitalize="none"
                       autoCompleteType="password"
                       textContentType="password"
                       placeholder="Password"
-                      placeholderTextColor={theme.text3}
+                      placeholderTextColor={colors.text_1}
                       secureTextEntry={passwordVisibility}
-                      style={{ marginLeft: 26, ...styles.formTextInput }}
+                      style={[styles.formTextInput, { color: colors.text_1 }]}
                       onChangeText={handleChange('password')}
                       onBlur={handleBlur('password')}
                       value={values.password}
@@ -125,17 +144,29 @@ const LogInScreen = ({ navigation }) => {
                     <View style={styles.bellowFormViewtext}>
                       <CheckBox
                         checked={remember}
-                        color={theme.highlight}
+                        color={colors.primary}
                         style={styles.spacer}
                         onPress={() => setRemember(!remember)}
                       />
-                      <Text style={styles.whiteFont}>Remember me</Text>
+                      <Text
+                        style={[styles.whiteFont, { color: colors.text_1 }]}>
+                        Remember me
+                      </Text>
                     </View>
 
                     <Pressable
                       hitSlop={{ bottom: 10, top: 10 }}
                       onPress={() => navigation.navigate('forgotpass')}>
-                      <Text style={styles.whiteFont}>Forgot Password</Text>
+                      <Text
+                        style={[
+                          styles.whiteFont,
+                          {
+                            color: colors.text_1,
+                            textDecorationLine: 'underline',
+                          },
+                        ]}>
+                        Forgot Password
+                      </Text>
                     </Pressable>
                   </Animatable.View>
 
@@ -143,19 +174,24 @@ const LogInScreen = ({ navigation }) => {
                     <Pressable
                       onPress={handleSubmit}
                       android_ripple={{ color: 'green' }}>
-                      <Button rounded style={styles.loginButton}>
-                        <View style={styles.flexrow}>
-                          <Text style={styles.logInButtonText}>Login</Text>
-                        </View>
-                      </Button>
+                      <Button
+                        title="Log In"
+                        rounded
+                        buttonStyle={[
+                          styles.loginButton,
+                          { backgroundColor: colors.primary },
+                        ]}
+                        loading={false}
+                      />
                     </Pressable>
                     <Pressable
                       style={styles.bellowButtonText}
                       hitSlop={{ bottom: 10, top: 10 }}
                       onPress={() => navigation.navigate('signup')}>
-                      <Text style={styles.whiteFont}>
+                      <Text
+                        style={[styles.whiteFont, { color: colors.text_1 }]}>
                         Dont have an account?{' '}
-                        <Text style={{ color: theme.highlight, fontSize: 13 }}>
+                        <Text style={{ color: colors.primary, fontSize: 13 }}>
                           Sign up
                         </Text>
                       </Text>
@@ -166,7 +202,7 @@ const LogInScreen = ({ navigation }) => {
                       onPress={() => navigation.navigate('login2')}>
                       <Text
                         style={{
-                          color: theme.highlight,
+                          color: colors.primary,
                           fontSize: 13,
                           textAlign: 'center',
                         }}>
@@ -189,48 +225,33 @@ const styles = StyleSheet.create({
     width: windowWidth,
     height: windowHeight,
     alignItems: 'center',
-    backgroundColor: theme.background,
-    justifyContent: 'space-around',
+    justifyContent: 'center',
   },
   topText: {
-    marginTop: 10,
-    fontSize: 13,
-    color: theme.text2,
+    marginTop: 5,
+    fontSize: normalize(16),
+    fontFamily: 'SofiaProRegular',
   },
 
   formField: {
     flexDirection: 'row',
-    borderColor: theme.text,
-    borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 15,
-    paddingVertical: 7,
+    paddingVertical: 0,
     marginTop: 15,
+    alignItems: 'center',
   },
 
   formTextInput: {
     marginLeft: 20,
     width: '90%',
-    fontSize: 16,
-    color: theme.text,
+    fontSize: normalize(17),
+    fontFamily: 'SofiaProRegular',
   },
 
   formIcons: {
-    color: theme.text3,
     fontSize: 16,
     alignSelf: 'center',
-  },
-
-  textInput: {
-    backgroundColor: theme.background,
-    borderWidth: 1,
-    borderColor: theme.text,
-    marginTop: 20,
-    width: appwidth,
-    padding: 5,
-    color: theme.text,
-    borderRadius: 10,
-    paddingLeft: 20,
   },
 
   flexrow: {
@@ -241,16 +262,19 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     alignSelf: 'center',
+    marginTop: -40,
   },
 
   whiteFont: {
-    color: theme.text2,
-    fontSize: 12,
+    fontSize: normalize(14),
+    fontFamily: 'SofiaProRegular',
   },
   spacer: {
     marginRight: 15,
     borderRadius: 6,
-    marginLeft: -9,
+    marginLeft: -10,
+    width: 22,
+    alignItems: 'center',
   },
 
   bellowFormView: {
@@ -272,20 +296,14 @@ const styles = StyleSheet.create({
   },
 
   loginButton: {
-    backgroundColor: theme.highlight,
     width: appwidth,
     justifyContent: 'center',
     borderRadius: 10,
   },
-
-  logInButtonText: {
-    fontWeight: 'bold',
-    fontSize: 17,
-    color: theme.text,
-  },
   bellowButtonText: {
     alignItems: 'center',
     marginTop: windowHeight * 0.05,
+    marginBottom: 23,
   },
 
   error: {

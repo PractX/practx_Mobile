@@ -15,6 +15,8 @@ import {
 import { createStackNavigator } from '@react-navigation/stack';
 import { ColorList } from './src/utils/color';
 import { selectThemeMode } from './src/redux/settings/settings.selector';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import Orientation from 'react-native-orientation-locker';
 
 import {
   Header,
@@ -75,6 +77,12 @@ const App = ({ themeMode }) => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [themeMode]);
+  useEffect(() => {
+    Orientation.lockToPortrait();
+    themeMode === 'Dark'
+      ? changeNavigationBarColor(ColorList[1].background)
+      : changeNavigationBarColor(ColorList[0].background);
   }, [themeMode]);
   return (
     <>
