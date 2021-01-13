@@ -15,15 +15,23 @@
     "@react-native-community/netinfo": "^5.9.10",
     "@react-navigation/drawer": "^5.11.4",
     "@react-navigation/native": "^5.8.10",
+    "axios": "^0.21.1",
+    "babel-plugin-dotenv-import": "^2.1.0",
+    "babel-plugin-inline-import": "^3.0.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "react": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-dotenv": "^2.5.0",
     "react-native-elements": "^3.1.0",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-maps": "^0.27.1",
     "react-native-offline": "^5.7.0",
+    "react-native-paper": "^4.6.0",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.16.1",
+    "react-native-set-version": "^1.1.2",
+    "react-native-svg-asset-plugin": "^0.5.0",
     "react-native-vector-icons": "^7.1.0",
     "react-navigation": "^4.4.3",
     "react-navigation-stack": "^2.10.2",
@@ -48,5 +56,10 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./src/assets/fonts"
+    ]
   }
 }
