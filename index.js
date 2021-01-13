@@ -2,13 +2,13 @@
  * @format
  */
 
-import {AppRegistry} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import { AppRegistry } from 'react-native';
+import React, { useCallback, useState } from 'react';
 import App from './App';
-import {Provider} from 'react-redux';
-import {store, persistor} from './src/redux/store';
-import {PersistGate} from 'redux-persist/integration/react';
-import {name as appName} from './app.json';
+import { Provider } from 'react-redux';
+import { store, persistor } from './src/redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { name as appName } from './app.json';
 // import Clipboard from '@react-native-community/clipboard';
 // import admob, {MaxAdContentRating} from '@react-native-firebase/admob';
 // import RNFetchBlob from 'rn-fetch-blob';
@@ -17,7 +17,7 @@ import {
   LogBox,
   // YellowBox
 } from 'react-native';
-import {NetworkProvider} from 'react-native-offline';
+import { NetworkProvider } from 'react-native-offline';
 
 const RNRedux = () => (
   <NetworkProvider

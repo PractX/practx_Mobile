@@ -1,7 +1,7 @@
 import SettingsActionTypes from './settings.types';
 
 const INITIAL_STATE = {
-  themeMode: 'Light',
+  themeMode: 'Dark',
   onScroll: null,
   speedDownloadActive: false,
   netState: true,
