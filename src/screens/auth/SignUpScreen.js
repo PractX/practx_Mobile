@@ -5,17 +5,15 @@ import * as Animatable from 'react-native-animatable';
 import { Formik } from 'formik';
 
 import {
-  Button,
   Text,
   Content,
   CheckBox,
-  Icon,
   Header,
   Right,
   Body,
   Left,
 } from 'native-base';
-
+import { Icon, Button } from 'react-native-elements';
 import {
   View,
   StyleSheet,
@@ -27,29 +25,23 @@ import {
 } from 'react-native';
 
 import { LOGO } from '../../../assets/images';
+import InputBox from '../../components/hoc/InputBox';
+import SmallInputBox from '../../components/hoc/SmallInputBox';
+import { normalize } from 'react-native-elements';
+import { useTheme } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
 
-const theme = {
-  /* ---- THeme to be gotten from redux or context------*/
-  background: '#1e1f36',
-  highlight: '#ff0000',
-  text: '#fff',
-  text2: '#aaa',
-  text3: '#555',
-};
+const SignUpScreen = ({ navigation }) => {
+  const { colors } = useTheme();
+  /* ---- Remember prev logged in user details in state ------*/
 
-function LogInScreen({ navigation }) {
-  {
-    /* ---- Remember prev logged in user details in state ------*/
-  }
   const [agreeTos, setAgreeTos] = useState(false);
 
-  {
-    /* ---- set password vissibility while typing ------*/
-  }
+  /* ---- set password vissibility while typing ------*/
+
   const [passwordVisibility, setPasswordVisibility] = useState(true);
 
   const signupPatient = async (values) => {
@@ -86,7 +78,7 @@ function LogInScreen({ navigation }) {
 
   return (
     <React.Fragment>
-      <Header style={styles.header}>
+      {/* <Header style={styles.header}>
         <Left>
           <Pressable onPress={() => navigation.goBack()}>
             <Icon type="AntDesign" name="left" style={{ color: theme.text }} />
@@ -94,9 +86,10 @@ function LogInScreen({ navigation }) {
         </Left>
         <Body />
         <Right />
-      </Header>
+      </Header> */}
       <Content>
-        <View style={styles.container}>
+        <View
+          style={[styles.container, { backgroundColor: colors.background }]}>
           <View style={{ width: '80%' }}>
             {/* ------------------- LOGO SECTION --------------------------------------- */}
 
@@ -105,12 +98,20 @@ function LogInScreen({ navigation }) {
 
               <View style={{ alignItems: 'center', marginTop: 10 }}>
                 <Text
-                  style={{ fontSize: 25, fontWeight: 'bold', color: 'white' }}>
+                  style={{
+                    fontSize: normalize(28),
+                    fontFamily: 'SofiaProSemiBold',
+                    color: 'white',
+                  }}>
                   Get Started
                 </Text>
 
-                <Text style={styles.topText}>Enter your details bellow</Text>
-                <Text style={styles.topText}>to register</Text>
+                <Text style={[styles.topText, { color: colors.text_1 }]}>
+                  Enter your personal details below for
+                </Text>
+                <Text style={[styles.topText, { color: colors.text_1 }]}>
+                  Signup into practx
+                </Text>
               </View>
             </Animatable.View>
 
@@ -133,177 +134,135 @@ function LogInScreen({ navigation }) {
                 }}>
                 {({ handleChange, handleBlur, handleSubmit, values }) => (
                   <View>
-                    <View style={styles.formField}>
-                      <Icon
-                        type="FontAwesome"
-                        name="envelope-o"
-                        style={styles.formIcons}
-                      />
-
-                      <TextInput
-                        autoCapitalize="none"
-                        autoCompleteType="username"
-                        textContentType="username"
-                        placeholder="Email"
-                        placeholderTextColor={theme.text3}
-                        style={styles.formTextInput}
-                        onChangeText={handleChange('email')}
-                        onBlur={handleBlur('email')}
-                        value={values.email}
-                      />
-                    </View>
-
-                    <View style={styles.formField}>
-                      <Icon
-                        type="FontAwesome"
-                        name="user-circle-o"
-                        style={styles.formIcons}
-                      />
-                      <TextInput
-                        autoCapitalize="words"
-                        autoCompleteType="name"
-                        placeholder="First Name"
-                        textContentType="givenName"
-                        placeholderTextColor={theme.text3}
-                        style={styles.formTextInput}
-                        onChangeText={handleChange('firstname')}
-                        onBlur={handleBlur('firstname')}
-                        value={values.firstname}
-                      />
-                    </View>
-
-                    <View style={styles.formField}>
-                      <Icon
-                        type="FontAwesome"
-                        name="user-circle-o"
-                        style={styles.formIcons}
-                      />
-                      <TextInput
-                        autoCapitalize="words"
-                        autoCompleteType="name"
-                        placeholder="Last Name"
-                        textContentType="familyName"
-                        placeholderTextColor={theme.text3}
-                        style={styles.formTextInput}
-                        onChangeText={handleChange('lastname')}
-                        onBlur={handleBlur('lastname')}
-                        value={values.lastname}
-                      />
-                    </View>
+                    <InputBox
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      valuesType={values.firstname}
+                      name="firstname"
+                      iconName="user"
+                      iconType="feather"
+                      placeholder="First Name"
+                      autoCompleteType="name"
+                      textContentType="givenName"
+                      keyboardType="default"
+                      autoCapitalize="sentences"
+                    />
+                    <InputBox
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      valuesType={values.lastname}
+                      name="lastname"
+                      iconName="user"
+                      iconType="feather"
+                      placeholder="Last Name"
+                      autoCompleteType="name"
+                      textContentType="familyName"
+                      keyboardType="default"
+                      autoCapitalize="sentences"
+                    />
+                    <InputBox
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      valuesType={values.email}
+                      name="email"
+                      iconName="mail"
+                      iconType="feather"
+                      placeholder="Email"
+                      autoCompleteType="email"
+                      textContentType="emailAddress"
+                      keyboardType="email"
+                      autoCapitalize="none"
+                    />
 
                     {/* --------------------------------------- DATE SECTION --------------------------------------- */}
 
                     <Text
                       style={{
                         marginTop: 20,
-                        color: theme.text2,
-                        marginLeft: 10,
-                        fontSize: 14,
+                        color: colors.text_1,
+                        fontSize: normalize(14),
+                        fontFamily: 'SofiaProRegular',
                       }}>
                       Date of Birth
                     </Text>
 
                     <View style={styles.formFieldRow}>
-                      <View
-                        style={{ ...styles.formField, width: appwidth * 0.25 }}>
-                        <Icon
-                          type="FontAwesome"
-                          name="calendar"
-                          style={styles.formIcons}
-                        />
-                        <TextInput
-                          autoCapitalize="none"
-                          autoCompleteType="cc-exp"
-                          placeholder="DD"
-                          maxLength={2}
-                          placeholderTextColor={theme.text3}
-                          style={{ marginLeft: 10 }}
-                          onChangeText={handleChange('DD')}
-                          onBlur={handleBlur('DD')}
-                          value={values.DD}
-                        />
-                      </View>
+                      <SmallInputBox
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        valuesType={values.DD}
+                        name="DD"
+                        iconName="calendar"
+                        iconType="feather"
+                        placeholder="DD"
+                        autoCompleteType="cc-exp"
+                        textContentType="none"
+                        keyboardType="numeric"
+                        autoCapitalize="none"
+                        maxLength={2}
+                      />
 
-                      <View
-                        style={{ ...styles.formField, width: appwidth * 0.25 }}>
-                        <Icon
-                          type="FontAwesome"
-                          name="calendar"
-                          style={styles.formIcons}
-                        />
-                        <TextInput
-                          autoCapitalize="none"
-                          autoCompleteType="cc-exp-month"
-                          placeholder="MM"
-                          maxLength={2}
-                          placeholderTextColor={theme.text3}
-                          style={{ marginLeft: 10 }}
-                          onChangeText={handleChange('MM')}
-                          onBlur={handleBlur('MM')}
-                          value={values.MM}
-                        />
-                      </View>
-                      <View
-                        style={{ ...styles.formField, width: appwidth * 0.25 }}>
-                        <Icon
-                          type="FontAwesome"
-                          name="calendar"
-                          style={styles.formIcons}
-                        />
-                        <TextInput
-                          autoCapitalize="none"
-                          autoCompleteType="cc-exp-year"
-                          placeholder="YY"
-                          maxLength={4}
-                          placeholderTextColor={theme.text3}
-                          style={{ marginLeft: 10 }}
-                          onChangeText={handleChange('YY')}
-                          onBlur={handleBlur('YY')}
-                          value={values.YY}
-                        />
-                      </View>
+                      <SmallInputBox
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        valuesType={values.MM}
+                        name="MM"
+                        iconName="calendar"
+                        iconType="feather"
+                        placeholder="MM"
+                        autoCompleteType="cc-exp-month"
+                        textContentType="none"
+                        keyboardType="numeric"
+                        autoCapitalize="none"
+                        maxLength={2}
+                      />
+
+                      <SmallInputBox
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        valuesType={values.YY}
+                        name="YY"
+                        iconName="calendar"
+                        iconType="feather"
+                        placeholder="YY"
+                        autoCompleteType="cc-exp-year"
+                        textContentType="none"
+                        keyboardType="numeric"
+                        autoCapitalize="none"
+                        maxLength={4}
+                      />
                     </View>
+
+                    <InputBox
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      valuesType={values.mobileNo}
+                      name="mobileNo"
+                      iconName="phone"
+                      iconType="feather"
+                      placeholder="Phone"
+                      autoCompleteType="tel"
+                      textContentType="telephoneNumber"
+                      keyboardType="number-pad"
+                      autoCapitalize="none"
+                    />
 
                     {/* ------------------- PASSWORD SECTION --------------------------------------- */}
 
-                    <View style={styles.formField}>
-                      <Icon
-                        type="FontAwesome"
-                        name="lock"
-                        style={styles.formIcons}
-                      />
-                      <TextInput
-                        autoCapitalize="none"
-                        autoCompleteType="password"
-                        textContentType="password"
-                        placeholder="Password"
-                        placeholderTextColor={theme.text3}
-                        secureTextEntry={passwordVisibility}
-                        style={{ marginLeft: 26, ...styles.formTextInput }}
-                        onChangeText={handleChange('password')}
-                        onBlur={handleBlur('password')}
-                        value={values.password}
-                      />
-                    </View>
-
-                    <View style={styles.formField}>
-                      <Icon
-                        type="FontAwesome"
-                        name="phone"
-                        style={styles.formIcons}
-                      />
-                      <TextInput
-                        autoCapitalize="none"
-                        autoCompleteType="tel"
-                        textContentType="telephoneNumber"
-                        placeholder="Phone Number"
-                        placeholderTextColor={theme.text3}
-                        style={{ marginLeft: 26, ...styles.formTextInput }}
-                        onChangeText={handleChange('mobileNo')}
-                        onBlur={handleBlur('mobileNo')}
-                        value={values.mobileNo}
-                      />
-                    </View>
+                    <InputBox
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      valuesType={values.password}
+                      name="password"
+                      iconName="lock-outline"
+                      iconType="material-community"
+                      placeholder="Password"
+                      autoCompleteType="password"
+                      textContentType="password"
+                      keyboardType="default"
+                      autoCapitalize="none"
+                      secureTextEntry={passwordVisibility}
+                    />
 
                     <Animatable.View
                       animation="bounceInRight"
@@ -311,22 +270,24 @@ function LogInScreen({ navigation }) {
                       <View style={styles.bellowFormViewtext}>
                         <CheckBox
                           checked={agreeTos}
-                          color={theme.highlight}
+                          color={colors.primary}
                           style={styles.spacer}
                           onPress={() => setAgreeTos(!agreeTos)}
                         />
                         <Text
-                          style={{
-                            ...styles.whiteFont,
-                            marginBottom: 30,
-                            fontSize: 11,
-                            width: appwidth,
-                          }}>
+                          style={[
+                            styles.whiteFont,
+                            {
+                              marginBottom: 30,
+                              color: colors.text_1,
+                              width: appwidth,
+                            },
+                          ]}>
                           I agree to the
                           <Text
                             style={{
-                              fontSize: 11,
-                              color: theme.highlight,
+                              fontSize: normalize(13),
+                              color: colors.primary,
                               textDecorationStyle: 'solid',
                               textDecorationLine: 'underline',
                             }}>
@@ -336,8 +297,8 @@ function LogInScreen({ navigation }) {
                           and{' '}
                           <Text
                             style={{
-                              fontSize: 11,
-                              color: theme.highlight,
+                              fontSize: normalize(13),
+                              color: colors.primary,
                               textDecorationStyle: 'solid',
                               textDecorationLine: 'underline',
                             }}>
@@ -352,23 +313,33 @@ function LogInScreen({ navigation }) {
 
                     <View styel={styles.loginButtonView}>
                       {/*--------------------- SUBMIT ---------------*/}
-                      <Pressable
+                      <Button
+                        title="Sign Up"
                         onPress={handleSubmit}
-                        android_ripple={{ color: 'green' }}>
-                        <Button rounded style={styles.loginButton}>
-                          <View style={styles.flexrow}>
-                            <Text style={styles.logInButtonText}>Sign Up</Text>
-                          </View>
-                        </Button>
-                      </Pressable>
+                        rounded
+                        buttonStyle={[
+                          styles.loginButton,
+                          { backgroundColor: colors.primary },
+                        ]}
+                        titleStyle={{
+                          fontFamily: 'SofiaProSemiBold',
+                          fontSize: normalize(16),
+                        }}
+                        loading={false}
+                      />
 
                       <Pressable
                         style={styles.bellowButtonText}
                         onPress={() => navigation.popToTop()}>
-                        <Text style={styles.whiteFont}>
+                        <Text
+                          style={[styles.whiteFont, { color: colors.text_1 }]}>
                           Already have an account?
                           <Text
-                            style={{ color: theme.highlight, fontSize: 13 }}>
+                            style={{
+                              color: colors.primary,
+                              fontSize: normalize(13),
+                              fontFamily: 'SofiaProRegular',
+                            }}>
                             {' '}
                             Login
                           </Text>
@@ -385,30 +356,22 @@ function LogInScreen({ navigation }) {
       </Content>
     </React.Fragment>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     width: windowWidth,
     alignItems: 'center',
-    backgroundColor: theme.background,
-  },
-
-  header: {
-    backgroundColor: theme.background,
-    // marginTop: Constants.statusBarHeight,
-    paddingVertical: 10,
   },
 
   topText: {
-    marginTop: 10,
-    fontSize: 13,
-    color: theme.text2,
+    marginTop: 5,
+    fontSize: normalize(16),
+    fontFamily: 'SofiaProRegular',
   },
 
   formField: {
     flexDirection: 'row',
-    borderColor: theme.text,
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 15,
@@ -427,21 +390,8 @@ const styles = StyleSheet.create({
   },
 
   formIcons: {
-    color: theme.text3,
     fontSize: 16,
     alignSelf: 'center',
-  },
-
-  textInput: {
-    backgroundColor: theme.background,
-    borderWidth: 1,
-    borderColor: theme.text,
-    marginTop: 20,
-    width: appwidth,
-    padding: 5,
-    color: theme.text,
-    borderRadius: 10,
-    paddingLeft: 20,
   },
 
   flexrow: {
@@ -455,13 +405,15 @@ const styles = StyleSheet.create({
   },
 
   whiteFont: {
-    color: theme.text2,
-    fontSize: 12,
+    fontSize: normalize(13),
+    fontFamily: 'SofiaProRegular',
   },
   spacer: {
     marginRight: 15,
     borderRadius: 6,
-    marginLeft: -9,
+    marginLeft: -10,
+    width: 22,
+    alignItems: 'center',
   },
 
   bellowFormView: {
@@ -482,16 +434,9 @@ const styles = StyleSheet.create({
   },
 
   loginButton: {
-    backgroundColor: theme.highlight,
     width: appwidth,
     justifyContent: 'center',
     borderRadius: 10,
-  },
-
-  logInButtonText: {
-    fontWeight: 'bold',
-    fontSize: 17,
-    color: theme.text,
   },
   bellowButtonText: {
     alignItems: 'center',
@@ -499,4 +444,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogInScreen;
+export default SignUpScreen;

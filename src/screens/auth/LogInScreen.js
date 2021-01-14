@@ -17,11 +17,10 @@ import {
 import { Icon, Button } from 'react-native-elements';
 import { Text, Content, CheckBox } from 'native-base';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
-
 // import * as Actions from '../redux/auth/actions';
-
 import { LOGO } from '../../../assets/images';
 import { normalize } from 'react-native-elements';
+import InputBox from '../../components/hoc/InputBox';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -34,8 +33,8 @@ const LogInScreen = ({ navigation }) => {
   const { colors } = useTheme();
   useScrollToTop(ref);
   // const dispatch = useDispatch();
-
   const login = (values) => {
+    console.log(values);
     // dispatch(Actions.loginPatient(values.email, values.password));
   };
 
@@ -53,7 +52,7 @@ const LogInScreen = ({ navigation }) => {
                   fontFamily: 'SofiaProSemiBold',
                   color: 'white',
                 }}>
-                Welcome Backs
+                Welcome Back
               </Text>
 
               <Text style={[styles.topText, { color: colors.text_1 }]}>
@@ -76,68 +75,33 @@ const LogInScreen = ({ navigation }) => {
               }}>
               {({ handleChange, handleBlur, handleSubmit, values }) => (
                 <View>
-                  <View
-                    style={[
-                      styles.formField,
-                      {
-                        backgroundColor: colors.background_1,
-                      },
-                    ]}>
-                    <Icon
-                      name={'mail'}
-                      type={'feather'}
-                      color={colors.text_1}
-                      size={normalize(19)}
-                      style={[
-                        styles.formIcons,
-                        { color: colors.text_1, alignSelf: 'center' },
-                      ]}
-                    />
-
-                    <TextInput
-                      autoCapitalize="none"
-                      autoCompleteType="username"
-                      textContentType="username"
-                      placeholder="Email"
-                      placeholderTextColor={colors.text_1}
-                      style={[styles.formTextInput, { color: colors.text_1 }]}
-                      onChangeText={handleChange('email')}
-                      onBlur={handleBlur('email')}
-                      value={values.email}
-                    />
-                  </View>
-
-                  <View
-                    style={[
-                      styles.formField,
-                      {
-                        backgroundColor: colors.background_1,
-                      },
-                    ]}>
-                    <Icon
-                      name={'lock-outline'}
-                      type={'material-community'}
-                      color={colors.text_1}
-                      size={normalize(19)}
-                      style={[
-                        styles.formIcons,
-                        { color: colors.text_1, alignSelf: 'center' },
-                      ]}
-                    />
-                    <TextInput
-                      autoCapitalize="none"
-                      autoCompleteType="password"
-                      textContentType="password"
-                      placeholder="Password"
-                      placeholderTextColor={colors.text_1}
-                      secureTextEntry={passwordVisibility}
-                      style={[styles.formTextInput, { color: colors.text_1 }]}
-                      onChangeText={handleChange('password')}
-                      onBlur={handleBlur('password')}
-                      value={values.password}
-                    />
-                  </View>
-
+                  <InputBox
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    valuesType={values.email}
+                    name="email"
+                    iconName="mail"
+                    iconType="feather"
+                    placeholder="Email"
+                    autoCompleteType="email"
+                    textContentType="emailAddress"
+                    keyboardType="email"
+                    autoCapitalize="none"
+                  />
+                  <InputBox
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    valuesType={values.password}
+                    name="password"
+                    iconName="lock-outline"
+                    iconType="material-community"
+                    placeholder="Password"
+                    autoCompleteType="password"
+                    textContentType="password"
+                    keyboardType="default"
+                    autoCapitalize="none"
+                    secureTextEntry={passwordVisibility}
+                  />
                   <Animatable.View
                     animation="bounceInRight"
                     style={styles.bellowFormView}>
@@ -169,21 +133,21 @@ const LogInScreen = ({ navigation }) => {
                       </Text>
                     </Pressable>
                   </Animatable.View>
-
-                  <View styel={styles.loginButtonView}>
-                    <Pressable
+                  <View style={styles.loginButtonView}>
+                    <Button
+                      title="Log In"
                       onPress={handleSubmit}
-                      android_ripple={{ color: 'green' }}>
-                      <Button
-                        title="Log In"
-                        rounded
-                        buttonStyle={[
-                          styles.loginButton,
-                          { backgroundColor: colors.primary },
-                        ]}
-                        loading={false}
-                      />
-                    </Pressable>
+                      rounded
+                      buttonStyle={[
+                        styles.loginButton,
+                        { backgroundColor: colors.primary },
+                      ]}
+                      titleStyle={{
+                        fontFamily: 'SofiaProSemiBold',
+                        fontSize: normalize(16),
+                      }}
+                      loading={false}
+                    />
                     <Pressable
                       style={styles.bellowButtonText}
                       hitSlop={{ bottom: 10, top: 10 }}
@@ -291,13 +255,13 @@ const styles = StyleSheet.create({
   },
 
   loginButtonView: {
-    width: windowWidth,
     alignItems: 'center',
   },
 
   loginButton: {
     width: appwidth,
     justifyContent: 'center',
+    fontFamily: 'SofiaProRegular',
     borderRadius: 10,
   },
   bellowButtonText: {
