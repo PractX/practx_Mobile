@@ -14,7 +14,7 @@ import {
   Alert,
   AccessibilityInfo,
 } from 'react-native';
-import { Icon, Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { Text, Content, CheckBox } from 'native-base';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 // import * as Actions from '../redux/auth/actions';
@@ -155,7 +155,11 @@ const LogInScreen = ({ navigation }) => {
                       <Text
                         style={[styles.whiteFont, { color: colors.text_1 }]}>
                         Dont have an account?{' '}
-                        <Text style={{ color: colors.primary, fontSize: 13 }}>
+                        <Text
+                          style={{
+                            color: colors.primary,
+                            fontSize: normalize(14),
+                          }}>
                           Sign up
                         </Text>
                       </Text>
@@ -167,7 +171,7 @@ const LogInScreen = ({ navigation }) => {
                       <Text
                         style={{
                           color: colors.primary,
-                          fontSize: 13,
+                          fontSize: normalize(14),
                           textAlign: 'center',
                         }}>
                         Verify Account
