@@ -2,19 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 // import Constants from "expo-constants";
 import * as Animatable from 'react-native-animatable';
 
-import {
-  Button,
-  Text,
-  Content,
-  CheckBox,
-  Container,
-  Icon,
-  Header,
-  Body,
-  Left,
-  Right,
-} from 'native-base';
-
+import { Text, Content } from 'native-base';
+import { Button } from 'react-native-elements';
 import {
   View,
   StyleSheet,
@@ -26,105 +15,133 @@ import {
 } from 'react-native';
 
 import { LOGO } from '../../../assets/images';
+import { useTheme } from '@react-navigation/native';
+import InputBox from '../../components/hoc/InputBox';
+import { Formik } from 'formik';
+import { normalize } from 'react-native-elements';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
 
-const theme = {
-  background: '#1e1f36',
-  highlight: '#ff0000',
-  text: '#fff',
-  text2: '#aaa',
-  text3: '#555',
-};
-
 function ForgotPassScreen({ navigation }) {
+  const { colors } = useTheme();
+
+  const sumbitReqPassReset = (values) => {
+    console.log(values);
+    // dispatch(Actions.loginPatient(values.email, values.password));
+  };
   return (
     <React.Fragment>
-      <Header style={styles.header}>
-        <Left>
-          <Pressable onPress={() => navigation.goBack()}>
-            <Icon type="AntDesign" name="left" style={{ color: theme.text }} />
-          </Pressable>
-        </Left>
-        <Body />
-        <Right />
-      </Header>
-
       <Content>
-        <View style={styles.container}>
+        <View
+          style={[styles.container, { backgroundColor: colors.background }]}>
           <View style={{ width: '80%' }}>
             <Animatable.View animation="pulse">
               <Image style={styles.logo} source={LOGO} resizeMode="contain" />
 
               <View style={{ alignItems: 'center', marginTop: 20 }}>
                 <Text
-                  style={{ fontSize: 25, fontWeight: 'bold', color: 'white' }}>
+                  style={{
+                    fontSize: normalize(25),
+                    fontFamily: 'SofiaProSemiBold',
+                    color: 'white',
+                  }}>
                   Reset Password
                 </Text>
 
-                <Text style={styles.topText}>
+                <Text style={[styles.topText, { color: colors.text_1 }]}>
                   Enter your email / username bellow
                 </Text>
-                <Text style={styles.topText}>We will send you an email</Text>
+                <Text style={[styles.topText, { color: colors.text_1 }]}>
+                  We will send you an email
+                </Text>
               </View>
             </Animatable.View>
 
             <Animatable.View animation="bounceInLeft" style={{ marginTop: 20 }}>
-              <View style={styles.formField}>
-                <Icon
-                  type="FontAwesome"
-                  name="envelope-o"
-                  style={styles.formIcons}
-                />
-                <TextInput
-                  autoCapitalize="none"
-                  autoCompleteType="email"
-                  textContentType="username"
-                  placeholder="Email"
-                  placeholderTextColor={theme.text3}
-                  style={styles.formTextInput}
-                />
-              </View>
+              <Formik
+                initialValues={{
+                  email: 'itstimiking@gmail.com',
+                  password: 'xxxxxx',
+                }}
+                onSubmit={(values) => {
+                  sumbitReqPassReset(values);
+                }}>
+                {({ handleChange, handleBlur, handleSubmit, values }) => (
+                  <View>
+                    <InputBox
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      valuesType={values.email}
+                      name="email"
+                      iconName="mail"
+                      iconType="feather"
+                      placeholder="Email"
+                      autoCompleteType="email"
+                      textContentType="emailAddress"
+                      keyboardType="email"
+                      autoCapitalize="none"
+                    />
+                    <View style={styles.loginButtonView}>
+                      <Button
+                        title="Reset Password"
+                        onPress={handleSubmit}
+                        rounded
+                        buttonStyle={[
+                          styles.loginButton,
+                          { backgroundColor: colors.primary },
+                        ]}
+                        titleStyle={{
+                          fontFamily: 'SofiaProSemiBold',
+                          fontSize: normalize(16),
+                        }}
+                        loading={false}
+                      />
+
+                      <Pressable
+                        style={styles.bellowButtonText}
+                        onPress={() => navigation.navigate('signup')}>
+                        <Text
+                          style={[styles.whiteFont, { color: colors.text_1 }]}>
+                          Dont have an account?
+                          <Text
+                            style={{
+                              color: colors.primary,
+                              fontSize: normalize(14),
+                            }}>
+                            {' '}
+                            Sign up
+                          </Text>
+                        </Text>
+                      </Pressable>
+
+                      <Pressable
+                        style={styles.bellowButtonText2}
+                        onPress={() => navigation.popToTop()}>
+                        <Text
+                          style={[styles.whiteFont, { color: colors.text_1 }]}>
+                          Remembered your password?
+                          <Text
+                            style={{
+                              color: colors.primary,
+                              fontSize: normalize(14),
+                            }}>
+                            {' '}
+                            Login
+                          </Text>
+                        </Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                )}
+              </Formik>
             </Animatable.View>
 
             <Animatable.View
               animation="bounceInRight"
               style={styles.bellowFormView}
             />
-          </View>
-
-          <View styel={styles.loginButtonView}>
-            <Button rounded style={styles.loginButton}>
-              <View style={styles.flexrow}>
-                <Text style={styles.logInButtonText}>Reset Password</Text>
-              </View>
-            </Button>
-
-            <Pressable
-              style={styles.bellowButtonText}
-              onPress={() => navigation.navigate('signup')}>
-              <Text style={styles.whiteFont}>
-                Dont have an account?
-                <Text style={{ color: theme.highlight, fontSize: 13 }}>
-                  {' '}
-                  Sign up
-                </Text>
-              </Text>
-            </Pressable>
-
-            <Pressable
-              style={styles.bellowButtonText2}
-              onPress={() => navigation.popToTop()}>
-              <Text style={styles.whiteFont}>
-                Remembered your details?
-                <Text style={{ color: theme.highlight, fontSize: 13 }}>
-                  {' '}
-                  Login
-                </Text>
-              </Text>
-            </Pressable>
           </View>
         </View>
       </Content>
@@ -137,49 +154,11 @@ const styles = StyleSheet.create({
     width: windowWidth,
     height: windowHeight,
     alignItems: 'center',
-    backgroundColor: theme.background,
   },
   topText: {
-    marginTop: 10,
-    fontSize: 13,
-    color: theme.text2,
-  },
-  header: {
-    backgroundColor: theme.background,
-    // marginTop: Constants.statusBarHeight,
-  },
-
-  formField: {
-    flexDirection: 'row',
-    borderColor: theme.text,
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 7,
-    marginTop: 15,
-  },
-  formTextInput: {
-    marginLeft: 20,
-    width: '90%',
-    fontSize: 16,
-  },
-
-  formIcons: {
-    color: theme.text3,
-    fontSize: 16,
-    alignSelf: 'center',
-  },
-
-  textInput: {
-    backgroundColor: theme.background,
-    borderWidth: 1,
-    borderColor: theme.text,
-    marginTop: 20,
-    width: appwidth,
-    padding: 5,
-    color: theme.text,
-    borderRadius: 10,
-    paddingLeft: 20,
+    marginTop: 5,
+    fontSize: normalize(16),
+    fontFamily: 'SofiaProRegular',
   },
 
   flexrow: {
@@ -193,9 +172,10 @@ const styles = StyleSheet.create({
   },
 
   whiteFont: {
-    color: theme.text2,
-    fontSize: 12,
+    fontSize: normalize(14),
+    fontFamily: 'SofiaProRegular',
   },
+
   spacer: {
     marginRight: 15,
     borderRadius: 6,
@@ -215,26 +195,21 @@ const styles = StyleSheet.create({
   },
 
   loginButtonView: {
-    width: windowWidth,
+    marginTop: 15,
+    // width: windowWidth,
     alignItems: 'center',
   },
 
   loginButton: {
-    backgroundColor: theme.highlight,
     width: appwidth,
     justifyContent: 'center',
-    marginTop: 10,
     borderRadius: 10,
   },
 
-  logInButtonText: {
-    fontWeight: 'bold',
-    fontSize: 17,
-    color: theme.text,
-  },
   bellowButtonText: {
     alignItems: 'center',
     marginTop: windowHeight * 0.05,
+    marginBottom: 15,
   },
   bellowButtonText2: {
     alignItems: 'center',

@@ -3,7 +3,8 @@ import * as Animatable from 'react-native-animatable';
 
 import { Formik } from 'formik';
 
-import { Button, Text, Content, CheckBox, Icon } from 'native-base';
+import { Text, Content, CheckBox } from 'native-base';
+import { Button } from 'react-native-elements';
 
 import {
   View,
@@ -16,20 +17,16 @@ import {
 } from 'react-native';
 
 import { LOGO } from '../../../assets/images';
+import { useTheme } from '@react-navigation/native';
+import InputBox from '../../components/hoc/InputBox';
+import { normalize } from 'react-native-elements';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
 
-const theme = {
-  background: '#1e1f36',
-  highlight: '#ff0000',
-  text: '#fff',
-  text2: '#aaa',
-  text3: '#555',
-};
-
-function LogInScreen2({ navigation }) {
+function VerifyAccount({ navigation }) {
+  const { colors } = useTheme();
   const [remember, setRemember] = useState(true);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
 
@@ -61,20 +58,26 @@ function LogInScreen2({ navigation }) {
 
   return (
     <Content>
-      <View style={styles.container}>
-        <View style={{ width: '100%' }}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={{ width: '80%' }}>
           <Animatable.View animation="pulse">
             <Image style={styles.logo} source={LOGO} resizeMode="contain" />
 
             <View style={{ alignItems: 'center', marginTop: 20 }}>
               <Text
-                style={{ fontSize: 25, fontWeight: 'bold', color: 'white' }}>
-                Welcome Back
+                style={{
+                  fontSize: normalize(25),
+                  fontFamily: 'SofiaProSemiBold',
+                  color: 'white',
+                }}>
+                Verify Account
               </Text>
 
-              <Text style={styles.topText}>Verify your account</Text>
-              <Text style={styles.topText}>
-                Enter verification code from your email bellow
+              <Text style={[styles.topText, { color: colors.text_1 }]}>
+                Enter verification code sent
+              </Text>
+              <Text style={[styles.topText, { color: colors.text_1 }]}>
+                to your email
               </Text>
             </View>
           </Animatable.View>
@@ -91,49 +94,69 @@ function LogInScreen2({ navigation }) {
               }}>
               {({ handleChange, handleBlur, handleSubmit, values }) => (
                 <View>
-                  <View style={styles.formField}>
-                    <Icon
-                      type="FontAwesome"
-                      name="envelope-o"
-                      style={styles.formIcons}
-                    />
-
-                    <TextInput
-                      autoCapitalize="none"
-                      autoCompleteType="off"
-                      textContentType="none"
-                      placeholder="Verification key"
-                      placeholderTextColor={theme.text3}
-                      style={styles.formTextInput}
-                      onChangeText={handleChange('verificationKey')}
-                      onBlur={handleBlur('verificationKey')}
-                      value={values.verificationKey}
-                    />
-                  </View>
+                  <InputBox
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    valuesType={values.verificationKey}
+                    name="verificationKey"
+                    iconName="key"
+                    iconType="feather"
+                    placeholder="Verification Key"
+                    autoCompleteType="off"
+                    textContentType="password"
+                    keyboardType="default"
+                    autoCapitalize="none"
+                    secureTextEntry={passwordVisibility}
+                  />
 
                   {/*--------------------------------------- SUBMIT BUTTON -----------------------------------*/}
 
-                  <View styel={styles.verify}>
-                    <Pressable
+                  <View style={styles.loginButtonView}>
+                    <Button
+                      title="Verify Account"
                       onPress={handleSubmit}
-                      android_ripple={{ color: 'green' }}>
-                      <Button rounded style={styles.loginButton}>
-                        <View style={styles.flexrow}>
-                          <Text style={styles.logInButtonText}>
-                            Verify My Account
-                          </Text>
-                        </View>
-                      </Button>
-                    </Pressable>
+                      rounded
+                      buttonStyle={[
+                        styles.loginButton,
+                        { backgroundColor: colors.primary },
+                      ]}
+                      titleStyle={{
+                        fontFamily: 'SofiaProSemiBold',
+                        fontSize: normalize(16),
+                      }}
+                      loading={false}
+                    />
 
                     <Pressable
                       style={styles.bellowButtonText}
-                      hitSlop={{ bottom: 10, top: 10 }}
                       onPress={() => navigation.navigate('signup')}>
-                      <Text style={styles.whiteFont}>
-                        Dont have an account?{' '}
-                        <Text style={{ color: theme.highlight, fontSize: 13 }}>
+                      <Text
+                        style={[styles.whiteFont, { color: colors.text_1 }]}>
+                        Dont have an account?
+                        <Text
+                          style={{
+                            color: colors.primary,
+                            fontSize: normalize(14),
+                          }}>
+                          {' '}
                           Sign up
+                        </Text>
+                      </Text>
+                    </Pressable>
+
+                    <Pressable
+                      style={styles.bellowButtonText2}
+                      onPress={() => navigation.popToTop()}>
+                      <Text
+                        style={[styles.whiteFont, { color: colors.text_1 }]}>
+                        Verified your account?
+                        <Text
+                          style={{
+                            color: colors.primary,
+                            fontSize: normalize(14),
+                          }}>
+                          {' '}
+                          Login
                         </Text>
                       </Text>
                     </Pressable>
@@ -150,52 +173,15 @@ function LogInScreen2({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: windowWidth,
     height: windowHeight,
-    paddingHorizontal: 40,
     alignItems: 'center',
-    backgroundColor: theme.background,
     justifyContent: 'space-around',
   },
   topText: {
-    marginTop: 10,
-    fontSize: 13,
-    color: theme.text2,
-  },
-
-  formField: {
-    flexDirection: 'row',
-    borderColor: theme.text,
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 7,
-    marginTop: 15,
-    marginBottom: 40,
-    width: appwidth,
-  },
-  formTextInput: {
-    marginLeft: 20,
-    width: '90%',
-    fontSize: 16,
-  },
-
-  formIcons: {
-    color: theme.text3,
-    fontSize: 16,
-    alignSelf: 'center',
-  },
-
-  textInput: {
-    backgroundColor: theme.background,
-    borderWidth: 1,
-    borderColor: theme.text,
-    marginTop: 20,
-    width: appwidth,
-    padding: 5,
-    color: theme.text,
-    borderRadius: 10,
-    paddingLeft: 20,
+    marginTop: 5,
+    fontSize: normalize(16),
+    fontFamily: 'SofiaProRegular',
   },
 
   flexrow: {
@@ -209,8 +195,8 @@ const styles = StyleSheet.create({
   },
 
   whiteFont: {
-    color: theme.text2,
-    fontSize: 12,
+    fontSize: normalize(14),
+    fontFamily: 'SofiaProRegular',
   },
   spacer: {
     marginRight: 15,
@@ -232,26 +218,24 @@ const styles = StyleSheet.create({
   },
 
   loginButtonView: {
-    width: '100%',
+    // width: '100%',
     alignItems: 'center',
+    marginTop: 35,
   },
 
   loginButton: {
-    backgroundColor: theme.highlight,
     width: appwidth,
     justifyContent: 'center',
     borderRadius: 10,
   },
-
-  logInButtonText: {
-    fontWeight: 'bold',
-    fontSize: 17,
-    color: theme.text,
-  },
   bellowButtonText: {
     alignItems: 'center',
     marginTop: windowHeight * 0.05,
+    marginBottom: 15,
+  },
+  bellowButtonText2: {
+    alignItems: 'center',
   },
 });
 
-export default LogInScreen2;
+export default VerifyAccount;
