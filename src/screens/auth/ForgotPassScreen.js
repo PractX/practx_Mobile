@@ -43,16 +43,6 @@ function ForgotPassScreen({ navigation }) {
   };
   return (
     <React.Fragment>
-      {/* <Header style={styles.header}>
-        <Left>
-          <Pressable onPress={() => navigation.goBack()}>
-            <Icon type="AntDesign" name="left" style={{ color: theme.text }} />
-          </Pressable>
-        </Left>
-        <Body />
-        <Right />
-      </Header> */}
-
       <Content>
         <View
           style={[styles.container, { backgroundColor: colors.background }]}>
