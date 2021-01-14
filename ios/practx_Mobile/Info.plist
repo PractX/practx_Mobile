@@ -38,7 +38,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -53,5 +53,51 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>AntDesign.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Fontisto.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>Roboto_medium.ttf</string>
+		<string>Roboto.ttf</string>
+		<string>rubicon-icon-font.ttf</string>
+		<string>Comfortaa-Bold.ttf</string>
+		<string>Comfortaa-Light.ttf</string>
+		<string>Comfortaa-Regular.ttf</string>
+		<string>FuturaStd-Bold.otf</string>
+		<string>Helvetica-Bold.ttf</string>
+		<string>Helvetica-Light.ttf</string>
+		<string>Helvetica.ttf</string>
+		<string>SFProDisplay-Light.ttf</string>
+		<string>SofiaProBlack-Italic.ttf</string>
+		<string>SofiaProBlack.ttf</string>
+		<string>SofiaProBold-Italic.ttf</string>
+		<string>SofiaProBold.ttf</string>
+		<string>SofiaProExtraLight-Italic.ttf</string>
+		<string>SofiaProExtraLight.ttf</string>
+		<string>SofiaProLight-Italic.ttf</string>
+		<string>SofiaProLight.ttf</string>
+		<string>SofiaProMedium-Italic.ttf</string>
+		<string>SofiaProMedium.ttf</string>
+		<string>SofiaProRegular-Italic.ttf</string>
+		<string>SofiaProRegular.ttf</string>
+		<string>SofiaProSemiBold-Italic.ttf</string>
+		<string>SofiaProSemiBold.ttf</string>
+		<string>SofiaProUltraLight-Italic.ttf</string>
+		<string>SofiaProUltraLight.ttf</string>
+	</array>
 </dict>
 </plist>
