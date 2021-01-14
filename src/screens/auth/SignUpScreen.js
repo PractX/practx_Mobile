@@ -286,7 +286,7 @@ const SignUpScreen = ({ navigation }) => {
                           I agree to the
                           <Text
                             style={{
-                              fontSize: normalize(13),
+                              fontSize: normalize(14),
                               color: colors.primary,
                               textDecorationStyle: 'solid',
                               textDecorationLine: 'underline',
@@ -297,7 +297,7 @@ const SignUpScreen = ({ navigation }) => {
                           and{' '}
                           <Text
                             style={{
-                              fontSize: normalize(13),
+                              fontSize: normalize(14),
                               color: colors.primary,
                               textDecorationStyle: 'solid',
                               textDecorationLine: 'underline',
@@ -337,7 +337,7 @@ const SignUpScreen = ({ navigation }) => {
                           <Text
                             style={{
                               color: colors.primary,
-                              fontSize: normalize(13),
+                              fontSize: normalize(14),
                               fontFamily: 'SofiaProRegular',
                             }}>
                             {' '}
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
   },
 
   whiteFont: {
-    fontSize: normalize(13),
+    fontSize: normalize(14),
     fontFamily: 'SofiaProRegular',
   },
   spacer: {

@@ -8,7 +8,7 @@ import {
 import ForgotPassScreen from './ForgotPassScreen';
 import SignUpScreen from './SignUpScreen';
 import LogInScreen from './LogInScreen';
-import LogInScreen2 from './LogInScreen2';
+import VerifyAccount from './VerifyAccount';
 
 const theme = {
   /* ---- THeme to be gotten from redux or context------*/
@@ -40,7 +40,7 @@ export default function AuthScreen() {
       <Stack.Screen name="login" component={LogInScreen} />
       <Stack.Screen name="signup" component={SignUpScreen} />
       <Stack.Screen name="forgotpass" component={ForgotPassScreen} />
-      <Stack.Screen name="login2" component={LogInScreen2} />
+      <Stack.Screen name="login2" component={VerifyAccount} />
     </Stack.Navigator>
   );
 }

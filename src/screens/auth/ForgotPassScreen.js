@@ -2,17 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 // import Constants from "expo-constants";
 import * as Animatable from 'react-native-animatable';
 
-import {
-  Text,
-  Content,
-  CheckBox,
-  Container,
-  Icon,
-  Header,
-  Body,
-  Left,
-  Right,
-} from 'native-base';
+import { Text, Content } from 'native-base';
 import { Button } from 'react-native-elements';
 import {
   View,
@@ -219,7 +209,7 @@ const styles = StyleSheet.create({
   bellowButtonText: {
     alignItems: 'center',
     marginTop: windowHeight * 0.05,
-    marginBottom: 23,
+    marginBottom: 15,
   },
   bellowButtonText2: {
     alignItems: 'center',
