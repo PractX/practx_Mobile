@@ -20,7 +20,7 @@ import {
 // import BgImg1 from '../assets/icon/bg.png';
 // import BgImg2 from '../assets/icon/bg0.png';
 // import Logo from '../assets/icon/logo.png';s
-import { Avatar, Button, Badge, normalize } from 'react-native-elements';
+// import { Avatar, Button, Badge, normalize } from 'react-native-elements';
 import {
   DrawerContentScrollView,
   DrawerItem,
@@ -52,8 +52,8 @@ import { showMessage } from 'react-native-flash-message';
 // import NumDownloads from '../helpers/numDownloads';
 // import { SvgXml } from 'react-native-svg';
 // import { checkInternetConnection } from 'react-native-offline';
-// import normalize from '../../normalize';
-// import FastImage from 'react-native-fast-image';
+import normalize from '../../utils/normalize';
+import FastImage from 'react-native-fast-image';
 
 const DrawerContent = ({
   navigation,
@@ -135,12 +135,12 @@ const DrawerContent = ({
   //   storageDownload,
   //   themeMode,
   // ]);
-  // useEffect(() => {
-
-  // }, [isDrawerOpen, setMyDownloads, storageDownload]);
+  useEffect(() => {
+    console.log(currentUser);
+  }, []);
   return (
     <View style={{ flex: 1 }}>
-      {/* <FastImage
+      <FastImage
         source={bgImage}
         style={[styles.userInfoSection]}
         resizeMode={FastImage.resizeMode.cover}
@@ -154,7 +154,7 @@ const DrawerContent = ({
               marginRight: 8,
               justifyContent: 'flex-end',
             }}>
-            <Button
+            {/* <Button
               onPress={() => signIn()}
               title={loginText}
               loading={false}
@@ -180,7 +180,7 @@ const DrawerContent = ({
                 // width: 100,
                 // marginTop: 30,
               }}
-            />
+            /> */}
           </View>
         )}
         {!currentUser && (
@@ -190,10 +190,10 @@ const DrawerContent = ({
             }}>
             {colors ? (
               <View>
-                <Avatar
+                {/* <Avatar
                   rounded
                   size={60}
-                  source={require('../assets/icon/icon_logo.png')}
+                  // source={require('../assets/icon/icon_logo.png')}
                   activeOpacity={0.2}
                   titleStyle={{ color: colors.text }}
                   containerStyle={{
@@ -203,9 +203,9 @@ const DrawerContent = ({
                     borderWidth: 1,
                   }}
                   placeholder={{ backgroundColor: colors.background }}
-                />
-                {/* <Accessory /> */}
-      {/* <Badge
+                /> */}
+                {/* <Accessory />
+                <Badge
                   status={currentNetState === 'success' ? 'success' : 'error'}
                   badgeStyle={{ width: 12, height: 12, borderRadius: 50 }}
                   containerStyle={{
@@ -213,11 +213,11 @@ const DrawerContent = ({
                     bottom: 4,
                     right: 4,
                   }}
-                />
+                /> */}
               </View>
             ) : (
               <View>
-                <Avatar
+                {/* <Avatar
                   rounded
                   size={60}
                   source={require('../assets/icon/stat_logo.png')}
@@ -230,9 +230,9 @@ const DrawerContent = ({
                     borderWidth: 1,
                   }}
                   placeholder={{ backgroundColor: colors.background }}
-                />
-                {/* <Accessory /> */}
-      {/* <Badge
+                /> */}
+                {/* <Accessory />
+                <Badge
                   status={currentNetState === 'success' ? 'success' : 'error'}
                   badgeStyle={{ width: 12, height: 12, borderRadius: 50 }}
                   containerStyle={{
@@ -240,19 +240,19 @@ const DrawerContent = ({
                     bottom: 4,
                     right: 4,
                   }}
-                />
+                /> */}
               </View>
             )}
           </View>
-        )} */}
-      {/* {currentUser && (
+        )}
+        {currentUser && (
           <TouchableOpacity
             onPress={() => navigation.navigate('Profile')}
             style={{
               flexDirection: 'row',
             }}>
             <View>
-              <Avatar
+              {/* <Avatar
                 rounded
                 size={60}
                 source={{
@@ -275,7 +275,7 @@ const DrawerContent = ({
                   bottom: 4,
                   right: 4,
                 }}
-              />
+              /> */}
             </View>
             <View
               style={{
@@ -314,14 +314,14 @@ const DrawerContent = ({
         )}
 
         {currentUser && (
-          <View style={styles.row}> */}
-      {/* <View style={styles.section}>
-                <Paragraph style={[styles.paragraph, styles.caption]}>
-                  80
-                </Paragraph>
-                <Caption style={styles.caption}>Following</Caption>
-              </View> */}
-      {/* <View style={styles.section}>
+          <View style={styles.row}>
+            <View style={styles.section}>
+              <Paragraph style={[styles.paragraph, styles.caption]}>
+                80
+              </Paragraph>
+              <Caption style={styles.caption}>Following</Caption>
+            </View>
+            <View style={styles.section}>
               <Paragraph
                 style={[
                   styles.paragraph,
@@ -340,270 +340,280 @@ const DrawerContent = ({
             </View>
           </View>
         )}
-      </FastImage> */}
+      </FastImage>
       <DrawerContentScrollView>
-        {/* <View style={styles.drawerContent}> */}
-        {/* <View> */}
+        <View style={styles.drawerContent}>
+          {/* <View> */}
 
-        <Drawer.Section style={styles.drawerSection}>
-          <DrawerItem
-            labelStyle={{
-              fontFamily: 'Comfortaa-Bold',
-              fontSize: normalize(13),
-              // color: colors.text,
-            }}
-            inactiveTintColor={colors.text}
-            activeTintColor={colors.primary}
-            focused={
-              navigation.dangerouslyGetState().index === 0 ? true : false
-            }
-            activeBackgroundColor={null}
-            icon={({ color, size }) => (
-              <Icon name="home" type="antdesign" color={color} size={size} />
-            )}
-            label="Home"
-            onPress={() => {
-              requestAnimationFrame(() => {
-                navigation.navigate(
-                  'HomeTabs',
-                  // , {
-                  //   screen: 'Home',
-                  // }
-                );
-              });
-            }}
-          />
-          <DrawerItem
-            labelStyle={{
-              fontFamily: 'Comfortaa-Bold',
-              fontSize: normalize(13),
-              // color: colors.text,
-            }}
-            inactiveTintColor={colors.text}
-            activeTintColor={colors.primary}
-            focused={
-              navigation.dangerouslyGetState().index === 1 ? true : false
-            }
-            activeBackgroundColor={null}
-            icon={({ color, size }) => (
-              <Icon
-                name="download-cloud"
-                type="feather"
-                color={color}
-                size={size}
-              />
-            )}
-            label="My Downloads"
-            onPress={() => {
-              requestAnimationFrame(() => {
-                navigation.navigate(
-                  'MyDownloadsTabs',
-                  //  {
-                  //   screen: 'MyInstagram',
-                  // }
-                );
-              });
-            }}
-          />
-          <DrawerItem
-            labelStyle={{
-              fontFamily: 'Comfortaa-Bold',
-              fontSize: normalize(13),
-              // color: colors.text,
-            }}
-            inactiveTintColor={colors.text}
-            activeTintColor={colors.primary}
-            focused={
-              navigation.dangerouslyGetState().index === 2 ? true : false
-            }
-            activeBackgroundColor={null}
-            icon={({ color, size }) => (
-              <Icon name="whatsapp" type="fontisto" color={color} size={size} />
-            )}
-            label={({ focused, color }) => (
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
-                <Text
-                  style={{
-                    color,
-                    alignItems: 'flex-start',
-                    // justifyContent: 'center',
-                    fontSize: normalize(13),
-                    fontFamily: 'Comfortaa-Bold',
-                    flexDirection: 'column',
-                  }}>
-                  {/* {focused ? 'Focused text' : 'Unfocused text'} */}
-                  WhatsApp Status
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: 'normal',
-                    top: -5,
-                    left: 5,
-                    color: colors.secondary,
-                    fontSize: normalize(11),
-                    fontFamily: 'Comfortaa-Bold',
-                  }}>
-                  pro
-                </Text>
-              </View>
-            )}
-            onPress={() => {
-              requestAnimationFrame(() => {
-                navigation.navigate(
-                  'WhatsAppTabs',
-                  //  {
-                  //   screen: 'MyInstagram',
-                  // }
-                );
-              });
-            }}
-          />
-          <DrawerItem
-            labelStyle={{
-              fontFamily: 'Comfortaa-Bold',
-              fontSize: normalize(13),
-              // color: colors.text,
-            }}
-            inactiveTintColor={colors.text}
-            activeTintColor={colors.primary}
-            focused={
-              navigation.dangerouslyGetState().index === 3 ? true : false
-            }
-            activeBackgroundColor={null}
-            icon={({ color, size }) => (
-              <Icon
-                name="instagram"
-                type="fontisto"
-                color={color}
-                size={size}
-              />
-            )}
-            label={({ focused, color }) => (
-              <View style={{ flexDirection: 'row' }}>
-                <Text
-                  style={{
-                    color,
-                    alignItems: 'flex-start',
-                    // justifyContent: 'center',
-                    fontSize: normalize(13),
-                    flexDirection: 'column',
-                    fontFamily: 'Comfortaa-Bold',
-                  }}>
-                  {/* {focused ? 'Focused text' : 'Unfocused text'} */}
-                  Instagram
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: 'normal',
-                    top: -5,
-                    left: 5,
-                    color: colors.secondary,
-                    fontSize: normalize(11),
-                    fontFamily: 'Comfortaa-Bold',
-                  }}>
-                  pro
-                </Text>
-              </View>
-            )}
-            onPress={() => {
-              requestAnimationFrame(() => {
-                navigation.navigate(
-                  'InstagramPro',
-                  //  {
-                  //   screen: 'MyInstagram',
-                  // }
-                );
-              });
-            }}
-          />
-          <DrawerItem
-            labelStyle={{
-              fontFamily: 'Comfortaa-Bold',
-              fontSize: normalize(13),
-            }}
-            inactiveTintColor={colors.text}
-            activeTintColor={colors.primary}
-            focused={
-              navigation.dangerouslyGetState().index === 10 ? true : false
-            }
-            activeBackgroundColor={null}
-            icon={({ color, size }) => (
-              <Icon name="setting" type="antdesign" color={color} size={size} />
-            )}
-            label="Settings"
-            onPress={() => {
-              requestAnimationFrame(() => {
-                navigation.navigate(
-                  'SettingsScreen',
-                  //  {
-                  //   screen: 'MyInstagram',
-                  // }
-                );
-              });
-            }}
-          />
-          <DrawerItem
-            labelStyle={{
-              fontFamily: 'Comfortaa-Bold',
-              fontSize: normalize(13),
-              // color: colors.primary,
-            }}
-            inactiveTintColor={colors.text}
-            activeTintColor={colors.primary}
-            activeBackgroundColor={null}
-            focused={
-              navigation.dangerouslyGetState().index === 11 ? true : false
-            }
-            icon={({ color, size }) => (
-              <Icon name="like2" type="antdesign" color={color} size={size} />
-            )}
-            label="Help & Feedback"
-            onPress={() => {
-              requestAnimationFrame(() => {
-                navigation.navigate(
-                  'HelpFeedBackScreen',
-                  //  {
-                  //   screen: 'MyInstagram',
-                  // }
-                );
-              });
-            }}
-          />
-          <View style={styles.preference}>
-            {isEnabled ? (
-              <Icon name="moon" color={colors.text} type="entypo" size={20} />
-            ) : (
-              <Icon name="sun" color={colors.text} type="feather" size={20} />
-            )}
-            <Text
-              style={{
-                color: colors.text,
-                paddingRight: 10,
+          <Drawer.Section style={styles.drawerSection}>
+            <DrawerItem
+              labelStyle={{
                 fontFamily: 'Comfortaa-Bold',
                 fontSize: normalize(13),
-              }}>
-              Dark Theme
-            </Text>
-            <Switch
-              // trackColor={{ false: '#767577', true: '#81b0ff' }}
-              // thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={
-                // requestAnimationFrame(() => {
-                toggleSwitch
-                // })
+                // color: colors.text,
+              }}
+              inactiveTintColor={colors.text}
+              activeTintColor={colors.primary}
+              focused={
+                navigation.dangerouslyGetState().index === 0 ? true : false
               }
-              value={isEnabled}
+              activeBackgroundColor={null}
+              icon={({ color, size }) => (
+                <Icon name="home" type="antdesign" color={color} size={size} />
+              )}
+              label="Home"
+              onPress={() => {
+                requestAnimationFrame(() => {
+                  navigation.navigate(
+                    'HomeTabs',
+                    // , {
+                    //   screen: 'Home',
+                    // }
+                  );
+                });
+              }}
             />
-          </View>
-        </Drawer.Section>
-        {/* <Drawer.Section style={{ color: 'white' }}> */}
+            <DrawerItem
+              labelStyle={{
+                fontFamily: 'Comfortaa-Bold',
+                fontSize: normalize(13),
+                // color: colors.text,
+              }}
+              inactiveTintColor={colors.text}
+              activeTintColor={colors.primary}
+              focused={
+                navigation.dangerouslyGetState().index === 1 ? true : false
+              }
+              activeBackgroundColor={null}
+              icon={({ color, size }) => (
+                <Icon
+                  name="download-cloud"
+                  type="feather"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="My Downloads"
+              onPress={() => {
+                requestAnimationFrame(() => {
+                  navigation.navigate(
+                    'MyDownloadsTabs',
+                    //  {
+                    //   screen: 'MyInstagram',
+                    // }
+                  );
+                });
+              }}
+            />
+            <DrawerItem
+              labelStyle={{
+                fontFamily: 'Comfortaa-Bold',
+                fontSize: normalize(13),
+                // color: colors.text,
+              }}
+              inactiveTintColor={colors.text}
+              activeTintColor={colors.primary}
+              focused={
+                navigation.dangerouslyGetState().index === 2 ? true : false
+              }
+              activeBackgroundColor={null}
+              icon={({ color, size }) => (
+                <Icon
+                  name="whatsapp"
+                  type="fontisto"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label={({ focused, color }) => (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                  }}>
+                  <Text
+                    style={{
+                      color,
+                      alignItems: 'flex-start',
+                      // justifyContent: 'center',
+                      fontSize: normalize(13),
+                      fontFamily: 'Comfortaa-Bold',
+                      flexDirection: 'column',
+                    }}>
+                    {/* {focused ? 'Focused text' : 'Unfocused text'} */}
+                    WhatsApp Status
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: 'normal',
+                      top: -5,
+                      left: 5,
+                      color: colors.secondary,
+                      fontSize: normalize(11),
+                      fontFamily: 'Comfortaa-Bold',
+                    }}>
+                    pro
+                  </Text>
+                </View>
+              )}
+              onPress={() => {
+                requestAnimationFrame(() => {
+                  navigation.navigate(
+                    'WhatsAppTabs',
+                    //  {
+                    //   screen: 'MyInstagram',
+                    // }
+                  );
+                });
+              }}
+            />
+            <DrawerItem
+              labelStyle={{
+                fontFamily: 'Comfortaa-Bold',
+                fontSize: normalize(13),
+                // color: colors.text,
+              }}
+              inactiveTintColor={colors.text}
+              activeTintColor={colors.primary}
+              focused={
+                navigation.dangerouslyGetState().index === 3 ? true : false
+              }
+              activeBackgroundColor={null}
+              icon={({ color, size }) => (
+                <Icon
+                  name="instagram"
+                  type="fontisto"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label={({ focused, color }) => (
+                <View style={{ flexDirection: 'row' }}>
+                  <Text
+                    style={{
+                      color,
+                      alignItems: 'flex-start',
+                      // justifyContent: 'center',
+                      fontSize: normalize(13),
+                      flexDirection: 'column',
+                      fontFamily: 'Comfortaa-Bold',
+                    }}>
+                    {/* {focused ? 'Focused text' : 'Unfocused text'} */}
+                    Instagram
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: 'normal',
+                      top: -5,
+                      left: 5,
+                      color: colors.secondary,
+                      fontSize: normalize(11),
+                      fontFamily: 'Comfortaa-Bold',
+                    }}>
+                    pro
+                  </Text>
+                </View>
+              )}
+              onPress={() => {
+                requestAnimationFrame(() => {
+                  navigation.navigate(
+                    'InstagramPro',
+                    //  {
+                    //   screen: 'MyInstagram',
+                    // }
+                  );
+                });
+              }}
+            />
+            <DrawerItem
+              labelStyle={{
+                fontFamily: 'Comfortaa-Bold',
+                fontSize: normalize(13),
+              }}
+              inactiveTintColor={colors.text}
+              activeTintColor={colors.primary}
+              focused={
+                navigation.dangerouslyGetState().index === 10 ? true : false
+              }
+              activeBackgroundColor={null}
+              icon={({ color, size }) => (
+                <Icon
+                  name="setting"
+                  type="antdesign"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="Settings"
+              onPress={() => {
+                requestAnimationFrame(() => {
+                  navigation.navigate(
+                    'SettingsScreen',
+                    //  {
+                    //   screen: 'MyInstagram',
+                    // }
+                  );
+                });
+              }}
+            />
+            <DrawerItem
+              labelStyle={{
+                fontFamily: 'Comfortaa-Bold',
+                fontSize: normalize(13),
+                // color: colors.primary,
+              }}
+              inactiveTintColor={colors.text}
+              activeTintColor={colors.primary}
+              activeBackgroundColor={null}
+              focused={
+                navigation.dangerouslyGetState().index === 11 ? true : false
+              }
+              icon={({ color, size }) => (
+                <Icon name="like2" type="antdesign" color={color} size={size} />
+              )}
+              label="Help & Feedback"
+              onPress={() => {
+                requestAnimationFrame(() => {
+                  navigation.navigate(
+                    'HelpFeedBackScreen',
+                    //  {
+                    //   screen: 'MyInstagram',
+                    // }
+                  );
+                });
+              }}
+            />
+            <View style={styles.preference}>
+              {isEnabled ? (
+                <Icon name="moon" color={colors.text} type="entypo" size={20} />
+              ) : (
+                <Icon name="sun" color={colors.text} type="feather" size={20} />
+              )}
+              <Text
+                style={{
+                  color: colors.text,
+                  paddingRight: 10,
+                  fontFamily: 'Comfortaa-Bold',
+                  fontSize: normalize(13),
+                }}>
+                Dark Theme
+              </Text>
+              <Switch
+                // trackColor={{ false: '#767577', true: '#81b0ff' }}
+                // thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={
+                  // requestAnimationFrame(() => {
+                  toggleSwitch
+                  // })
+                }
+                value={isEnabled}
+              />
+            </View>
+          </Drawer.Section>
+          {/* <Drawer.Section style={{ color: 'white' }}> */}
 
-        {/* </Drawer.Section>s */}
-        {/* </View> */}
+          {/* </Drawer.Section>s */}
+        </View>
       </DrawerContentScrollView>
 
       {/* <Drawer.Section

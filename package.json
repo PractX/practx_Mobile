@@ -28,6 +28,7 @@
     "react-native-dotenv": "^2.5.0",
     "react-native-dropdownalert": "^4.3.0",
     "react-native-elements": "^3.1.0",
+    "react-native-fast-image": "^8.3.4",
     "react-native-flash-message": "^0.1.21",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-maps": "^0.27.1",
