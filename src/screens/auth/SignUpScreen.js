@@ -170,7 +170,7 @@ const SignUpScreen = ({ navigation }) => {
                       placeholder="Email"
                       autoCompleteType="email"
                       textContentType="emailAddress"
-                      keyboardType="email"
+                      keyboardType="email-address"
                       autoCapitalize="none"
                     />
 

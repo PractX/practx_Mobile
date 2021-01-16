@@ -27,6 +27,7 @@ import {
   userPaymentFailure,
 } from './user.actions';
 import { getDownloadsApi, getSubscriptionApi } from '../../apis/api';
+import { showMessage, hideMessage } from 'react-native-flash-message';
 
 // const userActive = state => state.user.currentUser;
 const userToken = (state) => state.user.token.key;
@@ -47,35 +48,38 @@ export function* getSnapshotFromUserAuth(userAuth) {
 }
 
 export function* signIn({ payload: { email, password } }) {
+  console.log('I am here');
+  console.log(email, 'and');
   try {
     const result = yield signInApi(email, password).then(function (response) {
-      return response.data.data;
+      return response.data;
     });
+    console.log(result);
     const token = {
       key: result.token,
       expire: tokenExpiration(),
     };
     if (result) {
-      const download = yield getDownloadsApi(token.key).then(function (
-        response,
-      ) {
-        return response.data.data;
+      console.log(result);
+      showMessage({
+        message: result.message,
+        type: 'success',
       });
-      const subscription = yield getSubscriptionApi(token.key).then(function (
-        response,
-      ) {
-        return response.data.data;
-      });
+      yield delay(2000);
       yield put(setToken(token));
-      yield put(setSubscription(subscription.subscription));
-      yield put(setDownloads(download.downloads));
-      yield getSnapshotFromUserAuth(result.user);
+      yield getSnapshotFromUserAuth(result.patient);
     }
   } catch (error) {
+    // console.log(error.response.data);
+    showMessage({
+      message: error.response ? error.response.data.errors : error.message,
+      type: 'danger',
+    });
+    yield delay(2000);
     yield put(
       signInFailure(
         error.response
-          ? error.response.data.message || error.response.data.error
+          ? error.response.data.errors || error.response.data.errors
           : 'Sign in failed, Please check your connectivity, And try again',
       ),
     );
@@ -350,10 +354,6 @@ export function* onSignUpStart() {
   yield takeLatest(UserActionTypes.SIGN_UP_START, signUp);
 }
 
-export function* onUserPaymentStart() {
-  yield takeLatest(UserActionTypes.USER_PAYMENT_START, makePayment);
-}
-
 // export function* onSignUpSuccess() {
 //   yield takeLatest(UserActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp);
 // }
@@ -369,7 +369,6 @@ export function* userSagas() {
     call(onCheckUserSession),
     call(onSignOutStart),
     call(onSignUpStart),
-    call(onUserPaymentStart),
     // call(onSignUpSuccess),
   ]);
 }

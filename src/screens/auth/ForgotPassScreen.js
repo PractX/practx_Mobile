@@ -51,7 +51,7 @@ function ForgotPassScreen({ navigation }) {
                 </Text>
 
                 <Text style={[styles.topText, { color: colors.text_1 }]}>
-                  Enter your email / username bellow
+                  Enter your email or username below
                 </Text>
                 <Text style={[styles.topText, { color: colors.text_1 }]}>
                   We will send you an email
@@ -80,7 +80,7 @@ function ForgotPassScreen({ navigation }) {
                       placeholder="Email"
                       autoCompleteType="email"
                       textContentType="emailAddress"
-                      keyboardType="email"
+                      keyboardType="email-address"
                       autoCapitalize="none"
                     />
                     <View style={styles.loginButtonView}>

@@ -1,7 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
+import { useSelector, useDispatch, connect } from 'react-redux';
 import * as Animatable from 'react-native-animatable';
 import { Formik } from 'formik';
+
+import { showMessage, hideMessage } from 'react-native-flash-message';
 
 import {
   View,
@@ -21,12 +23,18 @@ import { useScrollToTop, useTheme } from '@react-navigation/native';
 import { LOGO } from '../../../assets/images';
 import { normalize } from 'react-native-elements';
 import InputBox from '../../components/hoc/InputBox';
+import { createStructuredSelector } from 'reselect';
+import { signInStart } from '../../redux/user/user.actions';
+import {
+  selectCurrentUser,
+  selectIsLoading,
+} from '../../redux/user/user.selector';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
 
-const LogInScreen = ({ navigation }) => {
+const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
   const [remember, setRemember] = useState(true);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const ref = React.useRef(null);
@@ -36,6 +44,7 @@ const LogInScreen = ({ navigation }) => {
   const login = (values) => {
     console.log(values);
     // dispatch(Actions.loginPatient(values.email, values.password));
+    signInStart(values.email, values.password);
   };
 
   return (
@@ -85,7 +94,7 @@ const LogInScreen = ({ navigation }) => {
                     placeholder="Email"
                     autoCompleteType="email"
                     textContentType="emailAddress"
-                    keyboardType="email"
+                    keyboardType="email-address"
                     autoCapitalize="none"
                   />
                   <InputBox
@@ -146,7 +155,7 @@ const LogInScreen = ({ navigation }) => {
                         fontFamily: 'SofiaProSemiBold',
                         fontSize: normalize(16),
                       }}
-                      loading={false}
+                      loading={isLoading}
                     />
                     <Pressable
                       style={styles.bellowButtonText}
@@ -280,4 +289,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogInScreen;
+const mapStateToProps = createStructuredSelector({
+  user: selectCurrentUser,
+  isLoading: selectIsLoading,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  signInStart: (email, password) => dispatch(signInStart({ email, password })),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LogInScreen);

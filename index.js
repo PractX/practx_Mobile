@@ -19,21 +19,25 @@ import {
 } from 'react-native';
 import { NetworkProvider } from 'react-native-offline';
 
+// SHOW NETWORK DEBUG
+// global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
+// global.FormData = global.originalFormData || global.FormData;
+
 const RNRedux = () => (
-  <NetworkProvider
-    pingTimeout={5000}
-    pingServerUrl={'https://www.google.com/'}
-    shouldPing={true}
-    pingInterval={20000}
-    pingOnlyIfOffline={false}
-    pingInBackground={false} //should be false
-  >
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <App />
-      </PersistGate>
-    </Provider>
-  </NetworkProvider>
+  // <NetworkProvider
+  //   pingTimeout={5000}
+  //   pingServerUrl={'https://www.google.com/'}
+  //   shouldPing={true}
+  //   pingInterval={20000}
+  //   pingOnlyIfOffline={false}
+  //   pingInBackground={false} //should be false
+  // >
+  <Provider store={store}>
+    <PersistGate persistor={persistor}>
+      <App />
+    </PersistGate>
+  </Provider>
+  //{/* </NetworkProvider> */}
 );
 
 AppRegistry.registerComponent(appName, () => RNRedux);
