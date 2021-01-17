@@ -8,6 +8,8 @@ import {
   ImageBackground,
   StatusBar,
   TouchableWithoutFeedback,
+  TextInput,
+  ScrollView,
 } from 'react-native';
 import {
   Avatar as TextAvatar,
@@ -54,6 +56,9 @@ import { showMessage } from 'react-native-flash-message';
 // import { checkInternetConnection } from 'react-native-offline';
 import normalize from '../../utils/normalize';
 import FastImage from 'react-native-fast-image';
+import { Formik } from 'formik';
+import InputBox from '../../components/hoc/InputBox';
+import ToggleSwitch from 'toggle-switch-react-native';
 
 const DrawerContent = ({
   navigation,
@@ -84,7 +89,7 @@ const DrawerContent = ({
   // console.log(currentUser);
 
   const signOut = () => {
-    // setSignOutText('Signing Out...');
+    setSignOutText('Logging Out...');
     // onGoogleButtonPress('signOut').then((res) => {
     //   console.log(res, 'Signed Out of Google!');
     //   // setCurrentUser(additionalUserInfo.profile);
@@ -108,496 +113,397 @@ const DrawerContent = ({
     //   })
     //   .catch((error) => setLoginText('Login'));
   };
+  const search = (value) => {
+    console.log(value);
+  };
+  useMemo(() => {
+    if (!currentUser) {
+      setSignOutText('Sign Out');
+    }
+    console.log(navigation.dangerouslyGetState().index);
 
-  // useMemo(() => {
-  //   if (!currentUser) {
-  //     setSignOutText('Sign Out');
-  //   }
-  //   console.log(navigation.dangerouslyGetState().index);
-  //   colors.mode === 'light' ? setBgImage(BgImg2) : setBgImage(BgImg1);
-  //   InteractionManager.runAfterInteractions(() => {
-  //     themeMode === 'Dark' ? setIsEnabled(true) : setIsEnabled(false);
-  //     // isEnabled ? setTheme('Dark') : setTheme('Light');
-  //   });
-  //   if (isDrawerOpen) {
-  //     // StatusBar.setBackgroundColor(colors.background_1);
-  //     NumDownloads(storageDownload).then((res) => {
-  //       setMyDownloads(res);
-  //     });
-  //   }
-  //   // console.log('drawer');
-  // }, [
-  //   colors.mode,
-  //   currentUser,
-  //   isDrawerOpen,
-  //   navigation,
-  //   setMyDownloads,
-  //   storageDownload,
-  //   themeMode,
-  // ]);
-  useEffect(() => {
-    console.log(currentUser);
-  }, []);
+    InteractionManager.runAfterInteractions(() => {
+      themeMode === 'Dark' ? setIsEnabled(true) : setIsEnabled(false);
+      // isEnabled ? setTheme('Dark') : setTheme('Light');
+      themeMode === 'Dark'
+        ? StatusBar.setBarStyle('light-content')
+        : StatusBar.setBarStyle('dark-content');
+    });
+    // if (isDrawerOpen) {
+
+    //   NumDownloads(storageDownload).then((res) => {
+    //     setMyDownloads(res);
+    //   });
+    // }
+    // console.log('drawer');
+  }, [currentUser, navigation, themeMode]);
+  // useEffect(() => {
+  //   console.log(currentUser);
+  // }, []);
   return (
     <View style={{ flex: 1 }}>
-      <FastImage
-        source={bgImage}
-        style={[styles.userInfoSection]}
-        resizeMode={FastImage.resizeMode.cover}
-        // placeHolder={<ActivityIndicator />}
-      >
-        {!currentUser && (
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 10,
-              marginRight: 8,
-              justifyContent: 'flex-end',
-            }}>
-            {/* <Button
-              onPress={() => signIn()}
-              title={loginText}
-              loading={false}
-              icon={
-                <Icon
-                  name="login"
-                  type="antdesign"
-                  size={normalize(12)}
-                  color={colors.text}
-                />
-              }
-              iconRight
-              titleStyle={{
-                marginRight: 5,
+      <View
+        style={[
+          styles.userInfoSection,
+          { borderBottomWidth: 0.8, borderBottomColor: colors.background_1 },
+        ]}>
+        <FastImage
+          source={{
+            uri:
+              'https://api.duniagames.co.id/api/content/upload/file/8143860661599124172.jpg',
+          }}
+          style={{
+            width: 65,
+            height: 65,
+            borderRadius: 15,
+            backgroundColor: colors.background_1,
+          }}
+          resizeMode={FastImage.resizeMode.cover}
+          // placeHolder={<ActivityIndicator />}
+        />
+
+        <View
+          style={{
+            marginLeft: 10,
+            flexDirection: 'column',
+            marginVertical: 2,
+            // alignItems: 'center',
+          }}>
+          <Text
+            style={[
+              styles.title,
+              {
                 color: colors.text,
-                // fontWeight: 'normal',
-                fontFamily: 'Comfortaa-Bold',
-                fontSize: normalize(13),
-              }}
-              buttonStyle={{
-                backgroundColor: colors.background_1,
-                alignItems: 'center',
-                // width: 100,
-                // marginTop: 30,
-              }}
-            /> */}
-          </View>
-        )}
-        {!currentUser && (
-          <View
+                // width: 150,
+                // flexWrap: 'wrap',
+                flexShrink: 1,
+                fontFamily: 'SofiaProSemiBold',
+              },
+            ]}>
+            {/* {currentUser.firstname} */}
+            {currentUser
+              ? currentUser.firstname.length + currentUser.lastname.length > 18
+                ? currentUser.firstname
+                : currentUser.firstname + ' ' + currentUser.lastname
+              : ''}
+          </Text>
+          <TouchableOpacity
+            // onPress={() => navigation.navigate('Profile')}
             style={{
               flexDirection: 'row',
+              marginVertical: 2,
             }}>
-            {colors ? (
-              <View>
-                {/* <Avatar
-                  rounded
-                  size={60}
-                  // source={require('../assets/icon/icon_logo.png')}
-                  activeOpacity={0.2}
-                  titleStyle={{ color: colors.text }}
-                  containerStyle={{
-                    alignSelf: 'center',
-                    backgroundColor: colors.card,
-                    borderColor: colors.text_4,
-                    borderWidth: 1,
+            <Text
+              style={[
+                styles.caption,
+                {
+                  // width: 150,
+                  color: colors.secondary,
+                  // flexWrap: 'wrap',
+                  // flexShrink: 1,
+                  fontFamily: 'SofiaProRegular',
+                },
+              ]}>
+              View and Edit profile
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      {/*  */}
+      <View style={styles.drawerContent}>
+        {/* <View> */}
+
+        <Drawer.Section style={styles.drawerSection}>
+          <Formik
+            initialValues={{
+              search: '',
+            }}
+            onSubmit={(values) => {
+              search(values);
+            }}>
+            {({ handleChange, handleBlur, handleSubmit, values }) => (
+              <View style={{ paddingBottom: 10 }}>
+                <InputBox
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  valuesType={values.email}
+                  name="email"
+                  iconName="search"
+                  iconType="feather"
+                  iconColor={colors.text}
+                  iconSize={16}
+                  placeholder="Search"
+                  placeholderTextColor={colors.text}
+                  autoCompleteType="off"
+                  textContentType="none"
+                  keyboardType="default"
+                  autoCapitalize="none"
+                  boxStyle={{ height: 40, width: '87%', alignSelf: 'center' }}
+                  styling={{
+                    input: {
+                      color: colors.text,
+                      alignSelf: 'center',
+                      fontSize: normalize(15),
+                    },
+                    icon: { color: colors.text, alignSelf: 'center' },
                   }}
-                  placeholder={{ backgroundColor: colors.background }}
-                /> */}
-                {/* <Accessory />
-                <Badge
-                  status={currentNetState === 'success' ? 'success' : 'error'}
-                  badgeStyle={{ width: 12, height: 12, borderRadius: 50 }}
-                  containerStyle={{
-                    position: 'absolute',
-                    bottom: 4,
-                    right: 4,
-                  }}
-                /> */}
-              </View>
-            ) : (
-              <View>
-                {/* <Avatar
-                  rounded
-                  size={60}
-                  source={require('../assets/icon/stat_logo.png')}
-                  activeOpacity={0.2}
-                  titleStyle={{ color: colors.text }}
-                  containerStyle={{
-                    alignSelf: 'center',
-                    backgroundColor: colors.card,
-                    borderColor: colors.text_4,
-                    borderWidth: 1,
-                  }}
-                  placeholder={{ backgroundColor: colors.background }}
-                /> */}
-                {/* <Accessory />
-                <Badge
-                  status={currentNetState === 'success' ? 'success' : 'error'}
-                  badgeStyle={{ width: 12, height: 12, borderRadius: 50 }}
-                  containerStyle={{
-                    position: 'absolute',
-                    bottom: 4,
-                    right: 4,
-                  }}
-                /> */}
+                />
               </View>
             )}
-          </View>
-        )}
-        {currentUser && (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Profile')}
-            style={{
-              flexDirection: 'row',
-            }}>
-            <View>
-              {/* <Avatar
-                rounded
-                size={60}
-                source={{
-                  uri: currentUser.picture,
-                }}
-                activeOpacity={0.2}
-                titleStyle={{ color: colors.text }}
-                containerStyle={{
-                  alignSelf: 'center',
-                  backgroundColor: colors.card,
-                  borderColor: colors.text_4,
-                  borderWidth: 1,
-                }}
-              />
-              <Badge
-                status={currentNetState === 'success' ? 'success' : 'error'}
-                badgeStyle={{ width: 12, height: 12, borderRadius: 50 }}
-                containerStyle={{
-                  position: 'absolute',
-                  bottom: 4,
-                  right: 4,
-                }}
-              /> */}
-            </View>
+          </Formik>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* -------------------------------- Services -------------------------------- */}
             <View
               style={{
-                marginLeft: 15,
-                flexDirection: 'column',
-                alignItems: 'center',
+                borderBottomWidth: 0.8,
+                borderBottomColor: colors.background_1,
+                marginTop: 10,
+                paddingBottom: 10,
               }}>
-              <Title
-                style={[
-                  styles.title,
-                  {
-                    color: colors.text,
-                    width: 150,
-                    flexWrap: 'wrap',
-                    flexShrink: 1,
-                    fontFamily: 'Comfortaa-Bold',
-                  },
-                ]}>
-                {currentUser.name}
-              </Title>
-              <Caption
-                style={[
-                  styles.caption,
-                  {
-                    width: 150,
-                    color: colors.text,
-                    flexWrap: 'wrap',
-                    flexShrink: 1,
-                    fontFamily: 'Comfortaa-Regular',
-                  },
-                ]}>
-                @{currentUser.email.split('@')[0]}
-              </Caption>
-            </View>
-          </TouchableOpacity>
-        )}
-
-        {currentUser && (
-          <View style={styles.row}>
-            <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption]}>
-                80
-              </Paragraph>
-              <Caption style={styles.caption}>Following</Caption>
-            </View>
-            <View style={styles.section}>
-              <Paragraph
-                style={[
-                  styles.paragraph,
-                  // styles.caption,
-                  {
-                    color: colors.text,
-                    lineHeight: 14,
-                    fontSize: normalize(13),
-                  },
-                ]}>
-                {(myDownloads && myDownloads.totalDownloads) || '0'}
-              </Paragraph>
-              <Caption style={[styles.caption, { color: colors.text }]}>
-                Downloads
-              </Caption>
-            </View>
-          </View>
-        )}
-      </FastImage>
-      <DrawerContentScrollView>
-        <View style={styles.drawerContent}>
-          {/* <View> */}
-
-          <Drawer.Section style={styles.drawerSection}>
-            <DrawerItem
-              labelStyle={{
-                fontFamily: 'Comfortaa-Bold',
-                fontSize: normalize(13),
-                // color: colors.text,
-              }}
-              inactiveTintColor={colors.text}
-              activeTintColor={colors.primary}
-              focused={
-                navigation.dangerouslyGetState().index === 0 ? true : false
-              }
-              activeBackgroundColor={null}
-              icon={({ color, size }) => (
-                <Icon name="home" type="antdesign" color={color} size={size} />
-              )}
-              label="Home"
-              onPress={() => {
-                requestAnimationFrame(() => {
-                  navigation.navigate(
-                    'HomeTabs',
-                    // , {
-                    //   screen: 'Home',
-                    // }
-                  );
-                });
-              }}
-            />
-            <DrawerItem
-              labelStyle={{
-                fontFamily: 'Comfortaa-Bold',
-                fontSize: normalize(13),
-                // color: colors.text,
-              }}
-              inactiveTintColor={colors.text}
-              activeTintColor={colors.primary}
-              focused={
-                navigation.dangerouslyGetState().index === 1 ? true : false
-              }
-              activeBackgroundColor={null}
-              icon={({ color, size }) => (
-                <Icon
-                  name="download-cloud"
-                  type="feather"
-                  color={color}
-                  size={size}
-                />
-              )}
-              label="My Downloads"
-              onPress={() => {
-                requestAnimationFrame(() => {
-                  navigation.navigate(
-                    'MyDownloadsTabs',
-                    //  {
-                    //   screen: 'MyInstagram',
-                    // }
-                  );
-                });
-              }}
-            />
-            <DrawerItem
-              labelStyle={{
-                fontFamily: 'Comfortaa-Bold',
-                fontSize: normalize(13),
-                // color: colors.text,
-              }}
-              inactiveTintColor={colors.text}
-              activeTintColor={colors.primary}
-              focused={
-                navigation.dangerouslyGetState().index === 2 ? true : false
-              }
-              activeBackgroundColor={null}
-              icon={({ color, size }) => (
-                <Icon
-                  name="whatsapp"
-                  type="fontisto"
-                  color={color}
-                  size={size}
-                />
-              )}
-              label={({ focused, color }) => (
-                <View
+              <View
+                style={{
+                  width: '85%',
+                  alignSelf: 'center',
+                }}>
+                <Text
                   style={{
-                    flexDirection: 'row',
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProSemiBold',
+                    color: colors.primary_light,
                   }}>
-                  <Text
-                    style={{
-                      color,
-                      alignItems: 'flex-start',
-                      // justifyContent: 'center',
-                      fontSize: normalize(13),
-                      fontFamily: 'Comfortaa-Bold',
-                      flexDirection: 'column',
-                    }}>
-                    {/* {focused ? 'Focused text' : 'Unfocused text'} */}
-                    WhatsApp Status
-                  </Text>
-                  <Text
-                    style={{
-                      fontWeight: 'normal',
-                      top: -5,
-                      left: 5,
-                      color: colors.secondary,
-                      fontSize: normalize(11),
-                      fontFamily: 'Comfortaa-Bold',
-                    }}>
-                    pro
-                  </Text>
-                </View>
-              )}
-              onPress={() => {
-                requestAnimationFrame(() => {
-                  navigation.navigate(
-                    'WhatsAppTabs',
-                    //  {
-                    //   screen: 'MyInstagram',
-                    // }
-                  );
-                });
-              }}
-            />
-            <DrawerItem
-              labelStyle={{
-                fontFamily: 'Comfortaa-Bold',
-                fontSize: normalize(13),
-                // color: colors.text,
-              }}
-              inactiveTintColor={colors.text}
-              activeTintColor={colors.primary}
-              focused={
-                navigation.dangerouslyGetState().index === 3 ? true : false
-              }
-              activeBackgroundColor={null}
-              icon={({ color, size }) => (
-                <Icon
-                  name="instagram"
-                  type="fontisto"
-                  color={color}
-                  size={size}
-                />
-              )}
-              label={({ focused, color }) => (
-                <View style={{ flexDirection: 'row' }}>
-                  <Text
-                    style={{
-                      color,
-                      alignItems: 'flex-start',
-                      // justifyContent: 'center',
-                      fontSize: normalize(13),
-                      flexDirection: 'column',
-                      fontFamily: 'Comfortaa-Bold',
-                    }}>
-                    {/* {focused ? 'Focused text' : 'Unfocused text'} */}
-                    Instagram
-                  </Text>
-                  <Text
-                    style={{
-                      fontWeight: 'normal',
-                      top: -5,
-                      left: 5,
-                      color: colors.secondary,
-                      fontSize: normalize(11),
-                      fontFamily: 'Comfortaa-Bold',
-                    }}>
-                    pro
-                  </Text>
-                </View>
-              )}
-              onPress={() => {
-                requestAnimationFrame(() => {
-                  navigation.navigate(
-                    'InstagramPro',
-                    //  {
-                    //   screen: 'MyInstagram',
-                    // }
-                  );
-                });
-              }}
-            />
-            <DrawerItem
-              labelStyle={{
-                fontFamily: 'Comfortaa-Bold',
-                fontSize: normalize(13),
-              }}
-              inactiveTintColor={colors.text}
-              activeTintColor={colors.primary}
-              focused={
-                navigation.dangerouslyGetState().index === 10 ? true : false
-              }
-              activeBackgroundColor={null}
-              icon={({ color, size }) => (
-                <Icon
-                  name="setting"
-                  type="antdesign"
-                  color={color}
-                  size={size}
-                />
-              )}
-              label="Settings"
-              onPress={() => {
-                requestAnimationFrame(() => {
-                  navigation.navigate(
-                    'SettingsScreen',
-                    //  {
-                    //   screen: 'MyInstagram',
-                    // }
-                  );
-                });
-              }}
-            />
-            <DrawerItem
-              labelStyle={{
-                fontFamily: 'Comfortaa-Bold',
-                fontSize: normalize(13),
-                // color: colors.primary,
-              }}
-              inactiveTintColor={colors.text}
-              activeTintColor={colors.primary}
-              activeBackgroundColor={null}
-              focused={
-                navigation.dangerouslyGetState().index === 11 ? true : false
-              }
-              icon={({ color, size }) => (
-                <Icon name="like2" type="antdesign" color={color} size={size} />
-              )}
-              label="Help & Feedback"
-              onPress={() => {
-                requestAnimationFrame(() => {
-                  navigation.navigate(
-                    'HelpFeedBackScreen',
-                    //  {
-                    //   screen: 'MyInstagram',
-                    // }
-                  );
-                });
-              }}
-            />
+                  Services
+                </Text>
+              </View>
+              <DrawerItem
+                labelStyle={{
+                  fontFamily: 'SofiaProSemiBold',
+                  fontSize: normalize(16),
+                  paddingLeft: 3,
+                  // color: colors.text,
+                }}
+                inactiveTintColor={colors.text}
+                activeTintColor={colors.secondary}
+                focused={
+                  navigation.dangerouslyGetState().index === 0 ? true : false
+                }
+                activeBackgroundColor={null}
+                label="Add Group"
+                onPress={() => {
+                  requestAnimationFrame(() => {
+                    navigation.navigate(
+                      'HomeTabs',
+                      // , {
+                      //   screen: 'Home',
+                      // }
+                    );
+                  });
+                }}
+              />
+              <DrawerItem
+                labelStyle={{
+                  fontFamily: 'SofiaProSemiBold',
+                  fontSize: normalize(16),
+                  paddingLeft: 3,
+                  // color: colors.text,
+                }}
+                inactiveTintColor={colors.text}
+                activeTintColor={colors.secondary}
+                focused={
+                  navigation.dangerouslyGetState().index === 1 ? true : false
+                }
+                activeBackgroundColor={null}
+                label="Notifications"
+                onPress={() => {
+                  requestAnimationFrame(() => {
+                    navigation.navigate(
+                      'HomeTabs',
+                      // , {
+                      //   screen: 'Home',
+                      // }
+                    );
+                  });
+                }}
+              />
+              <DrawerItem
+                labelStyle={{
+                  fontFamily: 'SofiaProSemiBold',
+                  fontSize: normalize(16),
+                  paddingLeft: 3,
+                  // color: colors.text,
+                }}
+                inactiveTintColor={colors.text}
+                activeTintColor={colors.secondary}
+                focused={
+                  navigation.dangerouslyGetState().index === 2 ? true : false
+                }
+                activeBackgroundColor={null}
+                label="Settings"
+                onPress={() => {
+                  requestAnimationFrame(() => {
+                    navigation.navigate(
+                      'HomeTabs',
+                      // , {
+                      //   screen: 'Home',
+                      // }
+                    );
+                  });
+                }}
+              />
+              <DrawerItem
+                labelStyle={{
+                  fontFamily: 'SofiaProSemiBold',
+                  fontSize: normalize(16),
+                  paddingLeft: 3,
+                  // color: colors.text,
+                }}
+                inactiveTintColor={colors.text}
+                activeTintColor={colors.secondary}
+                focused={
+                  navigation.dangerouslyGetState().index === 3 ? true : false
+                }
+                activeBackgroundColor={null}
+                label="Chats"
+                onPress={() => {
+                  requestAnimationFrame(() => {
+                    navigation.navigate(
+                      'HomeTabs',
+                      // , {
+                      //   screen: 'Home',
+                      // }
+                    );
+                  });
+                }}
+              />
+            </View>
+
+            {/* ---------------------------- Customer Support ---------------------------- */}
+            <View
+              style={{
+                // borderBottomWidth: 0.8,
+                // borderBottomColor: colors.background_1,
+                marginTop: 20,
+                paddingBottom: 10,
+              }}>
+              <View
+                style={{
+                  width: '85%',
+                  // backgroundColor: 'red',
+                  alignSelf: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProSemiBold',
+                    color: colors.primary_light,
+                  }}>
+                  Services
+                </Text>
+              </View>
+              <DrawerItem
+                labelStyle={{
+                  fontFamily: 'SofiaProSemiBold',
+                  fontSize: normalize(16),
+                  paddingLeft: 3,
+                  // color: colors.text,
+                }}
+                inactiveTintColor={colors.text}
+                activeTintColor={colors.secondary}
+                focused={
+                  navigation.dangerouslyGetState().index === 4 ? true : false
+                }
+                activeBackgroundColor={null}
+                label="FAQ"
+                onPress={() => {
+                  requestAnimationFrame(() => {
+                    navigation.navigate(
+                      'HomeTabs',
+                      // , {
+                      //   screen: 'Home',
+                      // }
+                    );
+                  });
+                }}
+              />
+              <DrawerItem
+                labelStyle={{
+                  fontFamily: 'SofiaProSemiBold',
+                  fontSize: normalize(16),
+                  paddingLeft: 3,
+                  // color: colors.text,
+                }}
+                inactiveTintColor={colors.text}
+                activeTintColor={colors.secondary}
+                focused={
+                  navigation.dangerouslyGetState().index === 5 ? true : false
+                }
+                activeBackgroundColor={null}
+                label="Help Center"
+                onPress={() => {
+                  requestAnimationFrame(() => {
+                    navigation.navigate(
+                      'HomeTabs',
+                      // , {
+                      //   screen: 'Home',
+                      // }
+                    );
+                  });
+                }}
+              />
+            </View>
+
             <View style={styles.preference}>
-              {isEnabled ? (
+              {/* {isEnabled ? (
                 <Icon name="moon" color={colors.text} type="entypo" size={20} />
               ) : (
                 <Icon name="sun" color={colors.text} type="feather" size={20} />
+              )} */}
+              <ToggleSwitch
+                isOn={isEnabled}
+                onColor={colors.background_1}
+                offColor={colors.background_1}
+                size="medium"
+                onToggle={(isOn) => toggleSwitch()}
+                icon={
+                  isEnabled ? (
+                    <Icon
+                      name="moon"
+                      color={colors.background}
+                      type="ionicon"
+                      size={13}
+                    />
+                  ) : (
+                    <Icon
+                      name="sun"
+                      color={colors.text}
+                      type="feather"
+                      size={13}
+                    />
+                  )
+                }
+              />
+              {isEnabled ? (
+                <Text
+                  style={{
+                    color: colors.text,
+                    paddingLeft: 20,
+                    fontFamily: 'SofiaProSemiBold',
+                    fontSize: normalize(16),
+                    // textAlign: 'center',
+                  }}>
+                  Dark
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: colors.text,
+                    paddingLeft: 10,
+                    fontFamily: 'SofiaProSemiBold',
+                    fontSize: normalize(16),
+                  }}>
+                  Light
+                </Text>
               )}
-              <Text
-                style={{
-                  color: colors.text,
-                  paddingRight: 10,
-                  fontFamily: 'Comfortaa-Bold',
-                  fontSize: normalize(13),
-                }}>
-                Dark Theme
-              </Text>
-              <Switch
+              {/* <Switch
                 // trackColor={{ false: '#767577', true: '#81b0ff' }}
                 // thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
                 ios_backgroundColor="#3e3e3e"
@@ -607,14 +513,15 @@ const DrawerContent = ({
                   // })
                 }
                 value={isEnabled}
-              />
+              /> */}
             </View>
-          </Drawer.Section>
-          {/* <Drawer.Section style={{ color: 'white' }}> */}
+          </ScrollView>
+        </Drawer.Section>
+        {/* <Drawer.Section style={{ color: 'white' }}> */}
 
-          {/* </Drawer.Section>s */}
-        </View>
-      </DrawerContentScrollView>
+        {/* </Drawer.Section>s */}
+      </View>
+      {/* </DrawerContentScrollView> */}
 
       {/* <Drawer.Section
         style={[
@@ -623,30 +530,28 @@ const DrawerContent = ({
           // { borderTopWidth: 1, borderColor: colors.background_1 },
         ]}> */}
       {currentUser && (
-        <DrawerItem
-          style={[
-            styles.bottomDrawerSection,
-            { borderWidth: 0 },
-            { borderTopWidth: 1, borderColor: colors.background_1 },
-          ]}
-          labelStyle={{
-            fontFamily: 'Comfortaa-Bold',
-            color: colors.text,
-            fontSize: normalize(13),
-          }}
-          icon={({ size }) => (
-            <Icon
-              name="logout"
-              type="antdesign"
-              color={colors.text}
-              size={size}
-            />
-          )}
-          label={signOutText || 'Sign Out'}
-          onPress={() => {
-            signOut();
-          }}
-        />
+        <View style={{ backgroundColor: colors.background }}>
+          <DrawerItem
+            style={[
+              styles.bottomDrawerSection,
+              {
+                width: '75%',
+                alignSelf: 'center',
+                borderTopWidth: 1,
+                borderColor: colors.background_1,
+              },
+            ]}
+            labelStyle={{
+              fontFamily: 'SofiaProSemiBold',
+              color: colors.text,
+              fontSize: normalize(15),
+            }}
+            label={signOutText || 'Log Out'}
+            onPress={() => {
+              signOut();
+            }}
+          />
+        </View>
       )}
       {/* </Drawer.Section> */}
     </View>
@@ -657,18 +562,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userInfoSection: {
-    paddingLeft: 20,
+    marginLeft: 20,
+    marginRight: 20,
     paddingTop: 20,
     paddingBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     fontSize: normalize(16),
+    paddingLeft: 3,
     marginTop: 3,
     // fontWeight: 'bold',
   },
   caption: {
     fontSize: normalize(12),
-    lineHeight: 14,
+    // lineHeight: 14,
   },
   row: {
     marginTop: 20,
@@ -686,13 +595,15 @@ const styles = StyleSheet.create({
   },
   drawerSection: {
     marginTop: 0,
+    marginLeft: 20,
+    marginRight: 20,
   },
   bottomDrawerSection: {
-    marginBottom: 15,
+    marginTop: 15,
   },
   preference: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // alignItems: 'center',
     paddingVertical: 15,
     paddingHorizontal: 20,
   },

@@ -15,18 +15,25 @@ const InputBox = ({
   name,
   iconName,
   iconType,
+  iconColor,
+  iconSize,
   placeholder,
+  placeholderTextColor,
   autoCompleteType,
   textContentType,
   keyboardType,
   autoCapitalize,
   secureTextEntry,
+  boxStyle,
+  styling,
 }) => {
   const { colors } = useTheme();
+
   return (
     <View
       style={[
         styles.formField,
+        boxStyle,
         {
           backgroundColor: colors.background_1,
         },
@@ -34,11 +41,11 @@ const InputBox = ({
       <Icon
         name={iconName}
         type={iconType}
-        color={colors.text_1}
-        size={normalize(19)}
+        color={iconColor ? iconColor : colors.text_1}
+        size={normalize(iconSize ? iconSize : 19)}
         style={[
           styles.formIcons,
-          { color: colors.text_1, alignSelf: 'center' },
+          styling && styling.icon ? styling.icon : { alignSelf: 'center' },
         ]}
       />
 
@@ -49,8 +56,13 @@ const InputBox = ({
         keyboardType={keyboardType}
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
-        placeholderTextColor={colors.text_1}
-        style={[styles.formTextInput, { color: colors.text_1 }]}
+        placeholderTextColor={
+          placeholderTextColor ? placeholderTextColor : colors.text_1
+        }
+        style={[
+          styles.formTextInput,
+          styling && styling.input ? styling.input : { color: colors.text_1 },
+        ]}
         onChangeText={handleChange(name)}
         onBlur={handleBlur(name)}
         value={valuesType}

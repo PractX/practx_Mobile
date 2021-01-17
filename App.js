@@ -91,7 +91,7 @@ const App = ({ themeMode, user, token }) => {
   }, [themeMode]);
   return (
     <>
-      <StatusBar backgroundColor={state.color} />
+      <StatusBar backgroundColor={state.color} barStyle={state.scheme} />
       <NavigationContainer
         theme={state.theme}
         ref={navigationRef}
