@@ -1,11 +1,28 @@
 import Axios from 'axios';
 import { REACT_APP_API, REACT_APP_SIGNUP, REACT_APP_SIGNIN } from '@env';
-export const signUpApi = async (username, email, password) => {
-  const collectionsMap = await Axios.post(REACT_APP_API + REACT_APP_SIGNUP, {
-    email: email,
-    full_name: username,
-    password: password,
-  });
+export const signUpApi = async (
+  email,
+  firstname,
+  lastname,
+  dob,
+  mobileNo,
+  password,
+) => {
+  const headers = {
+    'Content-Type': 'multipart/form-data,',
+  };
+  const collectionsMap = await Axios.post(
+    REACT_APP_API + REACT_APP_SIGNUP,
+    {
+      email,
+      firstname,
+      lastname,
+      dob,
+      mobileNo,
+      password,
+    },
+    headers,
+  );
   return collectionsMap;
 };
 

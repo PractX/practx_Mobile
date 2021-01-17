@@ -165,7 +165,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isLoading: false,
-        success: action.payload,
+        currentUser: action.payload,
         error: null,
       };
     case UserActionTypes.SIGN_IN_START:

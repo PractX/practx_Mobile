@@ -24,7 +24,7 @@ const theme = {
 const Stack = createStackNavigator();
 
 const AuthScreen = ({ setLoading }) => {
-  // setLoading(false);
+  setLoading(false);
   return (
     <>
       <Stack.Navigator
@@ -44,7 +44,7 @@ const AuthScreen = ({ setLoading }) => {
         <Stack.Screen name="login" component={LogInScreen} />
         <Stack.Screen name="signup" component={SignUpScreen} />
         <Stack.Screen name="forgotpass" component={ForgotPassScreen} />
-        <Stack.Screen name="login2" component={VerifyAccount} />
+        <Stack.Screen name="verifyAccount" component={VerifyAccount} />
       </Stack.Navigator>
     </>
   );

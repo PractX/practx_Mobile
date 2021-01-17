@@ -33,6 +33,65 @@ import { showMessage, hideMessage } from 'react-native-flash-message';
 const userToken = (state) => state.user.token.key;
 const userExpire = (state) => state.user.token.expire;
 
+export function* signUp({
+  payload: { email, firstname, lastname, dob, mobileNo, password, navigation },
+}) {
+  try {
+    console.log(email);
+    // const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+    const result = yield signUpApi(
+      email,
+      firstname,
+      lastname,
+      dob,
+      mobileNo,
+      password,
+    ).then(function (response) {
+      return response.data;
+    });
+    console.log(result);
+    showMessage({
+      message: result.message,
+      type: 'success',
+    });
+    yield delay(5000);
+    yield put(signUpSuccess(result.patient));
+    yield put(navigation.navigate('verifyAccount'));
+  } catch (error) {
+    console.log(error);
+    console.log(error.response);
+    let eMsg = '';
+    if (error.response) {
+      error.response.data.errors.map(function (i, err) {
+        if (error.response.data.errors.length > 1) {
+          eMsg += err + 1 + '. ' + i + '\n';
+          console.log(eMsg);
+        } else {
+          eMsg += i;
+          console.log(eMsg);
+        }
+      });
+      showMessage({
+        message: eMsg,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+
+    yield put(
+      signUpFailure(
+        error.response
+          ? error.response.data.errors || error.response.data.errors
+          : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
+      ),
+    );
+  }
+}
+
 export function* getSnapshotFromUserAuth(userAuth) {
   try {
     yield put(signInSuccess(userAuth));
@@ -71,10 +130,31 @@ export function* signIn({ payload: { email, password } }) {
     }
   } catch (error) {
     // console.log(error.response.data);
-    showMessage({
-      message: error.response ? error.response.data.errors : error.message,
-      type: 'danger',
-    });
+    let eMsg = '';
+    if (error.response) {
+      error.response.data.errors.map(function (i, err) {
+        if (error.response.data.errors.length > 1) {
+          eMsg += err + 1 + '. ' + i + '\n';
+          console.log(eMsg);
+        } else {
+          eMsg += i;
+          console.log(eMsg);
+        }
+      });
+      showMessage({
+        message: eMsg,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    // showMessage({
+    //   message: error.response ? error.response.data.errors : error.message,
+    //   type: 'danger',
+    // });
     yield delay(2000);
     yield put(
       signInFailure(
@@ -259,26 +339,6 @@ export function* signOut() {
     yield put(signOutSuccess());
   } catch (error) {
     yield put(signOutFailure(error));
-  }
-}
-
-export function* signUp({ payload: { userName, email, password } }) {
-  try {
-    // const { user } = yield auth.createUserWithEmailAndPassword(email, password);
-    const result = yield signUpApi(userName, email, password).then(function (
-      response,
-    ) {
-      return response.data.data;
-    });
-    yield put(signUpSuccess(result));
-  } catch (error) {
-    yield put(
-      signUpFailure(
-        error.response
-          ? error.response.data.message || error.response.data.error
-          : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
-      ),
-    );
   }
 }
 

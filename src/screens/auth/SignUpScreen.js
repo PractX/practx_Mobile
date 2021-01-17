@@ -29,12 +29,19 @@ import InputBox from '../../components/hoc/InputBox';
 import SmallInputBox from '../../components/hoc/SmallInputBox';
 import { normalize } from 'react-native-elements';
 import { useTheme } from '@react-navigation/native';
+import { signUpStart } from '../../redux/user/user.actions';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import {
+  selectCurrentUser,
+  selectIsLoading,
+} from '../../redux/user/user.selector';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
 
-const SignUpScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
   const { colors } = useTheme();
   /* ---- Remember prev logged in user details in state ------*/
 
@@ -45,34 +52,44 @@ const SignUpScreen = ({ navigation }) => {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
 
   const signupPatient = async (values) => {
+    const me = 'Shitboy';
     if (!agreeTos) {
       alert('Please agree to our terms and conditions');
     } else {
-      await fetch(
-        'http://practxbestaging-env.eba-6m7puu5w.us-east-2.elasticbeanstalk.com/api/auth/patients/signup',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: values.email,
-            password: values.password,
-            dob: `${values.MM}/${values.DD}/${values.YY}`,
-            mobileNo: values.mobileNo,
-            firstname: values.firstname,
-            lastname: values.lastname,
-          }),
-        },
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.patient) {
-            console.log(data.message);
-            alert(data.message);
-            navigation.navigate('login2');
-          } else {
-            alert(data.errors);
-          }
-        });
+      signUpStart({
+        email: values.email,
+        firstname: values.firstname,
+        lastname: values.lastname,
+        dob: `${values.MM}/${values.DD}/${values.YY}`,
+        mobileNo: values.mobileNo,
+        password: values.password,
+        navigation,
+      });
+      // await fetch(
+      //   'http://practxbestaging-env.eba-6m7puu5w.us-east-2.elasticbeanstalk.com/api/auth/patients/signup',
+      //   {
+      //     method: 'POST',
+      //     headers: { 'Content-Type': 'application/json' },
+      //     body: JSON.stringify({
+      //       email: values.email,
+      //       password: values.password,
+      //       dob: `${values.MM}/${values.DD}/${values.YY}`,
+      //       mobileNo: values.mobileNo,
+      //       firstname: values.firstname,
+      //       lastname: values.lastname,
+      //     }),
+      //   },
+      // )
+      //   .then((res) => res.json())
+      //   .then((data) => {
+      //     if (data.patient) {
+      //       console.log(data.message);
+      //       alert(data.message);
+      //       navigation.navigate('login2');
+      //     } else {
+      //       alert(data.errors);
+      //     }
+      //   });
     }
   };
 
@@ -126,8 +143,8 @@ const SignUpScreen = ({ navigation }) => {
                   MM: '',
                   YY: '',
                   mobileNo: '',
-                  email: 'itstimiking@gmail.com',
-                  password: 'xxxxxx',
+                  email: '',
+                  password: '',
                 }}
                 onSubmit={(values) => {
                   signupPatient(values);
@@ -325,7 +342,7 @@ const SignUpScreen = ({ navigation }) => {
                           fontFamily: 'SofiaProSemiBold',
                           fontSize: normalize(16),
                         }}
-                        loading={false}
+                        loading={isLoading}
                       />
 
                       <Pressable
@@ -444,4 +461,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpScreen;
+const mapStateToProps = createStructuredSelector({
+  user: selectCurrentUser,
+  isLoading: selectIsLoading,
+});
+const mapDispatchToProps = (dispatch) => ({
+  signUpStart: (data) => dispatch(signUpStart(data)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(SignUpScreen);

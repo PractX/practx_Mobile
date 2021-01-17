@@ -176,7 +176,7 @@ const DrawerContent = ({
                 color: colors.text,
                 // width: 150,
                 // flexWrap: 'wrap',
-                flexShrink: 1,
+                // flexShrink: 1,
                 fontFamily: 'SofiaProSemiBold',
               },
             ]}>
@@ -190,7 +190,7 @@ const DrawerContent = ({
           <TouchableOpacity
             // onPress={() => navigation.navigate('Profile')}
             style={{
-              flexDirection: 'row',
+              // flexDirection: 'row',
               marginVertical: 2,
             }}>
             <Text
@@ -251,7 +251,11 @@ const DrawerContent = ({
               </View>
             )}
           </Formik>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{
+              marginBottom: 60,
+            }}>
             {/* -------------------------------- Services -------------------------------- */}
             <View
               style={{
@@ -544,7 +548,7 @@ const DrawerContent = ({
             labelStyle={{
               fontFamily: 'SofiaProSemiBold',
               color: colors.text,
-              fontSize: normalize(15),
+              fontSize: normalize(16),
             }}
             label={signOutText || 'Log Out'}
             onPress={() => {
@@ -571,7 +575,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: normalize(16),
-    paddingLeft: 3,
+    // paddingLeft: 3,
     marginTop: 3,
     // fontWeight: 'bold',
   },
@@ -599,7 +603,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   bottomDrawerSection: {
-    marginTop: 15,
+    marginTop: 5,
   },
   preference: {
     flexDirection: 'row',

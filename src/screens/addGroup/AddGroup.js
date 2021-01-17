@@ -1,6 +1,12 @@
-import { useTheme } from '@react-navigation/native';
+import { DrawerActions, useTheme } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import {
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityBase,
+  View,
+} from 'react-native';
 
 const AddGroup = ({ navigation }) => {
   const { colors } = useTheme();
@@ -60,6 +66,46 @@ const AddGroup = ({ navigation }) => {
             borderRadius: 30,
           },
         ]}>
+        <View
+          style={{
+            height: 50,
+            width: '100%',
+            borderBottomColor: colors.background_1,
+            borderBottomWidth: 0.8,
+          }}>
+          <TouchableOpacity
+            style={{
+              justifyContent: 'center',
+              flexDirection: 'column',
+              // marginTop: 20,
+              // marginLeft: 20,
+              // backgroundColor: 'green',
+              marginHorizontal: 20,
+              marginVertical: 15,
+              width: 40,
+              height: 30,
+              alignItems: 'center',
+            }}
+            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+            <View
+              style={{
+                backgroundColor: colors.text,
+                width: 30,
+                height: 2,
+                alignSelf: 'flex-start',
+              }}
+            />
+            <View
+              style={{
+                backgroundColor: colors.primary,
+                width: 15,
+                height: 2,
+                marginTop: 10,
+                alignSelf: 'flex-start',
+              }}
+            />
+          </TouchableOpacity>
+        </View>
         <View style={{ alignItems: 'center' }}>
           <Text style={{ fontSize: 40, color: 'white' }}>Hellow worlds</Text>
           <Text style={{ fontSize: 40, color: 'white' }}>Hellow worlds</Text>
