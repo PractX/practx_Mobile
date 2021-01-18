@@ -176,7 +176,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
 
                     <Pressable
                       hitSlop={{ bottom: 10, top: 10 }}
-                      onPress={() => navigation.navigate('login2')}>
+                      onPress={() => navigation.navigate('verifyAccount')}>
                       <Text
                         style={{
                           color: colors.primary,

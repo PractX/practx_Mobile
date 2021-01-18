@@ -9,6 +9,7 @@ import {
   changePasswordApi,
   forgetPasswordApi,
   resetPasswordApi,
+  verifyAccountApi,
 } from '../../apis/auth';
 import { paymentVerifyApi } from '../../apis/payment';
 import {
@@ -130,6 +131,77 @@ export function* signIn({ payload: { email, password } }) {
     }
   } catch (error) {
     // console.log(error.response.data);
+    let eMsg = '';
+    if (error.response) {
+      error.response.data.errors.map(function (i, err) {
+        if (error.response.data.errors.length > 1) {
+          eMsg += err + 1 + '. ' + i + '\n';
+          console.log(eMsg);
+        } else {
+          eMsg += i;
+          console.log(eMsg);
+        }
+      });
+      showMessage({
+        message: eMsg,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    // showMessage({
+    //   message: error.response ? error.response.data.errors : error.message,
+    //   type: 'danger',
+    // });
+    yield delay(2000);
+    yield put(
+      signInFailure(
+        error.response
+          ? error.response.data.errors || error.response.data.errors
+          : 'Sign in failed, Please check your connectivity, And try again',
+      ),
+    );
+  }
+}
+
+export function* verifyAcct({ payload: verificationKey }) {
+  console.log(verificationKey);
+  try {
+    const result = yield verifyAccountApi(verificationKey).then(function (
+      response,
+    ) {
+      return response.data;
+    });
+    console.log(result);
+    const token = {
+      key: result.token,
+      expire: tokenExpiration(),
+    };
+    if (result) {
+      console.log(result);
+      showMessage({
+        message: result.message,
+        type: 'success',
+      });
+      yield delay(2000);
+      showMessage({
+        message: 'Logging In...',
+        type: 'success',
+      });
+      yield delay(3000);
+      showMessage({
+        message: 'Login successful!',
+        type: 'success',
+      });
+      yield delay(3000);
+      yield put(setToken(token));
+      yield getSnapshotFromUserAuth(result.patient);
+    }
+  } catch (error) {
+    console.log(error.response);
     let eMsg = '';
     if (error.response) {
       error.response.data.errors.map(function (i, err) {
@@ -378,7 +450,10 @@ export function* makePayment({ payload: txref }) {
 export function* onSignInStart() {
   yield takeLatest(UserActionTypes.SIGN_IN_START, signIn);
 }
-
+export function* OnVerifyAccount() {
+  yield takeLatest(UserActionTypes.VERIFY_ACCOUNT, verifyAcct);
+}
+// verifyAcct;
 export function* onSignInByTokenStart() {
   yield takeLatest(UserActionTypes.SIGN_IN_BY_TOKEN_START, signByToken);
 }
@@ -421,6 +496,7 @@ export function* onSignUpStart() {
 export function* userSagas() {
   yield all([
     call(onSignInStart),
+    call(OnVerifyAccount),
     call(onSignInByTokenStart),
     call(onResendConfirmEmail),
     call(onChangePassword),

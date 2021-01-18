@@ -20,40 +20,45 @@ import { LOGO } from '../../../assets/images';
 import { useTheme } from '@react-navigation/native';
 import InputBox from '../../components/hoc/InputBox';
 import { normalize } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { verifyAccount } from '../../redux/user/user.actions';
+import { createStructuredSelector } from 'reselect';
+import { selectIsLoading } from '../../redux/user/user.selector';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
 
-function VerifyAccount({ navigation }) {
+function VerifyAccount({ navigation, verifyAccount, isLoading }) {
   const { colors } = useTheme();
   const [remember, setRemember] = useState(true);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
 
   const verify = async (values) => {
-    try {
-      await fetch(
-        'http://practxbestaging-env.eba-6m7puu5w.us-east-2.elasticbeanstalk.com/api/patients/verify',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            verificationKey: values.verificationKey,
-          }),
-        },
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.patient) {
-            alert(data.message);
-            navigation.navigate('login');
-          } else {
-            alert(data.error);
-          }
-        });
-    } catch (e) {
-      alert('We had a problem verifying your account');
-    }
+    verifyAccount(values.verificationKey);
+    // try {
+    //     await fetch(
+    //       'http://practxbestaging-env.eba-6m7puu5w.us-east-2.elasticbeanstalk.com/api/patients/verify',
+    //       {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({
+    //           verificationKey: values.verificationKey,
+    //         }),
+    //       },
+    //     )
+    //       .then((res) => res.json())
+    //       .then((data) => {
+    //         if (data.patient) {
+    //           alert(data.message);
+    //           navigation.navigate('login');
+    //         } else {
+    //           alert(data.error);
+    //         }
+    //       });
+    // } catch (e) {
+    //   alert('We had a problem verifying your account');
+    // }
   };
 
   return (
@@ -124,7 +129,7 @@ function VerifyAccount({ navigation }) {
                         fontFamily: 'SofiaProSemiBold',
                         fontSize: normalize(16),
                       }}
-                      loading={false}
+                      loading={isLoading}
                     />
 
                     <Pressable
@@ -237,5 +242,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+const mapStateToProps = createStructuredSelector({
+  isLoading: selectIsLoading,
+});
+const mapDispatchToProps = (dispatch) => ({
+  verifyAccount: (key) => dispatch(verifyAccount(key)),
+});
 
-export default VerifyAccount;
+export default connect(mapStateToProps, mapDispatchToProps)(VerifyAccount);

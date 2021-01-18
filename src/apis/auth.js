@@ -1,5 +1,10 @@
 import Axios from 'axios';
-import { REACT_APP_API, REACT_APP_SIGNUP, REACT_APP_SIGNIN } from '@env';
+import {
+  REACT_APP_API,
+  REACT_APP_SIGNUP,
+  REACT_APP_SIGNIN,
+  REACT_APP_VERIFY,
+} from '@env';
 export const signUpApi = async (
   email,
   firstname,
@@ -31,6 +36,14 @@ export const signInApi = async (email, password) => {
   const collectionsMap = await Axios.post(REACT_APP_API + REACT_APP_SIGNIN, {
     email: email,
     password: password,
+  });
+  return collectionsMap;
+};
+
+export const verifyAccountApi = async (verificationKey) => {
+  console.log(verificationKey);
+  const collectionsMap = await Axios.post(REACT_APP_API + REACT_APP_VERIFY, {
+    verificationKey: verificationKey,
   });
   return collectionsMap;
 };

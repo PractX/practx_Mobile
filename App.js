@@ -122,7 +122,7 @@ const App = ({ themeMode, user, token }) => {
           zIndex: 20000,
           // alignItems: 'center',
         }}
-        // titleStyle={{ textAlign: 'center' }}
+        titleStyle={{ textAlign: 'left', fontFamily: 'SofiaProRegular' }}
         duration={4000}
         icon={{ icon: 'auto', position: 'right' }}
       />

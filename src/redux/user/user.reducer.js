@@ -17,6 +17,14 @@ const INITIAL_STATE = {
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     //Either any of the cases
+    case UserActionTypes.VERIFY_ACCOUNT:
+      return {
+        ...state,
+        isLoading: true,
+        currentUser: null,
+        token: null,
+        error: null,
+      };
     case UserActionTypes.SET_CURRENT_USER:
       return {
         ...state,
