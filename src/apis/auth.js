@@ -4,6 +4,7 @@ import {
   REACT_APP_SIGNUP,
   REACT_APP_SIGNIN,
   REACT_APP_VERIFY,
+  REACT_APP_FORGET_PASSWORD,
 } from '@env';
 export const signUpApi = async (
   email,
@@ -48,6 +49,11 @@ export const verifyAccountApi = async (verificationKey) => {
   return collectionsMap;
 };
 
+export const forgetPasswordApi = async (email) => {
+  const url = REACT_APP_API + REACT_APP_FORGET_PASSWORD;
+  const collectionsMap = await Axios.post(url, { email });
+  return collectionsMap;
+};
 // export const signInByTokenApi = async (token) => {
 //   const collectionsMap = await Axios.post(
 //     REACT_APP_API + REACT_APP_SIGNBYTOKEN,
@@ -80,13 +86,6 @@ export const verifyAccountApi = async (verificationKey) => {
 //   const collectionsMap = await Axios.patch(url, data, {
 //     headers: headers,
 //   });
-//   return collectionsMap;
-// };
-
-// export const forgetPasswordApi = async (email) => {
-//   const url = REACT_APP_API + REACT_APP_FORGET_PASSWORD;
-//   const data = email;
-//   const collectionsMap = await Axios.post(url, data);
 //   return collectionsMap;
 // };
 

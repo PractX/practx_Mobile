@@ -238,6 +238,62 @@ export function* verifyAcct({ payload: verificationKey }) {
   }
 }
 
+export function* isForgetPassword({ payload: email }) {
+  console.log(email);
+  try {
+    const result = yield forgetPasswordApi(email).then(function (response) {
+      return response.data;
+    });
+    if (result) {
+      console.log(result);
+      showMessage({
+        message: result.message,
+        type: 'success',
+      });
+      yield delay(5000);
+      yield put(forgetPasswordSuccess());
+      // yield put(setMessage({ type: 'success', message: result.message }));
+      // yield delay(8000);
+      // yield put(setMessage(null));
+    }
+  } catch (error) {
+    console.log(error.response);
+    let eMsg = '';
+    if (error.response) {
+      error.response.data.errors.map(function (i, err) {
+        if (error.response.data.errors.length > 1) {
+          eMsg += err + 1 + '. ' + i + '\n';
+          console.log(eMsg);
+        } else {
+          eMsg += i;
+          console.log(eMsg);
+        }
+      });
+      showMessage({
+        message: eMsg,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    // showMessage({
+    //   message: error.response ? error.response.data.errors : error.message,
+    //   type: 'danger',
+    // });
+    yield delay(2000);
+    yield put(
+      signInFailure(
+        error.response
+          ? error.response.data.errors || error.response.data.errors
+          : 'Sign in failed, Please check your connectivity, And try again',
+      ),
+    );
+  }
+}
+
 export function* signByToken({ payload: token }) {
   try {
     const result = yield signInByTokenApi(token).then(function (response) {
@@ -321,31 +377,6 @@ export function* isChangePassword({ payload: { old_password, new_password } }) {
     if (result) {
       yield put(setMessage({ type: 'success', message: result.message }));
       yield delay(6000);
-      yield put(setMessage(null));
-    }
-  } catch (error) {
-    yield put(
-      setMessage({
-        type: 'error',
-        message: error.response
-          ? error.response.data.message || error.response.data.error
-          : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
-      }),
-    );
-    yield delay(8000);
-    yield put(setMessage(null));
-  }
-}
-
-export function* isForgetPassword({ payload: email }) {
-  try {
-    const result = yield forgetPasswordApi(email).then(function (response) {
-      return response.data.data;
-    });
-    if (result) {
-      yield put(forgetPasswordSuccess());
-      yield put(setMessage({ type: 'success', message: result.message }));
-      yield delay(8000);
       yield put(setMessage(null));
     }
   } catch (error) {

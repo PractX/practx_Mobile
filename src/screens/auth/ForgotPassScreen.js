@@ -19,16 +19,21 @@ import { useTheme } from '@react-navigation/native';
 import InputBox from '../../components/hoc/InputBox';
 import { Formik } from 'formik';
 import { normalize } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { forgetPasswordStart } from '../../redux/user/user.actions';
+import { createStructuredSelector } from 'reselect';
+import { selectIsLoading } from '../../redux/user/user.selector';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
 
-function ForgotPassScreen({ navigation }) {
+function ForgotPassScreen({ navigation, isLoading, forgetPasswordStart }) {
   const { colors } = useTheme();
 
   const sumbitReqPassReset = (values) => {
     console.log(values);
+    forgetPasswordStart(values.email);
     // dispatch(Actions.loginPatient(values.email, values.password));
   };
   return (
@@ -62,8 +67,7 @@ function ForgotPassScreen({ navigation }) {
             <Animatable.View animation="bounceInLeft" style={{ marginTop: 20 }}>
               <Formik
                 initialValues={{
-                  email: 'itstimiking@gmail.com',
-                  password: 'xxxxxx',
+                  email: 'jaskyparrot@gmail.com',
                 }}
                 onSubmit={(values) => {
                   sumbitReqPassReset(values);
@@ -96,7 +100,7 @@ function ForgotPassScreen({ navigation }) {
                           fontFamily: 'SofiaProSemiBold',
                           fontSize: normalize(16),
                         }}
-                        loading={false}
+                        loading={isLoading}
                       />
 
                       <Pressable
@@ -215,5 +219,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export default ForgotPassScreen;
+const mapStateToProps = createStructuredSelector({
+  isLoading: selectIsLoading,
+});
+const mapDispatchToProps = (dispatch) => ({
+  forgetPasswordStart: (email) => dispatch(forgetPasswordStart(email)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassScreen);
