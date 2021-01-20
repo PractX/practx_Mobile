@@ -16,7 +16,7 @@ import {
   Pressable,
 } from 'react-native';
 
-import { LOGO } from '../../../assets/images';
+import { LOGO, LOGO2 } from '../../../assets/images';
 import { useTheme } from '@react-navigation/native';
 import InputBox from '../../components/hoc/InputBox';
 import { normalize } from 'react-native-elements';
@@ -33,6 +33,16 @@ function VerifyAccount({ navigation, verifyAccount, isLoading }) {
   const { colors } = useTheme();
   const [remember, setRemember] = useState(true);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
+  const [logo, setLogo] = useState(LOGO);
+  useEffect(() => {
+    console.log(colors.mode);
+    if (colors.mode === 'dark') {
+      // practxLogo-dark
+      setLogo(LOGO);
+    } else {
+      setLogo(LOGO2);
+    }
+  }, [colors.mode]);
 
   const verify = async (values) => {
     verifyAccount(values.verificationKey);
@@ -66,7 +76,7 @@ function VerifyAccount({ navigation, verifyAccount, isLoading }) {
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={{ width: '80%' }}>
           <Animatable.View animation="pulse">
-            <Image style={styles.logo} source={LOGO} resizeMode="contain" />
+            <Image style={styles.logo} source={logo} resizeMode="contain" />
 
             <View style={{ alignItems: 'center', marginTop: 20 }}>
               <Text

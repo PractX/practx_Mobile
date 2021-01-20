@@ -76,7 +76,7 @@ const DrawerContent = ({
   // const route = useRoute();
   const [isEnabled, setIsEnabled] = useState(false);
   const [bgImage, setBgImage] = useState(null);
-  const [signOutText, setSignOutText] = useState();
+  const [signOutText, setSignOutText] = useState('Logout');
   const [loginText, setLoginText] = useState('Login');
   // const isFocused = useIsFocused();
   const isDrawerOpen = useIsDrawerOpen();
@@ -118,7 +118,7 @@ const DrawerContent = ({
   };
   useMemo(() => {
     if (!currentUser) {
-      setSignOutText('Sign Out');
+      setSignOutText('Log Out');
     }
     console.log(navigation.dangerouslyGetState().index);
 
@@ -295,7 +295,7 @@ const DrawerContent = ({
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'HomeTabs',
+                      'AddGroup',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -320,7 +320,7 @@ const DrawerContent = ({
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'HomeTabs',
+                      'AddGroup',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -341,11 +341,11 @@ const DrawerContent = ({
                   navigation.dangerouslyGetState().index === 2 ? true : false
                 }
                 activeBackgroundColor={null}
-                label="Settings"
+                label="Appointments"
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'HomeTabs',
+                      'AddGroup',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -370,7 +370,7 @@ const DrawerContent = ({
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'HomeTabs',
+                      'AddGroup',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -400,9 +400,34 @@ const DrawerContent = ({
                     fontFamily: 'SofiaProSemiBold',
                     color: colors.primary_light,
                   }}>
-                  Services
+                  Customer support
                 </Text>
               </View>
+              <DrawerItem
+                labelStyle={{
+                  fontFamily: 'SofiaProSemiBold',
+                  fontSize: normalize(16),
+                  paddingLeft: 3,
+                  // color: colors.text,
+                }}
+                inactiveTintColor={colors.text}
+                activeTintColor={colors.secondary}
+                focused={
+                  navigation.dangerouslyGetState().index === 2 ? true : false
+                }
+                activeBackgroundColor={null}
+                label="Settings"
+                onPress={() => {
+                  requestAnimationFrame(() => {
+                    navigation.navigate(
+                      'AddGroup',
+                      // , {
+                      //   screen: 'Home',
+                      // }
+                    );
+                  });
+                }}
+              />
               <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
@@ -420,7 +445,7 @@ const DrawerContent = ({
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'HomeTabs',
+                      'AddGroup',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -445,7 +470,7 @@ const DrawerContent = ({
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'HomeTabs',
+                      'AddGroup',
                       // , {
                       //   screen: 'Home',
                       // }

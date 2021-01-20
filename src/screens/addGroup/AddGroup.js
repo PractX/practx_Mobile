@@ -1,19 +1,46 @@
 import { DrawerActions, useTheme } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  FlatList,
+  RefreshControl,
   SafeAreaView,
   Text,
   TouchableOpacity,
   TouchableOpacityBase,
   View,
+  Dimensions,
 } from 'react-native';
+import PracticesBox from '../../components/hoc/PracticesBox';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import Header from '../../components/hoc/Header';
+import { getPracticesAllStart } from '../../redux/practices/practices.actions';
+import {
+  selectAllPractices,
+  selectIsLoading,
+} from '../../redux/practices/practices.selector';
+import { selectCurrentUser } from '../../redux/user/user.selector';
+// import { getAllPracticesStart } from '../../redux/practices/practices.actions';
 
-const AddGroup = ({ navigation }) => {
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const appwidth = windowWidth * 0.9;
+
+const AddGroup = ({
+  navigation,
+  getPracticesAllStart,
+  isLoading,
+  practices,
+  currentUser,
+}) => {
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
+  const [refreshing, setRefreshing] = useState(false);
+  const ref = useRef(null);
+
   useEffect(() => {
-    // console.log(navigation.toggleDrawer());
-  }, [navigation]);
+    isLoading ? setRefreshing(true) : setRefreshing(false);
+  }, [isLoading]);
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('drawerOpen', (e) => {
       // Do something
@@ -23,6 +50,8 @@ const AddGroup = ({ navigation }) => {
     return unsubscribe;
   }, [navigation]);
   React.useEffect(() => {
+    // console.log(practices);
+    getPracticesAllStart();
     const unsubscribe = navigation.addListener('drawerClose', (e) => {
       // Do something
       setStyle1('close');
@@ -30,7 +59,14 @@ const AddGroup = ({ navigation }) => {
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [getPracticesAllStart, navigation]);
+  const Item = ({ id, title, isVideo, name }) => {
+    return (
+      <View style={{ backgroundColor: 'red', width: '100%' }}>
+        <Text style={{ color: 'white', fontSize: 18 }}>{name}</Text>
+      </View>
+    );
+  };
   return (
     <SafeAreaView
       style={[
@@ -66,53 +102,84 @@ const AddGroup = ({ navigation }) => {
             borderRadius: 30,
           },
         ]}>
+        <Header navigation={navigation} title="Group Request" />
         <View
           style={{
-            height: 50,
-            width: '100%',
-            borderBottomColor: colors.background_1,
-            borderBottomWidth: 0.8,
+            height: windowHeight,
+            width: style1 === 'open' ? appwidth - 50 : appwidth,
+            alignSelf: 'center',
+            justifyContent: 'center',
           }}>
-          <TouchableOpacity
-            style={{
-              justifyContent: 'center',
-              flexDirection: 'column',
-              // marginTop: 20,
-              // marginLeft: 20,
-              // backgroundColor: 'green',
-              marginHorizontal: 20,
-              marginVertical: 15,
-              width: 40,
-              height: 30,
-              alignItems: 'center',
-            }}
-            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+          {practices ? (
+            <FlatList
+              ref={ref}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={() => getPracticesAllStart()}
+                />
+              }
+              // removeClippedSubviews
+              // ListEmptyComponent
+              initialNumToRender={5}
+              updateCellsBatchingPeriod={5}
+              showsVerticalScrollIndicator={false}
+              style={{ marginBottom: 70 }}
+              data={practices.rows}
+              numColumns={1}
+              renderItem={({ item, index }) => (
+                <PracticesBox
+                  userId={currentUser ? currentUser.id : 0}
+                  id={index}
+                  practice={item}
+                />
+              )}
+              keyExtractor={(item, index) => item.display_url}
+              // showsHorizontalScrollIndicator={false}
+              // extraData={selected}
+            />
+          ) : (
             <View
               style={{
-                backgroundColor: colors.text,
-                width: 30,
-                height: 2,
-                alignSelf: 'flex-start',
-              }}
-            />
-            <View
-              style={{
-                backgroundColor: colors.primary,
-                width: 15,
-                height: 2,
-                marginTop: 10,
-                alignSelf: 'flex-start',
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={{ alignItems: 'center' }}>
-          <Text style={{ fontSize: 40, color: 'white' }}>Hellow worlds</Text>
-          <Text style={{ fontSize: 40, color: 'white' }}>Hellow worlds</Text>
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text>No data</Text>
+              {/* {errorData ? (
+                <Error
+                  title={errorData.includes('internet') ? 'OOPS!!!' : 'SORRY'}
+                  subtitle={
+                    errorData.includes('internet')
+                      ? 'Poor internet connection, Please check your connectivity, And try again'
+                      : errorData.includes('fetch')
+                      ? 'Enable to fetch post, please try again later'
+                      : 'Download link is not supported OR Account is private'
+                  }
+                />
+              ) : (
+                <Spinner
+                  style={styles.spinner}
+                  size={80}
+                  type="Circle"
+                  color={colors.primary}
+                />
+              )} */}
+            </View>
+          )}
         </View>
       </View>
     </SafeAreaView>
   );
 };
 
-export default AddGroup;
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
+  isLoading: selectIsLoading,
+  practices: selectAllPractices,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getPracticesAllStart: () => dispatch(getPracticesAllStart()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddGroup);

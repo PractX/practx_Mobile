@@ -20,7 +20,7 @@ import { Button } from 'react-native-elements';
 import { Text, Content, CheckBox } from 'native-base';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 // import * as Actions from '../redux/auth/actions';
-import { LOGO } from '../../../assets/images';
+import { LOGO, LOGO2 } from '../../../assets/images';
 import { normalize } from 'react-native-elements';
 import InputBox from '../../components/hoc/InputBox';
 import { createStructuredSelector } from 'reselect';
@@ -37,6 +37,7 @@ const appwidth = windowWidth * 0.8;
 const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
   const [remember, setRemember] = useState(true);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
+  const [logo, setLogo] = useState(LOGO);
   const ref = React.useRef(null);
   const { colors } = useTheme();
   useScrollToTop(ref);
@@ -47,12 +48,22 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
     signInStart(values.email, values.password);
   };
 
+  useEffect(() => {
+    console.log(colors.mode);
+    if (colors.mode === 'dark') {
+      // practxLogo-dark
+      setLogo(LOGO);
+    } else {
+      setLogo(LOGO2);
+    }
+  }, [colors.mode]);
+
   return (
     <Content>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={{ width: '80%' }}>
           <Animatable.View animation="pulse">
-            <Image style={styles.logo} source={LOGO} resizeMode="contain" />
+            <Image style={styles.logo} source={logo} resizeMode="contain" />
 
             <View style={{ alignItems: 'center', marginTop: 10 }}>
               <Text

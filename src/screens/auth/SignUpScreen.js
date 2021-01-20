@@ -24,7 +24,7 @@ import {
   Pressable,
 } from 'react-native';
 
-import { LOGO } from '../../../assets/images';
+import { LOGO, LOGO2 } from '../../../assets/images';
 import InputBox from '../../components/hoc/InputBox';
 import SmallInputBox from '../../components/hoc/SmallInputBox';
 import { normalize } from 'react-native-elements';
@@ -43,6 +43,7 @@ const appwidth = windowWidth * 0.8;
 
 const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
   const { colors } = useTheme();
+  const [logo, setLogo] = useState(LOGO);
   /* ---- Remember prev logged in user details in state ------*/
 
   const [agreeTos, setAgreeTos] = useState(false);
@@ -50,6 +51,16 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
   /* ---- set password vissibility while typing ------*/
 
   const [passwordVisibility, setPasswordVisibility] = useState(true);
+
+  useEffect(() => {
+    console.log(colors.mode);
+    if (colors.mode === 'dark') {
+      // practxLogo-dark
+      setLogo(LOGO);
+    } else {
+      setLogo(LOGO2);
+    }
+  }, [colors.mode]);
 
   const signupPatient = async (values) => {
     const me = 'Shitboy';
@@ -111,7 +122,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
             {/* ------------------- LOGO SECTION --------------------------------------- */}
 
             <Animatable.View animation="pulse">
-              <Image style={styles.logo} source={LOGO} resizeMode="contain" />
+              <Image style={styles.logo} source={logo} resizeMode="contain" />
 
               <View style={{ alignItems: 'center', marginTop: 10 }}>
                 <Text

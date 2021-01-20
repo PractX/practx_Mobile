@@ -3,6 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useWindowDimensions } from 'react-native';
 import DrawerContent from './DrawerContent';
 import AddGroup from '../addGroup/AddGroup';
+// import AddGroup from '../addGroup/AddGroup';
 
 const Drawer = createDrawerNavigator();
 
@@ -42,7 +43,7 @@ const MainScreen = () => {
       overlayColor={0}
       drawerType="slide"
       detachInactiveScreens={true}>
-      <Drawer.Screen name="HomeTabs" component={AddGroup} />
+      <Drawer.Screen name="AddGroup" component={AddGroup} />
       {/* <Drawer.Screen name="MyDownloadsTabs" component={MyDownloadsTabs} />
             <Drawer.Screen name="WhatsAppTabs" component={WhatsAppTabs} />
             <Drawer.Screen name="InstagramPro" component={InstagramPro} />
