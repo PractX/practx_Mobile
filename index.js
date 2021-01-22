@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { store, persistor } from './src/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { name as appName } from './app.json';
+import { MenuProvider } from 'react-native-popup-menu';
 // import Clipboard from '@react-native-community/clipboard';
 // import admob, {MaxAdContentRating} from '@react-native-firebase/admob';
 // import RNFetchBlob from 'rn-fetch-blob';
@@ -34,7 +35,15 @@ const RNRedux = () => (
   // >
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <App />
+      <MenuProvider
+        customStyles={{
+          menuProviderWrapper: {
+            backgroundColor: 'green',
+            padding: 0,
+          },
+        }}>
+        <App />
+      </MenuProvider>
     </PersistGate>
   </Provider>
   //{/* </NetworkProvider> */}

@@ -4,6 +4,7 @@ const SettingsActionTypes = {
   GET_ALL_PRACTICES_FAILURE: 'GET_ALL_PRACTICES_FAILURE',
   JOIN_PRACTICES: 'JOIN_PRACTICES',
   SET_LOADING: 'SET_LOADING',
+  SET_FILTER: 'SET_FILTER',
 };
 
 export default SettingsActionTypes;

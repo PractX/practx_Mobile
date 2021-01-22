@@ -23,3 +23,8 @@ export const setLoading = (action) => ({
   type: PracticesActionTypes.SET_LOADING,
   payload: action,
 });
+
+export const setFilter = (data) => ({
+  type: PracticesActionTypes.SET_FILTER,
+  payload: data,
+});

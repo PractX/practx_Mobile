@@ -194,6 +194,7 @@ const PracticeBox = ({
             onPress={() => joinPractice(practice.id)}
             type="outline"
             rounded
+            disabled
             buttonStyle={[styles.buttonAction, { borderColor: colors.primary }]}
             titleStyle={{
               fontFamily: 'SofiaProSemiBold',
@@ -204,7 +205,7 @@ const PracticeBox = ({
           />
         ) : member.length > 0 ? (
           <Button
-            title="You are a member"
+            title="Member"
             onPress={() => console.log('go to patient')}
             rounded
             buttonStyle={[

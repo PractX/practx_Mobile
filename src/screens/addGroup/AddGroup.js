@@ -14,12 +14,17 @@ import PracticesBox from '../../components/hoc/PracticesBox';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Header from '../../components/hoc/Header';
-import { getPracticesAllStart } from '../../redux/practices/practices.actions';
+import {
+  getPracticesAllStart,
+  setFilter,
+} from '../../redux/practices/practices.actions';
 import {
   selectAllPractices,
-  selectIsLoading,
+  selectFilter,
+  selectIsFetching,
 } from '../../redux/practices/practices.selector';
 import { selectCurrentUser } from '../../redux/user/user.selector';
+import { MenuProvider } from 'react-native-popup-menu';
 // import { getAllPracticesStart } from '../../redux/practices/practices.actions';
 
 const windowWidth = Dimensions.get('window').width;
@@ -29,18 +34,25 @@ const appwidth = windowWidth * 0.9;
 const AddGroup = ({
   navigation,
   getPracticesAllStart,
-  isLoading,
+  isFetching,
   practices,
   currentUser,
+  setFilter,
+  filter,
 }) => {
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
+  const [checkState, setCheckState] = useState(filter);
   const ref = useRef(null);
 
+  const openMenu = () => {
+    console.log('opening');
+  };
+
   useEffect(() => {
-    isLoading ? setRefreshing(true) : setRefreshing(false);
-  }, [isLoading]);
+    isFetching ? setRefreshing(true) : setRefreshing(false);
+  }, [isFetching]);
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('drawerOpen', (e) => {
       // Do something
@@ -102,7 +114,18 @@ const AddGroup = ({
             borderRadius: 30,
           },
         ]}>
-        <Header navigation={navigation} title="Group Request" />
+        <Header
+          navigation={navigation}
+          title="Group Request"
+          iconRight1={{
+            name: 'filter-sharp',
+            type: 'ionicon',
+            onPress: openMenu,
+          }}
+          checkState={checkState}
+          setCheckState={setCheckState}
+          setFilter={setFilter}
+        />
         <View
           style={{
             height: windowHeight,
@@ -125,7 +148,7 @@ const AddGroup = ({
               updateCellsBatchingPeriod={5}
               showsVerticalScrollIndicator={false}
               style={{ marginBottom: 70 }}
-              data={practices.rows}
+              data={practices}
               numColumns={1}
               renderItem={({ item, index }) => (
                 <PracticesBox
@@ -174,12 +197,14 @@ const AddGroup = ({
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
-  isLoading: selectIsLoading,
+  isFetching: selectIsFetching,
   practices: selectAllPractices,
+  filter: selectFilter,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getPracticesAllStart: () => dispatch(getPracticesAllStart()),
+  setFilter: (data) => dispatch(setFilter(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddGroup);

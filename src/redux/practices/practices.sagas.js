@@ -51,7 +51,6 @@ export function* willJoinPractices({ payload: practiceId }) {
     yield put(getPracticesAllStart());
   } catch (error) {
     console.log(error.response);
-    let eMsg = '';
     if (error.response) {
       showMessage({
         message: error.response.data.message,
