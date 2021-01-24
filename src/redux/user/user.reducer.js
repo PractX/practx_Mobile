@@ -169,6 +169,17 @@ const userReducer = (state = INITIAL_STATE, action) => {
         error: null,
         success: null,
       };
+    case UserActionTypes.SIGN_OUT_START:
+      return {
+        ...state,
+        isLoading: false,
+        currentUser: null,
+        subscription: null,
+        downloads: null,
+        myDownloads: null,
+        token: null,
+        error: null,
+      };
     case UserActionTypes.SIGN_UP_SUCCESS:
       return {
         ...state,

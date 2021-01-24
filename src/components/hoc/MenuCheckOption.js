@@ -41,7 +41,7 @@ const MenuCheckOption = ({
           </Text>
           <CheckBox
             checked={checkStateType[1]}
-            color={colors.background_1}
+            color={colors.mode === 'dark' ? colors.background_1 : colors.text_2}
             style={styles.spacer}
             onPress={() => {
               if (checkStateType[0] === 'opt1') {

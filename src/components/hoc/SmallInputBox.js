@@ -21,12 +21,14 @@ const SmallInputBox = ({
   keyboardType,
   autoCapitalize,
   maxLength,
+  boxStyle,
 }) => {
   const { colors } = useTheme();
   return (
     <View
       style={[
         styles.formField,
+        boxStyle,
         { width: appwidth * 0.28, backgroundColor: colors.background_1 },
       ]}>
       <Icon
@@ -46,7 +48,7 @@ const SmallInputBox = ({
         textContentType={textContentType}
         keyboardType={keyboardType}
         placeholder={placeholder}
-        placeholderTextColor={colors.text_1}
+        placeholderTextColor={colors.text_2}
         style={[styles.formTextInput, { color: colors.text_1 }]}
         onChangeText={handleChange(name)}
         onBlur={handleBlur(name)}

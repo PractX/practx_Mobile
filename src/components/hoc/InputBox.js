@@ -57,7 +57,7 @@ const InputBox = ({
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
         placeholderTextColor={
-          placeholderTextColor ? placeholderTextColor : colors.text_1
+          placeholderTextColor ? placeholderTextColor : colors.text_2
         }
         style={[
           styles.formTextInput,

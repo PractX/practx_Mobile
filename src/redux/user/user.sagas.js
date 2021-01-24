@@ -93,19 +93,19 @@ export function* signUp({
   }
 }
 
-export function* getSnapshotFromUserAuth(userAuth) {
-  try {
-    yield put(signInSuccess(userAuth));
-  } catch (error) {
-    yield put(
-      signInFailure(
-        error.response
-          ? error.response.data.message || error.response.data.error
-          : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
-      ),
-    );
-  }
-}
+// export function* getSnapshotFromUserAuth(userAuth) {
+//   try {
+//     yield put(signInSuccess(userAuth));
+//   } catch (error) {
+//     yield put(
+//       signInFailure(
+//         error.response
+//           ? error.response.data.message || error.response.data.error
+//           : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
+//       ),
+//     );
+//   }
+// }
 
 export function* signIn({ payload: { email, password } }) {
   console.log('I am here');
@@ -126,8 +126,8 @@ export function* signIn({ payload: { email, password } }) {
         type: 'success',
       });
       yield delay(2000);
+      yield yield put(signInSuccess(result.patient));
       yield put(setToken(token));
-      yield getSnapshotFromUserAuth(result.patient);
     }
   } catch (error) {
     // console.log(error.response.data);
@@ -197,8 +197,8 @@ export function* verifyAcct({ payload: verificationKey }) {
         type: 'success',
       });
       yield delay(3000);
+      yield put(signInSuccess(result.patient));
       yield put(setToken(token));
-      yield getSnapshotFromUserAuth(result.patient);
     }
   } catch (error) {
     console.log(error.response);
@@ -317,7 +317,7 @@ export function* signByToken({ payload: token }) {
       yield put(setToken(tokens));
       yield put(setSubscription(subscription.subscription));
       yield put(setDownloads(download.downloads));
-      yield getSnapshotFromUserAuth(result.user);
+      yield put(signInSuccess(result.user));
     }
   } catch (error) {
     yield put(
@@ -438,7 +438,7 @@ export function* isUserAuthenticated() {
 
 export function* signOut() {
   try {
-    yield delay(3000);
+    yield delay(2500);
     yield put(signOutSuccess());
   } catch (error) {
     yield put(signOutFailure(error));
@@ -455,7 +455,7 @@ export function* makePayment({ payload: txref }) {
       return response.data.data;
     });
     yield put(setSubscription(result.subscription));
-    yield getSnapshotFromUserAuth(result.user);
+    yield put(signInSuccess(result.user));
     yield put(setMessage({ type: 'success', message: result.message }));
     yield delay(6000);
     yield put(setMessage(null));

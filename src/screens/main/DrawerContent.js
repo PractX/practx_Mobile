@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   TextInput,
   ScrollView,
+  Pressable,
 } from 'react-native';
 import {
   Avatar as TextAvatar,
@@ -94,8 +95,8 @@ const DrawerContent = ({
     //   console.log(res, 'Signed Out of Google!');
     //   // setCurrentUser(additionalUserInfo.profile);
     // });
-    signOutStart();
     setTimeout(() => {
+      signOutStart();
       showMessage({
         message: 'Logout successful',
         type: 'success',
@@ -188,7 +189,16 @@ const DrawerContent = ({
               : ''}
           </Text>
           <TouchableOpacity
-            // onPress={() => navigation.navigate('Profile')}
+            onPress={() => {
+              requestAnimationFrame(() => {
+                navigation.navigate(
+                  'Profile',
+                  // , {
+                  //   screen: 'Home',
+                  // }
+                );
+              });
+            }}
             style={{
               // flexDirection: 'row',
               marginVertical: 2,
@@ -288,7 +298,7 @@ const DrawerContent = ({
                 inactiveTintColor={colors.text}
                 activeTintColor={colors.secondary}
                 focused={
-                  navigation.dangerouslyGetState().index === 0 ? true : false
+                  navigation.dangerouslyGetState().index === 1 ? true : false
                 }
                 activeBackgroundColor={null}
                 label="Add Group"
@@ -313,7 +323,7 @@ const DrawerContent = ({
                 inactiveTintColor={colors.text}
                 activeTintColor={colors.secondary}
                 focused={
-                  navigation.dangerouslyGetState().index === 1 ? true : false
+                  navigation.dangerouslyGetState().index === 2 ? true : false
                 }
                 activeBackgroundColor={null}
                 label="Notifications"
@@ -338,7 +348,7 @@ const DrawerContent = ({
                 inactiveTintColor={colors.text}
                 activeTintColor={colors.secondary}
                 focused={
-                  navigation.dangerouslyGetState().index === 2 ? true : false
+                  navigation.dangerouslyGetState().index === 3 ? true : false
                 }
                 activeBackgroundColor={null}
                 label="Appointments"

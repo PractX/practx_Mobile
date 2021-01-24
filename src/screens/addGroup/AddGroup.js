@@ -72,13 +72,7 @@ const AddGroup = ({
 
     return unsubscribe;
   }, [getPracticesAllStart, navigation]);
-  const Item = ({ id, title, isVideo, name }) => {
-    return (
-      <View style={{ backgroundColor: 'red', width: '100%' }}>
-        <Text style={{ color: 'white', fontSize: 18 }}>{name}</Text>
-      </View>
-    );
-  };
+
   return (
     <SafeAreaView
       style={[
@@ -112,6 +106,7 @@ const AddGroup = ({
             // Android
             elevation: 3,
             borderRadius: 30,
+            overflow: 'hidden',
           },
         ]}>
         <Header
@@ -121,6 +116,7 @@ const AddGroup = ({
             name: 'filter-sharp',
             type: 'ionicon',
             onPress: openMenu,
+            buttonType: 'filter',
           }}
           checkState={checkState}
           setCheckState={setCheckState}
@@ -132,6 +128,7 @@ const AddGroup = ({
             width: style1 === 'open' ? appwidth - 50 : appwidth,
             alignSelf: 'center',
             justifyContent: 'center',
+            marginTop: 50,
           }}>
           {practices ? (
             <FlatList
