@@ -60,6 +60,7 @@ import FastImage from 'react-native-fast-image';
 import { Formik } from 'formik';
 import InputBox from '../../components/hoc/InputBox';
 import ToggleSwitch from 'toggle-switch-react-native';
+import { Keyboard } from 'react-native';
 
 const DrawerContent = ({
   navigation,
@@ -118,6 +119,7 @@ const DrawerContent = ({
     console.log(value);
   };
   useMemo(() => {
+    Keyboard.dismiss();
     if (!currentUser) {
       setSignOutText('Log Out');
     }

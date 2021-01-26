@@ -27,7 +27,11 @@ import {
   forgetPasswordSuccess,
   userPaymentFailure,
 } from './user.actions';
-import { getDownloadsApi, getSubscriptionApi } from '../../apis/api';
+import {
+  editProfileApi,
+  getDownloadsApi,
+  getSubscriptionApi,
+} from '../../apis/api';
 import { showMessage, hideMessage } from 'react-native-flash-message';
 
 // const userActive = state => state.user.currentUser;
@@ -126,8 +130,8 @@ export function* signIn({ payload: { email, password } }) {
         type: 'success',
       });
       yield delay(2000);
-      yield yield put(signInSuccess(result.patient));
       yield put(setToken(token));
+      yield yield put(signInSuccess(result.patient));
     }
   } catch (error) {
     // console.log(error.response.data);
@@ -233,6 +237,61 @@ export function* verifyAcct({ payload: verificationKey }) {
         error.response
           ? error.response.data.errors || error.response.data.errors
           : 'Sign in failed, Please check your connectivity, And try again',
+      ),
+    );
+  }
+}
+
+export function* willEditProfile({ payload: profileDetails }) {
+  // console.log(profileDetails);
+  const token = yield select(userToken);
+  console.log(token);
+  try {
+    // console.log(email);
+    // const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+    const result = yield editProfileApi(token, profileDetails).then(function (
+      response,
+    ) {
+      return response.data;
+    });
+    console.log(result);
+    showMessage({
+      message: 'Added new changes',
+      type: 'success',
+    });
+    // yield delay(5000);
+    yield yield put(signInSuccess(result.patient));
+    // yield put(navigation.navigate('verifyAccount'));
+  } catch (error) {
+    console.log(error);
+    console.log(error.response);
+    let eMsg = '';
+    if (error.response) {
+      error.response.data.errors.map(function (i, err) {
+        if (error.response.data.errors.length > 1) {
+          eMsg += err + 1 + '. ' + i + '\n';
+          console.log(eMsg);
+        } else {
+          eMsg += i;
+          console.log(eMsg);
+        }
+      });
+      showMessage({
+        message: eMsg,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+
+    yield put(
+      signUpFailure(
+        error.response
+          ? error.response.data.errors || error.response.data.errors
+          : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
       ),
     );
   }
@@ -484,6 +543,11 @@ export function* onSignInStart() {
 export function* OnVerifyAccount() {
   yield takeLatest(UserActionTypes.VERIFY_ACCOUNT, verifyAcct);
 }
+
+export function* onEditProfileStart() {
+  yield takeLatest(UserActionTypes.EDIT_PROFILE, willEditProfile);
+}
+
 // verifyAcct;
 export function* onSignInByTokenStart() {
   yield takeLatest(UserActionTypes.SIGN_IN_BY_TOKEN_START, signByToken);
@@ -528,6 +592,7 @@ export function* userSagas() {
   yield all([
     call(onSignInStart),
     call(OnVerifyAccount),
+    call(onEditProfileStart),
     call(onSignInByTokenStart),
     call(onResendConfirmEmail),
     call(onChangePassword),

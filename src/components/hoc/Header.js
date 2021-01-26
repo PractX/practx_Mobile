@@ -17,6 +17,7 @@ import {
 } from 'react-native-popup-menu';
 import { CheckBox } from 'native-base';
 import MenuCheckOption from './MenuCheckOption';
+import { ActivityIndicator } from 'react-native-paper';
 
 const Header = ({
   navigation,
@@ -26,6 +27,7 @@ const Header = ({
   setCheckState,
   setFilter,
   backArrow,
+  isLoading,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
@@ -220,18 +222,31 @@ const Header = ({
             </Menu>
           )}
           {iconRight1.buttonType === 'save' && (
-            <TouchableOpacity onPress={() => console.log('Hrllo')}>
-              <Icon
-                name={iconRight1.name}
-                type={iconRight1.type}
-                color={colors.text}
-                size={normalize(19)}
-                style={{
-                  color: colors.text,
-                  alignSelf: 'center',
-                }}
-              />
-            </TouchableOpacity>
+            <Button
+              // onPress={handleSubmit}
+              TouchableComponent={() => {
+                return isLoading ? (
+                  <ActivityIndicator
+                    animating={true}
+                    size={normalize(20)}
+                    color={colors.text}
+                  />
+                ) : (
+                  <TouchableOpacity onPress={() => iconRight1.onPress()}>
+                    <Icon
+                      name={iconRight1.name}
+                      type={iconRight1.type}
+                      color={colors.text}
+                      size={normalize(20)}
+                      style={{
+                        color: colors.text,
+                        // alignSelf: 'center',
+                      }}
+                    />
+                  </TouchableOpacity>
+                );
+              }}
+            />
           )}
         </View>
       )}

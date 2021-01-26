@@ -14,7 +14,10 @@ import { DrawerActions, useRoute, useTheme } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { selectCurrentUser } from '../../../redux/user/user.selector';
+import {
+  selectCurrentUser,
+  selectIsLoading,
+} from '../../../redux/user/user.selector';
 import normalize from '../../../utils/normalize';
 import { ListItem, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native';
@@ -22,19 +25,46 @@ import { TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import InputBox from '../../../components/hoc/InputBox';
 import SmallInputBox from '../../../components/hoc/SmallInputBox';
+import { editProfile } from '../../../redux/user/user.actions';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
 
-const EditProfile = ({ navigation, route, currentUser, extraData }) => {
+const EditProfile = ({
+  navigation,
+  route,
+  currentUser,
+  extraData,
+  editProfile,
+  isLoading,
+}) => {
   const { colors } = useTheme();
+  const inputRef = useRef();
   // const props = useRoute();
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
+  const [imageUri, setImageUri] = useState();
+
+  const saveChanges = () => {
+    // console.log(imageUri);
+    // console.log(inputRef.current.values);
+    let newData = {
+      ...inputRef.current.values,
+      dob: `${inputRef.current.values.MM}/${inputRef.current.values.DD}/${inputRef.current.values.YY}`,
+      avatar: imageUri,
+    };
+    delete newData.DD;
+    delete newData.MM;
+    delete newData.YY;
+    // console.log(newData);
+    editProfile(newData);
+  };
 
   useEffect(() => {
+    console.log(inputRef);
     extraData.setOptions({
       drawerLockMode: 'locked-closed',
       swipeEnabled: false,
@@ -90,12 +120,13 @@ const EditProfile = ({ navigation, route, currentUser, extraData }) => {
           iconRight1={{
             name: 'save-outline',
             type: 'ionicon',
-            // onPress: openMenu,
+            onPress: saveChanges,
             buttonType: 'save',
           }}
+          isLoading={isLoading}
         />
         <KeyboardAwareScrollView
-          keyboardShouldPersistTaps={'always'}
+          // keyboardShouldPersistTaps={'always'}
           // style={{ flex: 1 }}
           showsVerticalScrollIndicator={false}
           style={{
@@ -103,92 +134,15 @@ const EditProfile = ({ navigation, route, currentUser, extraData }) => {
             alignSelf: 'center',
             marginTop: 50,
           }}>
-          <View
-            style={{
-              marginVertical: 20,
-              flexDirection: 'column',
-            }}>
-            <View
-              style={{
-                alignSelf: 'center',
-                alignItems: 'center',
-                width: 100,
-                height: 100,
-              }}>
-              <FastImage
-                source={{
-                  uri:
-                    'https://api.duniagames.co.id/api/content/upload/file/8143860661599124172.jpg',
-                }}
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 50,
-                  backgroundColor: colors.background_1,
-                  alignSelf: 'center',
-                }}
-                resizeMode={FastImage.resizeMode.cover}
-              />
-              <TouchableOpacity
-                onPress={() => console.log('Add new image')}
-                style={{
-                  backgroundColor: colors.secondary,
-                  height: 27,
-                  width: 27,
-                  borderRadius: 50,
-                  position: 'absolute',
-                  justifyContent: 'center',
-                  bottom: 0,
-                  right: 0,
-                }}>
-                <Icon
-                  name="pencil"
-                  type="simple-line-icon"
-                  color={'white'}
-                  size={normalize(13)}
-                  style={{
-                    color: colors.text,
-                    // alignSelf: 'center',
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                marginLeft: 10,
-                flexDirection: 'column',
-                marginVertical: 5,
-                paddingHorizontal: 4,
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  color: colors.text,
-                  fontSize: normalize(17),
-                  fontFamily: 'SofiaProSemiBold',
-                  textTransform: 'capitalize',
-                }}>
-                {currentUser.firstname + ' ' + currentUser.lastname}
-              </Text>
-              <Text
-                style={{
-                  color: colors.primary_light,
-                  fontSize: normalize(13),
-                  fontFamily: 'SofiaProRegular',
-                }}>
-                {currentUser.email}
-              </Text>
-            </View>
-          </View>
-          {/* /* -------------------------- Profile Details Edit -------------------------- */}
           <Animatable.View animation="bounceInLeft" style={{ marginTop: 0 }}>
             <Formik
+              innerRef={inputRef}
               initialValues={{
+                avatar: currentUser.avatar,
                 firstname: currentUser.firstname,
                 lastname: currentUser.lastname,
-                DD: currentUser.dob.split('/')[0],
-                MM: currentUser.dob.split('/')[1],
+                MM: currentUser.dob.split('/')[0],
+                DD: currentUser.dob.split('/')[1],
                 YY: currentUser.dob.split('/')[2],
                 mobileNo: currentUser.mobileNo,
                 bio: currentUser.bio,
@@ -200,6 +154,91 @@ const EditProfile = ({ navigation, route, currentUser, extraData }) => {
               }}>
               {({ handleChange, handleBlur, handleSubmit, values }) => (
                 <View style={{ marginBottom: 10 }}>
+                  <View
+                    style={{
+                      marginVertical: 20,
+                      flexDirection: 'column',
+                    }}>
+                    <View
+                      style={{
+                        alignSelf: 'center',
+                        alignItems: 'center',
+                        width: 100,
+                        height: 100,
+                      }}>
+                      <FastImage
+                        source={{
+                          uri: imageUri && imageUri.uri,
+                          // values.avatar
+                          //   ? values.avatar
+                          //   : 'https://api.duniagames.co.id/api/content/upload/file/8143860661599124172.jpg',
+                        }}
+                        style={{
+                          width: 100,
+                          height: 100,
+                          borderRadius: 50,
+                          backgroundColor: colors.background_1,
+                          alignSelf: 'center',
+                        }}
+                        resizeMode={FastImage.resizeMode.cover}
+                      />
+                      <TouchableOpacity
+                        onPress={() =>
+                          launchImageLibrary({ mediaType: 'photo' }, (i) =>
+                            setImageUri(i),
+                          )
+                        }
+                        style={{
+                          backgroundColor: colors.secondary,
+                          height: 27,
+                          width: 27,
+                          borderRadius: 50,
+                          position: 'absolute',
+                          justifyContent: 'center',
+                          bottom: 0,
+                          right: 0,
+                        }}>
+                        <Icon
+                          name="pencil"
+                          type="simple-line-icon"
+                          color={'white'}
+                          size={normalize(13)}
+                          style={{
+                            color: colors.text,
+                            // alignSelf: 'center',
+                          }}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <View
+                      style={{
+                        marginLeft: 10,
+                        flexDirection: 'column',
+                        marginVertical: 5,
+                        paddingHorizontal: 4,
+                        justifyContent: 'space-evenly',
+                        alignItems: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          color: colors.text,
+                          fontSize: normalize(17),
+                          fontFamily: 'SofiaProSemiBold',
+                          textTransform: 'capitalize',
+                        }}>
+                        {currentUser.firstname + ' ' + currentUser.lastname}
+                      </Text>
+                      <Text
+                        style={{
+                          color: colors.primary_light,
+                          fontSize: normalize(13),
+                          fontFamily: 'SofiaProRegular',
+                        }}>
+                        {currentUser.email}
+                      </Text>
+                    </View>
+                  </View>
+                  {/* /* -------------------------- Profile Details Edit -------------------------- */}
                   <InputBox
                     handleChange={handleChange}
                     handleBlur={handleBlur}
@@ -327,7 +366,7 @@ const EditProfile = ({ navigation, route, currentUser, extraData }) => {
                     handleChange={handleChange}
                     handleBlur={handleBlur}
                     valuesType={values.address}
-                    name="lastname"
+                    name="address"
                     iconName="location-outline"
                     iconType="ionicon"
                     placeholder="Address"
@@ -357,11 +396,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
+  isLoading: selectIsLoading,
 });
 
-// const mapDispatchToProps = (dispatch) => ({
-//   getPracticesAllStart: () => dispatch(getPracticesAllStart()),
-//   setFilter: (data) => dispatch(setFilter(data)),
-// });
+const mapDispatchToProps = (dispatch) => ({
+  // getPracticesAllStart: () => dispatch(getPracticesAllStart()),
+  editProfile: (data) => dispatch(editProfile(data)),
+});
 
-export default connect(mapStateToProps)(EditProfile);
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

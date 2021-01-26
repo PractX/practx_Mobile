@@ -87,8 +87,8 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
           <Animatable.View animation="bounceInLeft" style={{ marginTop: 20 }}>
             <Formik
               initialValues={{
-                email: 'itstimiking@gmail.com',
-                password: 'xxxxxx',
+                email: 'jaskyparrot@gmail.com',
+                password: 'test123',
               }}
               onSubmit={(values) => {
                 login(values);

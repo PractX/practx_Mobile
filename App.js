@@ -31,6 +31,7 @@ import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { selectCurrentUser, selectToken } from './src/redux/user/user.selector';
 import FlashMessage from 'react-native-flash-message';
+import { Keyboard } from 'react-native';
 
 function SplashScreen() {
   return (
@@ -50,6 +51,7 @@ const App = ({ themeMode, user, token }) => {
     theme: null,
   });
   useMemo(() => {
+    Keyboard.dismiss();
     console.log(state.color);
     if (themeMode === 'Dark') {
       setState({
@@ -81,7 +83,7 @@ const App = ({ themeMode, user, token }) => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [themeMode]);
+  }, [Keyboard, themeMode]);
   useEffect(() => {
     // console.log(token);
     Orientation.lockToPortrait();

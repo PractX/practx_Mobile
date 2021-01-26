@@ -154,11 +154,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                 fontSize: normalize(14),
                 fontFamily: 'SofiaProRegular',
               }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              {(currentUser && currentUser.bio) || 'No bio'}
             </Text>
           </View>
           <View
@@ -183,8 +179,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                 fontSize: normalize(14),
                 fontFamily: 'SofiaProRegular',
               }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              {(currentUser && currentUser.address) || 'No address'}
             </Text>
           </View>
 
@@ -210,8 +205,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                 fontSize: normalize(14),
                 fontFamily: 'SofiaProRegular',
               }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              {(currentUser && currentUser.insurance) || 'No Insurance details'}
             </Text>
           </View>
           <View>

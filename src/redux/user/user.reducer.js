@@ -17,6 +17,11 @@ const INITIAL_STATE = {
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     //Either any of the cases
+    case UserActionTypes.EDIT_PROFILE:
+      return {
+        ...state,
+        isLoading: true,
+      };
     case UserActionTypes.VERIFY_ACCOUNT:
       return {
         ...state,
