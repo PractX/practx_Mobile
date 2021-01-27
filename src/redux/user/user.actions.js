@@ -5,6 +5,11 @@ export const setCurrentUser = (userDetails) => ({
   payload: userDetails,
 });
 
+export const editProfile = (profileDetails) => ({
+  type: UserActionTypes.EDIT_PROFILE,
+  payload: profileDetails,
+});
+
 export const signInStart = (emailAndPassword) => ({
   type: UserActionTypes.SIGN_IN_START,
   payload: emailAndPassword,
@@ -15,10 +20,17 @@ export const signInSuccess = (message) => ({
   payload: message,
 });
 
+export const verifyAccount = (key) => ({
+  type: UserActionTypes.VERIFY_ACCOUNT,
+  payload: key,
+});
+
 export const signInFailure = (error) => ({
   type: UserActionTypes.SIGN_IN_FAILURE,
   payload: error,
 });
+
+/* ------------------------------ // Older DATA ----------------------------- */
 
 export const checkUserSession = () => ({
   type: UserActionTypes.CHECK_USER_SESSION,

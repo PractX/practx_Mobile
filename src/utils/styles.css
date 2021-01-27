@@ -1,3 +1,7 @@
+#mo {
+  color: #55596b
+}
+
 .light {
   primary: '#e01b43',
   primary_light: '#de5674',
@@ -8,7 +12,7 @@
   quinary: '#ffa873',
   senary: '#fce7ea',
   background: '#ffffff',
-  background_1: '#eeeeee',
+  background_1: '#838383',
   background_2: '#252a3e',
   card: '#f4f2f2',
   text: '#777777',

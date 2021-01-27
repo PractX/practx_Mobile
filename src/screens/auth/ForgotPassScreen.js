@@ -14,21 +14,36 @@ import {
   Pressable,
 } from 'react-native';
 
-import { LOGO } from '../../../assets/images';
+import { LOGO, LOGO2 } from '../../../assets/images';
 import { useTheme } from '@react-navigation/native';
 import InputBox from '../../components/hoc/InputBox';
 import { Formik } from 'formik';
 import { normalize } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { forgetPasswordStart } from '../../redux/user/user.actions';
+import { createStructuredSelector } from 'reselect';
+import { selectIsLoading } from '../../redux/user/user.selector';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
 
-function ForgotPassScreen({ navigation }) {
+function ForgotPassScreen({ navigation, isLoading, forgetPasswordStart }) {
   const { colors } = useTheme();
+  const [logo, setLogo] = useState(LOGO);
+  useEffect(() => {
+    console.log(colors.mode);
+    if (colors.mode === 'dark') {
+      // practxLogo-dark
+      setLogo(LOGO);
+    } else {
+      setLogo(LOGO2);
+    }
+  }, [colors.mode]);
 
   const sumbitReqPassReset = (values) => {
     console.log(values);
+    forgetPasswordStart(values.email);
     // dispatch(Actions.loginPatient(values.email, values.password));
   };
   return (
@@ -38,7 +53,7 @@ function ForgotPassScreen({ navigation }) {
           style={[styles.container, { backgroundColor: colors.background }]}>
           <View style={{ width: '80%' }}>
             <Animatable.View animation="pulse">
-              <Image style={styles.logo} source={LOGO} resizeMode="contain" />
+              <Image style={styles.logo} source={logo} resizeMode="contain" />
 
               <View style={{ alignItems: 'center', marginTop: 20 }}>
                 <Text
@@ -51,7 +66,7 @@ function ForgotPassScreen({ navigation }) {
                 </Text>
 
                 <Text style={[styles.topText, { color: colors.text_1 }]}>
-                  Enter your email / username bellow
+                  Enter your email or username below
                 </Text>
                 <Text style={[styles.topText, { color: colors.text_1 }]}>
                   We will send you an email
@@ -62,8 +77,7 @@ function ForgotPassScreen({ navigation }) {
             <Animatable.View animation="bounceInLeft" style={{ marginTop: 20 }}>
               <Formik
                 initialValues={{
-                  email: 'itstimiking@gmail.com',
-                  password: 'xxxxxx',
+                  email: 'jaskyparrot@gmail.com',
                 }}
                 onSubmit={(values) => {
                   sumbitReqPassReset(values);
@@ -80,7 +94,7 @@ function ForgotPassScreen({ navigation }) {
                       placeholder="Email"
                       autoCompleteType="email"
                       textContentType="emailAddress"
-                      keyboardType="email"
+                      keyboardType="email-address"
                       autoCapitalize="none"
                     />
                     <View style={styles.loginButtonView}>
@@ -96,7 +110,7 @@ function ForgotPassScreen({ navigation }) {
                           fontFamily: 'SofiaProSemiBold',
                           fontSize: normalize(16),
                         }}
-                        loading={false}
+                        loading={isLoading}
                       />
 
                       <Pressable
@@ -215,5 +229,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export default ForgotPassScreen;
+const mapStateToProps = createStructuredSelector({
+  isLoading: selectIsLoading,
+});
+const mapDispatchToProps = (dispatch) => ({
+  forgetPasswordStart: (email) => dispatch(forgetPasswordStart(email)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassScreen);

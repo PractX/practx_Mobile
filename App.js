@@ -26,8 +26,12 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import AuthScreen from './src/screens/auth/AuthScreen';
+import MainScreen from './src/screens/main/MainScreen';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
+import { selectCurrentUser, selectToken } from './src/redux/user/user.selector';
+import FlashMessage from 'react-native-flash-message';
+import { Keyboard } from 'react-native';
 
 function SplashScreen() {
   return (
@@ -37,15 +41,17 @@ function SplashScreen() {
   );
 }
 const Stack = createStackNavigator();
-const App = ({ themeMode }) => {
+const App = ({ themeMode, user, token }) => {
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
+  const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState({
     color: null,
     scheme: null,
     theme: null,
   });
   useMemo(() => {
+    Keyboard.dismiss();
     console.log(state.color);
     if (themeMode === 'Dark') {
       setState({
@@ -77,8 +83,9 @@ const App = ({ themeMode }) => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [themeMode]);
+  }, [Keyboard, themeMode]);
   useEffect(() => {
+    // console.log(token);
     Orientation.lockToPortrait();
     themeMode === 'Dark'
       ? changeNavigationBarColor(ColorList[1].background)
@@ -86,7 +93,7 @@ const App = ({ themeMode }) => {
   }, [themeMode]);
   return (
     <>
-      <StatusBar backgroundColor={state.color} />
+      <StatusBar backgroundColor={state.color} barStyle={state.scheme} />
       <NavigationContainer
         theme={state.theme}
         ref={navigationRef}
@@ -94,18 +101,33 @@ const App = ({ themeMode }) => {
           (routeNameRef.current = navigationRef.current.getCurrentRoute().name)
         }>
         <Stack.Navigator initialRouteName="NoAuth" headerMode="none">
-          {/* {state.isLoading ? (
+          {isLoading ? (
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
-          ) : state.userToken == null ? ( */}
-          {/* // No token found, user isn't signed in */}
-          <Stack.Screen name="AuthScreen" component={AuthScreen} />
-          {/* ) : (
+          ) : user === null && token === null ? (
+            // No token found, user isn't signed in
+            <Stack.Screen name="AuthScreen" component={AuthScreen} />
+          ) : (
             // User is signed in
-            <Stack.Screen name="Home" component={HomeScreen} />
-          )} */}
+            <Stack.Screen name="MainScreen" component={MainScreen} />
+          )}
         </Stack.Navigator>
       </NavigationContainer>
+      <FlashMessage
+        animated={true}
+        animationDuration={500}
+        floating={true}
+        position={'right'}
+        style={{
+          width: '70%',
+          alignSelf: 'center',
+          zIndex: 20000,
+          // alignItems: 'center',
+        }}
+        titleStyle={{ textAlign: 'left', fontFamily: 'SofiaProRegular' }}
+        duration={4000}
+        icon={{ icon: 'auto', position: 'right' }}
+      />
     </>
   );
 };
@@ -151,5 +173,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = createStructuredSelector({
   themeMode: selectThemeMode,
+  user: selectCurrentUser,
+  token: selectToken,
 });
 export default connect(mapStateToProps)(App);

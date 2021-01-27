@@ -17,6 +17,19 @@ const INITIAL_STATE = {
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     //Either any of the cases
+    case UserActionTypes.EDIT_PROFILE:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case UserActionTypes.VERIFY_ACCOUNT:
+      return {
+        ...state,
+        isLoading: true,
+        currentUser: null,
+        token: null,
+        error: null,
+      };
     case UserActionTypes.SET_CURRENT_USER:
       return {
         ...state,
@@ -161,11 +174,22 @@ const userReducer = (state = INITIAL_STATE, action) => {
         error: null,
         success: null,
       };
+    case UserActionTypes.SIGN_OUT_START:
+      return {
+        ...state,
+        isLoading: false,
+        currentUser: null,
+        subscription: null,
+        downloads: null,
+        myDownloads: null,
+        token: null,
+        error: null,
+      };
     case UserActionTypes.SIGN_UP_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        success: action.payload,
+        currentUser: action.payload,
         error: null,
       };
     case UserActionTypes.SIGN_IN_START:

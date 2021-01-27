@@ -1,7 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
+import { useSelector, useDispatch, connect } from 'react-redux';
 import * as Animatable from 'react-native-animatable';
 import { Formik } from 'formik';
+
+import { showMessage, hideMessage } from 'react-native-flash-message';
 
 import {
   View,
@@ -18,17 +20,24 @@ import { Button } from 'react-native-elements';
 import { Text, Content, CheckBox } from 'native-base';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 // import * as Actions from '../redux/auth/actions';
-import { LOGO } from '../../../assets/images';
+import { LOGO, LOGO2 } from '../../../assets/images';
 import { normalize } from 'react-native-elements';
 import InputBox from '../../components/hoc/InputBox';
+import { createStructuredSelector } from 'reselect';
+import { signInStart } from '../../redux/user/user.actions';
+import {
+  selectCurrentUser,
+  selectIsLoading,
+} from '../../redux/user/user.selector';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
 
-const LogInScreen = ({ navigation }) => {
+const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
   const [remember, setRemember] = useState(true);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
+  const [logo, setLogo] = useState(LOGO);
   const ref = React.useRef(null);
   const { colors } = useTheme();
   useScrollToTop(ref);
@@ -36,14 +45,25 @@ const LogInScreen = ({ navigation }) => {
   const login = (values) => {
     console.log(values);
     // dispatch(Actions.loginPatient(values.email, values.password));
+    signInStart(values.email, values.password);
   };
+
+  useEffect(() => {
+    console.log(colors.mode);
+    if (colors.mode === 'dark') {
+      // practxLogo-dark
+      setLogo(LOGO);
+    } else {
+      setLogo(LOGO2);
+    }
+  }, [colors.mode]);
 
   return (
     <Content>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={{ width: '80%' }}>
           <Animatable.View animation="pulse">
-            <Image style={styles.logo} source={LOGO} resizeMode="contain" />
+            <Image style={styles.logo} source={logo} resizeMode="contain" />
 
             <View style={{ alignItems: 'center', marginTop: 10 }}>
               <Text
@@ -67,8 +87,8 @@ const LogInScreen = ({ navigation }) => {
           <Animatable.View animation="bounceInLeft" style={{ marginTop: 20 }}>
             <Formik
               initialValues={{
-                email: 'itstimiking@gmail.com',
-                password: 'xxxxxx',
+                email: 'jaskyparrot@gmail.com',
+                password: 'test123',
               }}
               onSubmit={(values) => {
                 login(values);
@@ -85,7 +105,7 @@ const LogInScreen = ({ navigation }) => {
                     placeholder="Email"
                     autoCompleteType="email"
                     textContentType="emailAddress"
-                    keyboardType="email"
+                    keyboardType="email-address"
                     autoCapitalize="none"
                   />
                   <InputBox
@@ -146,7 +166,7 @@ const LogInScreen = ({ navigation }) => {
                         fontFamily: 'SofiaProSemiBold',
                         fontSize: normalize(16),
                       }}
-                      loading={false}
+                      loading={isLoading}
                     />
                     <Pressable
                       style={styles.bellowButtonText}
@@ -167,7 +187,7 @@ const LogInScreen = ({ navigation }) => {
 
                     <Pressable
                       hitSlop={{ bottom: 10, top: 10 }}
-                      onPress={() => navigation.navigate('login2')}>
+                      onPress={() => navigation.navigate('verifyAccount')}>
                       <Text
                         style={{
                           color: colors.primary,
@@ -280,4 +300,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogInScreen;
+const mapStateToProps = createStructuredSelector({
+  user: selectCurrentUser,
+  isLoading: selectIsLoading,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  signInStart: (email, password) => dispatch(signInStart({ email, password })),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LogInScreen);
