@@ -48,33 +48,21 @@ export const editProfileApi = async (token, data) => {
   console.log(data);
 
   const form = await new FormData();
-  const form2 = await new FormData();
-  form2.append('avatar', {
-    uri:
-      Platform.OS === 'android'
-        ? `file:///${data.avatar.uri}`
-        : `/private${data.avatar.uri}`,
-    type: 'image/jpeg',
-    name: 'image.jpg',
-  });
-  console.log(form2);
+  // const form2 = await new FormData();
+  // form2.append('avatar', {
+  //   uri:
+  //     Platform.OS === 'android'
+  //       ? `file:///${data.avatar.uri}`
+  //       : `/private${data.avatar.uri}`,
+  //   type: 'image/jpeg',
+  //   name: 'image.jpg',
+  // });
+  // console.log(form2);
   // const newData = { ...data, avatar: form2 };
 
   // console.log(newData);
   for (const key in data) {
-    if (key === 'avatar') {
-      form.append('avatar', {
-        uri:
-          Platform.OS === 'android'
-            ? `file:///${data[key].uri}`
-            : `/private${data[key].uri}`,
-        type: data[key].type,
-        name: data[key].fileName,
-      });
-    } else {
-      form.append(key, data[key]);
-      console.log(form);
-    }
+    form.append(key, data[key]);
   }
 
   const headers = {
