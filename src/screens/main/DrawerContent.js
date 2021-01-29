@@ -357,7 +357,7 @@ const DrawerContent = ({
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'AddGroup',
+                      'Appointments',
                       // , {
                       //   screen: 'Home',
                       // }

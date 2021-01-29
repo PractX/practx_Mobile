@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useWindowDimensions } from 'react-native';
 import DrawerContent from './DrawerContent';
-import AddGroup from '../addGroup/AddGroup';
+import AddGroup from './addGroup/AddGroup';
 import Profile from './profile/Profile';
 import EditProfile from './profile/EditProfile';
 // import AddGroup from '../addGroup/AddGroup';
+import Appointments from './appointment/Appointments';
 
 const Drawer = createDrawerNavigator();
 
@@ -48,6 +49,7 @@ const MainScreen = () => {
       detachInactiveScreens={true}>
       <Drawer.Screen name="Profile" component={Profile} />
       <Drawer.Screen name="AddGroup" component={AddGroup} />
+      <Drawer.Screen name="Appointments" component={Appointments} />
       {/* <Drawer.Screen
         name="EditProfile"
         component={EditProfile}
