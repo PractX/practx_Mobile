@@ -43,11 +43,16 @@ const theme = {
   text3: '#555',
 };
 
-const Appointment = ({ type }) => {
+const Appointment = ({ type, styling }) => {
   const { colors } = useTheme();
 
   return (
-    <View style={styles.card}>
+    <View
+      style={[
+        styling,
+        styles.card,
+        { borderBottomColor: colors.background_1, borderBottomWidth: 0.5 },
+      ]}>
       <View style={{ flexDirection: 'row' }}>
         <FastImage
           source={{
@@ -184,13 +189,10 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    width: appwidth,
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 16,
-    borderBottomColor: theme.text3,
-    borderBottomWidth: 0.5,
+    paddingVertical: 15,
   },
   cardhead: {
     flexDirection: 'row',

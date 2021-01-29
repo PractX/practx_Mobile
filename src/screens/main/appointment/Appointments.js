@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 // import Constants from 'expo-constants';
 import * as Animatable from 'react-native-animatable';
 // import { ThemeContext } from '../context/ThemeContext';
@@ -30,12 +30,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import normalize from '../../../utils/normalize';
+import { FlatList } from 'react-native';
 
 const Stack = createStackNavigator();
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const appwidth = windowWidth * 0.8;
+const appwidth = windowWidth * 0.9;
 
 const theme = {
   /* ---- THeme to be gotten from redux or context------*/
@@ -46,7 +47,32 @@ const theme = {
   text3: '#555',
 };
 
-function Appointments({ navigation }) {
+const appointmentData = [
+  {
+    type: 'voice',
+  },
+  {
+    type: 'video',
+  },
+  {
+    type: 'voice',
+  },
+  {
+    type: 'voice',
+  },
+  {
+    type: 'voice',
+  },
+  {
+    type: 'video',
+  },
+  {
+    type: 'video',
+  },
+];
+
+const Appointments = ({ navigation }) => {
+  const ref = useRef();
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
@@ -84,7 +110,7 @@ function Appointments({ navigation }) {
     return unsubscribe;
   }, [navigation]);
   return (
-    <SafeAreaView
+    <View
       style={[
         style1 === 'open' && {
           borderWidth: 18,
@@ -104,7 +130,7 @@ function Appointments({ navigation }) {
           style1 === 'open' && {
             // borderWidth: 20,
             backgroundColor: colors.background,
-            height: '100%',
+            height: windowHeight,
             // zIndex: 100,
             // IOS
             shadowOffset: {
@@ -117,6 +143,8 @@ function Appointments({ navigation }) {
             elevation: 3,
             borderRadius: 30,
             overflow: 'hidden',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
           },
         ]}>
         <Header navigation={navigation} title="Appointments" />
@@ -126,7 +154,12 @@ function Appointments({ navigation }) {
             alignSelf: 'center',
             marginTop: 50,
           }}></ScrollView> */}
-        <View style={{ backgroundColor: colors.background, marginTop: 50 }}>
+        <View
+          style={{
+            // backgroundColor: 'green',
+            marginTop: 50,
+            height: 360,
+          }}>
           <Calendar
             key={colors.mode}
             // onDayPress={(day) => {
@@ -197,42 +230,94 @@ function Appointments({ navigation }) {
               // textMonthFontWeight: 'bold',
               // textDayHeaderFontWeight: '300',
               textDayFontSize: normalize(16),
-              textMonthFontSize: normalize(18),
+              textMonthFontSize: normalize(17),
               textDayHeaderFontSize: normalize(15),
             }}
           />
-
+        </View>
+        <View
+          style={{
+            alignSelf: 'center',
+            justifyContent: 'center',
+            height: windowHeight - 435,
+            width: '100%',
+            // alignSelf: 'center',
+            // marginBottom: 100,
+          }}>
           <Text
             style={{
-              margin: 20,
+              marginHorizontal: 20,
+              marginTop: 10,
+              marginBottom: 5,
               color: colors.text,
               fontFamily: 'SofiaProSemiBold',
               fontSize: normalize(16),
             }}>
             Today's Appointment
           </Text>
-          <View
-            style={{
-              width: '100%',
-              // height: windowHeight,
-              // alignSelf: 'center',
-              // marginTop: 50,
-            }}>
-            <ScrollView
-              horizontal={false}
-              contentContainerStyle={{ flexGrow: 1 }}
-              // showsVerticalScrollIndicator={false}
-            >
-              <Appointment type="voice" />
-              <Appointment type="video" />
-              <Appointment type="video" />
-            </ScrollView>
-          </View>
+          {appointmentData ? (
+            <FlatList
+              ref={ref}
+              // refreshControl={
+              //   <RefreshControl
+              //     refreshing={refreshing}
+              //     onRefresh={() => getPracticesAllStart()}
+              //   />
+              // }
+              // removeClippedSubviews
+              // ListEmptyComponent
+              initialNumToRender={5}
+              updateCellsBatchingPeriod={5}
+              showsVerticalScrollIndicator={true}
+              // style={{ width: '100%', backgroundColor: 'blue' }}
+              data={appointmentData}
+              numColumns={1}
+              renderItem={({ item, index }) => (
+                <Appointment
+                  id={index}
+                  type={item.type}
+                  styling={{
+                    width: style1 === 'open' ? appwidth - 50 : appwidth,
+                  }}
+                />
+              )}
+              keyExtractor={(item, index) => item.display_url}
+              // showsHorizontalScrollIndicator={false}
+              // extraData={selected}
+            />
+          ) : (
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text>No data</Text>
+              {/* {errorData ? (
+                <Error
+                  title={errorData.includes('internet') ? 'OOPS!!!' : 'SORRY'}
+                  subtitle={
+                    errorData.includes('internet')
+                      ? 'Poor internet connection, Please check your connectivity, And try again'
+                      : errorData.includes('fetch')
+                      ? 'Enable to fetch post, please try again later'
+                      : 'Download link is not supported OR Account is private'
+                  }
+                />
+              ) : (
+                <Spinner
+                  style={styles.spinner}
+                  size={80}
+                  type="Circle"
+                  color={colors.primary}
+                />
+              )} */}
+            </View>
+          )}
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   date: {
