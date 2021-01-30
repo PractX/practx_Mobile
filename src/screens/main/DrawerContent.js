@@ -153,7 +153,9 @@ const DrawerContent = ({
         <FastImage
           source={{
             uri:
-              'https://api.duniagames.co.id/api/content/upload/file/8143860661599124172.jpg',
+              currentUser && currentUser.avatar
+                ? currentUser.avatar
+                : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
           }}
           style={{
             width: 65,
@@ -303,7 +305,7 @@ const DrawerContent = ({
                   navigation.dangerouslyGetState().index === 1 ? true : false
                 }
                 activeBackgroundColor={null}
-                label="Add Group"
+                label="Chats"
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
@@ -316,6 +318,56 @@ const DrawerContent = ({
                 }}
               />
               <DrawerItem
+                labelStyle={{
+                  fontFamily: 'SofiaProSemiBold',
+                  fontSize: normalize(16),
+                  paddingLeft: 3,
+                  // color: colors.text,
+                }}
+                inactiveTintColor={colors.text}
+                activeTintColor={colors.secondary}
+                focused={
+                  navigation.dangerouslyGetState().index === 2 ? true : false
+                }
+                activeBackgroundColor={null}
+                label="Join Practice"
+                onPress={() => {
+                  requestAnimationFrame(() => {
+                    navigation.navigate(
+                      'Practices',
+                      // , {
+                      //   screen: 'Home',
+                      // }
+                    );
+                  });
+                }}
+              />
+              <DrawerItem
+                labelStyle={{
+                  fontFamily: 'SofiaProSemiBold',
+                  fontSize: normalize(16),
+                  paddingLeft: 3,
+                  // color: colors.text,
+                }}
+                inactiveTintColor={colors.text}
+                activeTintColor={colors.secondary}
+                focused={
+                  navigation.dangerouslyGetState().index === 4 ? true : false
+                }
+                activeBackgroundColor={null}
+                label="Appointments"
+                onPress={() => {
+                  requestAnimationFrame(() => {
+                    navigation.navigate(
+                      'Appointments',
+                      // , {
+                      //   screen: 'Home',
+                      // }
+                    );
+                  });
+                }}
+              />
+              {/* <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
                   fontSize: normalize(16),
@@ -353,43 +405,18 @@ const DrawerContent = ({
                   navigation.dangerouslyGetState().index === 3 ? true : false
                 }
                 activeBackgroundColor={null}
-                label="Appointments"
+                label="Media"
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'Appointments',
+                      'Media',
                       // , {
                       //   screen: 'Home',
                       // }
                     );
                   });
                 }}
-              />
-              <DrawerItem
-                labelStyle={{
-                  fontFamily: 'SofiaProSemiBold',
-                  fontSize: normalize(16),
-                  paddingLeft: 3,
-                  // color: colors.text,
-                }}
-                inactiveTintColor={colors.text}
-                activeTintColor={colors.secondary}
-                focused={
-                  navigation.dangerouslyGetState().index === 3 ? true : false
-                }
-                activeBackgroundColor={null}
-                label="Chats"
-                onPress={() => {
-                  requestAnimationFrame(() => {
-                    navigation.navigate(
-                      'AddGroup',
-                      // , {
-                      //   screen: 'Home',
-                      // }
-                    );
-                  });
-                }}
-              />
+              /> */}
             </View>
 
             {/* ---------------------------- Customer Support ---------------------------- */}
@@ -425,7 +452,7 @@ const DrawerContent = ({
                 inactiveTintColor={colors.text}
                 activeTintColor={colors.secondary}
                 focused={
-                  navigation.dangerouslyGetState().index === 2 ? true : false
+                  navigation.dangerouslyGetState().index === 6 ? true : false
                 }
                 activeBackgroundColor={null}
                 label="Settings"
@@ -450,7 +477,7 @@ const DrawerContent = ({
                 inactiveTintColor={colors.text}
                 activeTintColor={colors.secondary}
                 focused={
-                  navigation.dangerouslyGetState().index === 4 ? true : false
+                  navigation.dangerouslyGetState().index === 7 ? true : false
                 }
                 activeBackgroundColor={null}
                 label="FAQ"
@@ -475,7 +502,7 @@ const DrawerContent = ({
                 inactiveTintColor={colors.text}
                 activeTintColor={colors.secondary}
                 focused={
-                  navigation.dangerouslyGetState().index === 5 ? true : false
+                  navigation.dangerouslyGetState().index === 8 ? true : false
                 }
                 activeBackgroundColor={null}
                 label="Help Center"

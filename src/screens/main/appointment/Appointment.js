@@ -107,7 +107,7 @@ const Appointment = ({ type, styling }) => {
             <Text
               style={{
                 color: type === 'video' ? colors.quinary : colors.quaternary,
-                fontSize: normalize(10),
+                fontSize: normalize(10.5),
                 fontFamily: 'SofiaProRegular',
               }}>
               {type === 'video' ? 'Video call' : 'Voice call'}
@@ -146,41 +146,6 @@ const Appointment = ({ type, styling }) => {
 };
 
 const styles = StyleSheet.create({
-  date: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: theme.text2,
-    paddingTop: 20,
-    paddingLeft: 10,
-  },
-  header: {
-    backgroundColor: theme.background,
-    borderBottomColor: theme.text3,
-    borderBottomWidth: 1,
-    // marginTop: Constants.statusBarHeight,
-  },
-  image: {
-    width: 50,
-    height: 50,
-    backgroundColor: 'gray',
-    borderRadius: 15,
-    marginRight: 10,
-  },
-  topThumbnails: {
-    paddingVertical: 10,
-    paddingLeft: 15,
-    backgroundColor: theme.background,
-  },
-  topThumbnailsItem: {
-    marginRight: 5,
-  },
-  topThumbnailsName: {
-    color: theme.text2,
-    fontSize: 12,
-    textAlign: 'center',
-    width: 50,
-  },
-
   flexrow: {
     flexDirection: 'row',
     flexWrap: 'nowrap',
@@ -201,8 +166,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     borderRadius: 10,
     justifyContent: 'flex-end',
-    width: 9,
-    height: 9,
+    width: 6,
+    height: 6,
     marginRight: 5,
     alignSelf: 'center',
   },

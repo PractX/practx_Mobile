@@ -85,7 +85,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
             overflow: 'hidden',
           },
         ]}>
-        <Header navigation={navigation} title="Profile" />
+        <Header navigation={navigation} title="Profile" notifyIcon={true} />
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{
@@ -104,7 +104,9 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
             <FastImage
               source={{
                 uri:
-                  'https://api.duniagames.co.id/api/content/upload/file/8143860661599124172.jpg',
+                  currentUser && currentUser.avatar
+                    ? currentUser.avatar
+                    : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
               }}
               style={{
                 width: 65,
@@ -220,10 +222,12 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                   backgroundColor: 'transparent',
                   borderWidth: 1,
                   borderColor: colors.background_1,
+                  paddingVertical: 12,
                   borderRadius: 15,
                   marginVertical: 10,
                 }}>
                 <Icon
+                  size={normalize(20)}
                   color={colors.text}
                   type="material-community"
                   name="account-edit-outline"
@@ -232,13 +236,13 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                   <ListItem.Title
                     style={{
                       color: colors.text,
-                      fontSize: normalize(17),
+                      fontSize: normalize(16),
                       fontFamily: 'SofiaProRegular',
                     }}>
                     Edit Profile
                   </ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron size={25} color={colors.text_1} />
+                <ListItem.Chevron size={normalize(23)} color={colors.text_1} />
               </ListItem>
             </TouchableOpacity>
             <ListItem
@@ -246,10 +250,12 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                 backgroundColor: 'transparent',
                 borderWidth: 1,
                 borderColor: colors.background_1,
+                paddingVertical: 12,
                 borderRadius: 15,
                 marginBottom: 20,
               }}>
               <Icon
+                size={normalize(20)}
                 color={colors.text}
                 type="material-community"
                 name="lock-outline"
@@ -258,13 +264,13 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                 <ListItem.Title
                   style={{
                     color: colors.text,
-                    fontSize: normalize(17),
+                    fontSize: normalize(16),
                     fontFamily: 'SofiaProRegular',
                   }}>
                   Reset Password
                 </ListItem.Title>
               </ListItem.Content>
-              <ListItem.Chevron size={25} color={colors.text_1} />
+              <ListItem.Chevron size={normalize(23)} color={colors.text_1} />
             </ListItem>
           </View>
         </ScrollView>

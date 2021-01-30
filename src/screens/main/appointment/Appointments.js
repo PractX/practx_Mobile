@@ -32,20 +32,11 @@ import { useTheme } from '@react-navigation/native';
 import normalize from '../../../utils/normalize';
 import { FlatList } from 'react-native';
 
-const Stack = createStackNavigator();
+// const Stack = createStackNavigator();
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
-
-const theme = {
-  /* ---- THeme to be gotten from redux or context------*/
-  background: '#1e1f36',
-  highlight: '#ff0000',
-  text: '#fff',
-  text2: '#aaa',
-  text3: '#555',
-};
 
 const appointmentData = [
   {
@@ -68,6 +59,12 @@ const appointmentData = [
   },
   {
     type: 'video',
+  },
+  {
+    type: 'voice',
+  },
+  {
+    type: 'voice',
   },
 ];
 
@@ -92,15 +89,15 @@ const Appointments = ({ navigation }) => {
   // }, [colors.background]);
 
   React.useEffect(() => {
-    console.log(selectedDate);
-    console.log(new Date().toJSON().slice(0, 10));
+    // console.log(selectedDate);
+    // console.log(new Date().toJSON().slice(0, 10));
     const unsubscribe = navigation.addListener('drawerOpen', (e) => {
       // Do something
       setStyle1('open');
     });
 
     return unsubscribe;
-  }, [navigation, selectedDate]);
+  }, [navigation]);
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('drawerClose', (e) => {
       // Do something
@@ -130,7 +127,7 @@ const Appointments = ({ navigation }) => {
           style1 === 'open' && {
             // borderWidth: 20,
             backgroundColor: colors.background,
-            height: windowHeight,
+            height: '100%',
             // zIndex: 100,
             // IOS
             shadowOffset: {
@@ -143,11 +140,15 @@ const Appointments = ({ navigation }) => {
             elevation: 3,
             borderRadius: 30,
             overflow: 'hidden',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
+            // flexDirection: 'column',
+            // justifyContent: 'space-between',
           },
         ]}>
-        <Header navigation={navigation} title="Appointments" />
+        <Header
+          navigation={navigation}
+          title="Appointments"
+          notifyIcon={true}
+        />
         {/* <ScrollView
           showsVerticalScrollIndicator=000000
             width: style1 === 'open' ? appwidth - 50 : appwidth,
@@ -173,7 +174,7 @@ const Appointments = ({ navigation }) => {
 
             enableSwipeMonths={true}
             horizontal={true}
-            pagingEnabled={true}
+            // pagingEnabled={true}
             showScrollIndicator={true}
             onDayPress={(day) =>
               setSelectedDate({
@@ -188,10 +189,24 @@ const Appointments = ({ navigation }) => {
                 },
               })
             }
+            minDate={new Date().toISOString().split('T')[0]}
             current={new Date().toISOString().split('T')[0]}
             markingType={'custom'}
             markedDates={{
-              '2021-01-21': {
+              '2021-01-31': {
+                customStyles: {
+                  container: {
+                    backgroundColor: colors.primary,
+                    borderRadius: 8,
+                  },
+                },
+                selected: true,
+                // marked: true,
+                // selectedColor: colors.primary,
+                // dotColor: 'white',
+                // textColor: 'green',
+              },
+              '2021-02-11': {
                 customStyles: {
                   container: {
                     backgroundColor: colors.primary,
@@ -239,7 +254,7 @@ const Appointments = ({ navigation }) => {
           style={{
             alignSelf: 'center',
             justifyContent: 'center',
-            height: windowHeight - 435,
+            height: windowHeight - 433,
             width: '100%',
             // alignSelf: 'center',
             // marginBottom: 100,
@@ -318,96 +333,5 @@ const Appointments = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  date: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: theme.text2,
-    paddingTop: 20,
-    paddingLeft: 10,
-  },
-  header: {
-    backgroundColor: theme.background,
-    borderBottomColor: theme.text3,
-    borderBottomWidth: 1,
-    // marginTop: Constants.statusBarHeight,
-  },
-  image: {
-    width: 50,
-    height: 50,
-    backgroundColor: 'gray',
-    borderRadius: 15,
-    marginRight: 10,
-  },
-  topThumbnails: {
-    paddingVertical: 10,
-    paddingLeft: 15,
-    backgroundColor: theme.background,
-  },
-  topThumbnailsItem: {
-    marginRight: 5,
-  },
-  topThumbnailsName: {
-    color: theme.text2,
-    fontSize: 12,
-    textAlign: 'center',
-    width: 50,
-  },
-
-  flexrow: {
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    flexGrow: 1,
-  },
-
-  card: {
-    width: '100%',
-    paddingVertical: 16,
-    borderBottomColor: theme.text3,
-    borderBottomWidth: 0.5,
-  },
-  cardbody: {
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    flexGrow: 1,
-    borderRightWidth: 1,
-    paddingHorizontal: 16,
-    width: '100%',
-  },
-  cardhead: {
-    flexDirection: 'row',
-    width: windowWidth * 0.74,
-  },
-
-  notificationHeader: {
-    color: theme.text,
-    fontSize: 12,
-    fontWeight: 'bold',
-    flex: 2,
-  },
-
-  notificationBody: {
-    marginTop: 5,
-    fontSize: 12,
-    paddingRight: 80,
-    color: theme.text2,
-    fontWeight: 'bold',
-  },
-  notificationBody2: {
-    color: 'green',
-    fontSize: 11,
-  },
-
-  dot: {
-    backgroundColor: 'green',
-    borderRadius: 10,
-    justifyContent: 'flex-end',
-    width: 9,
-    height: 9,
-    marginRight: 5,
-    alignSelf: 'center',
-  },
-});
 
 export default Appointments;
