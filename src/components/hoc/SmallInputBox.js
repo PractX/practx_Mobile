@@ -35,7 +35,7 @@ const SmallInputBox = ({
         name={iconName}
         type={iconType}
         color={colors.text_1}
-        size={normalize(19)}
+        size={normalize(18)}
         style={[
           styles.formIcons,
           { color: colors.text_1, alignSelf: 'center' },

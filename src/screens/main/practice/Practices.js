@@ -10,20 +10,20 @@ import {
   View,
   Dimensions,
 } from 'react-native';
-import PracticesBox from '../../components/hoc/PracticesBox';
+import PracticesBox from '../../../components/hoc/PracticesBox';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import Header from '../../components/hoc/Header';
+import Header from '../../../components/hoc/Header';
 import {
   getPracticesAllStart,
   setFilter,
-} from '../../redux/practices/practices.actions';
+} from '../../../redux/practices/practices.actions';
 import {
   selectAllPractices,
   selectFilter,
   selectIsFetching,
-} from '../../redux/practices/practices.selector';
-import { selectCurrentUser } from '../../redux/user/user.selector';
+} from '../../../redux/practices/practices.selector';
+import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
 // import { getAllPracticesStart } from '../../redux/practices/practices.actions';
 
@@ -31,7 +31,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
 
-const AddGroup = ({
+const Practices = ({
   navigation,
   getPracticesAllStart,
   isFetching,
@@ -111,13 +111,14 @@ const AddGroup = ({
         ]}>
         <Header
           navigation={navigation}
-          title="Group Request"
+          title="Practices"
           iconRight1={{
             name: 'filter-sharp',
             type: 'ionicon',
             onPress: openMenu,
             buttonType: 'filter',
           }}
+          notifyIcon={true}
           checkState={checkState}
           setCheckState={setCheckState}
           setFilter={setFilter}
@@ -204,4 +205,4 @@ const mapDispatchToProps = (dispatch) => ({
   setFilter: (data) => dispatch(setFilter(data)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddGroup);
+export default connect(mapStateToProps, mapDispatchToProps)(Practices);

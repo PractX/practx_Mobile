@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useWindowDimensions } from 'react-native';
 import DrawerContent from './DrawerContent';
-import AddGroup from '../addGroup/AddGroup';
+import Practices from './practice/Practices';
 import Profile from './profile/Profile';
 import EditProfile from './profile/EditProfile';
 // import AddGroup from '../addGroup/AddGroup';
+import Appointments from './appointment/Appointments';
+import Media from './media/Media';
+import { Dimensions } from 'react-native';
 
 const Drawer = createDrawerNavigator();
-
+const windowWidth = Dimensions.get('window').width;
 const MainScreen = () => {
   const dimensions = useWindowDimensions();
   const [isInitialRender, setIsInitialRender] = useState(false);
@@ -39,7 +42,7 @@ const MainScreen = () => {
     <Drawer.Navigator
       drawerContent={(props) => <DrawerContent {...props} />}
       drawerStyle={{
-        width: !isInitialRender ? 0 : 280,
+        width: !isInitialRender ? 0 : windowWidth - 80,
         // backgroundColor: 'white',
       }}
       initialRouteName="AddGroup"
@@ -47,7 +50,9 @@ const MainScreen = () => {
       drawerType="slide"
       detachInactiveScreens={true}>
       <Drawer.Screen name="Profile" component={Profile} />
-      <Drawer.Screen name="AddGroup" component={AddGroup} />
+      <Drawer.Screen name="Practices" component={Practices} />
+      <Drawer.Screen name="Appointments" component={Appointments} />
+      <Drawer.Screen name="Media" component={Media} />
       {/* <Drawer.Screen
         name="EditProfile"
         component={EditProfile}

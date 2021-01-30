@@ -168,7 +168,7 @@ const EditProfile = ({
                       }}>
                       <FastImage
                         source={{
-                          uri: imageUri && imageUri.uri,
+                          uri: imageUri ? imageUri.uri : currentUser.avatar,
                           // values.avatar
                           //   ? values.avatar
                           //   : 'https://api.duniagames.co.id/api/content/upload/file/8143860661599124172.jpg',

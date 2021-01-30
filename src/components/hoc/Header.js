@@ -23,6 +23,7 @@ const Header = ({
   navigation,
   title,
   iconRight1,
+  notifyIcon,
   checkState,
   setCheckState,
   setFilter,
@@ -71,7 +72,7 @@ const Header = ({
             name="arrow-back"
             type="material-icons"
             color={colors.text}
-            size={normalize(25)}
+            size={normalize(21)}
             style={{
               color: colors.text,
               // alignSelf: 'center',
@@ -96,8 +97,9 @@ const Header = ({
           <View
             style={{
               backgroundColor: colors.text,
-              width: 23,
-              height: 2,
+              width: 22,
+              height: 1.7,
+              marginTop: 4,
               alignSelf: 'flex-start',
             }}
           />
@@ -105,8 +107,8 @@ const Header = ({
             style={{
               backgroundColor: colors.primary,
               width: 11,
-              height: 2,
-              marginTop: 6,
+              height: 1.8,
+              marginTop: 4,
               alignSelf: 'flex-start',
             }}
           />
@@ -131,125 +133,147 @@ const Header = ({
           {title}
         </Text>
       </View>
-
-      {iconRight1 && (
-        <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
-          {iconRight1.buttonType === 'filter' && (
-            <Menu>
-              <MenuTrigger
-                // text="Select option"
-                children={
+      <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
+        {iconRight1 && iconRight1.buttonType === 'filter' && (
+          <Menu>
+            <MenuTrigger
+              // text="Select option"
+              children={
+                <Icon
+                  name={iconRight1.name}
+                  type={iconRight1.type}
+                  color={colors.text}
+                  size={normalize(19)}
+                  style={{
+                    color: colors.text,
+                    alignSelf: 'center',
+                  }}
+                />
+              }
+            />
+            <MenuOptions
+              customStyles={{
+                optionsWrapper: {
+                  backgroundColor: colors.background,
+                  borderWidth: 0.8,
+                  borderColor: colors.background_1,
+                },
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  backgroundColor: colors.background_1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: 5,
+                }}>
+                <Text
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(16),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
+                  Filter By
+                </Text>
+              </View>
+              <MenuCheckOption
+                name="None Member"
+                setCheckState={setCheckState}
+                checkState={checkState}
+                checkStateType={['opt1', checkState.opt1]}
+                colors={colors}
+              />
+              <MenuCheckOption
+                name="Pending Member"
+                setCheckState={setCheckState}
+                checkState={checkState}
+                checkStateType={['opt2', checkState.opt2]}
+                colors={colors}
+              />
+              <MenuCheckOption
+                name="Member"
+                setCheckState={setCheckState}
+                checkState={checkState}
+                checkStateType={['opt3', checkState.opt3]}
+                colors={colors}
+              />
+              <View style={{ marginVertical: 10 }}>
+                <MenuOption
+                  text="Filter"
+                  onSelect={() => setFilter(checkState)}
+                  customStyles={{
+                    optionWrapper: {
+                      width: '50%',
+                      alignSelf: 'center',
+                      backgroundColor: colors.tertiary,
+                      borderRadius: 5,
+                      // paddingVertical: 4,
+                    },
+                    optionText: {
+                      color: 'white',
+                      fontFamily: 'SofiaProRegular',
+                      fontSize: normalize(15),
+                      textAlign: 'center',
+                    },
+                  }}
+                />
+              </View>
+            </MenuOptions>
+          </Menu>
+        )}
+        {iconRight1 && iconRight1.buttonType === 'save' && (
+          <Button
+            // onPress={handleSubmit}
+            TouchableComponent={() => {
+              return isLoading ? (
+                <ActivityIndicator
+                  animating={true}
+                  size={normalize(21)}
+                  color={colors.text}
+                />
+              ) : (
+                <TouchableOpacity onPress={() => iconRight1.onPress()}>
                   <Icon
                     name={iconRight1.name}
                     type={iconRight1.type}
                     color={colors.text}
-                    size={normalize(19)}
+                    size={normalize(21)}
                     style={{
                       color: colors.text,
-                      alignSelf: 'center',
+                      // alignSelf: 'center',
                     }}
                   />
-                }
-              />
-              <MenuOptions
-                customStyles={{
-                  optionsWrapper: {
-                    backgroundColor: colors.background,
-                    borderWidth: 0.8,
-                    borderColor: colors.background_1,
-                  },
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    backgroundColor: colors.background_1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 5,
-                  }}>
-                  <Text
-                    style={{
-                      color: colors.text,
-                      fontSize: normalize(16),
-                      fontFamily: 'SofiaProRegular',
-                    }}>
-                    Filter By
-                  </Text>
-                </View>
-                <MenuCheckOption
-                  name="None Member"
-                  setCheckState={setCheckState}
-                  checkState={checkState}
-                  checkStateType={['opt1', checkState.opt1]}
-                  colors={colors}
-                />
-                <MenuCheckOption
-                  name="Pending Member"
-                  setCheckState={setCheckState}
-                  checkState={checkState}
-                  checkStateType={['opt2', checkState.opt2]}
-                  colors={colors}
-                />
-                <MenuCheckOption
-                  name="Member"
-                  setCheckState={setCheckState}
-                  checkState={checkState}
-                  checkStateType={['opt3', checkState.opt3]}
-                  colors={colors}
-                />
-                <View style={{ marginVertical: 10 }}>
-                  <MenuOption
-                    text="Filter"
-                    onSelect={() => setFilter(checkState)}
-                    customStyles={{
-                      optionWrapper: {
-                        width: '50%',
-                        alignSelf: 'center',
-                        backgroundColor: colors.tertiary,
-                        borderRadius: 5,
-                        // paddingVertical: 4,
-                      },
-                      optionText: {
-                        color: 'white',
-                        fontFamily: 'SofiaProRegular',
-                        fontSize: normalize(15),
-                        textAlign: 'center',
-                      },
-                    }}
-                  />
-                </View>
-              </MenuOptions>
-            </Menu>
-          )}
-          {iconRight1.buttonType === 'save' && (
-            <Button
-              // onPress={handleSubmit}
-              TouchableComponent={() => {
-                return isLoading ? (
-                  <ActivityIndicator
-                    animating={true}
-                    size={normalize(20)}
-                    color={colors.text}
-                  />
-                ) : (
-                  <TouchableOpacity onPress={() => iconRight1.onPress()}>
-                    <Icon
-                      name={iconRight1.name}
-                      type={iconRight1.type}
-                      color={colors.text}
-                      size={normalize(20)}
-                      style={{
-                        color: colors.text,
-                        // alignSelf: 'center',
-                      }}
-                    />
-                  </TouchableOpacity>
-                );
+                </TouchableOpacity>
+              );
+            }}
+          />
+        )}
+        {notifyIcon && (
+          <TouchableOpacity onPress={() => console.log('hello world')}>
+            <Icon
+              name="ios-notifications-outline"
+              type="ionicon"
+              color={colors.text}
+              size={normalize(21)}
+              style={{
+                color: colors.text,
+                marginLeft: 25,
               }}
             />
-          )}
-        </View>
-      )}
+            <View
+              style={{
+                position: 'absolute',
+                right: 3,
+                top: 2,
+                width: 6,
+                height: 6,
+                backgroundColor: colors.primary,
+                borderRadius: 50,
+              }}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 };

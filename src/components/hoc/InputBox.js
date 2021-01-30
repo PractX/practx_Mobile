@@ -42,7 +42,7 @@ const InputBox = ({
         name={iconName}
         type={iconType}
         color={iconColor ? iconColor : colors.text_1}
-        size={normalize(iconSize ? iconSize : 19)}
+        size={normalize(iconSize ? iconSize : 18)}
         style={[
           styles.formIcons,
           styling && styling.icon ? styling.icon : { alignSelf: 'center' },
