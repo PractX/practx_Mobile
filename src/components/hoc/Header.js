@@ -32,8 +32,8 @@ const Header = ({
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
-  console.log(screenWidth, '&', screenWidth / 2);
-  console.log(checkState);
+  // console.log(screenWidth, '&', screenWidth / 2);
+  // console.log(checkState);
 
   // const advanceCheck = (type) => {
   //   if (type === 'opt1') {

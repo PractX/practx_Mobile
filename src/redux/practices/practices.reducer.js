@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   isLoading: null,
   isFetching: null,
   filter: { opt1: true, opt2: true, opt3: true },
+  joinedPractices: null,
 };
 
 const practicesReducer = (state = INITIAL_STATE, action) => {
@@ -25,6 +26,19 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         isFetching: false,
         isLoading: false,
         practices: action.payload,
+      };
+
+    case PracticesActionTypes.GET_JOIN_PRACTICES_START:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case PracticesActionTypes.GET_JOIN_PRACTICES_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        isLoading: false,
+        joinedPractices: action.payload,
       };
     case PracticesActionTypes.JOIN_PRACTICES:
       return {

@@ -113,8 +113,8 @@ const Practices = ({
           navigation={navigation}
           title="Practices"
           iconRight1={{
-            name: 'filter-sharp',
-            type: 'ionicon',
+            name: 'equalizer',
+            type: 'simple-line-icon',
             onPress: openMenu,
             buttonType: 'filter',
           }}

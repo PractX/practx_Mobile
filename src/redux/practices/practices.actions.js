@@ -14,6 +14,15 @@ export const getPracticesAllFailure = (data) => ({
   payload: data,
 });
 
+export const getJoinedPracticesStart = () => ({
+  type: PracticesActionTypes.GET_JOIN_PRACTICES_START,
+});
+
+export const getJoinedPracticesSuccess = (data) => ({
+  type: PracticesActionTypes.GET_JOIN_PRACTICES_SUCCESS,
+  payload: data,
+});
+
 export const joinPractices = (id) => ({
   type: PracticesActionTypes.JOIN_PRACTICES,
   payload: id,

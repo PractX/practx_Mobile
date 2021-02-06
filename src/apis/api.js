@@ -4,6 +4,7 @@ import {
   REACT_APP_PRACTICES,
   REACT_APP_JOIN_PRACTICES,
   REACT_APP_EDIT_PROFILE,
+  REACT_APP_GET_PRACTICES_DMS,
 } from '@env';
 import { Platform } from 'react-native';
 
@@ -17,8 +18,33 @@ export const getPracticesApi = async (token) => {
   return collectionsMap;
 };
 
+export const getPracticesDmsApi = async (token, id) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const url =
+    REACT_APP_API +
+    REACT_APP_PRACTICES +
+    `/${id}` +
+    REACT_APP_GET_PRACTICES_DMS;
+  const collectionsMap = await Axios.get(url, { headers: headers });
+  return collectionsMap;
+};
+
+export const getJoinedPracticeApi = async (token) => {
+  // console.log(token);
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const url = REACT_APP_API + REACT_APP_JOIN_PRACTICES;
+  const collectionsMap = await Axios.get(url, { headers: headers });
+  return collectionsMap;
+};
+
 export const joinPracticeApi = async (practiceId, token) => {
-  console.log(token);
+  // console.log(token);
   const headers = {
     'Content-Type': 'application/json',
     Authorization: token,
@@ -44,8 +70,8 @@ export const joinPracticeApi = async (practiceId, token) => {
 // };
 
 export const editProfileApi = async (token, data) => {
-  console.log(data.avatar);
-  console.log(data);
+  // console.log(data.avatar);
+  // console.log(data);
 
   const form = await new FormData();
   // const form2 = await new FormData();
@@ -69,13 +95,13 @@ export const editProfileApi = async (token, data) => {
     'Content-Type': `multipart/form-data; boundary=${form._boundary}`,
     Authorization: token,
   };
-  console.log(form);
+  // console.log(form);
   const collectionsMap = await Axios.patch(
     REACT_APP_API + REACT_APP_EDIT_PROFILE,
     form,
     { headers },
   );
-  console.log(collectionsMap);
+  // console.log(collectionsMap);
   return collectionsMap;
 };
 // Twitter Route

@@ -1,8 +1,14 @@
 import { takeLatest, put, all, call, delay, select } from 'redux-saga/effects';
-import { getMontApi, getPracticesApi, joinPracticeApi } from '../../apis/api';
+import {
+  getJoinedPracticeApi,
+  getMontApi,
+  getPracticesApi,
+  joinPracticeApi,
+} from '../../apis/api';
 import PracticesActionTypes from './practices.types';
 import { REACT_APP_MONT } from '@env';
 import {
+  getJoinedPracticesSuccess,
   getPracticesAllStart,
   getPracticesAllSuccess,
   setLoading,
@@ -21,6 +27,27 @@ export function* willGetAllPractices() {
     });
     console.log(result);
     yield put(getPracticesAllSuccess(result.practices));
+  } catch (error) {
+    console.log(error.response);
+    // yield put(
+    //   signInFailure(
+    //     error.response
+    //       ? error.response.data.message || error.response.data.error
+    //       : 'Sign in failed, Please check your connectivity, And try again',
+    //   ),
+    // );
+  }
+}
+
+export function* willGetJoinedPractices() {
+  const token = yield select(userToken);
+  console.log('going in aoi');
+  try {
+    const result = yield getJoinedPracticeApi(token).then(function (response) {
+      return response.data.patient;
+    });
+    console.log(result);
+    yield put(getJoinedPracticesSuccess(result.practices));
   } catch (error) {
     console.log(error.response);
     // yield put(
@@ -75,10 +102,17 @@ export function* onGetAllPractices() {
 export function* onJoinPractices() {
   yield takeLatest(PracticesActionTypes.JOIN_PRACTICES, willJoinPractices);
 }
+export function* onGetJoinedPractices() {
+  yield takeLatest(
+    PracticesActionTypes.GET_JOIN_PRACTICES_START,
+    willGetJoinedPractices,
+  );
+}
 
 export function* practicesSagas() {
   yield all([
     call(onGetAllPractices),
+    call(onGetJoinedPractices),
     call(onJoinPractices),
     // call(onSignUpSuccess),
   ]);

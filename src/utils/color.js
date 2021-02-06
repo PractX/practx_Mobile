@@ -16,7 +16,7 @@ export const ColorList = [
     background_2: '#252a3e',
     card: '#ffffff',
     text: '#777777',
-    text_1: '#4d4c4c',
+    text_1: '#9b9b9b',
     text_2: '#a8a8a8',
     text_4: '#9b9b9b',
     btn_hover: '#a8a8a8',
