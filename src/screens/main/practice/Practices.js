@@ -25,6 +25,9 @@ import {
 } from '../../../redux/practices/practices.selector';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
+import { ActivityIndicator } from 'react-native-paper';
+import normalize from '../../../utils/normalize';
+import Error from '../../../components/hoc/Error';
 // import { getAllPracticesStart } from '../../redux/practices/practices.actions';
 
 const windowWidth = Dimensions.get('window').width;
@@ -165,8 +168,27 @@ const Practices = ({
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text>No data</Text>
-              {/* {errorData ? (
+              {isFetching ? (
+                <ActivityIndicator
+                  animating={isFetching}
+                  size={normalize(30)}
+                  color={colors.text}
+                />
+              ) : (
+                <Error
+                  title={'OOPS!!!'}
+                  type="internet"
+                  subtitle={
+                    'Unable to get Practices, Please check your internet connectivity'
+                  }
+                  action={getPracticesAllStart}
+                />
+              )}
+            </View>
+          )}
+        </View>
+      </View>
+      {/* {errorData ? (
                 <Error
                   title={errorData.includes('internet') ? 'OOPS!!!' : 'SORRY'}
                   subtitle={
@@ -185,10 +207,6 @@ const Practices = ({
                   color={colors.primary}
                 />
               )} */}
-            </View>
-          )}
-        </View>
-      </View>
     </SafeAreaView>
   );
 };

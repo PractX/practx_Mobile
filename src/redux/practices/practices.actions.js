@@ -23,6 +23,20 @@ export const getJoinedPracticesSuccess = (data) => ({
   payload: data,
 });
 
+export const getPracticesDmsStart = (data) => ({
+  type: PracticesActionTypes.GET_PRACTICES_DMS_START,
+  payload: data,
+});
+export const getPracticesDmsSuccess = (data) => ({
+  type: PracticesActionTypes.GET_PRACTICES_DMS_SUCCESS,
+  payload: data,
+});
+
+export const setPracticeId = (data) => ({
+  type: PracticesActionTypes.SET_PRACTICE_ID,
+  payload: data,
+});
+
 export const joinPractices = (id) => ({
   type: PracticesActionTypes.JOIN_PRACTICES,
   payload: id,
@@ -36,4 +50,8 @@ export const setLoading = (action) => ({
 export const setFilter = (data) => ({
   type: PracticesActionTypes.SET_FILTER,
   payload: data,
+});
+
+export const clearPracticeData = () => ({
+  type: PracticesActionTypes.CLEAR_PRACTICE_DATA,
 });

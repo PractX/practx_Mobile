@@ -18,14 +18,14 @@ export const getPracticesApi = async (token) => {
   return collectionsMap;
 };
 
-export const getPracticesDmsApi = async (token, id) => {
+export const getPracticesDmsApi = async (id, token) => {
   const headers = {
     'Content-Type': 'application/json',
     Authorization: token,
   };
   const url =
     REACT_APP_API +
-    REACT_APP_PRACTICES +
+    REACT_APP_JOIN_PRACTICES +
     `/${id}` +
     REACT_APP_GET_PRACTICES_DMS;
   const collectionsMap = await Axios.get(url, { headers: headers });

@@ -33,6 +33,7 @@ import {
   getSubscriptionApi,
 } from '../../apis/api';
 import { showMessage, hideMessage } from 'react-native-flash-message';
+import { clearPracticeData } from '../practices/practices.actions';
 
 // const userActive = state => state.user.currentUser;
 const userToken = (state) => state.user.token.key;
@@ -499,6 +500,7 @@ export function* signOut() {
   try {
     yield delay(2500);
     yield put(signOutSuccess());
+    yield put(clearPracticeData());
   } catch (error) {
     yield put(signOutFailure(error));
   }

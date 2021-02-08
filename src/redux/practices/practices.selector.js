@@ -87,5 +87,14 @@ export const selectJoinedPractices = createSelector(
   (practices) => practices.joinedPractices,
 );
 
+export const selectCurrentPracticeId = createSelector(
+  [selectPractices],
+  (practices) => practices.currentPracticeId,
+);
+
+export const selectPracticeDms = createSelector(
+  [selectPractices],
+  (practices) => practices.practiceDms,
+);
 // joinedPractice;
 // export const selectToken = createSelector([selectUser], (user) => user.token);
