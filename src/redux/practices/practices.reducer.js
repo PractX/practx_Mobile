@@ -5,15 +5,48 @@ const INITIAL_STATE = {
   isLoading: null,
   isFetching: null,
   filter: { opt1: true, opt2: true, opt3: true },
+  joinedPractices: null,
+  currentPracticeId: null,
+  practiceDms: null,
+  error: null,
 };
 
 const practicesReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case PracticesActionTypes.CLEAR_PRACTICE_DATA:
+      return {
+        ...state,
+        practices: null,
+        isLoading: null,
+        isFetching: null,
+        filter: { opt1: true, opt2: true, opt3: true },
+        joinedPractices: null,
+        currentPracticeId: null,
+        practiceDms: null,
+      };
+    case PracticesActionTypes.SET_PRACTICE_ID:
+      return {
+        ...state,
+        currentPracticeId: action.payload,
+      };
     case PracticesActionTypes.SET_FILTER:
       return {
         ...state,
         filter: action.payload,
       };
+    case PracticesActionTypes.GET_PRACTICES_DMS_START:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case PracticesActionTypes.GET_PRACTICES_DMS_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        isLoading: false,
+        practiceDms: action.payload,
+      };
+
     case PracticesActionTypes.GET_ALL_PRACTICES_START:
       return {
         ...state,
@@ -25,6 +58,27 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         isFetching: false,
         isLoading: false,
         practices: action.payload,
+      };
+
+    case PracticesActionTypes.GET_ALL_PRACTICES_FAILURE:
+      return {
+        ...state,
+        isFetching: false,
+        isLoading: false,
+        error: action.payload,
+      };
+
+    case PracticesActionTypes.GET_JOIN_PRACTICES_START:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case PracticesActionTypes.GET_JOIN_PRACTICES_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        isLoading: false,
+        joinedPractices: action.payload,
       };
     case PracticesActionTypes.JOIN_PRACTICES:
       return {

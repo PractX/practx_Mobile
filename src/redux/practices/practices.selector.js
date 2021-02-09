@@ -6,10 +6,10 @@ export const selectAllPractices = createSelector(
   [selectPractices],
   (practices) => {
     const { filter } = practices;
-    console.log(filter);
+    // console.log(filter);
     if (practices.practices) {
       const data = practices.practices.rows.filter((item) => {
-        console.log(item);
+        // console.log(item);
         if (
           filter.opt1 === true &&
           filter.opt2 === false &&
@@ -61,7 +61,7 @@ export const selectAllPractices = createSelector(
 
         // return practices.practices;
       });
-      console.log(data);
+      // console.log(data);
       return data;
     } else {
       return practices.practices;
@@ -79,8 +79,22 @@ export const selectIsLoading = createSelector(
 
 export const selectIsFetching = createSelector(
   [selectPractices],
-  (practices) => {
-    practices.isFetching;
-  },
+  (practices) => practices.isFetching,
 );
+
+export const selectJoinedPractices = createSelector(
+  [selectPractices],
+  (practices) => practices.joinedPractices,
+);
+
+export const selectCurrentPracticeId = createSelector(
+  [selectPractices],
+  (practices) => practices.currentPracticeId,
+);
+
+export const selectPracticeDms = createSelector(
+  [selectPractices],
+  (practices) => practices.practiceDms,
+);
+// joinedPractice;
 // export const selectToken = createSelector([selectUser], (user) => user.token);

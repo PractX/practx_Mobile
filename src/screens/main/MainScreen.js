@@ -9,6 +9,7 @@ import EditProfile from './profile/EditProfile';
 import Appointments from './appointment/Appointments';
 import Media from './media/Media';
 import { Dimensions } from 'react-native';
+import Chats from './chat/Chats';
 
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -45,11 +46,12 @@ const MainScreen = () => {
         width: !isInitialRender ? 0 : windowWidth - 80,
         // backgroundColor: 'white',
       }}
-      initialRouteName="AddGroup"
+      initialRouteName="Practices"
       overlayColor={0}
       drawerType="slide"
       detachInactiveScreens={true}>
       <Drawer.Screen name="Profile" component={Profile} />
+      <Drawer.Screen name="Chats" component={Chats} />
       <Drawer.Screen name="Practices" component={Practices} />
       <Drawer.Screen name="Appointments" component={Appointments} />
       <Drawer.Screen name="Media" component={Media} />

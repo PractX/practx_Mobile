@@ -11,7 +11,7 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-
+import loaderGif from '../../../../assets/loading.gif';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
@@ -146,10 +146,7 @@ const Media = ({ navigation }) => {
 
             <View style={{ flexDirection: 'row' }}>
               <FastImage
-                source={{
-                  uri:
-                    'https://wwwnc.cdc.gov/travel/images/travel-with-medicine.jpg',
-                }}
+                source={loaderGif}
                 onError={(error) => console.log(error)}
                 style={{
                   width: 60,

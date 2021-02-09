@@ -210,13 +210,17 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case UserActionTypes.SIGN_OUT_SUCCESS:
       return {
         ...state,
-        isLoading: false,
         currentUser: null,
-        subscription: null,
         downloads: null,
         myDownloads: null,
+        subscription: null,
+        message: null,
         token: null,
+        success: null,
         error: null,
+        isLoading: null,
+        confirmMessage: null,
+        paymentData: null,
       };
     case UserActionTypes.SIGN_IN_FAILURE:
     case UserActionTypes.SIGN_OUT_FAILURE:

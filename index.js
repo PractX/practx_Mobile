@@ -10,6 +10,9 @@ import { store, persistor } from './src/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { name as appName } from './app.json';
 import { MenuProvider } from 'react-native-popup-menu';
+import PubNub from 'pubnub';
+import { PubNubProvider, usePubNub } from 'pubnub-react';
+
 // import Clipboard from '@react-native-community/clipboard';
 // import admob, {MaxAdContentRating} from '@react-native-firebase/admob';
 // import RNFetchBlob from 'rn-fetch-blob';
@@ -19,6 +22,14 @@ import {
   // YellowBox
 } from 'react-native';
 import { NetworkProvider } from 'react-native-offline';
+
+const pubnub = new PubNub({
+  publishKey: 'pub-c-094cf6df-cba1-4ce9-93a1-c226c2ecd98b',
+  subscribeKey: 'sub-c-3ac6e21e-ec61-11ea-92d8-06a89e77181a',
+  autoNetworkDetection: true, // enable for non-browser environment automatic reconnection
+  restore: true, // enable catchup on missed messages
+  // uuid: 'myUniqueUUID',
+});
 
 // SHOW NETWORK DEBUG
 // global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
@@ -35,15 +46,17 @@ const RNRedux = () => (
   // >
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <MenuProvider
-        customStyles={{
-          menuProviderWrapper: {
-            backgroundColor: 'green',
-            padding: 0,
-          },
-        }}>
-        <App />
-      </MenuProvider>
+      <PubNubProvider client={pubnub}>
+        <MenuProvider
+          customStyles={{
+            menuProviderWrapper: {
+              backgroundColor: 'green',
+              padding: 0,
+            },
+          }}>
+          <App />
+        </MenuProvider>
+      </PubNubProvider>
     </PersistGate>
   </Provider>
   //{/* </NetworkProvider> */}

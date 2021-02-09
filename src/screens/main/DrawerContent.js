@@ -61,6 +61,7 @@ import { Formik } from 'formik';
 import InputBox from '../../components/hoc/InputBox';
 import ToggleSwitch from 'toggle-switch-react-native';
 import { Keyboard } from 'react-native';
+import { setFilter } from '../../redux/practices/practices.actions';
 
 const DrawerContent = ({
   navigation,
@@ -73,6 +74,7 @@ const DrawerContent = ({
   setMyDownloads,
   currentNetState,
   storageDownload,
+  setFilter,
 }) => {
   const { colors } = useTheme();
   // const route = useRoute();
@@ -309,7 +311,7 @@ const DrawerContent = ({
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'AddGroup',
+                      'Chats',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -333,8 +335,38 @@ const DrawerContent = ({
                 label="Join Practice"
                 onPress={() => {
                   requestAnimationFrame(() => {
+                    setFilter({
+                      opt1: true,
+                      opt2: true,
+                      opt3: true,
+                    });
                     navigation.navigate(
                       'Practices',
+                      // , {
+                      //   screen: 'Home',
+                      // }
+                    );
+                  });
+                }}
+              />
+              <DrawerItem
+                labelStyle={{
+                  fontFamily: 'SofiaProSemiBold',
+                  fontSize: normalize(16),
+                  paddingLeft: 3,
+                  // color: colors.text,
+                }}
+                inactiveTintColor={colors.text}
+                activeTintColor={colors.secondary}
+                focused={
+                  navigation.dangerouslyGetState().index === 3 ? true : false
+                }
+                activeBackgroundColor={null}
+                label="Appointments"
+                onPress={() => {
+                  requestAnimationFrame(() => {
+                    navigation.navigate(
+                      'Appointments',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -355,11 +387,11 @@ const DrawerContent = ({
                   navigation.dangerouslyGetState().index === 4 ? true : false
                 }
                 activeBackgroundColor={null}
-                label="Appointments"
+                label="Media"
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'Appointments',
+                      'Media',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -392,31 +424,7 @@ const DrawerContent = ({
                   });
                 }}
               />
-              <DrawerItem
-                labelStyle={{
-                  fontFamily: 'SofiaProSemiBold',
-                  fontSize: normalize(16),
-                  paddingLeft: 3,
-                  // color: colors.text,
-                }}
-                inactiveTintColor={colors.text}
-                activeTintColor={colors.secondary}
-                focused={
-                  navigation.dangerouslyGetState().index === 3 ? true : false
-                }
-                activeBackgroundColor={null}
-                label="Media"
-                onPress={() => {
-                  requestAnimationFrame(() => {
-                    navigation.navigate(
-                      'Media',
-                      // , {
-                      //   screen: 'Home',
-                      // }
-                    );
-                  });
-                }}
-              /> */}
+             */}
             </View>
 
             {/* ---------------------------- Customer Support ---------------------------- */}
@@ -690,6 +698,7 @@ const mapDispatchToProps = (dispatch) => ({
   setCurrentUser: (data) => dispatch(setCurrentUser(data)),
   signOutStart: () => dispatch(signOutStart()),
   setMyDownloads: (data) => dispatch(setMyDownloads(data)),
+  setFilter: (data) => dispatch(setFilter(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DrawerContent);
