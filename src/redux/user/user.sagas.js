@@ -130,7 +130,7 @@ export function* signIn({ payload: { email, password } }) {
         message: result.message,
         type: 'success',
       });
-      yield delay(2000);
+      yield delay(500);
       yield put(setToken(token));
       yield yield put(signInSuccess(result.patient));
     }
@@ -161,7 +161,7 @@ export function* signIn({ payload: { email, password } }) {
     //   message: error.response ? error.response.data.errors : error.message,
     //   type: 'danger',
     // });
-    yield delay(2000);
+    // yield delay(1000);
     yield put(
       signInFailure(
         error.response
@@ -268,19 +268,28 @@ export function* willEditProfile({ payload: profileDetails }) {
     console.log(error.response);
     let eMsg = '';
     if (error.response) {
-      error.response.data.errors.map(function (i, err) {
-        if (error.response.data.errors.length > 1) {
-          eMsg += err + 1 + '. ' + i + '\n';
-          console.log(eMsg);
-        } else {
-          eMsg += i;
-          console.log(eMsg);
-        }
-      });
-      showMessage({
-        message: eMsg,
-        type: 'danger',
-      });
+      if (error.response.data.errors) {
+        error.response.data.errors.map(function (i, err) {
+          if (error.response.data.errors.length > 1) {
+            eMsg += err + 1 + '. ' + i + '\n';
+            console.log(eMsg);
+          } else {
+            eMsg += i;
+            console.log(eMsg);
+          }
+        });
+        showMessage({
+          message: eMsg,
+          type: 'danger',
+        });
+      } else {
+        showMessage({
+          message: error.response.data.includes('Too Large')
+            ? 'Profile Image file too large'
+            : error.response.data,
+          type: 'danger',
+        });
+      }
     } else {
       showMessage({
         message: error.message,
@@ -291,7 +300,11 @@ export function* willEditProfile({ payload: profileDetails }) {
     yield put(
       signUpFailure(
         error.response
-          ? error.response.data.errors || error.response.data.errors
+          ? error.response.data.errors ||
+            error.response.data.errors ||
+            error.response.data.includes('Too Large')
+            ? 'Profile Image file too large'
+            : error.response.data
           : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
       ),
     );

@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   isFetching: null,
   filter: { opt1: true, opt2: true, opt3: true },
   joinedPractices: null,
-  currentPracticeId: null,
+  currentPracticeId: 0,
   practiceDms: null,
   error: null,
 };
@@ -21,8 +21,21 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         isFetching: null,
         filter: { opt1: true, opt2: true, opt3: true },
         joinedPractices: null,
-        currentPracticeId: null,
+        // currentPracticeId: null,
         practiceDms: null,
+      };
+    case PracticesActionTypes.CHAT_WITH_PRACTICE_START:
+      return {
+        ...state,
+        isFetching: true,
+      };
+
+    case PracticesActionTypes.CHAT_WITH_PRACTICE_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        isLoading: false,
+        practiceDms: action.payload,
       };
     case PracticesActionTypes.SET_PRACTICE_ID:
       return {

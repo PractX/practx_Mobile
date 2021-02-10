@@ -23,8 +23,11 @@ const PracticeList = ({
   navigation,
   practicesRefreshing,
   joinedPractices,
-  showStaffs,
+  chatWithPracticeStart,
   setShowStaffs,
+  currentPracticeId,
+  getPracticesDmsStart,
+  practiceDms,
 }) => {
   const { colors } = useTheme();
   const ref = useRef();
@@ -104,15 +107,19 @@ const PracticeList = ({
         initialNumToRender={5}
         updateCellsBatchingPeriod={5}
         showsVerticalScrollIndicator={false}
-        style={{}}
+        // style={{}}
         data={joinedPractices}
         numColumns={1}
         renderItem={({ item, index }) => (
           <PracticesBox
             id={index}
+            navigation={navigation}
             practice={item}
-            showStaffs={showStaffs}
+            chatWithPracticeStart={chatWithPracticeStart}
             setShowStaffs={setShowStaffs}
+            currentPracticeId={currentPracticeId}
+            getPracticesDmsStart={getPracticesDmsStart}
+            practiceDms={practiceDms}
           />
         )}
         keyExtractor={(item, index) => item.display_url}
@@ -147,11 +154,11 @@ const PracticeList = ({
               )}
           </View>
            )} */}
-      <StaffList
+      {/* <StaffList
         showStaffs={showStaffs}
         setShowStaffs={setShowStaffs}
         colors={colors}
-      />
+      /> */}
     </View>
   );
 };

@@ -156,6 +156,7 @@ const Practices = ({
                   userId={currentUser ? currentUser.id : 0}
                   id={index}
                   practice={item}
+                  navigation={navigation}
                 />
               )}
               keyExtractor={(item, index) => item.display_url}

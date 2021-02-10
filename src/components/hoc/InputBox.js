@@ -17,6 +17,11 @@ const InputBox = ({
   iconType,
   iconColor,
   iconSize,
+  icon2Name,
+  icon2Type,
+  icon2Color,
+  icon2Size,
+  icon2Action,
   placeholder,
   placeholderTextColor,
   autoCompleteType,
@@ -66,6 +71,18 @@ const InputBox = ({
         onChangeText={handleChange(name)}
         onBlur={handleBlur(name)}
         value={valuesType}
+      />
+
+      <Icon
+        onPress={() => icon2Action('Attaching')}
+        name={icon2Name}
+        type={icon2Type}
+        color={icon2Color ? icon2Color : colors.text_1}
+        size={normalize(icon2Size ? icon2Size : 18)}
+        style={[
+          styles.formIcons,
+          styling && styling.icon ? styling.icon : { alignSelf: 'center' },
+        ]}
       />
     </View>
   );

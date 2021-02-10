@@ -18,6 +18,7 @@ import {
 import { CheckBox } from 'native-base';
 import MenuCheckOption from './MenuCheckOption';
 import { ActivityIndicator } from 'react-native-paper';
+import FastImage from 'react-native-fast-image';
 
 const Header = ({
   navigation,
@@ -29,6 +30,7 @@ const Header = ({
   setFilter,
   backArrow,
   isLoading,
+  practice,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
@@ -57,28 +59,102 @@ const Header = ({
         backgroundColor: colors.background,
       }}>
       {backArrow ? (
-        <TouchableOpacity
+        <View
           style={{
             justifyContent: 'center',
-            flexDirection: 'column',
-            marginHorizontal: 20,
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginLeft: 20,
             marginVertical: 15,
-            width: 40,
-            height: 30,
-            alignItems: 'flex-start',
-          }}
-          onPress={() => navigation.goBack()}>
-          <Icon
-            name="arrow-back"
-            type="material-icons"
-            color={colors.text}
-            size={normalize(21)}
+          }}>
+          <TouchableOpacity
             style={{
-              color: colors.text,
-              // alignSelf: 'center',
+              width: 40,
+              height: 30,
+              alignItems: 'flex-start',
+              paddingTop: 5,
             }}
-          />
-        </TouchableOpacity>
+            onPress={() => navigation.goBack()}>
+            <Icon
+              name="arrow-back"
+              type="material-icons"
+              color={colors.text}
+              size={normalize(21)}
+              style={{
+                color: colors.text,
+                // alignSelf: 'center',
+              }}
+            />
+          </TouchableOpacity>
+          {practice && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <FastImage
+                source={{
+                  uri:
+                    (practice && practice.logo) ||
+                    'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
+                }}
+                style={[
+                  {
+                    width: 40,
+                    height: 40,
+                    borderRadius: 15,
+                    backgroundColor: colors.background_1,
+                    marginVertical: 5,
+                    justifyContent: 'flex-end',
+                  },
+                  // currentPracticeId === practice.id && {
+                  //   borderWidth: 1,
+                  //   borderColor: colors.text,
+                  // },
+                ]}
+                resizeMode={FastImage.resizeMode.cover}>
+                {/* {currentPracticeId === practice.id && <Icon
+            name={'primitive-dot'}
+            type={'octicon'}
+            color={colors.text}
+            size={normalize(13)}
+            style={[
+              {
+                right: 5,
+                alignSelf: 'flex-end',
+              },
+            ]}
+          />} */}
+              </FastImage>
+              <View style={{ flexDirection: 'column', paddingLeft: 10 }}>
+                <Text
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(15),
+                    fontFamily: 'SofiaProSemiBold',
+                  }}>
+                  {practice &&
+                  practice.practiceName &&
+                  practice.practiceName.length > 18
+                    ? practice.practiceName.substring(0, 11 - 3) + '...'
+                    : practice.practiceName}
+                </Text>
+                <Text
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(12),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
+                  {practice &&
+                  practice.specialty &&
+                  practice.specialty.length > 18
+                    ? practice.specialty.substring(0, 18 - 3) + '...'
+                    : practice.specialty}
+                </Text>
+              </View>
+            </View>
+          )}
+        </View>
       ) : (
         <TouchableOpacity
           style={{

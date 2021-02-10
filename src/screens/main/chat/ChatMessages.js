@@ -24,6 +24,7 @@ import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native';
 import {
+  chatWithPracticeStart,
   getJoinedPracticesStart,
   getPracticesDmsStart,
   setFilter,
@@ -55,6 +56,7 @@ const ChatMessages = ({
   isFetching,
   currentPracticeId,
   practiceDms,
+  chatWithPracticeStart,
 }) => {
   const { colors } = useTheme();
   const ref = useRef();
@@ -64,8 +66,11 @@ const ChatMessages = ({
   const [practicesRefreshing, setPracticesRefreshing] = useState(false);
   const isFocused = useIsFocused();
   const [showStaffs, setShowStaffs] = useState(false);
+  const d = new Date();
+  const time = d.getTime();
 
   const getMessages = (cha, num) => {
+    console.log('Chass', cha);
     const channels = [cha];
     console.log(channels);
     console.log(num);
@@ -73,13 +78,13 @@ const ChatMessages = ({
     pubnub.fetchMessages(
       {
         channels: [channels[0]],
-        count: num,
-        // end: time,
+        count: 10,
+        end: time,
       },
 
       (status, data) => {
         if (status.statusCode === 200) {
-          console.log(status);
+          // console.log(status);
           console.log('Datas', data);
         }
       },
@@ -101,21 +106,27 @@ const ChatMessages = ({
   //   pubnub.subscribe({ channels });
   // }, [pubnub, channels]);
 
-  // useEffect(() => {
-  //   console.log(joinedPractices);
-  //   // isFetching ? setRefreshing(true) : setRefreshing(false);
-  //   // pubnub.getMessage('', (msg) => {
-  //   //   console.log(msg);
-  //   // });
-  //   getMessages('c7fb1fce-aac7-492e-b07b-f1007c6edf96', 10);
-  //   // pubnub
-  //   //   .fetchMessages({
-  //   //     channels: ['bced67cb-c735-4382-abe2-9c0f0c4e637f'],
-  //   //     // count: 20,
-  //   //     // end: time,
-  //   //   })
-  //   //   .then((status, data) => console.log(data));
-  // }, [pubnub]);
+  useEffect(() => {
+    console.log(joinedPractices);
+    // isFetching ? setRefreshing(true) : setRefreshing(false);
+    // pubnub.getMessage('', (msg) => {
+    //   console.log(msg);
+    // });
+    getMessages(
+      practiceDms &&
+        practiceDms.length &&
+        practiceDms.find((item) => item.practiceId === currentPracticeId)
+          .channelName,
+      10,
+    );
+    // pubnub
+    //   .fetchMessages({
+    //     channels: ['bced67cb-c735-4382-abe2-9c0f0c4e637f'],
+    //     // count: 20,
+    //     // end: time,
+    //   })
+    //   .then((status, data) => console.log(data));
+  }, [pubnub]);
   const pract = async () => {
     await getJoinedPracticesStart();
     // if (!isFetching) {
@@ -138,7 +149,10 @@ const ChatMessages = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, isFocused]);
   useEffect(() => {
-    console.log(practiceDms);
+    // console.log(
+    //   practiceDms.find((item) => item.practiceId === currentPracticeId).Practice
+    //     .channelName,
+    // );
     const unsubscribe = navigation.addListener('drawerClose', (e) => {
       // Do something
       setStyle1('close');
@@ -194,73 +208,68 @@ const ChatMessages = ({
           navigation={navigation}
           practicesRefreshing={practicesRefreshing}
           joinedPractices={joinedPractices}
-          showStaffs={showStaffs}
+          chatWithPracticeStart={chatWithPracticeStart}
           setShowStaffs={setShowStaffs}
+          getPracticesDmsStart={getPracticesDmsStart}
+          currentPracticeId={currentPracticeId}
+          practiceDms={
+            practiceDms &&
+            practiceDms.find((item) => item.practiceId === currentPracticeId)
+          }
         />
 
-        {practiceDms ? (
-          <FlatList
-            ref={ref}
-            // refreshControl={
-            //   <RefreshControl
-            //     refreshing={refreshing}
-            //     onRefresh={() => getPracticesAllStart()}
-            //   />
-            // }
-            // removeClippedSubviews
-            // ListEmptyComponent
-            initialNumToRender={5}
-            updateCellsBatchingPeriod={5}
-            showsVerticalScrollIndicator={true}
-            style={{
-              height: windowHeight - 60,
-              width: style1 === 'open' ? appwidth - 50 : appwidth,
-              alignSelf: 'center',
-              marginTop: 10,
-              // backgroundColor: 'yellow',
-            }}
-            data={practiceDms}
-            numColumns={1}
-            renderItem={({ item, index }) => (
-              <DmsBox
-                id={index}
-                item={item}
-                // channel
-                styling={{
-                  width: style1 === 'open' ? appwidth - 50 : appwidth,
-                }}
-              />
-            )}
-            keyExtractor={(item, index) => item.display_url}
-            // showsHorizontalScrollIndicator={false}
-            // extraData={selected}
-          />
+        {practiceDms && practiceDms.length ? (
+          <>
+            <View
+              style={{
+                width: style1 === 'open' ? appwidth - 50 : appwidth,
+                alignSelf: 'center',
+                marginTop: 30,
+              }}>
+              <Text
+                style={{
+                  color: colors.text,
+                  fontSize: normalize(14),
+                  fontFamily: 'SofiaProSemiBold',
+                }}>
+                Direct message
+              </Text>
+            </View>
+            <DmsBox
+              id={currentPracticeId}
+              item={
+                practiceDms &&
+                practiceDms.find(
+                  (item) => item.practiceId === currentPracticeId,
+                )
+              }
+              practiceDms={practiceDms}
+              navigation={navigation}
+              // channel
+              styling={{
+                width: style1 === 'open' ? appwidth - 50 : appwidth,
+              }}
+            />
+          </>
         ) : (
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text>No data</Text>
-            {/* {errorData ? (
-                <Error
-                  title={errorData.includes('internet') ? 'OOPS!!!' : 'SORRY'}
-                  subtitle={
-                    errorData.includes('internet')
-                      ? 'Poor internet connection, Please check your connectivity, And try again'
-                      : errorData.includes('fetch')
-                      ? 'Enable to fetch post, please try again later'
-                      : 'Download link is not supported OR Account is private'
-                  }
-                />
-              ) : (
-                <Spinner
-                  style={styles.spinner}
-                  size={80}
-                  type="Circle"
-                  color={colors.primary}
-                />
-              )} */}
+          <View style={{ padding: 80, alignItems: 'center' }}>
+            <Icon
+              name="chat-alert-outline"
+              type="material-community"
+              color={colors.text_2}
+              size={normalize(50)}
+              style={{ color: colors.text_1, alignSelf: 'center' }}
+            />
+            <Text
+              style={{
+                color: colors.text_2,
+                alignSelf: 'center',
+                fontSize: normalize(16),
+                fontFamily: 'SofiaProRegular',
+                textAlign: 'center',
+              }}>
+              Join a Practice to have access to chat message
+            </Text>
           </View>
         )}
       </View>
@@ -280,7 +289,8 @@ const mapDispatchToProps = (dispatch) => ({
   // getPracticesAllStart: () => dispatch(getPracticesAllStart()),
   getJoinedPracticesStart: () => dispatch(getJoinedPracticesStart()),
   setFilter: (data) => dispatch(setFilter(data)),
-  getPracticesDmsStart: (data) => dispatch(getPracticesDmsStart(data)),
+  getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
+  chatWithPracticeStart: (data) => dispatch(chatWithPracticeStart(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatMessages);
