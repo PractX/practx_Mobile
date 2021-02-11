@@ -5,6 +5,7 @@ import { Dimensions, TouchableOpacity } from 'react-native';
 import { View, Text } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import normalize from '../../../utils/normalize';
+import timeAgo from '../../../utils/timeAgo';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -21,73 +22,14 @@ const DmsBox = ({ id, item, navigation, practiceDms }) => {
     const unixTimestamp = message.timetoken / 10000000;
     const gmtDate = new Date(unixTimestamp * 1000);
     // const localeDateTime = gmtDate.toLocaleString();
-    setNewMessageTime(time_ago(gmtDate));
+    setNewMessageTime(timeAgo(gmtDate));
   };
-
-  const time_ago = (time) => {
-    switch (typeof time) {
-      case 'number':
-        break;
-      case 'string':
-        time = +new Date(time);
-        break;
-      case 'object':
-        if (time.constructor === Date) {
-          time = time.getTime();
-        }
-        break;
-      default:
-        time = +new Date();
-    }
-    let time_formats = [
-      [60, 'seconds', 1], // 60
-      [120, '1 minute ago', '1 minute from now'], // 60*2
-      [3600, 'minutes', 60], // 60*60, 60
-      [7200, '1 hour ago', '1 hour from now'], // 60*60*2
-      [86400, 'hours', 3600], // 60*60*24, 60*60
-      [172800, 'Yesterday', 'Tomorrow'], // 60*60*24*2
-      [604800, 'days', 86400], // 60*60*24*7, 60*60*24
-      [1209600, 'Last week', 'Next week'], // 60*60*24*7*4*2
-      [2419200, 'weeks', 604800], // 60*60*24*7*4, 60*60*24*7
-      [4838400, 'Last month', 'Next month'], // 60*60*24*7*4*2
-      [29030400, 'months', 2419200], // 60*60*24*7*4*12, 60*60*24*7*4
-      [58060800, 'Last year', 'Next year'], // 60*60*24*7*4*12*2
-      [2903040000, 'years', 29030400], // 60*60*24*7*4*12*100, 60*60*24*7*4*12
-      [5806080000, 'Last century', 'Next century'], // 60*60*24*7*4*12*100*2
-      [58060800000, 'centuries', 2903040000], // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
-    ];
-    var seconds = (+new Date() - time) / 1000,
-      token = 'ago',
-      list_choice = 1;
-
-    if (seconds == 0) {
-      return 'Just now';
-    }
-    if (seconds < 0) {
-      seconds = Math.abs(seconds);
-      token = 'from now';
-      list_choice = 2;
-    }
-    var i = 0,
-      format;
-    while ((format = time_formats[i++])) {
-      if (seconds < format[0]) {
-        if (typeof format[2] === 'string') {
-          return format[list_choice];
-        } else {
-          return (
-            Math.floor(seconds / format[2]) + ' ' + format[1] + ' ' + token
-          );
-        }
-      }
-    }
-    return time;
-  };
+  // console.log(item);
 
   const getMessages = (cha, num) => {
     const myChannels = [cha];
-    console.log(cha);
-    console.log(num);
+    // console.log(cha);
+    // console.log(num);
 
     pubnub.fetchMessages(
       {
@@ -97,9 +39,10 @@ const DmsBox = ({ id, item, navigation, practiceDms }) => {
       },
 
       (status, data) => {
+        // console.log(data);
         if (status.statusCode === 200) {
           let { channels } = data;
-          console.log(status);
+          // console.log(status);
           if (Object.keys(channels).length === 0) {
             console.log(Object.keys(channels).length === 0);
             // console.log(channels);
@@ -116,23 +59,23 @@ const DmsBox = ({ id, item, navigation, practiceDms }) => {
             // const localeDateTime = gmtDate.toLocaleString();
             const message = channels[myChannels][0];
             // console.log('Hello', localeDateTime);
-            console.log('new Msfg', message);
+            // console.log('new Msfg', message);
             setNewMessage(message);
             addTime(message);
           }
-          console.log(newMessage);
+          // console.log(newMessage);
         }
       },
     );
   };
-  const handleMessage = (event) => {
-    const message = event.message;
-    if (typeof message === 'string' || message.hasOwnProperty('text')) {
-      const text = message.text || message;
-      // console.log(text);
-      newMessage((messages) => [...messages, text]);
-    }
-  };
+  // const handleMessage = (event) => {
+  //   const message = event.message;
+  //   if (typeof message === 'string' || message.hasOwnProperty('text')) {
+  //     const text = message.text || message;
+  //     // console.log(text);
+  //     newMessage((messages) => [...messages, text]);
+  //   }
+  // };
   useEffect(() => {
     // var d = new Date('16125953266304813');
     var timeValue = 16125953266304813;
@@ -143,8 +86,8 @@ const DmsBox = ({ id, item, navigation, practiceDms }) => {
     console.log(newMessage);
     if (item) {
       getMessages(item.channelName, 1);
-      pubnub.addListener({ message: handleMessage });
-      pubnub.subscribe([item.channelName]);
+      // pubnub.addListener({ message: handleMessage });
+      // pubnub.subscribe([item.channelName]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, pubnub]);
@@ -182,6 +125,7 @@ const DmsBox = ({ id, item, navigation, practiceDms }) => {
             getMessages(item && item.channelName, 10);
             navigation.navigate('ChatScreen', {
               practice: item && item.Practice && item.Practice,
+              channelName: item && item.channelName && item.channelName,
               practiceDms,
             });
           }}
@@ -209,10 +153,10 @@ const DmsBox = ({ id, item, navigation, practiceDms }) => {
               fontSize: normalize(12),
               fontFamily: 'SofiaProRegular',
             }}>
-            {newMessage && newMessage.message && newMessage.message.length > 60
-              ? newMessage.message.substring(0, 60 - 3) + '...'
-              : newMessage.message
-              ? newMessage.message
+            {newMessage && newMessage.message && newMessage.message.text
+              ? newMessage.message.text.length > 60
+                ? newMessage.message.text.substring(0, 60 - 3) + '...'
+                : newMessage.message.text
               : newMessage}
           </Text>
         </TouchableOpacity>

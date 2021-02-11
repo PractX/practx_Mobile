@@ -4,13 +4,29 @@ import { useTheme } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import { Dimensions } from 'react-native';
 import normalize from '../../utils/normalize';
+import timeAgo from '../../utils/timeAgo';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
 
-const ChatBubble = ({ practice }) => {
+const ChatBubble = ({ practice, message }) => {
   const { colors } = useTheme();
+  // console.log('Bubble', message);
+  const checkAmPm = (time) => {
+    if (time.split(':')[0] > 12) {
+      return time + ' pm';
+    } else {
+      return time + ' am';
+    }
+  };
+  const addTime = (msg) => {
+    const unixTimestamp = msg.timetoken / 10000000;
+    const gmtDate = new Date(unixTimestamp * 1000);
+    const localeDateTime = gmtDate.toLocaleString();
+    const time = localeDateTime.split(', ')[1];
+    return checkAmPm(time.slice(0, -3));
+  };
   return (
     <View
       style={{
@@ -49,7 +65,7 @@ const ChatBubble = ({ practice }) => {
           style={{
             // minHeight: 50,
             backgroundColor: colors.background_1,
-            alignItems: 'center',
+            // alignItems: 'center',
             justifyContent: 'center',
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
@@ -61,11 +77,9 @@ const ChatBubble = ({ practice }) => {
               fontSize: normalize(14),
               fontFamily: 'SofiaProRegular',
               color: colors.text,
+              textAlign: 'left',
             }}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque
-            debitis iste fugiat recusandae illo exercitationem dignissimos iure
-            ab suscipit, doloremque, distinctio at optio velit atque? Sed
-            consequatur libero facilis fugit?
+            {message.message.text && message.message.text}
           </Text>
         </View>
         <Text
@@ -74,7 +88,7 @@ const ChatBubble = ({ practice }) => {
             fontFamily: 'SofiaProRegular',
             color: colors.text,
           }}>
-          Message seen 1:22pm
+          Message sent {addTime(message)}
         </Text>
       </View>
     </View>

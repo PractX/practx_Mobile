@@ -40,6 +40,7 @@ import PracticesBox from './PracticeBox';
 import { usePubNub } from 'pubnub-react';
 import PracticeList from './PracticeList';
 import DmsBox from './DmsBox';
+import { ActivityIndicator } from 'react-native-paper';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -47,6 +48,7 @@ const appwidth = windowWidth * 0.9;
 
 const ChatMessages = ({
   navigation,
+  extraData,
   route,
   currentUser,
   getJoinedPracticesStart,
@@ -91,20 +93,43 @@ const ChatMessages = ({
     );
   };
   // const pubnub = usePubNub();
-  const [channels] = useState(['c7fb1fce-aac7-492e-b07b-f1007c6edf96']);
-  const [messages, addMessage] = useState([]);
-  const [message, setMessage] = useState('');
-  const handleMessage = (event) => {
-    const message = event.message;
-    if (typeof message === 'string' || message.hasOwnProperty('text')) {
-      const text = message.text || message;
-      addMessage((messages) => [...messages, text]);
-    }
-  };
+  // const [messages, addMessage] = useState([]);
+  // const [message, setMessage] = useState('');
+  // const handleMessage = (event) => {
+  //   const message = event.message;
+  //   if (typeof message === 'string' || message.hasOwnProperty('text')) {
+  //     const text = message.text || message;
+  //     addMessage((messages) => [...messages, text]);
+  //   }
+  // };
   // useEffect(() => {
   //   pubnub.addListener({ message: handleMessage });
   //   pubnub.subscribe({ channels });
   // }, [pubnub, channels]);
+
+  const removeChannel = () => {
+    console.log('Deleting');
+    // pubnub.removeMessageAction(
+    //   {
+    //     channel: ['23_15_V3wNztfhu'],
+    //     messageTimetoken: '16130166805908223',
+    //     actionTimetoken: Date.now(),
+    //   },
+    //   function (status, response) {
+    //     console.log(response);
+    //   },
+    // );
+    pubnub.deleteMessages(
+      {
+        channel: '23_55_dh7cQxgYQ',
+        start: Date.now(),
+        end: '16130833426058690',
+      },
+      (result) => {
+        console.log(result);
+      },
+    );
+  };
 
   useEffect(() => {
     console.log(joinedPractices);
@@ -137,29 +162,32 @@ const ChatMessages = ({
     // console.log(currentUser);
 
     if (isFocused) {
-      pract();
+      // pract();
       // getMessages();
+      removeChannel();
     }
-    const unsubscribe = navigation.addListener('drawerOpen', (e) => {
+    const unsubscribe = extraData.addListener('drawerOpen', (e) => {
       // Do something
       setStyle1('open');
+      console.log('Open');
     });
 
     return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation, isFocused]);
+  }, [extraData, isFocused]);
   useEffect(() => {
     // console.log(
     //   practiceDms.find((item) => item.practiceId === currentPracticeId).Practice
     //     .channelName,
     // );
-    const unsubscribe = navigation.addListener('drawerClose', (e) => {
+    const unsubscribe = extraData.addListener('drawerClose', (e) => {
       // Do something
+      console.log('Close');
       setStyle1('close');
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [extraData]);
 
   return (
     <SafeAreaView
@@ -253,23 +281,33 @@ const ChatMessages = ({
           </>
         ) : (
           <View style={{ padding: 80, alignItems: 'center' }}>
-            <Icon
-              name="chat-alert-outline"
-              type="material-community"
-              color={colors.text_2}
-              size={normalize(50)}
-              style={{ color: colors.text_1, alignSelf: 'center' }}
-            />
-            <Text
-              style={{
-                color: colors.text_2,
-                alignSelf: 'center',
-                fontSize: normalize(16),
-                fontFamily: 'SofiaProRegular',
-                textAlign: 'center',
-              }}>
-              Join a Practice to have access to chat message
-            </Text>
+            {practiceDms === null || isFetching ? (
+              <ActivityIndicator
+                animating={isFetching}
+                size={normalize(35)}
+                color={colors.text}
+              />
+            ) : (
+              <>
+                <Icon
+                  name="chat-alert-outline"
+                  type="material-community"
+                  color={colors.text_2}
+                  size={normalize(50)}
+                  style={{ color: colors.text_1, alignSelf: 'center' }}
+                />
+                <Text
+                  style={{
+                    color: colors.text_2,
+                    alignSelf: 'center',
+                    fontSize: normalize(16),
+                    fontFamily: 'SofiaProRegular',
+                    textAlign: 'center',
+                  }}>
+                  Join a Practice to have access to chat message
+                </Text>
+              </>
+            )}
           </View>
         )}
       </View>
