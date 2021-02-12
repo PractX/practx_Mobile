@@ -347,24 +347,11 @@ const ChatScreen = ({
 
   return (
     <View
-      style={[
-        style1 === 'open' && {
-          borderWidth: 18,
-          // borderColor: colors.background_1,
-          borderTopColor: 'transparent',
-          borderBottomColor: 'transparent',
-          borderLeftColor: colors.background_1,
-          borderRightColor: 'transparent',
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          // borderRadius: 240,
-          // position: 'fixed',
-          // bottom: 0,
-          borderTopLeftRadius: 110,
-          borderBottomLeftRadius: 110,
-        },
-      ]}>
+      style={{
+        flex: 1,
+        justifyContent: 'space-between',
+        // height: '100%',
+      }}>
       <Header
         navigation={navigation}
         // title="Edit Profile"
@@ -379,180 +366,160 @@ const ChatScreen = ({
         practice={practice}
         // isLoading={isLoading}
       />
-      <KeyboardAwareScrollView
-        behavior="height"
-        style={[
-          style1 === 'open' && {
-            // borderWidth: 20,
-            backgroundColor: colors.background,
-            // height: '100%',
-            // zIndex: 100,
-            // IOS
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            flex: 1,
-            shadowOpacity: 0.1,
-            shadowRadius: 2,
-            // Android
-            elevation: 3,
-            borderRadius: 30,
-            overflow: 'hidden',
-          },
-        ]}>
-        <FlatList
-          ref={chatRef}
-          // horizontal={true}
-          // refreshControl={
-          //   <RefreshControl
-          //   // horizontal={true}
-          //   // refreshing={practicesRefreshing}
-          //   // onRefresh={() => getPracticesAllStart()}
-          //   />
-          // }
-          onRefresh={() => console.log('bonjours')}
-          refreshing={false}
-          // onContentSizeChange={() => chatRef.} // scroll it
-          inverted={false}
-          // removeClippedSubviews
-          // ListEmptyComponent
-          // contentContainerStyle={{ flexDirection: 'column-reverse' }}
-          initialNumToRender={5}
-          updateCellsBatchingPeriod={5}
-          showsVerticalScrollIndicator={false}
-          style={{
-            minHeight: windowHeight - 140,
-            backgroundColor: colors.background,
-            marginTop: 55,
-            marginBottom: 60,
-          }}
-          data={messages}
-          numColumns={1}
-          renderItem={({ item, index }) => (
-            <ChatBubble
-              id={index}
-              message={item}
-              navigation={navigation}
-              practice={practice}
-              practiceDms={practiceDms}
-            />
-          )}
-          keyExtractor={(item, index) => index}
-          // showsHorizontalScrollIndicator={false}
-          // extraData={selected}
-        />
-      </KeyboardAwareScrollView>
-      <Animatable.View
-        animation="bounceInLeft"
+      <FlatList
+        ref={chatRef}
+        // horizontal={true}
+        // refreshControl={
+        //   <RefreshControl
+        //   // horizontal={true}
+        //   // refreshing={practicesRefreshing}
+        //   // onRefresh={() => getPracticesAllStart()}
+        //   />
+        // }
+        onRefresh={() => console.log('bonjours')}
+        refreshing={false}
+        // onContentSizeChange={() => chatRef.} // scroll it
+        inverted={false}
+        // removeClippedSubviews
+        // ListEmptyComponent
+        // contentContainerStyle={{ flexDirection: 'column-reverse' }}
+        initialNumToRender={5}
+        updateCellsBatchingPeriod={5}
+        showsVerticalScrollIndicator={false}
         style={{
-          position: 'absolute',
-          bottom: 0,
-          width: '100%',
-          // marginTop: -10,
-          // marginBottom: 10,
-          // height: 100,
+          // flex: 2,
+          // minHeight: windowHeight - 140,
           backgroundColor: colors.background,
-        }}>
-        <Formik
-          innerRef={inputRef}
-          initialValues={{
-            message: '',
-          }}
-          style={{}}
-          onSubmit={(values) => {
-            // signupPatient(values);
-
-            setMessage(values.message);
-            sendMessage(values.message);
-            values.message = '';
-            // console.log('Lets go');
+          marginTop: 55,
+          // marginBottom: 60,
+        }}
+        data={messages}
+        numColumns={1}
+        renderItem={({ item, index }) => (
+          <ChatBubble
+            id={index}
+            message={item}
+            navigation={navigation}
+            practice={practice}
+            practiceDms={practiceDms}
+          />
+        )}
+        keyExtractor={(item, index) => index}
+        // showsHorizontalScrollIndicator={false}
+        // extraData={selected}
+      />
+      <KeyboardAvoidingView behavior="height">
+        <Animatable.View
+          animation="bounceInLeft"
+          style={{
+            // position: 'absolute',
+            // bottom: 0,
+            width: '100%',
+            // marginTop: -10,
+            // marginBottom: 10,
+            // height: 100,
+            backgroundColor: colors.primary,
           }}>
-          {({ handleChange, handleBlur, handleSubmit, values }) => (
-            <View
-              style={{
-                margin: 0,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: colors.background,
-                borderTopWidth: 0.8,
-                borderColor: colors.background_1,
-                height: 56,
-              }}>
-              {/* ------------------- BIO SECTION --------------------------------------- */}
+          <Formik
+            innerRef={inputRef}
+            initialValues={{
+              message: '',
+            }}
+            style={{}}
+            onSubmit={(values) => {
+              // signupPatient(values);
 
-              <InputBox
-                handleChange={handleChange}
-                handleBlur={handleBlur}
-                valuesType={values.message}
-                name="message"
-                placeholder={`Message ${
-                  practice && practice.practiceName.length > 18
-                    ? practice.practiceName.substring(0, 11 - 3) + '...'
-                    : practice.practiceName
-                }`}
-                icon2Name="attachment"
-                icon2Type="entypo"
-                icon2Action={console.log}
-                autoCompleteType="name"
-                textContentType="givenName"
-                keyboardType="default"
-                autoCapitalize="sentences"
-                boxStyle={{
-                  borderRadius: 50,
-                  width: windowWidth - 80,
-                  height: 45,
-                  marginTop: 0,
-                }}
-                styling={{
-                  input: {
-                    fontSize: normalize(15),
-                    color: colors.text,
-                    marginLeft: 5,
-                  },
-                }}
-              />
-              <Button
-                TouchableComponent={() => {
-                  // return isLoading ? (
-                  //   <ActivityIndicator
-                  //     animating={true}
-                  //     size={normalize(21)}
-                  //     color={colors.text}
-                  //   />
-                  // ) : (
-                  return (
-                    <TouchableOpacity
-                      onPress={handleSubmit}
-                      style={{
-                        backgroundColor: colors.primary,
-                        height: 40,
-                        width: 40,
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        // marginTop: 10,
-                        marginLeft: 10,
-                        borderRadius: 10,
-                      }}>
-                      <Icon
-                        name={'ios-send'}
-                        type={'ionicon'}
-                        color={'white'}
-                        size={normalize(21)}
+              setMessage(values.message);
+              sendMessage(values.message);
+              values.message = '';
+              // console.log('Lets go');
+            }}>
+            {({ handleChange, handleBlur, handleSubmit, values }) => (
+              <View
+                style={{
+                  margin: 0,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: colors.background,
+                  borderTopWidth: 0.8,
+                  borderColor: colors.background_1,
+                  height: 56,
+                }}>
+                {/* ------------------- BIO SECTION --------------------------------------- */}
+
+                <InputBox
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  valuesType={values.message}
+                  name="message"
+                  placeholder={`Message ${
+                    practice && practice.practiceName.length > 18
+                      ? practice.practiceName.substring(0, 11 - 3) + '...'
+                      : practice.practiceName
+                  }`}
+                  icon2Name="attachment"
+                  icon2Type="entypo"
+                  icon2Action={console.log}
+                  autoCompleteType="name"
+                  textContentType="givenName"
+                  keyboardType="default"
+                  autoCapitalize="sentences"
+                  boxStyle={{
+                    borderRadius: 50,
+                    width: windowWidth - 80,
+                    height: 45,
+                    marginTop: 0,
+                  }}
+                  styling={{
+                    input: {
+                      fontSize: normalize(15),
+                      color: colors.text,
+                      marginLeft: 5,
+                    },
+                  }}
+                />
+                <Button
+                  TouchableComponent={() => {
+                    // return isLoading ? (
+                    //   <ActivityIndicator
+                    //     animating={true}
+                    //     size={normalize(21)}
+                    //     color={colors.text}
+                    //   />
+                    // ) : (
+                    return (
+                      <TouchableOpacity
+                        onPress={handleSubmit}
                         style={{
+                          backgroundColor: colors.primary,
+                          height: 40,
+                          width: 40,
                           alignSelf: 'center',
-                        }}
-                      />
-                    </TouchableOpacity>
-                  );
-                  // );
-                }}
-              />
-            </View>
-          )}
-        </Formik>
-      </Animatable.View>
+                          justifyContent: 'center',
+                          // marginTop: 10,
+                          marginLeft: 10,
+                          borderRadius: 10,
+                        }}>
+                        <Icon
+                          name={'ios-send'}
+                          type={'ionicon'}
+                          color={'white'}
+                          size={normalize(21)}
+                          style={{
+                            alignSelf: 'center',
+                          }}
+                        />
+                      </TouchableOpacity>
+                    );
+                    // );
+                  }}
+                />
+              </View>
+            )}
+          </Formik>
+        </Animatable.View>
+      </KeyboardAvoidingView>
     </View>
   );
 };
