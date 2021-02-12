@@ -12,7 +12,8 @@ const appwidth = windowWidth * 0.9;
 
 const ChatBubble = ({ practice, message }) => {
   const { colors } = useTheme();
-  // console.log('Bubble', message);
+  console.log('Bubble', practice);
+  console.log('message', message);
   const checkAmPm = (time) => {
     if (time.split(':')[0] > 12) {
       return time + ' pm';
@@ -58,7 +59,7 @@ const ChatBubble = ({ practice, message }) => {
       <View
         style={{
           flexDirection: 'column',
-          width: appwidth - 80,
+          maxWidth: appwidth - 80,
           marginLeft: 15,
         }}>
         <View
@@ -66,6 +67,7 @@ const ChatBubble = ({ practice, message }) => {
             // minHeight: 50,
             backgroundColor: colors.background_1,
             // alignItems: 'center',
+            maxWidth: appwidth - 80,
             justifyContent: 'center',
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,

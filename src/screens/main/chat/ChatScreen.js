@@ -52,7 +52,7 @@ const ChatScreen = ({
   editProfile,
   isLoading,
 }) => {
-  const ref = useRef();
+  const chatRef = useRef();
   const { colors } = useTheme();
   const inputRef = useRef();
   const { params } = useRoute();
@@ -331,6 +331,7 @@ const ChatScreen = ({
 
   useEffect(() => {
     console.log(inputRef);
+    // chatRef.scrollToEnd();
     // console.log('ALLLL PROPSSS _____ ', practice);
     extraData.setOptions({
       drawerLockMode: 'locked-closed',
@@ -401,19 +402,22 @@ const ChatScreen = ({
           },
         ]}>
         <FlatList
-          ref={ref}
+          ref={chatRef}
           // horizontal={true}
-          refreshControl={
-            <RefreshControl
-              horizontal={true}
-              // refreshing={practicesRefreshing}
-              // onRefresh={() => getPracticesAllStart()}
-            />
-          }
-          inverted={-1}
+          // refreshControl={
+          //   <RefreshControl
+          //   // horizontal={true}
+          //   // refreshing={practicesRefreshing}
+          //   // onRefresh={() => getPracticesAllStart()}
+          //   />
+          // }
+          onRefresh={() => console.log('bonjours')}
+          refreshing={false}
+          // onContentSizeChange={() => chatRef.} // scroll it
+          inverted={false}
           // removeClippedSubviews
           // ListEmptyComponent
-          contentContainerStyle={{ flexDirection: 'column-reverse' }}
+          // contentContainerStyle={{ flexDirection: 'column-reverse' }}
           initialNumToRender={5}
           updateCellsBatchingPeriod={5}
           showsVerticalScrollIndicator={false}

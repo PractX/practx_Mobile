@@ -162,9 +162,9 @@ const ChatMessages = ({
     // console.log(currentUser);
 
     if (isFocused) {
-      // pract();
+      pract();
       // getMessages();
-      removeChannel();
+      // removeChannel();
     }
     const unsubscribe = extraData.addListener('drawerOpen', (e) => {
       // Do something
