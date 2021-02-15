@@ -31,6 +31,7 @@ const Header = ({
   backArrow,
   isLoading,
   practice,
+  group,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
@@ -86,7 +87,7 @@ const Header = ({
               }}
             />
           </TouchableOpacity>
-          {practice && (
+          {practice || group ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -94,9 +95,11 @@ const Header = ({
               }}>
               <FastImage
                 source={{
-                  uri:
-                    (practice && practice.logo) ||
-                    'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
+                  uri: practice
+                    ? practice.logo ||
+                      'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
+                    : group &&
+                      'https://cdn.raceroster.com/assets/images/team-placeholder.png',
                 }}
                 style={[
                   {
@@ -133,11 +136,13 @@ const Header = ({
                     fontSize: normalize(15),
                     fontFamily: 'SofiaProSemiBold',
                   }}>
-                  {practice &&
-                  practice.practiceName &&
-                  practice.practiceName.length > 18
-                    ? practice.practiceName.substring(0, 11 - 3) + '...'
-                    : practice.practiceName}
+                  {practice
+                    ? practice.practiceName && practice.practiceName.length > 18
+                      ? practice.practiceName.substring(0, 11 - 3) + '...'
+                      : practice.practiceName
+                    : group && group.name.length > 18
+                    ? group.name.substring(0, 11 - 3) + '...'
+                    : group.name}
                 </Text>
                 <Text
                   style={{
@@ -145,14 +150,16 @@ const Header = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {practice &&
-                  practice.specialty &&
-                  practice.specialty.length > 18
-                    ? practice.specialty.substring(0, 18 - 3) + '...'
-                    : practice.specialty}
+                  {practice
+                    ? practice.specialty && practice.specialty.length > 18
+                      ? practice.specialty.substring(0, 18 - 3) + '...'
+                      : practice.specialty
+                    : ''}
                 </Text>
               </View>
             </View>
+          ) : (
+            ''
           )}
         </View>
       ) : (

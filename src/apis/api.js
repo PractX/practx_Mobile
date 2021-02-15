@@ -5,7 +5,7 @@ import {
   REACT_APP_JOIN_PRACTICES,
   REACT_APP_EDIT_PROFILE,
   REACT_APP_GET_PRACTICES_DMS,
-  REACT_APP_CHAT_WITH_STAFF,
+  REACT_APP_GET_SUBGROUPS,
 } from '@env';
 import { Platform } from 'react-native';
 
@@ -48,6 +48,20 @@ export const getPracticesDmsApi = async (token) => {
     Authorization: token,
   };
   const url = REACT_APP_API + REACT_APP_GET_PRACTICES_DMS;
+  const collectionsMap = await Axios.get(url, { headers: headers });
+  return collectionsMap;
+};
+
+export const getPracticeSubGroupApi = async (token, practiceId) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const url =
+    REACT_APP_API +
+    REACT_APP_PRACTICES +
+    `/${practiceId}` +
+    REACT_APP_GET_SUBGROUPS;
   const collectionsMap = await Axios.get(url, { headers: headers });
   return collectionsMap;
 };

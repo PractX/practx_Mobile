@@ -5,6 +5,7 @@ import {
   getMontApi,
   getPracticesApi,
   getPracticesDmsApi,
+  getPracticeSubGroupApi,
   joinPracticeApi,
 } from '../../apis/api';
 import PracticesActionTypes from './practices.types';
@@ -15,8 +16,9 @@ import {
   getPracticesAllStart,
   getPracticesAllSuccess,
   getPracticesDmsSuccess,
+  getPracticeSubgroupsSuccess,
   setLoading,
-  setPracticeId,
+  // setPracticeId,
 } from './practices.actions';
 import { showMessage } from 'react-native-flash-message';
 
@@ -45,11 +47,11 @@ export function* willGetAllPractices() {
       );
       console.log(data);
 
-      haveIt ? console.log('there is') : yield put(setPracticeId(data[0].id));
+      // haveIt ? console.log('there is') : yield put(setPracticeId(data[0].id));
     } else {
       console.log('Dont have the Id');
       console.log(data);
-      yield put(setPracticeId(data.length === 0 ? 0 : data[0].id));
+      // yield put(setPracticeId(data.length === 0 ? 0 : data[0].id));
     }
 
     yield put(getPracticesAllSuccess(result.practices));
@@ -178,6 +180,39 @@ export function* willGetPracticesDms() {
   }
 }
 
+export function* willGetPracticeSubgroup({ payload: practiceId }) {
+  const token = yield select(userToken);
+  console.log('getting subgroups');
+  console.log(practiceId);
+  try {
+    const result = yield getPracticeSubGroupApi(token, practiceId).then(
+      function (response) {
+        return response.data;
+      },
+    );
+    console.log('SUBGROUPS ______', result);
+    // showMessage({
+    //   message: result.message,
+    //   type: 'success',
+    // });
+    yield put(getPracticeSubgroupsSuccess(result.practice.subgroups));
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      showMessage({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    yield put(setLoading(false));
+  }
+}
+
 export function* willChatWithPractice({ payload: practiceId }) {
   const token = yield select(userToken);
   // console.log('going in aoi');
@@ -227,6 +262,12 @@ export function* onGetPracticesDms() {
     willGetPracticesDms,
   );
 }
+export function* onGetPracticeSubgroups() {
+  yield takeLatest(
+    PracticesActionTypes.GET_PRACTICE_SUBGROUPS_START,
+    willGetPracticeSubgroup,
+  );
+}
 export function* onChatWithPractice() {
   yield takeLatest(
     PracticesActionTypes.CHAT_WITH_PRACTICE_START,
@@ -246,6 +287,7 @@ export function* practicesSagas() {
     call(onGetJoinedPractices),
     call(onJoinPractices),
     call(onGetPracticesDms),
+    call(onGetPracticeSubgroups),
     call(onChatWithPractice),
   ]);
 }
