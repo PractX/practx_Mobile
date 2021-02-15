@@ -6,9 +6,11 @@ const INITIAL_STATE = {
   isFetching: null,
   filter: { opt1: true, opt2: true, opt3: true },
   joinedPractices: null,
-  currentPracticeId: null,
+  currentPracticeId: 0,
   practiceDms: null,
+  practiceSubgroups: [],
   error: null,
+  allMessages: [],
 };
 
 const practicesReducer = (state = INITIAL_STATE, action) => {
@@ -21,8 +23,29 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         isFetching: null,
         filter: { opt1: true, opt2: true, opt3: true },
         joinedPractices: null,
-        currentPracticeId: null,
+        currentPracticeId: 0,
         practiceDms: null,
+        practiceSubgroups: [],
+        allMessages: [],
+      };
+
+    case PracticesActionTypes.SET_ALL_MESSAGES:
+      return {
+        ...state,
+        allMessages: action.payload,
+      };
+    case PracticesActionTypes.CHAT_WITH_PRACTICE_START:
+      return {
+        ...state,
+        isFetching: true,
+      };
+
+    case PracticesActionTypes.CHAT_WITH_PRACTICE_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        isLoading: false,
+        practiceDms: action.payload,
       };
     case PracticesActionTypes.SET_PRACTICE_ID:
       return {
@@ -45,6 +68,19 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         isFetching: false,
         isLoading: false,
         practiceDms: action.payload,
+      };
+    case PracticesActionTypes.GET_PRACTICE_SUBGROUPS_START:
+      return {
+        ...state,
+        isFetching: true,
+        // practiceSubgroups: [],
+      };
+    case PracticesActionTypes.GET_PRACTICE_SUBGROUPS_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        isLoading: false,
+        practiceSubgroups: action.payload,
       };
 
     case PracticesActionTypes.GET_ALL_PRACTICES_START:
@@ -90,6 +126,7 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isLoading: action.payload,
+        isFetching: action.payload,
       };
     default:
       return state;

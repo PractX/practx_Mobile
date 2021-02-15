@@ -11,14 +11,13 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
 
-const DmsBox = ({
+const GroupBox = ({
   id,
   item,
   navigation,
   practiceDms,
   styling,
   allMessages,
-  subgroups,
 }) => {
   const { colors } = useTheme();
   const pubnub = usePubNub();
@@ -76,7 +75,7 @@ const DmsBox = ({
       style={[
         styling,
         {
-          marginVertical: 20,
+          marginVertical: 10,
           flexDirection: 'row',
           // borderBottomWidth: 0.8,
           // borderBottomColor: colors.background_1,
@@ -88,9 +87,7 @@ const DmsBox = ({
         <FastImage
           source={{
             uri:
-              item && item.Practice && item.Practice.logo
-                ? item.Practice.logo
-                : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
+              'https://cdn.raceroster.com/assets/images/team-placeholder.png',
           }}
           style={{
             width: 50,
@@ -104,10 +101,9 @@ const DmsBox = ({
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ChatScreen', {
-              practice: item && item.Practice && item.Practice,
+              group: item && item,
               channelName: item && item.channelName && item.channelName,
               practiceDms,
-              subgroups: subgroups,
             });
           }}
           style={{
@@ -126,7 +122,7 @@ const DmsBox = ({
               fontFamily: 'SofiaProSemiBold',
               textTransform: 'capitalize',
             }}>
-            {item && item.Practice && item.Practice.practiceName}
+            {item && item.name}
           </Text>
           <Text
             style={{
@@ -147,9 +143,7 @@ const DmsBox = ({
                   : allMessages.messages[allMessages.messages.length - 1]
                       .message.text
                 : allMessages.messages[allMessages.messages.length - 1]
-              : `ℹ️ Chat with ${
-                  item && item.Practice && item.Practice.practiceName
-                }`}
+              : 'ℹ️ Begin conversation'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -163,7 +157,7 @@ const DmsBox = ({
           }}>
           {allMessages && newMessageTime ? newMessageTime : null}
         </Text>
-        <View
+        {/* <View
           style={{
             backgroundColor: colors.primary,
             borderRadius: 8,
@@ -182,10 +176,10 @@ const DmsBox = ({
             }}>
             {1}
           </Text>
-        </View>
+        </View> */}
       </View>
     </TouchableOpacity>
   );
 };
 
-export default DmsBox;
+export default GroupBox;

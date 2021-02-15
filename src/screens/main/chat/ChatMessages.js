@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   Dimensions,
@@ -24,21 +30,28 @@ import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native';
 import {
+  chatWithPracticeStart,
   getJoinedPracticesStart,
   getPracticesDmsStart,
+  getPracticeSubgroupsStart,
   setFilter,
+  setAllMessages,
 } from '../../../redux/practices/practices.actions';
 import { RefreshControl } from 'react-native';
 import {
+  selectAllMessages,
   selectCurrentPracticeId,
   selectIsFetching,
   selectJoinedPractices,
   selectPracticeDms,
+  selectPracticeSubgroups,
 } from '../../../redux/practices/practices.selector';
 import PracticesBox from './PracticeBox';
 import { usePubNub } from 'pubnub-react';
 import PracticeList from './PracticeList';
 import DmsBox from './DmsBox';
+import { ActivityIndicator } from 'react-native-paper';
+import GroupBox from './GroupBox';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -46,6 +59,7 @@ const appwidth = windowWidth * 0.9;
 
 const ChatMessages = ({
   navigation,
+  extraData,
   route,
   currentUser,
   getJoinedPracticesStart,
@@ -55,6 +69,11 @@ const ChatMessages = ({
   isFetching,
   currentPracticeId,
   practiceDms,
+  chatWithPracticeStart,
+  getPracticeSubgroupsStart,
+  subgroups,
+  allMessages,
+  setAllMessages,
 }) => {
   const { colors } = useTheme();
   const ref = useRef();
@@ -64,88 +83,431 @@ const ChatMessages = ({
   const [practicesRefreshing, setPracticesRefreshing] = useState(false);
   const isFocused = useIsFocused();
   const [showStaffs, setShowStaffs] = useState(false);
+  const d = new Date();
+  const time = d.getTime();
 
-  const getMessages = (cha, num) => {
-    const channels = [cha];
-    console.log(channels);
-    console.log(num);
+  // const getMessages = (cha, num) => {
+  //   console.log('Chass', cha);
+  //   const channels = [cha];
+  //   console.log(channels);
+  //   console.log(num);
+
+  //   pubnub.fetchMessages(
+  //     {
+  //       channels: [channels[0]],
+  //       count: 10,
+  //       end: time,
+  //     },
+
+  //     (status, data) => {
+  //       if (status.statusCode === 200) {
+  //         // console.log(status);
+  //         console.log('Datas', data);
+  //       }
+  //     },
+  //   );
+  // };
+
+  const getAllChannelMessages = (dms, subGroups) => {
+    // const dmsCha = dms.map((i) => i.channelName); /// When backend guy delete
+    const dmsCha = dms.map((i) => i.channelName);
+    console.log(dmsCha);
+    const subgroupsCha = subGroups.map((i) => i.channelName);
+    const allChannels = [...dmsCha, ...subgroupsCha];
+
+    console.log('=== GET MESSAGES FROM ALL CHANNEL =====: ', allChannels);
 
     pubnub.fetchMessages(
       {
-        channels: [channels[0]],
-        count: num,
-        // end: time,
+        channels: allChannels,
+        count: 25,
+        end: time,
       },
 
       (status, data) => {
         if (status.statusCode === 200) {
-          console.log(status);
-          console.log('Datas', data);
+          const { channels } = data;
+          const allMsgs = [];
+
+          allChannels.map((i) => {
+            const msgs = channels[i];
+            if (msgs) {
+              const lst = msgs[msgs.length - 1].timetoken;
+              const fst = msgs[0].timetoken;
+
+              allMsgs.push({ channel: i, lst, fst, messages: msgs });
+            }
+            return i;
+          });
+          console.log('ALL_MESSAGE+++++', allMsgs);
+          setAllMessages(allMsgs);
+
+          // pubnub.time((status, response) => {
+          //   if (!status.error) {
+          //     pubnub.objects.setMemberships({
+          //       channels: [
+          //         {
+          //           id: allChannels[0],
+          //           custom: {
+          //             lastReadTimetoken: response.timetoken,
+          //           },
+          //         },
+          //       ],
+          //     });
+
+          //     // dispatch(Actions.messagesCountUpdate(allChannels[0]));
+          //     // console.log(
+          //     //   allChannels[0],
+          //     //   '=== MESSAGE COUNT =====:',
+          //     //   messagesCount[allChannels[0]],
+          //     // );
+          //   }
+          // });
         }
       },
     );
+
+    console.log('___ALLCHANNELS___', allChannels);
+
+    pubnub.subscribe({ channels: allChannels });
   };
-  // const pubnub = usePubNub();
-  const [channels] = useState(['c7fb1fce-aac7-492e-b07b-f1007c6edf96']);
-  const [messages, addMessage] = useState([]);
-  const [message, setMessage] = useState('');
-  const handleMessage = (event) => {
-    const message = event.message;
-    if (typeof message === 'string' || message.hasOwnProperty('text')) {
-      const text = message.text || message;
-      addMessage((messages) => [...messages, text]);
+
+  useMemo(() => {
+    if (isFocused && practiceDms && practiceDms.length) {
+      getAllChannelMessages(practiceDms, subgroups);
     }
+  }, [isFocused]);
+
+  const getMessages = (cha) => {
+    console.log('=== GET MESSAGES FROM CHANNEL =====: ', cha);
+    const channelMsgs = allMessages.find((i) => i.channel === cha);
+    const channels = [cha];
+    if (channelMsgs) {
+      pubnub.fetchMessages(
+        {
+          channels: [channels[0]],
+          start: channelMsgs.lst + 1,
+          end: time,
+        },
+
+        (status, data) => {
+          if (status.statusCode === 200) {
+            console.log('=== FOUND MESSAGES FROM CHANNEL =====: ', cha);
+            // addMessage([...channelMsgs.messages, ...data.channels[channels]])
+            const msgs = data.channels[channels];
+            console.log(
+              '=== FOUND NEW MESSAGES FROM CHANNEL =====: ',
+              cha,
+              msgs,
+            );
+
+            console.log('=== msgs =====: ', msgs);
+            if (msgs.length && msgs[0].timetoken !== channelMsgs.lst) {
+              channelMsgs.lst = msgs[msgs.length - 1].timetoken;
+              channelMsgs.messages = [...channelMsgs.messages, ...msgs];
+              // channelMsgs.messages = [...msgs]
+              const newSavedMessages = allMessages.filter(
+                (i) => i.channel !== channelMsgs.channel,
+              );
+              console.log('=== channelMsgs =====: ', channelMsgs);
+              console.log('=== newSavedMessages =====: ', newSavedMessages);
+              setAllMessages([...newSavedMessages, channelMsgs]);
+            }
+
+            // pubnub.time((status, response)=>{
+            // 	if(!status.error){
+
+            // 		pubnub.objects.setMemberships({
+            // 			channels: [{
+            // 				id: channels[0],
+            // 				custom: {
+            // 						lastReadTimetoken: response.timetoken,
+            // 				}
+            // 			}]
+
+            // 		})
+
+            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
+            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+
+            // 	}
+
+            // })
+          }
+        },
+      );
+    } else {
+      pubnub.fetchMessages(
+        {
+          channels: [channels[0]],
+          count: 25,
+          end: time,
+        },
+
+        (status, data) => {
+          if (status.statusCode === 200) {
+            console.log('=== GETTING MESSAGES FROM CHANNEL =====: ', cha);
+            // addMessage([...data.channels[channels]])
+            const msgs = data.channels[channels];
+            if (msgs.length) {
+              console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
+              const lst = msgs[msgs.length - 1].timetoken;
+              const fst = msgs[0].timetoken;
+              setAllMessages([
+                ...allMessages,
+                { channel: cha, fst, lst, messages: msgs },
+              ]);
+            }
+
+            // pubnub.time((status, response)=>{
+            // 	if(!status.error){
+
+            // 		pubnub.objects.setMemberships({
+            // 			channels: [{
+            // 				id: channels[0],
+            // 				custom: {
+            // 						lastReadTimetoken: response.timetoken,
+            // 				}
+            // 			}]
+
+            // 		})
+
+            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
+            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+
+            // 	}
+
+            // })
+          }
+        },
+      );
+    }
+
+    // pubnub.subscribe({ channels });
+
+    // return () => {
+    //   pubnub.unsubscribeAll();
+    // };
   };
-  // useEffect(() => {
-  //   pubnub.addListener({ message: handleMessage });
-  //   pubnub.subscribe({ channels });
-  // }, [pubnub, channels]);
 
   // useEffect(() => {
-  //   console.log(joinedPractices);
-  //   // isFetching ? setRefreshing(true) : setRefreshing(false);
-  //   // pubnub.getMessage('', (msg) => {
-  //   //   console.log(msg);
-  //   // });
-  //   getMessages('c7fb1fce-aac7-492e-b07b-f1007c6edf96', 10);
-  //   // pubnub
-  //   //   .fetchMessages({
-  //   //     channels: ['bced67cb-c735-4382-abe2-9c0f0c4e637f'],
-  //   //     // count: 20,
-  //   //     // end: time,
-  //   //   })
-  //   //   .then((status, data) => console.log(data));
-  // }, [pubnub]);
+  //   if (isFocused && currentPracticeId) {
+
+  //   }
+  // }, [isFocused, currentPracticeId]);
+
+  const removeChannel = () => {
+    console.log('Deleting');
+    // pubnub.removeMessageAction(
+    //   {
+    //     channel: ['23_15_V3wNztfhu'],
+    //     messageTimetoken: '16130166805908223',
+    //     actionTimetoken: Date.now(),
+    //   },
+    //   function (status, response) {
+    //     console.log(response);
+    //   },
+    // );
+    pubnub.deleteMessages(
+      {
+        channel: '23_15_V3wNztfhu',
+        start: Date.now(),
+        end: '16132590032361472',
+      },
+      (result) => {
+        console.log(result);
+      },
+    );
+  };
+
+  useEffect(() => {
+    if (isFocused && pubnub) {
+      pubnub.setUUID(currentUser.chatId);
+
+      pubnub.addListener({
+        message: (messageEvent) => {
+          // addMessages([
+          //   ...messages,
+          //   {
+          //     channel: messageEvent.channel,
+          //     message: messageEvent.message,
+          //     timetoken: messageEvent.timetoken,
+          //     uuid: messageEvent.publisher,
+          //   },
+          // ]);
+          getMessages(messageEvent.channel);
+          console.log('Events', messageEvent);
+
+          pubnub.objects.setMemberships({
+            channels: [
+              {
+                id: messageEvent.channel,
+                custom: {
+                  lastReadTimetoken: messageEvent.timetoken,
+                },
+              },
+            ],
+          });
+
+          // Get memberships and all messages count as well
+          // pubnub.his
+          pubnub.objects
+            .getMemberships({
+              uuid: messageEvent.publisher,
+              include: {
+                customFields: true,
+              },
+            })
+            .then((data) => {
+              if (data.status === 200) {
+                if (data.data.length > 0) {
+                  const channels = data.data.map((res) => res.channel.id);
+                  const timetoken = data.data.map(
+                    (res) => res.custom.lastReadTimetoken,
+                  );
+
+                  pubnub
+                    .messageCounts({
+                      channels: channels,
+                      channelTimetokens: timetoken,
+                    })
+                    .then((response) => {
+                      // set all messages count to a global variable
+                      // dispatch(setMessagesCount(response.channels))
+                    })
+                    .catch((error) => {
+                      console.log(
+                        error,
+                        '------ Error Message count ======== ',
+                      );
+                    });
+                } else {
+                  console.log(data, '------ No Message count ======== ');
+                }
+              }
+            });
+        },
+
+        file: (picture) => {
+          // addMessages([
+          //   ...messages,
+          //   {
+          //     channel: picture.channel,
+          //     message: picture.message,
+          //     timetoken: picture.timetoken,
+          //     uuid: picture.publisher,
+          //   },
+          // ]);
+        },
+
+        signal: function (s) {
+          // handle signal
+          var channelName = s.channel; // The channel to which the signal was published
+          var channelGroup = s.subscription; // The channel group or wildcard subscription match (if exists)
+          var pubTT = s.timetoken; // Publish timetoken
+          var msg = s.message; // The Payload
+          var publisher = s.publisher; //The Publisher
+        },
+
+        status: function (s) {
+          var affectedChannelGroups = s.affectedChannelGroups; // The channel groups affected in the operation, of type array.
+          var affectedChannels = s.affectedChannels; // The channels affected in the operation, of type array.
+          var category = s.category; //Returns PNConnectedCategory
+          var operation = s.operation; //Returns PNSubscribeOperation
+          var lastTimetoken = s.lastTimetoken; //The last timetoken used in the subscribe request, of type long.
+          var currentTimetoken = s.currentTimetoken; //The current timetoken fetched in the subscribe response, which is going to be used in the next request, of type long.
+          var subscribedChannels = s.subscribedChannels; //All the current subscribed channels, of type array.
+        },
+
+        presence: function (p) {
+          console.log('============ PRESENCE LISTENER ============', p);
+          // handle presence
+          // var action = p.action; // Can be join, leave, state-change, or timeout
+          // var channelName = p.channel; // The channel to which the message was published
+          // var occupancy = p.occupancy; // Number of users subscribed to the channel
+          // var state = p.state; // User State
+          // var channelGroup = p.subscription; //  The channel group or wildcard subscription match (if exists)
+          // var publishTime = p.timestamp; // Publish timetoken
+          // var timetoken = p.timetoken;  // Current timetoken
+          // var uuid = p.uuid; // UUIDs of users who are subscribed to the channel
+        },
+      });
+
+      // Fetch messaged from pubnub history..............
+
+      // if (messages < 1) {
+      //   getMessages(channels);
+      // }
+
+      // console.log(channels);
+
+      // pubnub.subscribe({ channels: channels, withPresence: true });
+
+      // return () => {
+      //   pubnub.unsubscribeAll();
+      // };
+
+      // setChannel(channels);
+    }
+  }, [pubnub]);
+
+  useEffect(() => {
+    console.log(joinedPractices);
+    // isFetching ? setRefreshing(true) : setRefreshing(false);
+    // pubnub.getMessage('', (msg) => {
+    //   console.log(msg);
+    // });
+    // getMessages(
+    //   practiceDms &&
+    //     practiceDms.length &&
+    //     practiceDms.find((item) => item.practiceId === currentPracticeId)
+    //       .channelName,
+    //   10,
+    // );
+  }, [pubnub]);
   const pract = async () => {
+    console.log('fetching');
     await getJoinedPracticesStart();
     // if (!isFetching) {
     await getPracticesDmsStart(currentPracticeId);
+
     // }
   };
+
   useEffect(() => {
     // console.log(currentUser);
-
-    if (isFocused) {
+    // practiceDms.length && getAllChannelMessages(practiceDms, subgroups);
+    if (isFocused || currentPracticeId) {
       pract();
+
       // getMessages();
+      // removeChannel();
+      if (currentPracticeId > 0) {
+        getPracticeSubgroupsStart(currentPracticeId);
+      }
     }
-    const unsubscribe = navigation.addListener('drawerOpen', (e) => {
+    const unsubscribe = extraData.addListener('drawerOpen', (e) => {
       // Do something
       setStyle1('open');
+      console.log('Open');
     });
 
     return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation, isFocused]);
-  useEffect(() => {
-    console.log(practiceDms);
-    const unsubscribe = navigation.addListener('drawerClose', (e) => {
+  }, [extraData, isFocused, currentPracticeId]);
+  useMemo(() => {
+    // console.log(
+    //   practiceDms.find((item) => item.practiceId === currentPracticeId).Practice
+    //     .channelName,
+    // );
+    const unsubscribe = extraData.addListener('drawerClose', (e) => {
       // Do something
+      console.log('Close');
       setStyle1('close');
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [extraData]);
 
   return (
     <SafeAreaView
@@ -194,73 +556,199 @@ const ChatMessages = ({
           navigation={navigation}
           practicesRefreshing={practicesRefreshing}
           joinedPractices={joinedPractices}
-          showStaffs={showStaffs}
+          chatWithPracticeStart={chatWithPracticeStart}
           setShowStaffs={setShowStaffs}
+          getPracticesDmsStart={getPracticesDmsStart}
+          currentPracticeId={currentPracticeId}
+          practiceDms={
+            practiceDms &&
+            practiceDms.find((item) => item.practiceId === currentPracticeId)
+          }
         />
 
-        {practiceDms ? (
-          <FlatList
-            ref={ref}
-            // refreshControl={
-            //   <RefreshControl
-            //     refreshing={refreshing}
-            //     onRefresh={() => getPracticesAllStart()}
-            //   />
-            // }
-            // removeClippedSubviews
-            // ListEmptyComponent
-            initialNumToRender={5}
-            updateCellsBatchingPeriod={5}
-            showsVerticalScrollIndicator={true}
-            style={{
-              height: windowHeight - 60,
-              width: style1 === 'open' ? appwidth - 50 : appwidth,
-              alignSelf: 'center',
-              marginTop: 10,
-              // backgroundColor: 'yellow',
-            }}
-            data={practiceDms}
-            numColumns={1}
-            renderItem={({ item, index }) => (
-              <DmsBox
-                id={index}
-                item={item}
-                // channel
-                styling={{
-                  width: style1 === 'open' ? appwidth - 50 : appwidth,
-                }}
-              />
+        {practiceDms && practiceDms.length && currentPracticeId ? (
+          <>
+            <View
+              style={{
+                width: style1 === 'open' ? appwidth - 50 : appwidth,
+                alignSelf: 'center',
+                marginTop: 30,
+              }}>
+              <Text
+                style={{
+                  color: colors.text,
+                  fontSize: normalize(14),
+                  fontFamily: 'SofiaProSemiBold',
+                }}>
+                Direct message
+              </Text>
+            </View>
+            <DmsBox
+              id={currentPracticeId}
+              item={
+                practiceDms &&
+                practiceDms.find(
+                  (item) => item.practiceId === currentPracticeId,
+                )
+              }
+              allMessages={
+                practiceDms && allMessages
+                  ? allMessages.find(
+                      (it) =>
+                        it.channel ===
+                        practiceDms.find(
+                          (item) => item.practiceId === currentPracticeId,
+                        ).channelName,
+                    )
+                    ? allMessages.find(
+                        (it) =>
+                          it.channel ===
+                          practiceDms.find(
+                            (item) => item.practiceId === currentPracticeId,
+                          ).channelName,
+                      )
+                    : null
+                  : null
+              }
+              practiceDms={practiceDms}
+              subgroups={subgroups}
+              navigation={navigation}
+              styling={{
+                width: style1 === 'open' ? appwidth - 50 : appwidth,
+              }}
+            />
+            {subgroups && (
+              <View style={{ marginTop: 0 }}>
+                <View
+                  style={{
+                    width: style1 === 'open' ? appwidth - 50 : appwidth,
+                    alignSelf: 'center',
+                    paddingVertical: 5,
+                  }}>
+                  <Text
+                    style={{
+                      color: colors.text,
+                      fontSize: normalize(14),
+                      fontFamily: 'SofiaProSemiBold',
+                    }}>
+                    Groups
+                  </Text>
+                </View>
+                {subgroups.length > 0 ? (
+                  <FlatList
+                    ref={ref}
+                    horizontal={false}
+                    refreshControl={
+                      <RefreshControl
+                        horizontal={true}
+                        refreshing={practicesRefreshing}
+                        // onRefresh={() => getPracticesAllStart()}
+                      />
+                    }
+                    // removeClippedSubviews
+                    // ListEmptyComponent
+                    initialNumToRender={5}
+                    updateCellsBatchingPeriod={5}
+                    showsVerticalScrollIndicator={false}
+                    style={{ height: windowHeight - 350 }}
+                    data={subgroups}
+                    numColumns={1}
+                    renderItem={({ item, index }) => (
+                      <GroupBox
+                        id={currentPracticeId}
+                        item={item}
+                        allMessages={
+                          practiceDms && allMessages
+                            ? allMessages.find(
+                                (it) =>
+                                  it.channel ===
+                                  practiceDms.find(
+                                    (item) =>
+                                      item.practiceId === currentPracticeId,
+                                  ).channelName,
+                              )
+                              ? allMessages.find(
+                                  (it) =>
+                                    it.channel === subgroups[0].channelName,
+                                )
+                              : null
+                            : null
+                        }
+                        practiceDms={practiceDms}
+                        navigation={navigation}
+                        // channel
+                        styling={{
+                          width: style1 === 'open' ? appwidth - 50 : appwidth,
+                        }}
+                      />
+                    )}
+                    keyExtractor={(item, index) => item.display_url}
+                    // showsHorizontalScrollIndicator={false}
+                    // extraData={selected}
+                  />
+                ) : (
+                  <View style={{ padding: 80, alignItems: 'center' }}>
+                    {practiceDms === null || isFetching ? (
+                      <ActivityIndicator
+                        animating={isFetching}
+                        size={normalize(35)}
+                        color={colors.text}
+                      />
+                    ) : (
+                      <>
+                        <Icon
+                          name="deleteusergroup"
+                          type="antdesign"
+                          color={colors.text_2}
+                          size={normalize(50)}
+                          style={{ color: colors.text_1, alignSelf: 'center' }}
+                        />
+                        <Text
+                          style={{
+                            color: colors.text_2,
+                            alignSelf: 'center',
+                            fontSize: normalize(16),
+                            fontFamily: 'SofiaProRegular',
+                            textAlign: 'center',
+                          }}>
+                          No group added
+                        </Text>
+                      </>
+                    )}
+                  </View>
+                )}
+              </View>
             )}
-            keyExtractor={(item, index) => item.display_url}
-            // showsHorizontalScrollIndicator={false}
-            // extraData={selected}
-          />
+          </>
         ) : (
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text>No data</Text>
-            {/* {errorData ? (
-                <Error
-                  title={errorData.includes('internet') ? 'OOPS!!!' : 'SORRY'}
-                  subtitle={
-                    errorData.includes('internet')
-                      ? 'Poor internet connection, Please check your connectivity, And try again'
-                      : errorData.includes('fetch')
-                      ? 'Enable to fetch post, please try again later'
-                      : 'Download link is not supported OR Account is private'
-                  }
+          <View style={{ padding: 80, alignItems: 'center' }}>
+            {practiceDms === null || isFetching ? (
+              <ActivityIndicator
+                animating={isFetching}
+                size={normalize(35)}
+                color={colors.text}
+              />
+            ) : (
+              <>
+                <Icon
+                  name="chat-alert-outline"
+                  type="material-community"
+                  color={colors.text_2}
+                  size={normalize(50)}
+                  style={{ color: colors.text_1, alignSelf: 'center' }}
                 />
-              ) : (
-                <Spinner
-                  style={styles.spinner}
-                  size={80}
-                  type="Circle"
-                  color={colors.primary}
-                />
-              )} */}
+                <Text
+                  style={{
+                    color: colors.text_2,
+                    alignSelf: 'center',
+                    fontSize: normalize(16),
+                    fontFamily: 'SofiaProRegular',
+                    textAlign: 'center',
+                  }}>
+                  Join a Practice to have access to chat message
+                </Text>
+              </>
+            )}
           </View>
         )}
       </View>
@@ -274,13 +762,18 @@ const mapStateToProps = createStructuredSelector({
   isFetching: selectIsFetching,
   currentPracticeId: selectCurrentPracticeId,
   practiceDms: selectPracticeDms,
+  subgroups: selectPracticeSubgroups,
+  allMessages: selectAllMessages,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   // getPracticesAllStart: () => dispatch(getPracticesAllStart()),
   getJoinedPracticesStart: () => dispatch(getJoinedPracticesStart()),
   setFilter: (data) => dispatch(setFilter(data)),
-  getPracticesDmsStart: (data) => dispatch(getPracticesDmsStart(data)),
+  getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
+  chatWithPracticeStart: (data) => dispatch(chatWithPracticeStart(data)),
+  getPracticeSubgroupsStart: (id) => dispatch(getPracticeSubgroupsStart(id)),
+  setAllMessages: (msg) => dispatch(setAllMessages(msg)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatMessages);

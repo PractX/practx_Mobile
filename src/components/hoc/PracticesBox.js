@@ -17,7 +17,10 @@ import { useTheme } from '@react-navigation/native';
 import normalize from '../../utils/normalize';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
-import { joinPractices } from '../../redux/practices/practices.actions';
+import {
+  joinPractices,
+  setPracticeId,
+} from '../../redux/practices/practices.actions';
 import { selectIsLoading } from '../../redux/practices/practices.selector';
 import { createStructuredSelector } from 'reselect';
 
@@ -44,6 +47,8 @@ const PracticeBox = ({
   id,
   userId,
   isLoading,
+  navigation,
+  setPracticeId,
 }) => {
   const { colors } = useTheme();
   const pending = practice.requests;
@@ -206,7 +211,10 @@ const PracticeBox = ({
         ) : member.length > 0 ? (
           <Button
             title="Member"
-            onPress={() => console.log('go to patient')}
+            onPress={async () => {
+              await setPracticeId(practice.id);
+              await navigation.navigate('Chats');
+            }}
             rounded
             buttonStyle={[
               styles.buttonAction,
@@ -285,6 +293,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   joinPractices: (practiceId) => dispatch(joinPractices(practiceId)),
+  setPracticeId: (id) => dispatch(setPracticeId(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PracticeBox);

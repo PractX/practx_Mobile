@@ -1,0 +1,142 @@
+import React from 'react';
+import { View, Text } from 'react-native';
+import { useTheme } from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
+import { Dimensions } from 'react-native';
+import normalize from '../../utils/normalize';
+import timeAgo from '../../utils/timeAgo';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const appwidth = windowWidth * 0.9;
+
+const ChatBubble = ({ practice, message, patientChatId, index }) => {
+  const { colors } = useTheme();
+  // console.log('Bubble', practice);
+  const checkAmPm = (time) => {
+    if (time.split(':')[0] > 12) {
+      return time + ' pm';
+    } else {
+      return time + ' am';
+    }
+  };
+  const addTime = (msg) => {
+    const unixTimestamp = msg.timetoken / 10000000;
+    const gmtDate = new Date(unixTimestamp * 1000);
+    const localeDateTime = gmtDate.toLocaleString();
+    const time = localeDateTime.split(', ')[1];
+    return checkAmPm(time.slice(0, -3));
+  };
+  return (
+    <View key={index} style={{ width: appwidth, alignSelf: 'center' }}>
+      {message.uuid === patientChatId ? (
+        <View
+          style={{
+            alignSelf: 'flex-end',
+            flexDirection: 'column',
+            maxWidth: appwidth - 50,
+            marginVertical: 20,
+          }}>
+          <View
+            style={{
+              // minHeight: 50,
+              backgroundColor: colors.primary,
+              alignItems: 'flex-start',
+              // width: 80,
+              // maxWidth: appwidth - 80,
+              justifyContent: 'center',
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              borderBottomRightRadius: 20,
+              padding: 15,
+            }}>
+            <Text
+              style={{
+                fontSize: normalize(14),
+                fontFamily: 'SofiaProRegular',
+                color: 'white',
+                textAlign: 'left',
+              }}>
+              {message.message.text && message.message.text}
+            </Text>
+          </View>
+          <Text
+            style={{
+              fontSize: normalize(12),
+              fontFamily: 'SofiaProRegular',
+              color: colors.text,
+            }}>
+            Message sent {addTime(message)}
+          </Text>
+        </View>
+      ) : (
+        <View
+          style={{
+            flexDirection: 'row',
+            maxWidth: appwidth - 50,
+            alignSelf: 'flex-start',
+            marginVertical: 20,
+          }}>
+          <FastImage
+            source={{
+              uri:
+                (practice && practice.logo) ||
+                'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
+            }}
+            style={[
+              {
+                width: 35,
+                height: 35,
+                borderRadius: 15,
+                backgroundColor: colors.background_1,
+                marginVertical: 5,
+                justifyContent: 'flex-end',
+                alignSelf: 'flex-end',
+                marginBottom: 17,
+              },
+            ]}
+            resizeMode={FastImage.resizeMode.cover}
+          />
+          <View
+            style={{
+              flexDirection: 'column',
+              maxWidth: appwidth - 80,
+              marginLeft: 15,
+            }}>
+            <View
+              style={{
+                // minHeight: 50,
+                backgroundColor: colors.background_1,
+                // alignItems: 'center',
+                justifyContent: 'center',
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                borderBottomRightRadius: 20,
+                padding: 15,
+              }}>
+              <Text
+                style={{
+                  fontSize: normalize(14),
+                  fontFamily: 'SofiaProRegular',
+                  color: colors.text,
+                  textAlign: 'left',
+                }}>
+                {message.message.text && message.message.text}
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: normalize(12),
+                fontFamily: 'SofiaProRegular',
+                color: colors.text,
+              }}>
+              Message sent {addTime(message)}
+            </Text>
+          </View>
+        </View>
+      )}
+    </View>
+  );
+};
+
+export default ChatBubble;

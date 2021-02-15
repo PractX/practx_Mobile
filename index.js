@@ -17,10 +17,7 @@ import { PubNubProvider, usePubNub } from 'pubnub-react';
 // import admob, {MaxAdContentRating} from '@react-native-firebase/admob';
 // import RNFetchBlob from 'rn-fetch-blob';
 // import {firebase} from '@react-native-firebase/analytics';
-import {
-  LogBox,
-  // YellowBox
-} from 'react-native';
+import { LogBox, YellowBox } from 'react-native';
 import { NetworkProvider } from 'react-native-offline';
 
 const pubnub = new PubNub({
@@ -30,7 +27,7 @@ const pubnub = new PubNub({
   restore: true, // enable catchup on missed messages
   // uuid: 'myUniqueUUID',
 });
-
+YellowBox.ignoreWarnings(['']);
 // SHOW NETWORK DEBUG
 // global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
 // global.FormData = global.originalFormData || global.FormData;

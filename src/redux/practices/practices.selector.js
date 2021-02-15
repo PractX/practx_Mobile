@@ -94,7 +94,26 @@ export const selectCurrentPracticeId = createSelector(
 
 export const selectPracticeDms = createSelector(
   [selectPractices],
-  (practices) => practices.practiceDms,
+  (practices) => {
+    if (practices.practiceDms) {
+      const data = practices.practiceDms.filter(
+        (item) => item.practiceId !== null,
+      );
+      return data;
+    } else {
+      return practices.practiceDms;
+    }
+  },
+);
+
+export const selectPracticeSubgroups = createSelector(
+  [selectPractices],
+  (practices) => practices.practiceSubgroups,
+);
+
+export const selectAllMessages = createSelector(
+  [selectPractices],
+  (practices) => practices.allMessages,
 );
 // joinedPractice;
 // export const selectToken = createSelector([selectUser], (user) => user.token);

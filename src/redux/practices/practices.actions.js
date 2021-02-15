@@ -32,6 +32,30 @@ export const getPracticesDmsSuccess = (data) => ({
   payload: data,
 });
 
+export const getPracticeSubgroupsStart = (id) => ({
+  type: PracticesActionTypes.GET_PRACTICE_SUBGROUPS_START,
+  payload: id,
+});
+export const getPracticeSubgroupsSuccess = (data) => ({
+  type: PracticesActionTypes.GET_PRACTICE_SUBGROUPS_SUCCESS,
+  payload: data,
+});
+
+export const chatWithPracticeStart = (data) => ({
+  type: PracticesActionTypes.CHAT_WITH_PRACTICE_START,
+  payload: data,
+});
+
+export const chatWithPracticeSuccess = (data) => ({
+  type: PracticesActionTypes.CHAT_WITH_PRACTICE_SUCCESS,
+  payload: data,
+});
+
+export const setAllMessages = (data) => ({
+  type: PracticesActionTypes.SET_ALL_MESSAGES,
+  payload: data,
+});
+
 export const setPracticeId = (data) => ({
   type: PracticesActionTypes.SET_PRACTICE_ID,
   payload: data,

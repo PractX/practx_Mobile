@@ -1,4 +1,8 @@
-import { DrawerActions, useTheme } from '@react-navigation/native';
+import {
+  DrawerActions,
+  useIsFocused,
+  useTheme,
+} from '@react-navigation/native';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   FlatList,
@@ -48,6 +52,7 @@ const Practices = ({
   const [refreshing, setRefreshing] = useState(false);
   const [checkState, setCheckState] = useState(filter);
   const ref = useRef(null);
+  const isFocused = useIsFocused();
 
   const openMenu = () => {
     console.log('opening');
@@ -64,13 +69,18 @@ const Practices = ({
 
     return unsubscribe;
   }, [navigation]);
+  useEffect(() => {
+    if (isFocused) {
+      getPracticesAllStart();
+    }
+  }, []);
   React.useEffect(() => {
     // console.log(practices);
-    getPracticesAllStart();
+
     const unsubscribe = navigation.addListener('drawerClose', (e) => {
       // Do something
       setStyle1('close');
-      console.log('Close');
+      // console.log('Close');
     });
 
     return unsubscribe;
@@ -156,6 +166,7 @@ const Practices = ({
                   userId={currentUser ? currentUser.id : 0}
                   id={index}
                   practice={item}
+                  navigation={navigation}
                 />
               )}
               keyExtractor={(item, index) => item.display_url}

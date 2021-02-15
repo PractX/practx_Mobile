@@ -1,9 +1,11 @@
 import { takeLatest, put, all, call, delay, select } from 'redux-saga/effects';
 import {
+  chatWithPracticeApi,
   getJoinedPracticeApi,
   getMontApi,
   getPracticesApi,
   getPracticesDmsApi,
+  getPracticeSubGroupApi,
   joinPracticeApi,
 } from '../../apis/api';
 import PracticesActionTypes from './practices.types';
@@ -14,8 +16,9 @@ import {
   getPracticesAllStart,
   getPracticesAllSuccess,
   getPracticesDmsSuccess,
+  getPracticeSubgroupsSuccess,
   setLoading,
-  setPracticeId,
+  // setPracticeId,
 } from './practices.actions';
 import { showMessage } from 'react-native-flash-message';
 
@@ -36,20 +39,21 @@ export function* willGetAllPractices() {
     let data = yield result.practices.rows.filter(
       (item) => item.patients.length === 1,
     );
-    if (currentPracticeId) {
+    if (currentPracticeId > 0 && data.length) {
+      console.log('have the Id');
       let haveIt = yield data.reduce(
         (accumulator, item) => accumulator || item.id === currentPracticeId,
         false,
       );
+      console.log(data);
 
-      haveIt ? console.log('there is') : yield put(setPracticeId(data[0].id));
-      // console.log('have the Id');
+      // haveIt ? console.log('there is') : yield put(setPracticeId(data[0].id));
     } else {
-      yield put(setPracticeId(data[0].id));
-      // console.log('Dont have the Id');
+      console.log('Dont have the Id');
+      console.log(data);
+      // yield put(setPracticeId(data.length === 0 ? 0 : data[0].id));
     }
-    // console.log(data[0].id);
-    // }
+
     yield put(getPracticesAllSuccess(result.practices));
   } catch (error) {
     console.log(error);
@@ -144,13 +148,78 @@ export function* willJoinPractices({ payload: practiceId }) {
   }
 }
 
-export function* willGetPracticesDms({ payload: practiceId }) {
+export function* willGetPracticesDms() {
   const token = yield select(userToken);
   // console.log('going in aoi');
-  yield put(setPracticeId(55));
+  // yield put(setPracticeId(55));
+  // console.log(practiceId);
+  try {
+    const result = yield getPracticesDmsApi(token).then(function (response) {
+      return response.data;
+    });
+    console.log(result);
+    // showMessage({
+    //   message: result.message,
+    //   type: 'success',
+    // });
+    yield put(getPracticesDmsSuccess(result.dms));
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      showMessage({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    yield put(setLoading(false));
+  }
+}
+
+export function* willGetPracticeSubgroup({ payload: practiceId }) {
+  const token = yield select(userToken);
+  console.log('getting subgroups');
   console.log(practiceId);
   try {
-    const result = yield getPracticesDmsApi(practiceId, token).then(function (
+    const result = yield getPracticeSubGroupApi(token, practiceId).then(
+      function (response) {
+        return response.data;
+      },
+    );
+    console.log('SUBGROUPS ______', result);
+    // showMessage({
+    //   message: result.message,
+    //   type: 'success',
+    // });
+    yield put(getPracticeSubgroupsSuccess(result.practice.subgroups));
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      showMessage({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    yield put(setLoading(false));
+  }
+}
+
+export function* willChatWithPractice({ payload: practiceId }) {
+  const token = yield select(userToken);
+  // console.log('going in aoi');
+  // const currentPracticeId = yield select(havePracticeId);
+  console.log(practiceId);
+  try {
+    const result = yield chatWithPracticeApi(practiceId, token).then(function (
       response,
     ) {
       return response.data;
@@ -160,9 +229,7 @@ export function* willGetPracticesDms({ payload: practiceId }) {
     //   message: result.message,
     //   type: 'success',
     // });
-    yield put(
-      getPracticesDmsSuccess(result.practiceDms && result.practiceDms.staffs),
-    );
+    // yield put(getPracticesDmsSuccess(result.dms));
   } catch (error) {
     console.log(error.response);
     if (error.response) {
@@ -195,6 +262,18 @@ export function* onGetPracticesDms() {
     willGetPracticesDms,
   );
 }
+export function* onGetPracticeSubgroups() {
+  yield takeLatest(
+    PracticesActionTypes.GET_PRACTICE_SUBGROUPS_START,
+    willGetPracticeSubgroup,
+  );
+}
+export function* onChatWithPractice() {
+  yield takeLatest(
+    PracticesActionTypes.CHAT_WITH_PRACTICE_START,
+    willChatWithPractice,
+  );
+}
 export function* onGetJoinedPractices() {
   yield takeLatest(
     PracticesActionTypes.GET_JOIN_PRACTICES_START,
@@ -208,5 +287,7 @@ export function* practicesSagas() {
     call(onGetJoinedPractices),
     call(onJoinPractices),
     call(onGetPracticesDms),
+    call(onGetPracticeSubgroups),
+    call(onChatWithPractice),
   ]);
 }
