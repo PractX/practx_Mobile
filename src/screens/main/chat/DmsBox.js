@@ -163,7 +163,7 @@ const DmsBox = ({
           }}>
           {allMessages && newMessageTime ? newMessageTime : null}
         </Text>
-        <View
+        {/* <View
           style={{
             backgroundColor: colors.primary,
             borderRadius: 8,
@@ -182,7 +182,7 @@ const DmsBox = ({
             }}>
             {1}
           </Text>
-        </View>
+        </View> */}
       </View>
     </TouchableOpacity>
   );

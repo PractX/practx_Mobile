@@ -310,9 +310,9 @@ const ChatMessages = ({
     // );
     pubnub.deleteMessages(
       {
-        channel: '23_15_V3wNztfhu',
+        channel: '23_13_jZ_GFSXex',
         start: Date.now(),
-        end: '16132590032361472',
+        end: '16134350735442841',
       },
       (result) => {
         console.log(result);
@@ -478,10 +478,10 @@ const ChatMessages = ({
     // console.log(currentUser);
     // practiceDms.length && getAllChannelMessages(practiceDms, subgroups);
     if (isFocused || currentPracticeId) {
-      pract();
+      // pract();
 
       // getMessages();
-      // removeChannel();
+      removeChannel();
       if (currentPracticeId > 0) {
         getPracticeSubgroupsStart(currentPracticeId);
       }
@@ -658,18 +658,12 @@ const ChatMessages = ({
                         id={currentPracticeId}
                         item={item}
                         allMessages={
-                          practiceDms && allMessages
+                          practiceDms && allMessages && subgroups
                             ? allMessages.find(
-                                (it) =>
-                                  it.channel ===
-                                  practiceDms.find(
-                                    (item) =>
-                                      item.practiceId === currentPracticeId,
-                                  ).channelName,
+                                (it) => it.channel === item.channelName,
                               )
                               ? allMessages.find(
-                                  (it) =>
-                                    it.channel === subgroups[0].channelName,
+                                  (it) => it.channel === item.channelName,
                                 )
                               : null
                             : null

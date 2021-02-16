@@ -33,7 +33,8 @@ const GroupBox = ({
   //   'Last____',
   //   allMessages.messages[allMessages.messages.length - 1].timetoken / 10000000,
   // );
-  // console.log(newMessages);
+  console.log(item);
+  console.log(allMessages);
 
   useEffect(() => {
     if (allMessages) {

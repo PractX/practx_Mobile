@@ -75,6 +75,7 @@ const ChatScreen = ({
   const [imageUri, setImageUri] = useState();
   const [messages, addMessages] = useState([]);
   const [message, setMessage] = useState('');
+  const [groupSuggest, setGroupSuggest] = useState(false);
   const d = new Date();
   const time = d.getTime();
   const pubnub = usePubNub();
@@ -140,25 +141,25 @@ const ChatScreen = ({
     console.log(message);
     // chatRef.scrollToEnd();
     pubnub.setUUID(currentUser.chatId);
-    // if (message) {
-    pubnub.publish(
-      {
-        message: {
-          text: message,
-          userType: 'patient',
+    if (message) {
+      pubnub.publish(
+        {
+          message: {
+            text: message,
+            userType: 'patient',
+          },
+          channel: channelName,
         },
-        channel: channelName,
-      },
-      (status, response) => {
-        setMessage('');
-        // handle status, response
-        console.log(status);
-        // console.log(response);
-      },
-    );
-    // } else {
-    //   console.log('NO message');
-    // }
+        (status, response) => {
+          setMessage('');
+          // handle status, response
+          console.log(status);
+          // console.log(response);
+        },
+      );
+    } else {
+      console.log('NO message');
+    }
   };
 
   const getMessages = (cha) => {
@@ -543,10 +544,14 @@ const ChatScreen = ({
   // }, [pubnub]);
 
   useEffect(() => {
+    console.log('Group_SUGGEST', groupSuggest);
     if (isFocused) {
+      allMessages.find((item) => item.channel === channelName)
+        ? setGroupSuggest(false)
+        : setGroupSuggest(true);
       getAllChannelMessages(channelName);
     }
-  }, [isFocused]);
+  }, [isFocused, groupSuggest]);
 
   useEffect(() => {
     console.log(inputRef);
@@ -588,7 +593,7 @@ const ChatScreen = ({
         group={group}
         // isLoading={isLoading}
       />
-      {subgroups && subgroups.length > 0 && (
+      {groupSuggest && subgroups && subgroups.length > 0 && (
         <View
           style={{
             width: '100%',
