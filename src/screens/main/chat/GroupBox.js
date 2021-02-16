@@ -102,7 +102,7 @@ const GroupBox = ({
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ChatScreen', {
-              group: item && item,
+              group: item ? item : {},
               channelName: item && item.channelName && item.channelName,
               practiceDms,
             });

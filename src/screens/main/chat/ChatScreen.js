@@ -379,27 +379,27 @@ const ChatScreen = ({
           console.log('ALL_MESSAGE+++++', allMsgs);
           setAllMessages(allMsgs);
 
-          // pubnub.time((status, response) => {
-          //   if (!status.error) {
-          //     pubnub.objects.setMemberships({
-          //       channels: [
-          //         {
-          //           id: allChannels[0],
-          //           custom: {
-          //             lastReadTimetoken: response.timetoken,
-          //           },
-          //         },
-          //       ],
-          //     });
+          pubnub.time((status, response) => {
+            if (!status.error) {
+              pubnub.objects.setMemberships({
+                channels: [
+                  {
+                    id: allChannels[0],
+                    custom: {
+                      lastReadTimetoken: response.timetoken,
+                    },
+                  },
+                ],
+              });
 
-          //     // dispatch(Actions.messagesCountUpdate(allChannels[0]));
-          //     // console.log(
-          //     //   allChannels[0],
-          //     //   '=== MESSAGE COUNT =====:',
-          //     //   messagesCount[allChannels[0]],
-          //     // );
-          //   }
-          // });
+              // dispatch(Actions.messagesCountUpdate(allChannels[0]));
+              // console.log(
+              //   allChannels[0],
+              //   '=== MESSAGE COUNT =====:',
+              //   messagesCount[allChannels[0]],
+              // );
+            }
+          });
         }
       },
     );
@@ -680,8 +680,9 @@ const ChatScreen = ({
           // marginBottom: 60,
         }}
         data={
-          allMessages.find((item) => item.channel === channelName) &&
-          allMessages.find((item) => item.channel === channelName).messages
+          allMessages.find((item) => item.channel === channelName)
+            ? allMessages.find((item) => item.channel === channelName).messages
+            : []
         }
         // numColumns={1}
         renderItem={({ item, index }) => (

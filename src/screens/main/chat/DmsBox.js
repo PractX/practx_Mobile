@@ -108,6 +108,7 @@ const DmsBox = ({
               channelName: item && item.channelName && item.channelName,
               practiceDms,
               subgroups: subgroups,
+              group: null,
             });
           }}
           style={{

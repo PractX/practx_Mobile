@@ -477,13 +477,15 @@ const ChatMessages = ({
   useEffect(() => {
     // console.log(currentUser);
     // practiceDms.length && getAllChannelMessages(practiceDms, subgroups);
-    if (isFocused || currentPracticeId) {
-      // pract();
+    if (currentUser) {
+      if (isFocused || currentPracticeId) {
+        pract();
 
-      // getMessages();
-      removeChannel();
-      if (currentPracticeId > 0) {
-        getPracticeSubgroupsStart(currentPracticeId);
+        // getMessages();
+        // removeChannel();
+        if (currentPracticeId > 0) {
+          getPracticeSubgroupsStart(currentPracticeId);
+        }
       }
     }
     const unsubscribe = extraData.addListener('drawerOpen', (e) => {
@@ -494,7 +496,7 @@ const ChatMessages = ({
 
     return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [extraData, isFocused, currentPracticeId]);
+  }, [extraData, isFocused, currentPracticeId, currentUser]);
   useMemo(() => {
     // console.log(
     //   practiceDms.find((item) => item.practiceId === currentPracticeId).Practice
