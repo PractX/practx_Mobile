@@ -11,7 +11,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 import normalize from '../../utils/normalize';
@@ -125,15 +125,97 @@ const PracticeBox = ({
                 fontFamily: 'SofiaProRegular',
                 textTransform: 'capitalize',
               }}>
-              {practice.specialty}
+              {practice.specialty && practice.specialty.length > 20
+                ? practice.specialty.substring(0, 20 - 3) + '...'
+                : practice.specialty}
             </Text>
           </View>
         </View>
       </View>
 
       <View style={{ padding: 20 }}>
-        <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-          <Thumbnail
+        <View
+          style={{
+            flexDirection: 'row',
+            marginBottom: 20,
+            justifyContent: 'space-between',
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Icon
+              name="location-city"
+              type="material-icons"
+              color={colors.text}
+              size={normalize(21)}
+              style={{
+                color: colors.text,
+                // alignSelf: 'center',
+              }}
+            />
+            <Text
+              style={{
+                fontSize: normalize(16),
+                fontFamily: 'SofiaProRegular',
+                color: colors.text,
+                paddingLeft: 10,
+              }}>
+              Florida
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Icon
+              name="doctor"
+              type="material-community"
+              color={colors.text}
+              size={normalize(21)}
+              style={{
+                color: colors.text,
+                // alignSelf: 'center',
+              }}
+            />
+            <Text
+              style={{
+                fontSize: normalize(16),
+                fontFamily: 'SofiaProRegular',
+                color: colors.text,
+                paddingLeft: 10,
+              }}>
+              60k
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Icon
+              name="ios-people-sharp"
+              type="ionicon"
+              color={colors.text}
+              size={normalize(21)}
+              style={{
+                color: colors.text,
+                // alignSelf: 'center',
+              }}
+            />
+            <Text
+              style={{
+                fontSize: normalize(16),
+                fontFamily: 'SofiaProRegular',
+                color: colors.text,
+                paddingLeft: 10,
+              }}>
+              450k
+            </Text>
+          </View>
+          {/* <Thumbnail
             source={{ uri: 'https://image.ibb.co/b4kxGw/zach_1.jpg' }}
             width={50}
             height={50}
@@ -176,7 +258,7 @@ const PracticeBox = ({
               marginLeft: 10,
             }}>
             +20 Members
-          </Text>
+          </Text> */}
         </View>
         {/* <Button
           style={{
