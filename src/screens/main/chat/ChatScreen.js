@@ -47,7 +47,11 @@ import { RefreshControl } from 'react-native';
 import { selectAllMessages } from '../../../redux/practices/practices.selector';
 import { setAllMessages } from '../../../redux/practices/practices.actions';
 // import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import EmojiSelector, { Categories } from 'react-native-emoji-selector';
+import { Keyboard } from 'react-native';
 
+const { flags, sports, food } = Categories;
+// console.log(Categories);
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
@@ -75,6 +79,8 @@ const ChatScreen = ({
   const [imageUri, setImageUri] = useState();
   const [messages, addMessages] = useState([]);
   const [message, setMessage] = useState('');
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [groupSuggest, setGroupSuggest] = useState(false);
   const d = new Date();
   const time = d.getTime();
   const pubnub = usePubNub();
@@ -140,25 +146,25 @@ const ChatScreen = ({
     console.log(message);
     // chatRef.scrollToEnd();
     pubnub.setUUID(currentUser.chatId);
-    // if (message) {
-    pubnub.publish(
-      {
-        message: {
-          text: message,
-          userType: 'patient',
+    if (message) {
+      pubnub.publish(
+        {
+          message: {
+            text: message,
+            userType: 'patient',
+          },
+          channel: channelName,
         },
-        channel: channelName,
-      },
-      (status, response) => {
-        setMessage('');
-        // handle status, response
-        console.log(status);
-        // console.log(response);
-      },
-    );
-    // } else {
-    //   console.log('NO message');
-    // }
+        (status, response) => {
+          setMessage('');
+          // handle status, response
+          console.log(status);
+          // console.log(response);
+        },
+      );
+    } else {
+      console.log('NO message');
+    }
   };
 
   const getMessages = (cha) => {
@@ -378,27 +384,27 @@ const ChatScreen = ({
           console.log('ALL_MESSAGE+++++', allMsgs);
           setAllMessages(allMsgs);
 
-          // pubnub.time((status, response) => {
-          //   if (!status.error) {
-          //     pubnub.objects.setMemberships({
-          //       channels: [
-          //         {
-          //           id: allChannels[0],
-          //           custom: {
-          //             lastReadTimetoken: response.timetoken,
-          //           },
-          //         },
-          //       ],
-          //     });
+          pubnub.time((status, response) => {
+            if (!status.error) {
+              pubnub.objects.setMemberships({
+                channels: [
+                  {
+                    id: allChannels[0],
+                    custom: {
+                      lastReadTimetoken: response.timetoken,
+                    },
+                  },
+                ],
+              });
 
-          //     // dispatch(Actions.messagesCountUpdate(allChannels[0]));
-          //     // console.log(
-          //     //   allChannels[0],
-          //     //   '=== MESSAGE COUNT =====:',
-          //     //   messagesCount[allChannels[0]],
-          //     // );
-          //   }
-          // });
+              // dispatch(Actions.messagesCountUpdate(allChannels[0]));
+              // console.log(
+              //   allChannels[0],
+              //   '=== MESSAGE COUNT =====:',
+              //   messagesCount[allChannels[0]],
+              // );
+            }
+          });
         }
       },
     );
@@ -543,10 +549,14 @@ const ChatScreen = ({
   // }, [pubnub]);
 
   useEffect(() => {
+    console.log('Group_SUGGEST', groupSuggest);
     if (isFocused) {
+      allMessages.find((item) => item.channel === channelName)
+        ? setGroupSuggest(false)
+        : setGroupSuggest(true);
       getAllChannelMessages(channelName);
     }
-  }, [isFocused]);
+  }, [isFocused, groupSuggest]);
 
   useEffect(() => {
     console.log(inputRef);
@@ -588,7 +598,7 @@ const ChatScreen = ({
         group={group}
         // isLoading={isLoading}
       />
-      {subgroups && subgroups.length > 0 && (
+      {groupSuggest && subgroups && subgroups.length > 0 && (
         <View
           style={{
             width: '100%',
@@ -675,8 +685,9 @@ const ChatScreen = ({
           // marginBottom: 60,
         }}
         data={
-          allMessages.find((item) => item.channel === channelName) &&
-          allMessages.find((item) => item.channel === channelName).messages
+          allMessages.find((item) => item.channel === channelName)
+            ? allMessages.find((item) => item.channel === channelName).messages
+            : []
         }
         // numColumns={1}
         renderItem={({ item, index }) => (
@@ -693,7 +704,7 @@ const ChatScreen = ({
         // showsHorizontalScrollIndicator={false}
         // extraData={selected}
       />
-      <KeyboardAvoidingView behavior="height">
+      <KeyboardAvoidingView>
         <Animatable.View
           animation="bounceInLeft"
           style={{
@@ -703,7 +714,7 @@ const ChatScreen = ({
             // marginTop: -10,
             // marginBottom: 10,
             // height: 100,
-            backgroundColor: colors.background,
+            // backgroundColor: colors.background,
           }}>
           <Formik
             innerRef={inputRef}
@@ -719,89 +730,137 @@ const ChatScreen = ({
               values.message = '';
               // console.log('Lets go');
             }}>
-            {({ handleChange, handleBlur, handleSubmit, values }) => (
-              <View
-                style={{
-                  margin: 0,
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: colors.background,
-                  borderTopWidth: 0.8,
-                  borderColor: colors.background_1,
-                  height: 56,
-                }}>
-                {/* ------------------- BIO SECTION --------------------------------------- */}
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              setValues,
+            }) => (
+              <View style={{ margin: 0 }}>
+                <View
+                  style={{
+                    margin: 0,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: colors.background,
+                    borderTopWidth: 0.8,
+                    borderColor: colors.background_1,
+                    height: 56,
+                  }}>
+                  {/* ------------------- BIO SECTION --------------------------------------- */}
 
-                <InputBox
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  valuesType={values.message}
-                  name="message"
-                  placeholder={`Message ${
-                    practice
-                      ? practice.practiceName.length > 18
-                        ? practice.practiceName.substring(0, 11 - 3) + '...'
-                        : practice.practiceName
-                      : group && group.name
-                  }`}
-                  icon2Name="attachment"
-                  icon2Type="entypo"
-                  icon2Action={console.log}
-                  autoCompleteType="name"
-                  textContentType="givenName"
-                  keyboardType="default"
-                  autoCapitalize="sentences"
-                  boxStyle={{
-                    borderRadius: 50,
-                    width: windowWidth - 80,
-                    height: 45,
-                    marginTop: 0,
-                  }}
-                  styling={{
-                    input: {
-                      fontSize: normalize(15),
-                      color: colors.text,
-                      marginLeft: 5,
-                    },
-                  }}
-                />
-                <Button
-                  TouchableComponent={() => {
-                    // return isLoading ? (
-                    //   <ActivityIndicator
-                    //     animating={true}
-                    //     size={normalize(21)}
-                    //     color={colors.text}
-                    //   />
-                    // ) : (
-                    return (
-                      <TouchableOpacity
-                        onPress={handleSubmit}
-                        style={{
-                          backgroundColor: colors.primary,
-                          height: 40,
-                          width: 40,
-                          alignSelf: 'center',
-                          justifyContent: 'center',
-                          // marginTop: 10,
-                          marginLeft: 10,
-                          borderRadius: 10,
-                        }}>
-                        <Icon
-                          name={'ios-send'}
-                          type={'ionicon'}
-                          color={'white'}
-                          size={normalize(21)}
+                  <InputBox
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    valuesType={values.message}
+                    name="message"
+                    placeholder={`Message ${
+                      practice
+                        ? practice.practiceName.length > 18
+                          ? practice.practiceName.substring(0, 11 - 3) + '...'
+                          : practice.practiceName
+                        : group && group.name
+                    }`}
+                    iconLeft={{
+                      name: 'smile',
+                      type: 'font-awesome-5',
+                      action: setShowEmoji,
+                      value: showEmoji,
+                    }}
+                    icon2Name="attachment"
+                    icon2Type="entypo"
+                    icon2Action={console.log}
+                    autoCompleteType="name"
+                    textContentType="givenName"
+                    keyboardType="default"
+                    autoCapitalize="sentences"
+                    boxStyle={{
+                      borderRadius: 50,
+                      width: windowWidth - 80,
+                      height: 45,
+                      marginTop: 0,
+                      justifyContent: 'space-between',
+                    }}
+                    styling={{
+                      input: {
+                        fontSize: normalize(15),
+                        color: colors.text,
+                        marginLeft: 6,
+                      },
+                      // icon: {},,
+                    }}
+                  />
+                  <Button
+                    TouchableComponent={() => {
+                      // return isLoading ? (
+                      //   <ActivityIndicator
+                      //     animating={true}
+                      //     size={normalize(21)}
+                      //     color={colors.text}
+                      //   />
+                      // ) : (
+                      return (
+                        <TouchableOpacity
+                          onPress={handleSubmit}
                           style={{
+                            backgroundColor: colors.primary,
+                            height: 40,
+                            width: 40,
                             alignSelf: 'center',
-                          }}
-                        />
-                      </TouchableOpacity>
-                    );
-                    // );
-                  }}
-                />
+                            justifyContent: 'center',
+                            // marginTop: 10,
+                            marginLeft: 10,
+                            borderRadius: 10,
+                          }}>
+                          <Icon
+                            name={'ios-send'}
+                            type={'ionicon'}
+                            color={'white'}
+                            size={normalize(21)}
+                            style={{
+                              alignSelf: 'center',
+                            }}
+                          />
+                        </TouchableOpacity>
+                      );
+                      // );
+                    }}
+                  />
+                </View>
+                {showEmoji && (
+                  <View style={{ height: 300 }}>
+                    <EmojiSelector
+                      showTabs={true}
+                      theme={colors.background}
+                      showHistory={true}
+                      showSectionTitles={true}
+                      showSearchBar={false}
+                      // categoriesEnabled={[flags, sports, food]}
+                      columns={10}
+                      // category={Categories.symbols}
+                      onEmojiSelected={(emoji) => {
+                        Keyboard.dismiss();
+                        setValues({ message: (values.message += emoji) });
+                      }}
+                      shouldInclude={
+                        (emoji) => {
+                          // eslint-disable-next-line radix
+                          if (Platform.OS === 'android') {
+                            if (parseInt(emoji.added_in) <= 4.9) {
+                              return emoji;
+                            }
+                          } else {
+                            return emoji;
+                          }
+                        }
+                        // emoji.lib.added_in === '6.0' ||
+                        // emoji.lib.added_in === '6.1'
+                      }
+                    />
+                  </View>
+                )}
               </View>
             )}
           </Formik>

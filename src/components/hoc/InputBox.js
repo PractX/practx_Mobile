@@ -3,6 +3,7 @@ import { View, Dimensions, TextInput, StyleSheet } from 'react-native';
 import { normalize } from 'react-native-elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import { Icon, Button } from 'react-native-elements';
+import { Keyboard } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -13,6 +14,7 @@ const InputBox = ({
   handleBlur,
   valuesType,
   name,
+  iconLeft,
   iconName,
   iconType,
   iconColor,
@@ -43,16 +45,38 @@ const InputBox = ({
           backgroundColor: colors.background_1,
         },
       ]}>
-      <Icon
-        name={iconName}
-        type={iconType}
-        color={iconColor ? iconColor : colors.text_1}
-        size={normalize(iconSize ? iconSize : 18)}
-        style={[
-          styles.formIcons,
-          styling && styling.icon ? styling.icon : { alignSelf: 'center' },
-        ]}
-      />
+      <>
+        {iconLeft ? (
+          <Icon
+            onPress={() => {
+              Keyboard.dismiss();
+              // if (iconLeft.value) {
+              // Keyboard.dismiss();
+              iconLeft.action(!iconLeft.value);
+              // }
+            }}
+            name={iconLeft.value ? 'keyboard' : iconLeft.name}
+            type={iconLeft.value ? 'font-awesome-5' : iconLeft.type}
+            color={colors.text_1}
+            size={normalize(iconSize ? iconSize : 18)}
+            style={[
+              styles.formIcons,
+              styling && styling.icon ? styling.icon : { alignSelf: 'center' },
+            ]}
+          />
+        ) : (
+          <Icon
+            name={iconName}
+            type={iconType}
+            color={iconColor ? iconColor : colors.text_1}
+            size={normalize(iconSize ? iconSize : 18)}
+            style={[
+              styles.formIcons,
+              styling && styling.icon ? styling.icon : { alignSelf: 'center' },
+            ]}
+          />
+        )}
+      </>
 
       <TextInput
         autoCapitalize={autoCapitalize}
@@ -71,6 +95,7 @@ const InputBox = ({
         onChangeText={handleChange(name)}
         onBlur={handleBlur(name)}
         value={valuesType}
+        onFocus={() => iconLeft && iconLeft.action(false)}
       />
 
       <Icon
@@ -112,7 +137,8 @@ const styles = StyleSheet.create({
 
   formTextInput: {
     marginLeft: 20,
-    width: '90%',
+    // width: '90%',
+    flex: 2,
     fontSize: normalize(17),
     fontFamily: 'SofiaProRegular',
   },

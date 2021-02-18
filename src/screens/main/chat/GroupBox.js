@@ -33,7 +33,8 @@ const GroupBox = ({
   //   'Last____',
   //   allMessages.messages[allMessages.messages.length - 1].timetoken / 10000000,
   // );
-  // console.log(newMessages);
+  console.log(item);
+  console.log(allMessages);
 
   useEffect(() => {
     if (allMessages) {
@@ -101,7 +102,7 @@ const GroupBox = ({
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ChatScreen', {
-              group: item && item,
+              group: item ? item : {},
               channelName: item && item.channelName && item.channelName,
               practiceDms,
             });

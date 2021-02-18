@@ -158,9 +158,7 @@ const Header = ({
                 </Text>
               </View>
             </View>
-          ) : (
-            ''
-          )}
+          ) : null}
         </View>
       ) : (
         <TouchableOpacity
