@@ -24,6 +24,7 @@ const Header = ({
   navigation,
   title,
   iconRight1,
+  chatRight,
   notifyIcon,
   checkState,
   setCheckState,
@@ -328,6 +329,50 @@ const Header = ({
               );
             }}
           />
+        )}
+        {chatRight && (
+          <>
+            <Button
+              // onPress={handleSubmit}
+              TouchableComponent={() => (
+                <TouchableOpacity onPress={() => chatRight[0].onPress()}>
+                  <Icon
+                    name={chatRight[0].name}
+                    type={chatRight[0].type}
+                    color={'white'}
+                    size={normalize(21)}
+                    style={{
+                      borderRadius: 5,
+                      backgroundColor: colors.primary,
+                      padding: 5,
+                      color: colors.text,
+                      // alignSelf: 'center',
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
+            />
+            <Button
+              // onPress={handleSubmit}
+              TouchableComponent={() => (
+                <TouchableOpacity onPress={() => chatRight[1].onPress()}>
+                  <Icon
+                    name={chatRight[1].name}
+                    type={chatRight[1].type}
+                    color={'white'}
+                    size={normalize(20)}
+                    style={{
+                      borderRadius: 5,
+                      backgroundColor: colors.quaternary,
+                      padding: 5,
+                      color: colors.text,
+                      marginLeft: 15,
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
+            />
+          </>
         )}
         {notifyIcon && (
           <TouchableOpacity onPress={() => console.log('hello world')}>

@@ -109,6 +109,8 @@ const DmsBox = ({
               practiceDms,
               subgroups: subgroups,
               group: null,
+              navigation: navigation,
+              type: 'dm',
             });
           }}
           style={{

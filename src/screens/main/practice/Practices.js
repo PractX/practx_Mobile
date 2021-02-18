@@ -32,6 +32,8 @@ import { MenuProvider } from 'react-native-popup-menu';
 import { ActivityIndicator } from 'react-native-paper';
 import normalize from '../../../utils/normalize';
 import Error from '../../../components/hoc/Error';
+import BottomSheet from 'reanimated-bottom-sheet';
+import PracticeDetails from '../../../components/hoc/PracticeDetails';
 // import { getAllPracticesStart } from '../../redux/practices/practices.actions';
 
 const windowWidth = Dimensions.get('window').width;
@@ -47,16 +49,36 @@ const Practices = ({
   setFilter,
   filter,
 }) => {
+  const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
   const [checkState, setCheckState] = useState(filter);
   const ref = useRef(null);
   const isFocused = useIsFocused();
+  const [practiceData, setPracticeData] = useState({
+    show: false,
+    data: null,
+  });
+
+  const renderContent = () => (
+    <View
+      style={{
+        backgroundColor: 'white',
+        padding: 16,
+        height: 450,
+      }}>
+      <Text>Swipe down to close</Text>
+    </View>
+  );
 
   const openMenu = () => {
     console.log('opening');
   };
+
+  useEffect(() => {
+    practiceData.show && bottomSheetRef.current.snapTo(0);
+  });
 
   useEffect(() => {
     isFetching ? setRefreshing(true) : setRefreshing(false);
@@ -167,6 +189,8 @@ const Practices = ({
                   id={index}
                   practice={item}
                   navigation={navigation}
+                  practiceData={practiceData}
+                  setPracticeData={setPracticeData}
                 />
               )}
               keyExtractor={(item, index) => item.display_url}
@@ -199,25 +223,31 @@ const Practices = ({
           )}
         </View>
       </View>
-      {/* {errorData ? (
-                <Error
-                  title={errorData.includes('internet') ? 'OOPS!!!' : 'SORRY'}
-                  subtitle={
-                    errorData.includes('internet')
-                      ? 'Poor internet connection, Please check your connectivity, And try again'
-                      : errorData.includes('fetch')
-                      ? 'Enable to fetch post, please try again later'
-                      : 'Download link is not supported OR Account is private'
-                  }
-                />
-              ) : (
-                <Spinner
-                  style={styles.spinner}
-                  size={80}
-                  type="Circle"
-                  color={colors.primary}
-                />
-              )} */}
+      {practiceData.show && (
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            backgroundColor: '#000000b9',
+            height: '100%',
+            width: '100%',
+          }}
+        />
+      )}
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={[560, 400, 0]}
+        borderRadius={20}
+        renderContent={() => (
+          <PracticeDetails
+            bottomSheetRef={bottomSheetRef}
+            navigation={navigation}
+            practiceData={practiceData}
+          />
+        )}
+        initialSnap={2}
+        onCloseEnd={() => setPracticeData({ show: false, data: null })}
+      />
     </SafeAreaView>
   );
 };

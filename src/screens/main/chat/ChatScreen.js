@@ -71,7 +71,7 @@ const ChatScreen = ({
   const inputRef = useRef();
   const { params } = useRoute();
   const isFocused = useIsFocused();
-  const { practice, practiceDms, channelName, subgroups, group } = params;
+  const { practice, practiceDms, channelName, subgroups, group, type } = params;
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
@@ -588,12 +588,24 @@ const ChatScreen = ({
         // title="Edit Profile"
         backArrow={true}
         headerWithImage={{ chatUser: currentUser, status: 'Active Now' }}
-        iconRight1={{
-          name: 'save-outline',
-          type: 'ionicon',
-          onPress: saveChanges,
-          buttonType: 'save',
-        }}
+        chatRight={
+          type === 'dm'
+            ? [
+                {
+                  name: 'calendar-today',
+                  type: 'material-community',
+                  onPress: () => navigation.navigate('Appointments', {}),
+                  buttonType: 'save',
+                },
+                {
+                  name: 'ios-call',
+                  type: 'ionicon',
+                  onPress: saveChanges,
+                  buttonType: 'save',
+                },
+              ]
+            : null
+        }
         practice={practice}
         group={group}
         // isLoading={isLoading}
@@ -629,6 +641,17 @@ const ChatScreen = ({
             }}>
             {subgroups.map((item) => (
               <TouchableOpacity
+                onPress={() => {
+                  // console.log(item);
+                  navigation.navigate('ChatScreen', {
+                    practice: null,
+                    channelName: item && item.channelName && item.channelName,
+                    practiceDms,
+                    subgroups: [],
+                    group: item,
+                    type: 'group',
+                  });
+                }}
                 style={{
                   marginVertical: 6,
                   marginHorizontal: 10,
