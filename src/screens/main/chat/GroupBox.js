@@ -105,6 +105,7 @@ const GroupBox = ({
               group: item ? item : {},
               channelName: item && item.channelName && item.channelName,
               practiceDms,
+              type: 'group',
             });
           }}
           style={{

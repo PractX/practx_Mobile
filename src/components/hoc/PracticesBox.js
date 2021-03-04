@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import * as Animatable from 'react-native-animatable';
 
 import { Text, Thumbnail } from 'native-base';
@@ -23,6 +23,7 @@ import {
 } from '../../redux/practices/practices.actions';
 import { selectIsLoading } from '../../redux/practices/practices.selector';
 import { createStructuredSelector } from 'reselect';
+import BottomSheet from 'reanimated-bottom-sheet';
 
 const Stack = createStackNavigator();
 
@@ -49,6 +50,8 @@ const PracticeBox = ({
   isLoading,
   navigation,
   setPracticeId,
+  practiceData,
+  setPracticeData,
 }) => {
   const { colors } = useTheme();
   const pending = practice.requests;
@@ -92,7 +95,6 @@ const PracticeBox = ({
             marginRight: 15,
           }}
           resizeMode={FastImage.resizeMode.cover}
-          // placeHolder={<ActivityIndicator />}
         />
 
         <View style={{ justifyContent: 'center' }}>
@@ -149,7 +151,7 @@ const PracticeBox = ({
               name="location-city"
               type="material-icons"
               color={colors.text}
-              size={normalize(21)}
+              size={normalize(18)}
               style={{
                 color: colors.text,
                 // alignSelf: 'center',
@@ -157,12 +159,16 @@ const PracticeBox = ({
             />
             <Text
               style={{
-                fontSize: normalize(16),
+                fontSize: normalize(15),
                 fontFamily: 'SofiaProRegular',
                 color: colors.text,
                 paddingLeft: 10,
               }}>
-              Florida
+              {practice.location
+                ? practice.location.length > 10
+                  ? practice.location.substring(0, 10 - 3) + '...'
+                  : practice.location
+                : 'No location'}
             </Text>
           </View>
           <View
@@ -174,7 +180,7 @@ const PracticeBox = ({
               name="doctor"
               type="material-community"
               color={colors.text}
-              size={normalize(21)}
+              size={normalize(18)}
               style={{
                 color: colors.text,
                 // alignSelf: 'center',
@@ -182,7 +188,7 @@ const PracticeBox = ({
             />
             <Text
               style={{
-                fontSize: normalize(16),
+                fontSize: normalize(15),
                 fontFamily: 'SofiaProRegular',
                 color: colors.text,
                 paddingLeft: 10,
@@ -199,7 +205,7 @@ const PracticeBox = ({
               name="ios-people-sharp"
               type="ionicon"
               color={colors.text}
-              size={normalize(21)}
+              size={normalize(18)}
               style={{
                 color: colors.text,
                 // alignSelf: 'center',
@@ -207,7 +213,7 @@ const PracticeBox = ({
             />
             <Text
               style={{
-                fontSize: normalize(16),
+                fontSize: normalize(15),
                 fontFamily: 'SofiaProRegular',
                 color: colors.text,
                 paddingLeft: 10,
@@ -215,66 +221,8 @@ const PracticeBox = ({
               450k
             </Text>
           </View>
-          {/* <Thumbnail
-            source={{ uri: 'https://image.ibb.co/b4kxGw/zach_1.jpg' }}
-            width={50}
-            height={50}
-            small
-          />
-          <Thumbnail
-            source={{ uri: 'https://image.ibb.co/fQKPww/kennith_1.jpg' }}
-            width={50}
-            height={50}
-            style={{ marginLeft: -16 }}
-            small
-          />
-          <Thumbnail
-            source={{ uri: 'https://image.ibb.co/j4Ov3b/darth_vader_1.png' }}
-            width={50}
-            height={50}
-            style={{ marginLeft: -16 }}
-            small
-          />
-          <Thumbnail
-            source={{ uri: 'https://image.ibb.co/dM6hib/tara_1.jpg' }}
-            width={50}
-            height={50}
-            style={{ marginLeft: -16 }}
-            small
-          />
-          <Thumbnail
-            source={{ uri: 'https://image.ibb.co/iasYpG/ash_1.jpg' }}
-            width={50}
-            height={50}
-            style={{ marginLeft: -16 }}
-            small
-          />
-
-          <Text
-            style={{
-              color: theme.text2,
-              fontSize: 13,
-              marginTop: 8,
-              marginLeft: 10,
-            }}>
-            +20 Members
-          </Text> */}
         </View>
-        {/* <Button
-          style={{
 
-            width: '100%',
-            justifyContent: 'center',
-            backgroundColor: 'transparent',
-            borderRadius: 15,
-            borderColor: theme.highlight,
-            borderWidth: 1,
-          }}
-          disabled>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ color: theme.highlight }}>Pending</Text>
-          </View>
-        </Button> */}
         {pending.length > 0 ? (
           <Button
             title="Pending"
@@ -291,23 +239,107 @@ const PracticeBox = ({
             loading={loading}
           />
         ) : member.length > 0 ? (
-          <Button
-            title="Member"
-            onPress={async () => {
-              await setPracticeId(practice.id);
-              await navigation.navigate('Chats');
-            }}
-            rounded
-            buttonStyle={[
-              styles.buttonAction,
-              { backgroundColor: colors.primary },
-            ]}
-            titleStyle={{
-              fontFamily: 'SofiaProSemiBold',
-              fontSize: normalize(16),
-            }}
-            loading={loading}
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: appwidth,
+            }}>
+            <Button
+              title="Chat"
+              onPress={async () => {
+                await setPracticeId(practice.id);
+                await navigation.navigate('Chats');
+              }}
+              icon={
+                <Icon
+                  name="ios-chatbubble"
+                  type="ionicon"
+                  color={'white'}
+                  size={normalize(16)}
+                  style={{
+                    color: 'white',
+                    paddingRight: 5,
+                    // alignSelf: 'center',
+                  }}
+                />
+              }
+              rounded
+              buttonStyle={[
+                styles.buttonAction,
+                { backgroundColor: colors.primary, width: appwidth / 3.8 },
+              ]}
+              titleStyle={{
+                fontFamily: 'SofiaProSemiBold',
+                fontSize: normalize(14),
+              }}
+              loading={loading}
+            />
+
+            <Button
+              title="View"
+              onPress={async () => {
+                if (practiceData.show) {
+                  setPracticeData({ show: true, data: null });
+                } else {
+                  setPracticeData({ show: true, data: practice });
+                }
+              }}
+              icon={
+                <Icon
+                  name="ios-eye"
+                  type="ionicon"
+                  color={'white'}
+                  size={normalize(16)}
+                  style={{
+                    color: 'white',
+                    paddingRight: 5,
+                    // alignSelf: 'center',
+                  }}
+                />
+              }
+              rounded
+              buttonStyle={[
+                styles.buttonAction,
+                { backgroundColor: colors.primary, width: appwidth / 3.8 },
+              ]}
+              titleStyle={{
+                fontFamily: 'SofiaProSemiBold',
+                fontSize: normalize(14),
+              }}
+              loading={loading}
+            />
+            <Button
+              title="Call"
+              onPress={async () => {
+                await setPracticeId(practice.id);
+                await navigation.navigate('Chats');
+              }}
+              icon={
+                <Icon
+                  name="ios-call"
+                  type="ionicon"
+                  color={'white'}
+                  size={normalize(16)}
+                  style={{
+                    color: 'white',
+                    paddingRight: 5,
+                    // alignSelf: 'center',
+                  }}
+                />
+              }
+              rounded
+              buttonStyle={[
+                styles.buttonAction,
+                { backgroundColor: colors.primary, width: appwidth / 3.8 },
+              ]}
+              titleStyle={{
+                fontFamily: 'SofiaProSemiBold',
+                fontSize: normalize(14),
+              }}
+              loading={loading}
+            />
+          </View>
         ) : (
           <Button
             title="Join"
@@ -325,37 +357,6 @@ const PracticeBox = ({
           />
         )}
       </View>
-      {/* <Button
-        style={{
-
-          width: '100%',
-          justifyContent: 'center',
-          backgroundColor: 'transparent',
-          borderRadius: 15,
-          borderColor: 'green',
-          borderWidth: 1,
-        }}
-        disabled>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={{ color: 'green' }}> You are a member </Text>
-        </View>
-      </Button> */}
-
-      {/*       <Button
-        style={{
-
-          width: '100%',
-          justifyContent: 'center',
-          backgroundColor: 'green',
-          borderRadius: 15,
-          borderColor: colors.background_1,
-          borderWidth: 1,
-        }}
-        onPress={() => joinPractice(practiceId, token, Id)}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text> Join Practice </Text>
-        </View>
-      </Button> */}
     </View>
   );
 };
