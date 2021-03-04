@@ -61,7 +61,7 @@ export function* signUp({
       type: 'success',
     });
     yield delay(5000);
-    yield put(signUpSuccess(result.patient));
+    // yield put(signUpSuccess(result.patient));
     yield put(navigation.navigate('verifyAccount'));
   } catch (error) {
     console.log(error);

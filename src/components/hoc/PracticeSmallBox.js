@@ -1,0 +1,169 @@
+import React, { useEffect, useState, useContext, useRef } from 'react';
+import * as Animatable from 'react-native-animatable';
+
+import { Text, Thumbnail } from 'native-base';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Image,
+  TextInput,
+  ScrollView,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
+import { Button, Icon } from 'react-native-elements';
+import { createStackNavigator } from '@react-navigation/stack';
+import { useTheme } from '@react-navigation/native';
+import normalize from '../../utils/normalize';
+import FastImage from 'react-native-fast-image';
+import { connect } from 'react-redux';
+import {
+  joinPractices,
+  setPracticeId,
+} from '../../redux/practices/practices.actions';
+import { selectIsLoading } from '../../redux/practices/practices.selector';
+import { createStructuredSelector } from 'reselect';
+import BottomSheet from 'reanimated-bottom-sheet';
+
+const Stack = createStackNavigator();
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const appwidth = windowWidth * 0.8;
+
+const theme = {
+  /* ---- THeme to be gotten from redux or context------*/
+  background: '#1e1f36',
+  highlight: '#ff0000',
+  text: '#fff',
+  text2: '#aaa',
+  text3: '#555',
+};
+
+const PracticeSmallBox = ({
+  joinPractices,
+  practice,
+  getpractx,
+  token,
+  id,
+  userId,
+  isLoading,
+  navigation,
+  setPracticeId,
+  practiceData,
+  setPracticeData,
+}) => {
+  const { colors } = useTheme();
+  const pending = practice.requests;
+  const member = practice.patients.filter((val) => val.id === userId);
+  const [loading, setLoading] = useState(false);
+
+  const joinPractice = (practiceId) => {
+    if (practiceId === practice.id) {
+      setLoading(true);
+    }
+    joinPractices(practiceId);
+  };
+
+  useEffect(() => {
+    !isLoading && setLoading(false);
+  }, [isLoading, practice]);
+
+  return (
+    <TouchableOpacity
+      onPress={async () => {
+        if (practiceData.show) {
+          setPracticeData({ show: true, data: null });
+        } else {
+          setPracticeData({ show: true, data: practice });
+        }
+      }}
+      style={{
+        // borderWidth: 0.9,
+        // borderColor: colors.background_1,
+        // borderRadius: 30,
+        width: 95,
+        marginTop: 15,
+        marginBottom: 15,
+        marginRight: 20,
+      }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          borderWidth: 0.9,
+          borderColor: colors.background_1,
+          borderRadius: 15,
+        }}>
+        <FastImage
+          source={{ uri: practice.logo }}
+          style={{
+            width: 95,
+            height: 95,
+            borderRadius: 15,
+            backgroundColor: colors.background_1,
+            // marginRight: 15,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+      </View>
+      <View style={{ justifyContent: 'center' }}>
+        <Text
+          style={{
+            fontSize: normalize(12),
+            fontFamily: 'SofiaProSemiBold',
+            color: colors.text,
+          }}>
+          {practice.practiceName && practice.practiceName.length > 15
+            ? practice.practiceName.substring(0, 15 - 3) + '...'
+            : practice.practiceName}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            // justifyContent: 'center',
+          }}>
+          <Icon
+            name="medical-bag"
+            type="material-community"
+            color={colors.text}
+            size={normalize(10)}
+          />
+          <Text
+            style={{
+              color: colors.text_2,
+              fontSize: normalize(11),
+              fontFamily: 'SofiaProRegular',
+              textTransform: 'capitalize',
+              marginLeft: 3,
+            }}>
+            {practice.specialty && practice.specialty.length > 15
+              ? practice.specialty.substring(0, 15 - 3) + '...'
+              : practice.specialty}
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  buttonAction: {
+    width: appwidth,
+    justifyContent: 'center',
+    fontFamily: 'SofiaProRegular',
+    borderRadius: 10,
+  },
+});
+
+const mapStateToProps = createStructuredSelector({
+  isLoading: selectIsLoading,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  joinPractices: (practiceId) => dispatch(joinPractices(practiceId)),
+  setPracticeId: (id) => dispatch(setPracticeId(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PracticeSmallBox);

@@ -95,7 +95,6 @@ const PracticeBox = ({
             marginRight: 15,
           }}
           resizeMode={FastImage.resizeMode.cover}
-          // placeHolder={<ActivityIndicator />}
         />
 
         <View style={{ justifyContent: 'center' }}>
@@ -222,66 +221,8 @@ const PracticeBox = ({
               450k
             </Text>
           </View>
-          {/* <Thumbnail
-            source={{ uri: 'https://image.ibb.co/b4kxGw/zach_1.jpg' }}
-            width={50}
-            height={50}
-            small
-          />
-          <Thumbnail
-            source={{ uri: 'https://image.ibb.co/fQKPww/kennith_1.jpg' }}
-            width={50}
-            height={50}
-            style={{ marginLeft: -16 }}
-            small
-          />
-          <Thumbnail
-            source={{ uri: 'https://image.ibb.co/j4Ov3b/darth_vader_1.png' }}
-            width={50}
-            height={50}
-            style={{ marginLeft: -16 }}
-            small
-          />
-          <Thumbnail
-            source={{ uri: 'https://image.ibb.co/dM6hib/tara_1.jpg' }}
-            width={50}
-            height={50}
-            style={{ marginLeft: -16 }}
-            small
-          />
-          <Thumbnail
-            source={{ uri: 'https://image.ibb.co/iasYpG/ash_1.jpg' }}
-            width={50}
-            height={50}
-            style={{ marginLeft: -16 }}
-            small
-          />
-
-          <Text
-            style={{
-              color: theme.text2,
-              fontSize: 13,
-              marginTop: 8,
-              marginLeft: 10,
-            }}>
-            +20 Members
-          </Text> */}
         </View>
-        {/* <Button
-          style={{
 
-            width: '100%',
-            justifyContent: 'center',
-            backgroundColor: 'transparent',
-            borderRadius: 15,
-            borderColor: theme.highlight,
-            borderWidth: 1,
-          }}
-          disabled>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ color: theme.highlight }}>Pending</Text>
-          </View>
-        </Button> */}
         {pending.length > 0 ? (
           <Button
             title="Pending"

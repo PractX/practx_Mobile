@@ -310,9 +310,9 @@ const ChatMessages = ({
     // );
     pubnub.deleteMessages(
       {
-        channel: '23_13_jZ_GFSXex',
+        channel: '23_15_V3wNztfhu',
         start: Date.now(),
-        end: '16134350735442841',
+        end: '16148006508208300',
       },
       (result) => {
         console.log(result);
@@ -389,6 +389,7 @@ const ChatMessages = ({
         },
 
         file: (picture) => {
+          console.log('PICTURES____', picture);
           // addMessages([
           //   ...messages,
           //   {
@@ -637,51 +638,56 @@ const ChatMessages = ({
                   </Text>
                 </View>
                 {subgroups.length > 0 ? (
-                  <FlatList
-                    ref={ref}
-                    horizontal={false}
-                    refreshControl={
-                      <RefreshControl
-                        horizontal={true}
-                        refreshing={practicesRefreshing}
-                        // onRefresh={() => getPracticesAllStart()}
-                      />
-                    }
-                    // removeClippedSubviews
-                    // ListEmptyComponent
-                    initialNumToRender={5}
-                    updateCellsBatchingPeriod={5}
-                    showsVerticalScrollIndicator={false}
-                    style={{ height: windowHeight - 350 }}
-                    data={subgroups}
-                    numColumns={1}
-                    renderItem={({ item, index }) => (
-                      <GroupBox
-                        id={currentPracticeId}
-                        item={item}
-                        allMessages={
-                          practiceDms && allMessages && subgroups
-                            ? allMessages.find(
-                                (it) => it.channel === item.channelName,
-                              )
+                  <View
+                    style={{
+                      height: windowHeight - 400,
+                    }}>
+                    <FlatList
+                      ref={ref}
+                      horizontal={false}
+                      refreshControl={
+                        <RefreshControl
+                          horizontal={true}
+                          refreshing={practicesRefreshing}
+                          // onRefresh={() => getPracticesAllStart()}
+                        />
+                      }
+                      // removeClippedSubviews
+                      // ListEmptyComponent
+                      initialNumToRender={5}
+                      updateCellsBatchingPeriod={5}
+                      showsVerticalScrollIndicator={false}
+                      contentContainerStyle={{ flexGrow: 1 }}
+                      data={subgroups}
+                      numColumns={1}
+                      renderItem={({ item, index }) => (
+                        <GroupBox
+                          id={currentPracticeId}
+                          item={item}
+                          allMessages={
+                            practiceDms && allMessages && subgroups
                               ? allMessages.find(
                                   (it) => it.channel === item.channelName,
                                 )
+                                ? allMessages.find(
+                                    (it) => it.channel === item.channelName,
+                                  )
+                                : null
                               : null
-                            : null
-                        }
-                        practiceDms={practiceDms}
-                        navigation={navigation}
-                        // channel
-                        styling={{
-                          width: style1 === 'open' ? appwidth - 50 : appwidth,
-                        }}
-                      />
-                    )}
-                    keyExtractor={(item, index) => item.display_url}
-                    // showsHorizontalScrollIndicator={false}
-                    // extraData={selected}
-                  />
+                          }
+                          practiceDms={practiceDms}
+                          navigation={navigation}
+                          // channel
+                          styling={{
+                            width: style1 === 'open' ? appwidth - 50 : appwidth,
+                          }}
+                        />
+                      )}
+                      keyExtractor={(item, index) => item.display_url}
+                      // showsHorizontalScrollIndicator={false}
+                      // extraData={selected}
+                    />
+                  </View>
                 ) : (
                   <View style={{ padding: 80, alignItems: 'center' }}>
                     {practiceDms === null || isFetching ? (
