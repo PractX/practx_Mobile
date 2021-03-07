@@ -167,7 +167,7 @@ const ChatMessages = ({
       },
     );
 
-    console.log('___ALLCHANNELS___', allChannels);
+    // console.log('___ALLCHANNELS___', allChannels);
 
     pubnub.subscribe({ channels: allChannels });
   }, []);
@@ -178,134 +178,133 @@ const ChatMessages = ({
   //   }
   // }, [isFocused]);
 
-  const getMessages = useCallback(
-    (cha) => {
-      let d2 = new Date();
-      let timeNow = d2.getTime();
-      console.log('=== GET MESSAGES FROM CHANNEL =====: ', cha);
-      const channelMsgs = allMessages.find((i) => i.channel === cha);
-      const channels = [cha];
-      console.log('Times', time);
-      if (channelMsgs) {
-        pubnub.fetchMessages(
-          {
-            channels: [channels[0]],
-            start: channelMsgs.lst + 1,
-            end: timeNow,
-          },
+  const getMessages = (cha) => {
+    console.log('=== GET MESSAGES FROM CHANNEL =====: ', cha);
+    console.log('ALL____', allMessages);
 
-          (status, data) => {
-            if (status.statusCode === 200) {
-              console.log('=== FOUND MESSAGES FROM CHANNEL =====: ', cha);
-              // addMessage([...channelMsgs.messages, ...data.channels[channels]])
-              const msgs = data.channels[channels];
-              console.log(
-                '=== FOUND NEW MESSAGES FROM CHANNEL =====: ',
-                cha,
-                msgs,
+    const channelMsgs = allMessages.find((i) => i.channel === cha);
+    const channels = [cha];
+    console.log('Time token____', channelMsgs.lst);
+    console.log('Current Date____', time);
+    if (channelMsgs) {
+      pubnub.fetchMessages(
+        {
+          channels: [channels[0]],
+          start: channelMsgs.lst + 1,
+          count: 1,
+          end: time,
+        },
+
+        (status, data) => {
+          if (status.statusCode === 200) {
+            console.log('=== FOUND MESSAGES FROM CHANNEL =====: ', cha);
+            // addMessage([...channelMsgs.messages, ...data.channels[channels]])
+            const msgs = data.channels[channels];
+            console.log(
+              '=== FOUND NEW MESSAGES FROM CHANNEL =====: ',
+              cha,
+              msgs,
+            );
+
+            console.log('=== msgs =====: ', msgs);
+            if (msgs.length && msgs[0].timetoken !== channelMsgs.lst) {
+              channelMsgs.lst = msgs[msgs.length - 1].timetoken;
+              channelMsgs.messages = [...channelMsgs.messages, ...msgs];
+              // channelMsgs.messages = [...msgs]
+              const newSavedMessages = allMessages.filter(
+                (i) => i.channel !== channelMsgs.channel,
               );
-
-              console.log('=== msgs =====: ', msgs);
-              if (msgs.length && msgs[0].timetoken !== channelMsgs.lst) {
-                channelMsgs.lst = msgs[msgs.length - 1].timetoken;
-                channelMsgs.messages = [...channelMsgs.messages, ...msgs];
-                // channelMsgs.messages = [...msgs]
-                const newSavedMessages = allMessages.filter(
-                  (i) => i.channel !== channelMsgs.channel,
-                );
-                console.log('=== channelMsgs =====: ', channelMsgs);
-                console.log('=== newSavedMessages =====: ', newSavedMessages);
-                console.log('=== All messages =====: ', allMessages);
-                setAllMessages([...newSavedMessages, channelMsgs]);
-              }
-
-              // pubnub.time((status, response)=>{
-              // 	if(!status.error){
-
-              // 		pubnub.objects.setMemberships({
-              // 			channels: [{
-              // 				id: channels[0],
-              // 				custom: {
-              // 						lastReadTimetoken: response.timetoken,
-              // 				}
-              // 			}]
-
-              // 		})
-
-              // 		dispatch(Actions.messagesCountUpdate(channels[0]))
-              // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
-
-              // 	}
-
-              // })
+              console.log('=== channelMsgs =====: ', channelMsgs);
+              console.log('=== newSavedMessages =====: ', newSavedMessages);
+              console.log('=== All messages =====: ', allMessages);
+              setAllMessages([...newSavedMessages, channelMsgs]);
             }
-          },
-        );
-      } else {
-        pubnub.fetchMessages(
-          {
-            channels: [channels[0]],
-            count: 25,
-            end: timeNow,
-          },
 
-          (status, data) => {
-            if (status.statusCode === 200) {
-              console.log('=== GETTING MESSAGES FROM CHANNEL =====: ', cha);
-              // addMessage([...data.channels[channels]])
-              const msgs = data.channels[channels];
-              if (msgs.length) {
-                console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
-                const lst = msgs[msgs.length - 1].timetoken;
-                const fst = msgs[0].timetoken;
-                setAllMessages([
-                  ...allMessages,
-                  { channel: cha, fst, lst, messages: msgs },
-                ]);
-              }
+            // pubnub.time((status, response)=>{
+            // 	if(!status.error){
 
-              // pubnub.time((status, response)=>{
-              // 	if(!status.error){
+            // 		pubnub.objects.setMemberships({
+            // 			channels: [{
+            // 				id: channels[0],
+            // 				custom: {
+            // 						lastReadTimetoken: response.timetoken,
+            // 				}
+            // 			}]
 
-              // 		pubnub.objects.setMemberships({
-              // 			channels: [{
-              // 				id: channels[0],
-              // 				custom: {
-              // 						lastReadTimetoken: response.timetoken,
-              // 				}
-              // 			}]
+            // 		})
 
-              // 		})
+            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
+            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
 
-              // 		dispatch(Actions.messagesCountUpdate(channels[0]))
-              // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+            // 	}
 
-              // 	}
+            // })
+          }
+        },
+      );
+    } else {
+      pubnub.fetchMessages(
+        {
+          channels: [channels[0]],
+          count: 25,
+          end: time,
+        },
 
-              // })
+        (status, data) => {
+          if (status.statusCode === 200) {
+            console.log('=== GETTING MESSAGES FROM CHANNEL =====: ', cha);
+            // addMessage([...data.channels[channels]])
+            const msgs = data.channels[channels];
+            if (msgs.length) {
+              console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
+              const lst = msgs[msgs.length - 1].timetoken;
+              const fst = msgs[0].timetoken;
+              setAllMessages([
+                ...allMessages,
+                { channel: cha, fst, lst, messages: msgs },
+              ]);
             }
-          },
-        );
-      }
 
-      // pubnub.subscribe({ channels });
+            // pubnub.time((status, response)=>{
+            // 	if(!status.error){
 
-      // return () => {
-      //   pubnub.unsubscribeAll();
-      // };
-    },
-    [allMessages],
-  );
+            // 		pubnub.objects.setMemberships({
+            // 			channels: [{
+            // 				id: channels[0],
+            // 				custom: {
+            // 						lastReadTimetoken: response.timetoken,
+            // 				}
+            // 			}]
 
-  const pract = useCallback(async () => {
-    console.log('fetching');
+            // 		})
 
-    if (currentPracticeId > 0) {
-      getPracticeSubgroupsStart(currentPracticeId);
+            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
+            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+
+            // 	}
+
+            // })
+          }
+        },
+      );
     }
 
-    // }
-  }, []);
+    // pubnub.subscribe({ channels });
+
+    // return () => {
+    //   pubnub.unsubscribeAll();
+    // };
+  };
+
+  // const pract = useCallback(async () => {
+  //   console.log('fetching');
+
+  //   if (currentPracticeId > 0) {
+  //     getPracticeSubgroupsStart(currentPracticeId);
+  //   }
+
+  //   // }
+  // }, []);
 
   // useMemo(() => {
   //   getJoinedPracticesStart();
@@ -315,17 +314,18 @@ const ChatMessages = ({
 
   useMemo(() => {
     if (currentPracticeId) {
-      pract();
+      // pract();
+      getPracticeSubgroupsStart(currentPracticeId);
       // getMessages();
       // removeChannel();
     }
-  }, []);
+  }, [currentPracticeId]);
 
-  useMemo(() => {
+  useEffect(() => {
     if (currentPracticeId) {
       getAllChannelMessages(practiceDms, subgroups);
     }
-  }, [currentPracticeId]);
+  }, [currentPracticeId, subgroups]);
 
   const removeChannel = () => {
     console.log('Deleting');
@@ -351,11 +351,12 @@ const ChatMessages = ({
     );
   };
 
-  useMemo(() => {
+  useEffect(() => {
     if (pubnub) {
+      console.log('Add event  listener');
       pubnub.setUUID(currentUser.chatId);
 
-      pubnub.addListener({
+      const listener = {
         message: (messageEvent) => {
           // addMessages([
           //   ...messages,
@@ -464,7 +465,7 @@ const ChatMessages = ({
           // var timetoken = p.timetoken;  // Current timetoken
           // var uuid = p.uuid; // UUIDs of users who are subscribed to the channel
         },
-      });
+      };
 
       // Fetch messaged from pubnub history..............
 
@@ -475,29 +476,31 @@ const ChatMessages = ({
       // console.log(channels);
 
       // pubnub.subscribe({ channels: channels, withPresence: true });
+      pubnub.addListener(listener);
 
-      // return () => {
-      //   pubnub.unsubscribeAll();
-      // };
+      return () => {
+        console.log('Removing listener');
+        pubnub.removeListener(listener);
+      };
 
       // setChannel(channels);
     }
-  }, [pubnub]);
+  }, [allMessages, subgroups, currentPracticeId]);
 
-  useEffect(() => {
-    console.log(joinedPractices);
-    // isFetching ? setRefreshing(true) : setRefreshing(false);
-    // pubnub.getMessage('', (msg) => {
-    //   console.log(msg);
-    // });
-    // getMessages(
-    //   practiceDms &&
-    //     practiceDms.length &&
-    //     practiceDms.find((item) => item.practiceId === currentPracticeId)
-    //       .channelName,
-    //   10,
-    // );
-  }, [pubnub]);
+  // useEffect(() => {
+  //   console.log(joinedPractices);
+  //   // isFetching ? setRefreshing(true) : setRefreshing(false);
+  //   // pubnub.getMessage('', (msg) => {
+  //   //   console.log(msg);
+  //   // });
+  //   // getMessages(
+  //   //   practiceDms &&
+  //   //     practiceDms.length &&
+  //   //     practiceDms.find((item) => item.practiceId === currentPracticeId)
+  //   //       .channelName,
+  //   //   10,
+  //   // );
+  // }, [pubnub]);
 
   useEffect(() => {
     // console.log(currentUser);
@@ -629,6 +632,7 @@ const ChatMessages = ({
               practiceDms={practiceDms}
               subgroups={subgroups}
               navigation={navigation}
+              newDate={d}
               styling={{
                 width: style1 === 'open' ? appwidth - 50 : appwidth,
               }}

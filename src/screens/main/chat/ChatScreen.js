@@ -593,7 +593,7 @@ const ChatScreen = ({
         // }
         onRefresh={() => getOldMessages(channelName)}
         refreshing={refreshing}
-        // onContentSizeChange={() => chatRef.scrollToEnd({ animated: false })} // scroll it
+        onContentSizeChange={() => chatRef.scrollToEnd({ animated: false })} // scroll it
         onLayout={() => chatRef.scrollToEnd({ animated: false })}
         // initialNumToRender={10}
         // windowSize={5}

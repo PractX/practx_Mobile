@@ -46,7 +46,7 @@ const GroupBox = ({
       // const localeDateTime = gmtDate.toLocaleString();
       setNewMessageTime(timeAgo(gmtDate));
     }
-  }, [allMessages]);
+  }, [allMessages, time]);
   // const handleMessage = (event) => {
   //   const message = event.message;
   //   if (typeof message === 'string' || message.hasOwnProperty('text')) {

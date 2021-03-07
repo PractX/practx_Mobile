@@ -166,7 +166,7 @@ const Practices = ({
         />
         <View
           style={{
-            height: windowHeight,
+            height: windowHeight - 120,
             width: style1 === 'open' ? appwidth - 50 : appwidth,
             alignSelf: 'center',
             justifyContent: 'center',
@@ -186,7 +186,7 @@ const Practices = ({
               initialNumToRender={5}
               updateCellsBatchingPeriod={5}
               showsVerticalScrollIndicator={false}
-              style={{ marginBottom: 70 }}
+              // style={{ marginBottom: 10 }}
               data={practices}
               numColumns={1}
               renderItem={({ item, index }) => (
