@@ -78,7 +78,7 @@ const ChatScreen = ({
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
-  const [channels] = useState();
+  // const [channels] = useState();
   const [imageUri, setImageUri] = useState();
   const [messages, addMessages] = useState([]);
   const [message, setMessage] = useState('');
@@ -90,7 +90,7 @@ const ChatScreen = ({
   const time = d.getTime();
   const pubnub = usePubNub();
 
-  console.log('GROUP____', group);
+  // console.log('GROUP____', group);
   // const getAllMessages = (cha, num) => {
   //   // const myChannels = [cha];
   //   console.log(cha);
@@ -137,6 +137,7 @@ const ChatScreen = ({
     console.log(channelName);
     console.log(message);
     // chatRef.scrollToEnd();
+    chatRef.scrollToEnd({ animated: false });
     pubnub.setUUID(currentUser.chatId);
     if (message) {
       pubnub.publish(
@@ -148,9 +149,9 @@ const ChatScreen = ({
           channel: channelName,
         },
         (status, response) => {
-          setMessage('');
+          // setMessage('');
           // handle status, response
-          console.log(status);
+          // console.log(status);
           // console.log(response);
         },
       );
@@ -183,119 +184,6 @@ const ChatScreen = ({
     }
   };
 
-  const getMessages = (cha) => {
-    console.log('=== GET MESSAGES FROM CHANNEL =====: ', cha);
-    const channelMsgs = allMessages.find((i) => i.channel === cha);
-    console.log('===  CHANNELS MESSAGES FROM =====: ', channelMsgs);
-    const channels = [cha];
-    if (channelMsgs) {
-      pubnub.fetchMessages(
-        {
-          channels: [channels[0]],
-          start: channelMsgs.lst + 1,
-          end: time,
-        },
-
-        (status, data) => {
-          if (status.statusCode === 200) {
-            console.log('=== FOUND MESSAGES FROM CHANNEL =====: ', cha);
-            // addMessage([...channelMsgs.messages, ...data.channels[channels]])
-            const msgs = data.channels[channels];
-            console.log(
-              '=== FOUND NEW MESSAGES FROM CHANNEL =====: ',
-              cha,
-              msgs,
-            );
-            if (channelMsgs.messages !== msgs) {
-              if (msgs.length && msgs[0].timetoken !== channelMsgs.lst) {
-                channelMsgs.lst = msgs[msgs.length - 1].timetoken;
-                channelMsgs.messages = [...channelMsgs.messages, ...msgs];
-                // channelMsgs.messages = [...msgs]
-                const newSavedMessages = allMessages.filter(
-                  (i) => i.channel !== channelMsgs.channel,
-                );
-                console.log('=== channelMsgs =====: ', channelMsgs);
-                console.log('=== newSavedMessages =====: ', newSavedMessages);
-                setAllMessages([...newSavedMessages, channelMsgs]);
-              }
-            }
-
-            // pubnub.time((status, response)=>{
-            // 	if(!status.error){
-
-            // 		pubnub.objects.setMemberships({
-            // 			channels: [{
-            // 				id: channels[0],
-            // 				custom: {
-            // 						lastReadTimetoken: response.timetoken,
-            // 				}
-            // 			}]
-
-            // 		})
-
-            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
-            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
-
-            // 	}
-
-            // })
-          }
-        },
-      );
-    } else {
-      pubnub.fetchMessages(
-        {
-          channels: [channels[0]],
-          count: 25,
-          end: time,
-        },
-
-        (status, data) => {
-          if (status.statusCode === 200) {
-            console.log('=== GETTING MESSAGES FROM CHANNEL =====: ', cha);
-            // addMessage([...data.channels[channels]])
-            const msgs = data.channels[channels];
-            if (msgs.length) {
-              console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
-              const lst = msgs[msgs.length - 1].timetoken;
-              const fst = msgs[0].timetoken;
-              setAllMessages([
-                ...allMessages,
-                { channel: cha, fst, lst, messages: msgs },
-              ]);
-            }
-
-            // pubnub.time((status, response)=>{
-            // 	if(!status.error){
-
-            // 		pubnub.objects.setMemberships({
-            // 			channels: [{
-            // 				id: channels[0],
-            // 				custom: {
-            // 						lastReadTimetoken: response.timetoken,
-            // 				}
-            // 			}]
-
-            // 		})
-
-            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
-            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
-
-            // 	}
-
-            // })
-          }
-        },
-      );
-    }
-
-    pubnub.subscribe({ channels });
-
-    return () => {
-      pubnub.unsubscribeAll();
-    };
-  };
-
   const getOldMessages = useCallback((cha) => {
     // setRefreshing(true);
     console.log('=== GET OLD MESSAGES FROM CHANNEL =====: ', cha);
@@ -307,7 +195,7 @@ const ChatScreen = ({
         {
           channels: [channels[0]],
           count: 25,
-          start: channelMsgs.fst - 1,
+          start: channelMsgs.fst,
         },
 
         (status, data) => {
@@ -360,10 +248,6 @@ const ChatScreen = ({
         },
       );
     }
-
-    return () => {
-      pubnub.unsubscribeAll();
-    };
   }, []);
 
   const getAllChannelMessages = (myChannel) => {
@@ -429,7 +313,7 @@ const ChatScreen = ({
 
     // pubnub.subscribe({ channels: allChannels });
   };
-
+  console.log('I am updating');
   // useEffect(() => {
   //   console.log(
   //     'CHANNELSS_+++++++',
@@ -565,14 +449,15 @@ const ChatScreen = ({
   // }, [pubnub]);
 
   useEffect(() => {
-    console.log('Group_SUGGEST', groupSuggest);
+    // console.log('Group_SUGGEST', groupSuggest);
+
     if (isFocused) {
+      getOldMessages(channelName);
       allMessages.find((item) => item.channel === channelName)
         ? setGroupSuggest(false)
         : setGroupSuggest(true);
-      getAllChannelMessages(channelName);
     }
-  }, [isFocused, groupSuggest]);
+  }, [isFocused]);
 
   useEffect(() => {
     console.log(inputRef);
@@ -693,6 +578,7 @@ const ChatScreen = ({
         ref={(ref) => setChatRef(ref)}
         // keyExtractor={(item) => item.id.toString()}
         keyboardDismissMode="on-drag"
+        // initialScrollIndex={0}
         // maintainVisibleContentPosition={{
         //   autoscrollToTopThreshold: 10,
         //   minIndexForVisible: 1,
@@ -707,9 +593,15 @@ const ChatScreen = ({
         // }
         onRefresh={() => getOldMessages(channelName)}
         refreshing={refreshing}
-        onContentSizeChange={() => chatRef.scrollToEnd({ animated: true })} // scroll it
-        // onLayout={() => chatRef.scrollToEnd({ animated: true })}
-        // inverted={false}
+        // onContentSizeChange={() => chatRef.scrollToEnd({ animated: false })} // scroll it
+        onLayout={() => chatRef.scrollToEnd({ animated: false })}
+        // initialNumToRender={10}
+        // windowSize={5}
+        // maxToRenderPerBatch={5}
+        // updateCellsBatchingPeriod={30}
+        // removeClippedSubviews={false}
+        onEndReachedThreshold={0.1}
+        inverted={false}
         // removeClippedSubviews
         // ListEmptyComponent
         // contentContainerStyle={{ flexDirection: 'column-reverse' }}
@@ -731,7 +623,7 @@ const ChatScreen = ({
         // numColumns={1}
         renderItem={({ item, index }) => (
           <ChatBubble
-            id={index}
+            id={item.id}
             message={item}
             navigation={navigation}
             practice={practice}
@@ -739,7 +631,7 @@ const ChatScreen = ({
             patientChatId={currentUser.chatId}
           />
         )}
-        keyExtractor={(item, index) => item.id}
+        keyExtractor={(item, index) => index}
         // showsHorizontalScrollIndicator={false}
         // extraData={selected}
       />

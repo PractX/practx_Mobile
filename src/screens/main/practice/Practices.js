@@ -19,7 +19,9 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Header from '../../../components/hoc/Header';
 import {
+  getJoinedPracticesStart,
   getPracticesAllStart,
+  getPracticesDmsStart,
   setFilter,
 } from '../../../redux/practices/practices.actions';
 import {
@@ -43,6 +45,8 @@ const appwidth = windowWidth * 0.9;
 const Practices = ({
   navigation,
   getPracticesAllStart,
+  getJoinedPracticesStart,
+  getPracticesDmsStart,
   isFetching,
   practices,
   currentUser,
@@ -94,8 +98,10 @@ const Practices = ({
   useEffect(() => {
     if (isFocused) {
       getPracticesAllStart();
+      getJoinedPracticesStart();
+      getPracticesDmsStart();
     }
-  }, []);
+  }, [isFocused]);
   React.useEffect(() => {
     // console.log(practices);
 
@@ -261,6 +267,8 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   getPracticesAllStart: () => dispatch(getPracticesAllStart()),
+  getJoinedPracticesStart: () => dispatch(getJoinedPracticesStart()),
+  getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
   setFilter: (data) => dispatch(setFilter(data)),
 });
 

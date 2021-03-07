@@ -158,7 +158,10 @@ const MediaPicker = ({
             backgroundColor: colors.primary,
             borderRadius: 50,
           }}
-          onPress={() => sendFile(mediaFile)}>
+          onPress={() => {
+            sendFile(mediaFile);
+            setShowMediaPick(false);
+          }}>
           <Icon
             name="send"
             type="material-icons"
