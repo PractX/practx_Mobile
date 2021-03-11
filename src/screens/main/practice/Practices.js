@@ -166,7 +166,7 @@ const Practices = ({
         />
         <View
           style={{
-            height: windowHeight - 120,
+            height: windowHeight - 100,
             width: style1 === 'open' ? appwidth - 50 : appwidth,
             alignSelf: 'center',
             justifyContent: 'center',

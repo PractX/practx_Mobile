@@ -306,11 +306,13 @@ const ChatMessages = ({
   //   // }
   // }, []);
 
-  // useMemo(() => {
-  //   getJoinedPracticesStart();
-  //   getPracticesDmsStart();
-  //   // if (!isFetching) {
-  // }, []);
+  useMemo(() => {
+    if (isFocused) {
+      getJoinedPracticesStart();
+    }
+    // getPracticesDmsStart();
+    // if (!isFetching) {
+  }, [isFocused]);
 
   useMemo(() => {
     if (currentPracticeId) {

@@ -52,6 +52,7 @@ import EmojiSelector, { Categories } from 'react-native-emoji-selector';
 import { Keyboard } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import MediaPicker from './MediaPicker';
+import { GiftedChat } from 'react-native-gifted-chat';
 
 const { flags, sports, food } = Categories;
 // console.log(Categories);
@@ -74,6 +75,7 @@ const ChatScreen = ({
   const inputRef = useRef();
   const { params } = useRoute();
   const isFocused = useIsFocused();
+  const [loader, setLoader] = useState(true);
   const { practice, practiceDms, channelName, subgroups, group, type } = params;
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [style1, setStyle1] = useState();
@@ -169,7 +171,10 @@ const ChatScreen = ({
       pubnub.sendFile(
         {
           channel: channelName,
-          message: '',
+          message: {
+            text: '',
+            userType: 'patient',
+          },
           file: fileData,
         },
         (status, response) => {
@@ -220,8 +225,25 @@ const ChatScreen = ({
               console.log('=== newSavedMessages =====: ', newSavedMessages);
               // dispatch(Actions.saveMsg([...newSavedMessages, channelMsgs]));
               setAllMessages([...newSavedMessages, channelMsgs]);
+              addMessages(channelMsgs);
               setRefreshing(false);
+              setLoader(false);
+              console.log('Length__ ', channelMsgs.messages.length - 1);
+              if (channelMsgs.messages.length > 25) {
+                chatRef.scrollToOffset({
+                  animated: false,
+                  offset: 300,
+                });
+              }
+              // if (channelMsgs.messages.length) {
+              //   cRef.scrollToIndex({
+              //     animate: true,
+              //     index: channelMsgs.messages.length - 1,
+              //   });
+              // }
+              // cRef.scrollToEnd({ animated: true });
             }
+            setLoader(false);
             setRefreshing(false);
 
             // pubnub.time((status, response)=>{
@@ -244,215 +266,45 @@ const ChatScreen = ({
 
             // })
           }
+          setLoader(false);
           setRefreshing(false);
         },
       );
     }
   }, []);
 
-  const getAllChannelMessages = (myChannel) => {
-    // const dmsCha = dms.map((i) => i.channelName); /// When backend guy delete
-    // const dmsCha = dms.map((i) => i.channelName);
-    // console.log(dmsCha);
-    // const subgroupsCha = subGroups.map((i) => i.Subgroup.channelName);
-    const allChannels = [myChannel];
-
-    console.log('=== GET MESSAGES FROM ALL CHANNEL =====: ', allChannels);
-
-    pubnub.fetchMessages(
-      {
-        channels: allChannels,
-        count: 25,
-        end: time,
-      },
-
-      (status, data) => {
-        if (status.statusCode === 200) {
-          const { channels } = data;
-          const allMsgs = [];
-
-          allChannels.map((i) => {
-            const msgs = channels[i];
-            if (msgs) {
-              const lst = msgs[msgs.length - 1].timetoken;
-              const fst = msgs[0].timetoken;
-
-              allMsgs.push({ channel: i, lst, fst, messages: msgs });
-            }
-            return i;
-          });
-          console.log('ALL_MESSAGE+++++', allMsgs);
-          setAllMessages(allMsgs);
-
-          pubnub.time((status, response) => {
-            if (!status.error) {
-              pubnub.objects.setMemberships({
-                channels: [
-                  {
-                    id: allChannels[0],
-                    custom: {
-                      lastReadTimetoken: response.timetoken,
-                    },
-                  },
-                ],
-              });
-
-              // dispatch(Actions.messagesCountUpdate(allChannels[0]));
-              // console.log(
-              //   allChannels[0],
-              //   '=== MESSAGE COUNT =====:',
-              //   messagesCount[allChannels[0]],
-              // );
-            }
-          });
-        }
-      },
-    );
-
-    console.log('___ALLCHANNELS___', allChannels);
-
-    // pubnub.subscribe({ channels: allChannels });
-  };
-  console.log('I am updating');
-  // useEffect(() => {
-  //   console.log(
-  //     'CHANNELSS_+++++++',
-  //     practiceDms.find((item) => item.channelName),
-  //   );
-  //   if (pubnub) {
-  //     pubnub.setUUID(currentUser.chatId);
-
-  //     pubnub.addListener({
-  //       message: (messageEvent) => {
-  //         // addMessages([
-  //         //   ...messages,
-  //         //   {
-  //         //     channel: messageEvent.channel,
-  //         //     message: messageEvent.message,
-  //         //     timetoken: messageEvent.timetoken,
-  //         //     uuid: messageEvent.publisher,
-  //         //   },
-  //         // ]);
-  //         getMessages(messageEvent.channel);
-  //         console.log('Events', messageEvent);
-
-  //         pubnub.objects.setMemberships({
-  //           channels: [
-  //             {
-  //               id: messageEvent.channel,
-  //               custom: {
-  //                 lastReadTimetoken: messageEvent.timetoken,
-  //               },
-  //             },
-  //           ],
-  //         });
-
-  //         // Get memberships and all messages count as well
-  //         // pubnub.his
-  //         pubnub.objects
-  //           .getMemberships({
-  //             uuid: messageEvent.publisher,
-  //             include: {
-  //               customFields: true,
-  //             },
-  //           })
-  //           .then((data) => {
-  //             if (data.status === 200) {
-  //               if (data.data.length > 0) {
-  //                 const channels = data.data.map((res) => res.channel.id);
-  //                 const timetoken = data.data.map(
-  //                   (res) => res.custom.lastReadTimetoken,
-  //                 );
-
-  //                 pubnub
-  //                   .messageCounts({
-  //                     channels: channels,
-  //                     channelTimetokens: timetoken,
-  //                   })
-  //                   .then((response) => {
-  //                     // set all messages count to a global variable
-  //                     // dispatch(setMessagesCount(response.channels))
-  //                   })
-  //                   .catch((error) => {
-  //                     console.log(
-  //                       error,
-  //                       '------ Error Message count ======== ',
-  //                     );
-  //                   });
-  //               } else {
-  //                 console.log(data, '------ No Message count ======== ');
-  //               }
-  //             }
-  //           });
-  //       },
-
-  //       file: (picture) => {
-  //         addMessages([
-  //           ...messages,
-  //           {
-  //             channel: picture.channel,
-  //             message: picture.message,
-  //             timetoken: picture.timetoken,
-  //             uuid: picture.publisher,
-  //           },
-  //         ]);
-  //       },
-
-  //       signal: function (s) {
-  //         // handle signal
-  //         var channelName = s.channel; // The channel to which the signal was published
-  //         var channelGroup = s.subscription; // The channel group or wildcard subscription match (if exists)
-  //         var pubTT = s.timetoken; // Publish timetoken
-  //         var msg = s.message; // The Payload
-  //         var publisher = s.publisher; //The Publisher
-  //       },
-
-  //       status: function (s) {
-  //         var affectedChannelGroups = s.affectedChannelGroups; // The channel groups affected in the operation, of type array.
-  //         var affectedChannels = s.affectedChannels; // The channels affected in the operation, of type array.
-  //         var category = s.category; //Returns PNConnectedCategory
-  //         var operation = s.operation; //Returns PNSubscribeOperation
-  //         var lastTimetoken = s.lastTimetoken; //The last timetoken used in the subscribe request, of type long.
-  //         var currentTimetoken = s.currentTimetoken; //The current timetoken fetched in the subscribe response, which is going to be used in the next request, of type long.
-  //         var subscribedChannels = s.subscribedChannels; //All the current subscribed channels, of type array.
-  //       },
-
-  //       presence: function (p) {
-  //         // console.log('============ PRESENCE LISTENER ============', p);
-  //         // handle presence
-  //         // var action = p.action; // Can be join, leave, state-change, or timeout
-  //         // var channelName = p.channel; // The channel to which the message was published
-  //         // var occupancy = p.occupancy; // Number of users subscribed to the channel
-  //         // var state = p.state; // User State
-  //         // var channelGroup = p.subscription; //  The channel group or wildcard subscription match (if exists)
-  //         // var publishTime = p.timestamp; // Publish timetoken
-  //         // var timetoken = p.timetoken;  // Current timetoken
-  //         // var uuid = p.uuid; // UUIDs of users who are subscribed to the channel
-  //       },
-  //     });
-
-  //     // Fetch messaged from pubnub history..............
-
-  //     // if (messages < 1) {
-  //     //   getMessages(channels);
-  //     // }
-
-  //     // console.log(channels);
-
-  //     // pubnub.subscribe({ channels: channels, withPresence: true });
-
-  //     // setChannel(channels);
-  //   }
-  //   return () => {
-  //     pubnub.unsubscribeAll();
-  //   };
-  // }, [pubnub]);
-
   useEffect(() => {
+    if (isFocused) {
+      addMessages(
+        allMessages.find((item) => item.channel === channelName)
+          ? allMessages.find((item) => item.channel === channelName).messages
+          : [],
+      );
+      // if (chatRef !== undefined && messages.length > 1) {
+      //   console.log('REF__', chatRef);
+      //   chatRef && chatRef.scrollToIndex({ animated: true, index: 20 });
+      // }
+    }
+    console.log(messages);
+    //
+  }, [allMessages, isFocused, messages]);
+
+  // useMemo(() => {}, [isFocused, chatRef, messages]);
+
+  useMemo(() => {
     // console.log('Group_SUGGEST', groupSuggest);
 
     if (isFocused) {
-      getOldMessages(channelName);
+      // console.log('Chat Ref___', chatRef);
+      if (
+        allMessages.find((item) => item.channel === channelName).messages
+          .length <= 1
+      ) {
+        setLoader(true);
+        getOldMessages(channelName);
+      } else {
+        setLoader(false);
+      }
       allMessages.find((item) => item.channel === channelName)
         ? setGroupSuggest(false)
         : setGroupSuggest(true);
@@ -460,7 +312,7 @@ const ChatScreen = ({
   }, [isFocused]);
 
   useEffect(() => {
-    console.log(inputRef);
+    // console.log(inputRef);
     // chatRef.scrollToEnd();
     // console.log('ALLLL PROPSSS _____ ', practice);
     extraData.setOptions({
@@ -574,68 +426,101 @@ const ChatScreen = ({
           </View>
         </View>
       )}
-      <FlatList
-        ref={(ref) => setChatRef(ref)}
-        // keyExtractor={(item) => item.id.toString()}
-        keyboardDismissMode="on-drag"
-        // initialScrollIndex={0}
-        // maintainVisibleContentPosition={{
-        //   autoscrollToTopThreshold: 10,
-        //   minIndexForVisible: 1,
-        // }}
-        // horizontal={true}
-        // refreshControl={
-        //   <RefreshControl
-        //   // horizontal={true}
-        //   // refreshing={practicesRefreshing}
-        //   // onRefresh={() => getPracticesAllStart()}
-        //   />
-        // }
-        onRefresh={() => getOldMessages(channelName)}
-        refreshing={refreshing}
-        onContentSizeChange={() => chatRef.scrollToEnd({ animated: false })} // scroll it
-        onLayout={() => chatRef.scrollToEnd({ animated: false })}
-        // initialNumToRender={10}
-        // windowSize={5}
-        // maxToRenderPerBatch={5}
-        // updateCellsBatchingPeriod={30}
-        // removeClippedSubviews={false}
-        onEndReachedThreshold={0.1}
-        inverted={false}
-        // removeClippedSubviews
-        // ListEmptyComponent
-        // contentContainerStyle={{ flexDirection: 'column-reverse' }}
-        // initialNumToRender={5}
-        // updateCellsBatchingPeriod={5}
-        showsVerticalScrollIndicator={true}
-        style={{
-          // flex: 2,
-          // minHeight: windowHeight - 140,
-          backgroundColor: colors.background,
-          marginTop: 55,
-          // marginBottom: 60,
-        }}
-        data={
-          allMessages.find((item) => item.channel === channelName)
-            ? allMessages.find((item) => item.channel === channelName).messages
-            : []
+      {/* <ScrollView
+        contentContainerStyle={
+          {
+            // flexDirection: 'row',
+            // alignSelf: 'flex-end',
+            // flexGrow: 1,
+          }
         }
-        // numColumns={1}
-        renderItem={({ item, index }) => (
-          <ChatBubble
-            id={item.id}
-            message={item}
-            navigation={navigation}
-            practice={practice}
-            practiceDms={practiceDms}
-            patientChatId={currentUser.chatId}
-          />
-        )}
-        keyExtractor={(item, index) => index}
-        // showsHorizontalScrollIndicator={false}
-        // extraData={selected}
-      />
-      <KeyboardAvoidingView>
+        > */}
+
+      {!loader ? (
+        <FlatList
+          ref={(ref) => setChatRef(ref)}
+          // keyExtractor={(item) => item.id.toString()}
+          keyboardDismissMode="on-drag"
+          // initialScrollIndex={0}
+          // maintainVisibleContentPosition={{
+          //   autoscrollToTopThreshold: 10,
+          //   minIndexForVisible: 1,
+          // }}
+          // horizontal={true}
+          refreshControl={
+            <RefreshControl
+              horizontal={true}
+              refreshing={refreshing}
+              onRefresh={() => getOldMessages(channelName)}
+            />
+          }
+          // getItemLayout
+
+          // onRefresh={() => getOldMessages(channelName)}
+          // refreshing={refreshing}
+          onContentSizeChange={(data, index, extra) => {
+            if (messages.length > 25) {
+              chatRef.scrollToOffset({
+                animated: false,
+                offset: 44894,
+              });
+            } else {
+              chatRef.scrollToEnd({
+                animated: false,
+                index: messages.length - 1,
+              });
+            }
+            console.log(chatRef.getScrollableNode());
+          }} // scroll it
+          onLayout={() =>
+            chatRef.scrollToIndex({
+              animated: false,
+              index: messages.length - 1,
+            })
+          }
+          // initialNumToRender={10}
+          // windowSize={5}
+          // removeClippedSubviews
+          // ListEmptyComponent
+          // initialNumToRender={5}
+          // updateCellsBatchingPeriod={5}
+          // initialScrollIndex={messages.length > 26 ? 25 : null}
+          showsVerticalScrollIndicator={true}
+          style={{
+            // flex: 2,
+            // minHeight: windowHeight - 140,
+            backgroundColor: colors.background,
+            marginTop: 55,
+            // marginBottom: 60,
+          }}
+          data={messages}
+          // numColumns={1}
+          renderItem={({ item, index }) => (
+            <ChatBubble
+              id={item.id}
+              message={item}
+              navigation={navigation}
+              practice={practice}
+              practiceDms={practiceDms}
+              patientChatId={currentUser.chatId}
+            />
+          )}
+          keyExtractor={(item, index) => index}
+          // showsHorizontalScrollIndicator={false}
+          // extraData={selected}
+          // ListFooterComponent={}
+        />
+      ) : (
+        <ActivityIndicator
+          animating={true}
+          size={normalize(30)}
+          color={colors.text}
+          style={{ position: 'absolute', top: '50%', left: '50%' }}
+        />
+      )}
+
+      {/* </ScrollView> */}
+      <KeyboardAvoidingView behavior="height">
         <Animatable.View
           animation="bounceInLeft"
           style={{
