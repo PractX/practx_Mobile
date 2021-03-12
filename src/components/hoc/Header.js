@@ -4,7 +4,8 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  StyleSheet,
+  Pressable,
+  TextInput,
 } from 'react-native';
 import { DrawerActions, useTheme } from '@react-navigation/native';
 import normalize from '../../utils/normalize';
@@ -33,6 +34,8 @@ const Header = ({
   isLoading,
   practice,
   group,
+  search,
+  searchData,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
@@ -196,25 +199,93 @@ const Header = ({
           />
         </TouchableOpacity>
       )}
-      <View
-        style={{
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          justifyContent: 'center',
-          position: 'absolute',
-          alignItems: 'center',
-        }}>
-        <Text
+      {title && (
+        <View
           style={{
-            fontSize: normalize(17.5),
-            fontFamily: 'SofiaProSemiBold',
-            color: colors.text,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: 'center',
+            position: 'absolute',
+            alignItems: 'center',
           }}>
-          {title}
-        </Text>
-      </View>
+          <Text
+            style={{
+              fontSize: normalize(17.5),
+              fontFamily: 'SofiaProSemiBold',
+              color: colors.text,
+            }}>
+            {title}
+          </Text>
+        </View>
+      )}
+      {searchData && (
+        <Pressable
+          style={{
+            // top: 0,
+            left: 0,
+            // right: 0,
+            // bottom: 0,
+            width: screenWidth - 150,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            // position: 'absolute',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: normalize(17.5),
+              fontFamily: 'SofiaProRegular',
+              color: colors.text,
+            }}>
+            {searchData.name}
+          </Text>
+          <Icon
+            name={'search'}
+            type={'ionicon'}
+            color={colors.text}
+            size={normalize(21)}
+            style={{
+              color: colors.text,
+              // alignSelf: 'center',
+            }}
+          />
+        </Pressable>
+      )}
+      {search && (
+        <View
+          style={
+            {
+              // top: 0,
+              // left: 0,
+              // right: 0,
+              // bottom: 0,
+              // justifyContent: 'center',
+              // position: 'absolute',
+              // alignItems: 'center',
+            }
+          }>
+          <TextInput
+            autoCapitalize={false}
+            autoCompleteType={'name'}
+            textContentType={'givenName'}
+            keyboardType={'default'}
+            placeholder={search.placeholder}
+            secureTextEntry={true}
+            placeholderTextColor={colors.text_2}
+            style={{
+              color: colors.text_1,
+              fontFamily: 'SofiaProRegular',
+              fontSize: normalize(16),
+            }}
+            // onChangeText={handleChange(name)}
+            // onBlur={handleBlur(name)}
+            // value={valuesType}
+            // onFocus={() => iconLeft && iconLeft.action(false)}
+          />
+        </View>
+      )}
       <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
         {iconRight1 && iconRight1.buttonType === 'filter' && (
           <Menu>

@@ -50,9 +50,17 @@ import { setAllMessages } from '../../../redux/practices/practices.actions';
 // import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import EmojiSelector, { Categories } from 'react-native-emoji-selector';
 import { Keyboard } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import MediaPicker from './MediaPicker';
-import { GiftedChat } from 'react-native-gifted-chat';
+import {
+  Actions,
+  GiftedChat,
+  InputToolbar,
+  Message,
+  Send,
+} from 'react-native-gifted-chat';
+import EmojiBoard from 'react-native-emoji-board';
+import runes from 'runes';
 
 const { flags, sports, food } = Categories;
 // console.log(Categories);
@@ -84,7 +92,9 @@ const ChatScreen = ({
   const [imageUri, setImageUri] = useState();
   const [messages, addMessages] = useState([]);
   const [message, setMessage] = useState('');
+  const [inputText, setInputText] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
+  const [showAccessories, setShowAccessories] = useState(false);
   const [showMediaPick, setShowMediaPick] = useState(false);
   const [mediaFile, setMediaFile] = useState();
   const [groupSuggest, setGroupSuggest] = useState(false);
@@ -135,17 +145,16 @@ const ChatScreen = ({
   //   );
   //   pubnub.subscribe({ channels });
   // };
-  const sendMessage = (message) => {
+  const sendMessage = (data) => {
     console.log(channelName);
-    console.log(message);
+    console.log(data[0].text);
     // chatRef.scrollToEnd();
-    chatRef.scrollToEnd({ animated: false });
     pubnub.setUUID(currentUser.chatId);
-    if (message) {
+    if (data) {
       pubnub.publish(
         {
           message: {
-            text: message,
+            text: data[0].text,
             userType: 'patient',
           },
           channel: channelName,
@@ -153,8 +162,8 @@ const ChatScreen = ({
         (status, response) => {
           // setMessage('');
           // handle status, response
-          // console.log(status);
-          // console.log(response);
+          console.log(status);
+          console.log(response);
         },
       );
     } else {
@@ -203,7 +212,7 @@ const ChatScreen = ({
           start: channelMsgs.fst,
         },
 
-        (status, data) => {
+        async (status, data) => {
           console.log(status);
           if (status.statusCode === 200) {
             const msgs = data.channels[channels];
@@ -216,32 +225,39 @@ const ChatScreen = ({
             if (msgs.length && msgs[0].timetoken !== channelMsgs.fst) {
               // channelMsgs.lst = msgs[msgs.length - 1].timetoken
               channelMsgs.fst = msgs[0].timetoken;
-              channelMsgs.messages = [...msgs, ...channelMsgs.messages];
-              // channelMsgs.messages = [...msgs]
-              const newSavedMessages = allMessages.filter(
-                (i) => i.channel !== channelMsgs.channel,
+              let newMsgs = await msgs.map((item) =>
+                Object.assign(item, {
+                  _id: item.timetoken,
+                  user: { _id: item.uuid },
+                }),
               );
-              console.log('=== channelMsgs =====: ', channelMsgs);
-              console.log('=== newSavedMessages =====: ', newSavedMessages);
-              // dispatch(Actions.saveMsg([...newSavedMessages, channelMsgs]));
-              setAllMessages([...newSavedMessages, channelMsgs]);
-              addMessages(channelMsgs);
-              setRefreshing(false);
-              setLoader(false);
-              console.log('Length__ ', channelMsgs.messages.length - 1);
-              if (channelMsgs.messages.length > 25) {
-                chatRef.scrollToOffset({
-                  animated: false,
-                  offset: 300,
-                });
+              console.log('POOOOO___', newMsgs);
+              if (newMsgs) {
+                channelMsgs.messages = [...msgs, ...channelMsgs.messages];
+
+                // channelMsgs.messages = [...msgs]
+                const newSavedMessages = allMessages.filter(
+                  (i) => i.channel !== channelMsgs.channel,
+                );
+                console.log('=== channelMsgs =====: ', channelMsgs);
+                console.log('=== newSavedMessages =====: ', newSavedMessages);
+
+                // console.log('NEWWW__', newMsg);
+                // dispatch(Actions.saveMsg([...newSavedMessages, channelMsgs]));
+                addMessages(channelMsgs);
+                setAllMessages([...newSavedMessages, channelMsgs]);
+                // addMessages(channelMsgs);
+                // setRefreshing(false);
+                // setLoader(false);
+                console.log('Length__ ', channelMsgs.messages.length - 1);
+                // if (channelMsgs.messages.length) {
+                //   cRef.scrollToIndex({
+                //     animate: true,
+                //     index: channelMsgs.messages.length - 1,
+                //   });
+                // }
+                // cRef.scrollToEnd({ animated: true });
               }
-              // if (channelMsgs.messages.length) {
-              //   cRef.scrollToIndex({
-              //     animate: true,
-              //     index: channelMsgs.messages.length - 1,
-              //   });
-              // }
-              // cRef.scrollToEnd({ animated: true });
             }
             setLoader(false);
             setRefreshing(false);
@@ -273,29 +289,31 @@ const ChatScreen = ({
     }
   }, []);
 
-  useEffect(() => {
-    if (isFocused) {
-      addMessages(
-        allMessages.find((item) => item.channel === channelName)
-          ? allMessages.find((item) => item.channel === channelName).messages
-          : [],
-      );
+  useMemo(() => {
+    if (isFocused || allMessages) {
+      console.log('New MESSAgE Available__');
+      allMessages.find((item) => item.channel === channelName) &&
+        addMessages(
+          allMessages.find((item) => item.channel === channelName).messages,
+        );
       // if (chatRef !== undefined && messages.length > 1) {
       //   console.log('REF__', chatRef);
       //   chatRef && chatRef.scrollToIndex({ animated: true, index: 20 });
       // }
     }
-    console.log(messages);
+    // console.log('Updated MESSAgE__', messages);
     //
-  }, [allMessages, isFocused, messages]);
+  }, [allMessages, messages, channelName, isFocused]);
 
   // useMemo(() => {}, [isFocused, chatRef, messages]);
 
   useMemo(() => {
     // console.log('Group_SUGGEST', groupSuggest);
-
     if (isFocused) {
-      // console.log('Chat Ref___', chatRef);
+      // console.log(
+      //   'Chat Ref___',
+      //   allMessages.find((item) => item.channel === channelName).messages,
+      // );
       if (
         allMessages.find((item) => item.channel === channelName).messages
           .length <= 1
@@ -312,7 +330,7 @@ const ChatScreen = ({
   }, [isFocused]);
 
   useEffect(() => {
-    // console.log(inputRef);
+    console.log('rerendering_____');
     // chatRef.scrollToEnd();
     // console.log('ALLLL PROPSSS _____ ', practice);
     extraData.setOptions({
@@ -329,11 +347,257 @@ const ChatScreen = ({
 
   // let dataMsg = [] allMessages.find((item) => item.channel === channelName);
 
+  const renderActions = (props) => {
+    return (
+      <>
+        <Actions
+          {...props}
+          icon={() => (
+            <Icon
+              name={'plus'}
+              type={'antdesign'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={24}
+              color={'white'}
+            />
+          )}
+          onPressActionButton={() =>
+            showAccessories
+              ? setShowAccessories(false)
+              : setShowAccessories(true)
+          }
+          containerStyle={{
+            backgroundColor: colors.primary,
+            borderRadius: 100,
+            height: 36,
+            width: 36,
+            marginTop: 10,
+            alignSelf: 'center',
+            justifyContent: 'center',
+          }}
+        />
+        <Actions
+          {...props}
+          icon={() => (
+            <Icon
+              name={showEmoji ? 'keyboard' : 'smile'}
+              type={'font-awesome-5'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={normalize(25)}
+              color={colors.text}
+            />
+          )}
+          onPressActionButton={() => {
+            Keyboard.dismiss();
+            showEmoji ? setShowEmoji(false) : setShowEmoji(true);
+          }}
+          containerStyle={{
+            // backgroundColor: colors.primary,
+            // height: 36,
+            width: 36,
+            marginRight: 10,
+            marginTop: 10,
+            alignSelf: 'center',
+          }}
+        />
+      </>
+    );
+  };
+
+  const renderAccessory = (props) => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start',
+          width: windowWidth,
+          marginVertical: 10,
+          paddingHorizontal: 10,
+        }}>
+        <Actions
+          {...props}
+          options
+          icon={() => (
+            <Icon
+              name={'camera'}
+              type={'font-awesome-5'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={25}
+              color={colors.text_2}
+            />
+          )}
+          onPressActionButton={() =>
+            launchCamera({ mediaType: 'photo' }, (i) => {
+              if (!i.didCancel) {
+                setMediaFile({
+                  name: i.fileName,
+                  uri: i.uri,
+                  mimeType: i.type,
+                  size: i.fileSize,
+                  height: i.height,
+                  width: i.width,
+                });
+                setShowMediaPick(true);
+              }
+              console.log(mediaFile);
+              console.log('setting Image');
+            })
+          }
+        />
+        <Actions
+          {...props}
+          options
+          icon={() => (
+            <Icon
+              name={'video'}
+              type={'font-awesome-5'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={25}
+              color={colors.text_2}
+            />
+          )}
+          onPressActionButton={() =>
+            launchCamera({ mediaType: 'video' }, (i) => {
+              if (!i.didCancel) {
+                setMediaFile({
+                  name: i.fileName,
+                  uri: i.uri,
+                  mimeType: i.type,
+                  size: i.fileSize,
+                  height: i.height,
+                  width: i.width,
+                });
+                setShowMediaPick(true);
+              }
+              console.log(mediaFile);
+              console.log('setting Image');
+            })
+          }
+          containerStyle={{ marginLeft: 30 }}
+        />
+        <Actions
+          {...props}
+          options
+          icon={() => (
+            <Icon
+              name={'perm-media'}
+              type={'material-icons'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={25}
+              color={colors.text_2}
+            />
+          )}
+          onPressActionButton={() =>
+            launchImageLibrary({}, (i) => {
+              if (!i.didCancel) {
+                setMediaFile({
+                  name: i.fileName,
+                  uri: i.uri,
+                  mimeType: i.type,
+                  size: i.fileSize,
+                  height: i.height,
+                  width: i.width,
+                });
+                setShowMediaPick(true);
+              }
+              console.log(mediaFile);
+              console.log('setting Image');
+            })
+          }
+          containerStyle={{ marginLeft: 30 }}
+        />
+        <Actions
+          {...props}
+          options
+          icon={() => (
+            <Icon
+              name={'file-medical'}
+              type={'font-awesome-5'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={25}
+              color={colors.text_2}
+            />
+          )}
+          onPressActionButton={() =>
+            showEmoji ? setShowEmoji(false) : setShowEmoji(true)
+          }
+          containerStyle={{ marginLeft: 30 }}
+        />
+      </View>
+    );
+  };
+  // const backspace = (text) => {
+  //   console.log(text.length);
+  //   return runes.substr(text, text.length - 1, 1);
+  // };
+
+  const renderSender = (props) => {
+    return (
+      <Send
+        {...props}
+        alwaysShowSend={true}
+        containerStyle={{
+          borderTopColor: null,
+          borderWidth: 0,
+          alignSelf: 'center',
+          marginRight: 10,
+          justifyContent: 'center',
+        }}>
+        <Button
+          TouchableComponent={() => {
+            // return isLoading ? (
+            //   <ActivityIndicator
+            //     animating={true}
+            //     size={normalize(21)}
+            //     color={colors.text}
+            //   />
+            // ) : (
+            return (
+              <View
+                style={{
+                  backgroundColor: colors.primary,
+                  height: 36,
+                  width: 36,
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  marginLeft: 10,
+                  borderRadius: 10,
+                }}>
+                <Icon
+                  name={'ios-send'}
+                  type={'ionicon'}
+                  color={'white'}
+                  size={normalize(20)}
+                  style={{
+                    alignSelf: 'center',
+                  }}
+                />
+              </View>
+            );
+            // );
+          }}
+        />
+      </Send>
+    );
+  };
+
+  // const renderMessage = (props) => {
+  //   console.log(props);
+  // };
+
   return (
     <View
       style={{
         flex: 1,
         justifyContent: 'space-between',
+        // backgroundColor: 'whi',
         // height: '100%',
       }}>
       <Header
@@ -437,7 +701,90 @@ const ChatScreen = ({
         > */}
 
       {!loader ? (
-        <FlatList
+        <View style={{ flex: 1, marginTop: 50 }}>
+          <GiftedChat
+            // ref={(ref) => setChatRef(ref)}
+            messages={messages.length ? [...messages].reverse() : []}
+            onSend={(text, shouldResetInputToolbar) => {
+              // onSend(messages)
+              console.log('HEY_____h');
+              setMessage(text);
+              sendMessage(text);
+              //  values.message = '';
+            }}
+            // scrollToBottom={true}
+            scrollToBottom={true}
+            // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
+            renderMessage={({ currentMessage }) => (
+              <ChatBubble
+                id={currentMessage.timetoken}
+                message={currentMessage}
+                navigation={navigation}
+                practice={practice}
+                practiceDms={practiceDms}
+                patientChatId={currentUser.chatId}
+              />
+            )}
+            renderChatEmpty={() => <View />}
+            user={{
+              _id: 1,
+            }}
+            listViewProps={{
+              style: {
+                marginBottom: 20,
+              },
+            }}
+            textInputProps={{
+              onFocus: () => setShowEmoji(false),
+            }}
+            text={inputText}
+            onInputTextChanged={(text) => setInputText(text)}
+            // focusTextInput={true}
+            textInputStyle={{
+              backgroundColor: colors.background,
+              color: colors.text,
+              alignSelf: 'center',
+              fontFamily: 'SofiaProRegular',
+            }}
+            // renderInputToolbar={() => <></>}
+            renderInputToolbar={(props) => (
+              <InputToolbar
+                {...props}
+                renderAccessory={() =>
+                  showAccessories ? renderAccessory() : null
+                }
+                renderActions={renderActions}
+                renderSend={renderSender}
+                accessoryStyle={{ height: showAccessories ? null : 0 }}
+                containerStyle={{
+                  // width: windowWidth - 60,
+                  backgroundColor: colors.background,
+                  // marginHorizontal: 20,
+                  borderTopColor: colors.background_1,
+                  borderTopWidth: 1,
+                  paddingVertical: 0,
+                  // marginTop: 15,
+                  alignItems: 'center',
+                }}
+              />
+            )}
+            keyboardShouldPersistTaps={true}
+            // maxInputLength={20}
+            inverted={true}
+            onLoadEarlier={() => {
+              setRefreshing(true);
+              getOldMessages(channelName);
+            }}
+            isLoadingEarlier={refreshing}
+            loadEarlier={true}
+            infiniteScroll={true}
+            maxComposerHeight={100}
+            alignTop={true}
+
+            // renderChatFooter={}
+          />
+
+          {/* <FlatList
           ref={(ref) => setChatRef(ref)}
           // keyExtractor={(item) => item.id.toString()}
           keyboardDismissMode="on-drag"
@@ -509,7 +856,9 @@ const ChatScreen = ({
           // showsHorizontalScrollIndicator={false}
           // extraData={selected}
           // ListFooterComponent={}
-        />
+        /> */}
+          {/* //ANCHOR */}
+        </View>
       ) : (
         <ActivityIndicator
           animating={true}
@@ -520,184 +869,121 @@ const ChatScreen = ({
       )}
 
       {/* </ScrollView> */}
-      <KeyboardAvoidingView behavior="height">
-        <Animatable.View
-          animation="bounceInLeft"
-          style={{
-            // position: 'absolute',
-            // bottom: 0,
-            width: '100%',
-            // marginTop: -10,
-            // marginBottom: 10,
-            // height: 100,
-            // backgroundColor: colors.background,
-          }}>
-          <Formik
-            innerRef={inputRef}
-            initialValues={{
-              message: '',
+      {/* <KeyboardAvoidingView behavior="height">
+        <InputBox
+          handleChange={handleChange}
+          handleBlur={handleBlur}
+          valuesType={values.message}
+          name="message"
+          placeholder={`Message ${
+            practice
+              ? practice.practiceName.length > 18
+                ? practice.practiceName.substring(0, 11 - 3) + '...'
+                : practice.practiceName
+              : group && group.name
+          }`}
+          iconLeft={{
+            name: 'smile',
+            type: 'font-awesome-5',
+            action: setShowEmoji,
+            value: showEmoji,
+          }}
+          icon2Name="attachment"
+          icon2Type="entypo"
+          icon2Action={() =>
+            launchImageLibrary({ mediaType: 'photo' }, (i) => {
+              if (!i.didCancel) {
+                setMediaFile({
+                  name: i.fileName,
+                  uri: i.uri,
+                  mimeType: i.type,
+                  size: i.fileSize,
+                  height: i.height,
+                  width: i.width,
+                });
+                setShowMediaPick(true);
+              }
+              console.log(mediaFile);
+              console.log('setting Image');
+            })
+          }
+          autoCompleteType="name"
+          textContentType="givenName"
+          keyboardType="default"
+          autoCapitalize="sentences"
+          boxStyle={{
+            borderRadius: 50,
+            width: windowWidth - 80,
+            height: 45,
+            marginTop: 0,
+            justifyContent: 'space-between',
+          }}
+          styling={{
+            input: {
+              fontSize: normalize(15),
+              color: colors.text,
+              marginLeft: 6,
+            },
+            // icon: {},,
+          }}
+        />
+
+
+      </KeyboardAvoidingView> */}
+      {/* {showEmoji && (
+        <View style={{ height: 300 }}>
+          <EmojiSelector
+            showTabs={true}
+            theme={colors.background}
+            showHistory={true}
+            showSectionTitles={true}
+            showSearchBar={false}
+            categoriesEnabled={[flags, sports, food]}
+            columns={10}
+            category={Categories.symbols}
+            onEmojiSelected={(emoji) => {
+              Keyboard.dismiss();
+              setInputText((input) => input + emoji);
             }}
-            style={{}}
-            onSubmit={(values) => {
-              // signupPatient(values);
+            shouldInclude={
+              (emoji) => {
+                // eslint-disable-next-line radix
+                if (Platform.OS === 'android') {
+                  if (parseInt(emoji.added_in) <= 4.9) {
+                    return emoji;
+                  }
+                } else {
+                  return emoji;
+                }
+              }
+              // emoji.lib.added_in === '6.0' ||
+              // emoji.lib.added_in === '6.1'
+            }
+          />
+        </View>
+      )} */}
+      {showEmoji && (
+        <View style={{ height: 280 }}>
+          <EmojiBoard
+            // blackList={[]}
+            showBoard={true}
+            containerStyle={{
+              backgroundColor: colors.background,
+            }}
+            // tabBarStyle={{color: 'green'}}
+            onClick={(emoji) => {
+              Keyboard.dismiss();
+              console.log(emoji);
+              setInputText((input) => input + emoji.code);
+            }}
+            onRemove={() => {
+              // setInputText(backspace(inputText));
+              setInputText(deleteEmoji(inputText));
+            }}
+          />
+        </View>
+      )}
 
-              setMessage(values.message);
-              sendMessage(values.message);
-              values.message = '';
-              // console.log('Lets go');
-            }}>
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              setValues,
-            }) => (
-              <View style={{ margin: 0 }}>
-                <View
-                  style={{
-                    margin: 0,
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: colors.background,
-                    borderTopWidth: 0.8,
-                    borderColor: colors.background_1,
-                    height: 56,
-                  }}>
-                  {/* ------------------- BIO SECTION --------------------------------------- */}
-
-                  <InputBox
-                    handleChange={handleChange}
-                    handleBlur={handleBlur}
-                    valuesType={values.message}
-                    name="message"
-                    placeholder={`Message ${
-                      practice
-                        ? practice.practiceName.length > 18
-                          ? practice.practiceName.substring(0, 11 - 3) + '...'
-                          : practice.practiceName
-                        : group && group.name
-                    }`}
-                    iconLeft={{
-                      name: 'smile',
-                      type: 'font-awesome-5',
-                      action: setShowEmoji,
-                      value: showEmoji,
-                    }}
-                    icon2Name="attachment"
-                    icon2Type="entypo"
-                    icon2Action={() =>
-                      launchImageLibrary({ mediaType: 'photo' }, (i) => {
-                        if (!i.didCancel) {
-                          setMediaFile({
-                            name: i.fileName,
-                            uri: i.uri,
-                            mimeType: i.type,
-                            size: i.fileSize,
-                            height: i.height,
-                            width: i.width,
-                          });
-                          setShowMediaPick(true);
-                        }
-                        console.log(mediaFile);
-                        console.log('setting Image');
-                      })
-                    }
-                    autoCompleteType="name"
-                    textContentType="givenName"
-                    keyboardType="default"
-                    autoCapitalize="sentences"
-                    boxStyle={{
-                      borderRadius: 50,
-                      width: windowWidth - 80,
-                      height: 45,
-                      marginTop: 0,
-                      justifyContent: 'space-between',
-                    }}
-                    styling={{
-                      input: {
-                        fontSize: normalize(15),
-                        color: colors.text,
-                        marginLeft: 6,
-                      },
-                      // icon: {},,
-                    }}
-                  />
-                  <Button
-                    TouchableComponent={() => {
-                      // return isLoading ? (
-                      //   <ActivityIndicator
-                      //     animating={true}
-                      //     size={normalize(21)}
-                      //     color={colors.text}
-                      //   />
-                      // ) : (
-                      return (
-                        <TouchableOpacity
-                          onPress={handleSubmit}
-                          style={{
-                            backgroundColor: colors.primary,
-                            height: 40,
-                            width: 40,
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            // marginTop: 10,
-                            marginLeft: 10,
-                            borderRadius: 10,
-                          }}>
-                          <Icon
-                            name={'ios-send'}
-                            type={'ionicon'}
-                            color={'white'}
-                            size={normalize(21)}
-                            style={{
-                              alignSelf: 'center',
-                            }}
-                          />
-                        </TouchableOpacity>
-                      );
-                      // );
-                    }}
-                  />
-                </View>
-                {showEmoji && (
-                  <View style={{ height: 300 }}>
-                    <EmojiSelector
-                      showTabs={true}
-                      theme={colors.background}
-                      showHistory={true}
-                      showSectionTitles={true}
-                      showSearchBar={false}
-                      // categoriesEnabled={[flags, sports, food]}
-                      columns={10}
-                      // category={Categories.symbols}
-                      onEmojiSelected={(emoji) => {
-                        Keyboard.dismiss();
-                        setValues({ message: (values.message += emoji) });
-                      }}
-                      shouldInclude={
-                        (emoji) => {
-                          // eslint-disable-next-line radix
-                          if (Platform.OS === 'android') {
-                            if (parseInt(emoji.added_in) <= 4.9) {
-                              return emoji;
-                            }
-                          } else {
-                            return emoji;
-                          }
-                        }
-                        // emoji.lib.added_in === '6.0' ||
-                        // emoji.lib.added_in === '6.1'
-                      }
-                    />
-                  </View>
-                )}
-              </View>
-            )}
-          </Formik>
-        </Animatable.View>
-      </KeyboardAvoidingView>
       <MediaPicker
         navigation={navigation}
         practice={practice}
@@ -711,6 +997,21 @@ const ChatScreen = ({
     </View>
   );
 };
+
+// function backspace(text) {
+//   // var newText = text.split('').reverse().join('');
+//   // text.substr;
+//   console.log(runes.prototype);
+//   console.log(text.length);
+//   // text.gsub(/[^[:alnum:][:blank:][:punct:]]/, '').squeeze(' ').strip;
+//   return runes(text).slice(0, -1);
+// }
+
+function deleteEmoji(emojiStr) {
+  let emojisArray = emojiStr.match(/([\uD800-\uDBFF][\uDC00-\uDFFF])/g);
+  emojisArray = emojisArray.splice(0, emojisArray.length - 1);
+  return emojisArray.join('');
+}
 
 const styles = StyleSheet.create({
   formFieldRow: {

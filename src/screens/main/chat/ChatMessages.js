@@ -115,7 +115,7 @@ const ChatMessages = ({
     const subgroupsCha = subGroups.map((i) => i.channelName);
     const allChannels = [...dmsCha, ...subgroupsCha];
 
-    console.log('=== GET MESSAGES FROM ALL CHANNEL =====: ', allChannels);
+    // console.log('=== GET MESSAGES FROM ALL CHANNEL =====: ', allChannels);
 
     pubnub.fetchMessages(
       {
@@ -131,15 +131,21 @@ const ChatMessages = ({
 
           allChannels.map((i) => {
             const msgs = channels[i];
-            if (msgs) {
-              const lst = msgs[msgs.length - 1].timetoken;
-              const fst = msgs[0].timetoken;
+            const newMsg = msgs.map((item) =>
+              Object.assign(item, {
+                _id: item.timetoken,
+                user: { _id: item.uuid },
+              }),
+            );
+            if (newMsg) {
+              const lst = newMsg[newMsg.length - 1].timetoken;
+              const fst = newMsg[0].timetoken;
 
-              allMsgs.push({ channel: i, lst, fst, messages: msgs });
+              allMsgs.push({ channel: i, lst, fst, messages: newMsg });
             }
             return i;
           });
-          console.log('ALL_MESSAGE+++++', allMsgs);
+          console.log('NEW_ALL_MESSAGE+++++', allMsgs);
           setAllMessages(allMsgs);
 
           // pubnub.time((status, response) => {
@@ -195,25 +201,28 @@ const ChatMessages = ({
           end: time,
         },
 
-        (status, data) => {
+        async (status, data) => {
           if (status.statusCode === 200) {
             console.log('=== FOUND MESSAGES FROM CHANNEL =====: ', cha);
             // addMessage([...channelMsgs.messages, ...data.channels[channels]])
             const msgs = data.channels[channels];
-            console.log(
-              '=== FOUND NEW MESSAGES FROM CHANNEL =====: ',
-              cha,
-              msgs,
-            );
+            console.log('=== FOUND NEW MESSAGES FROM CHANNEL =====: ', cha);
 
             console.log('=== msgs =====: ', msgs);
             if (msgs.length && msgs[0].timetoken !== channelMsgs.lst) {
               channelMsgs.lst = msgs[msgs.length - 1].timetoken;
+              await msgs.map((item) =>
+                Object.assign(item, {
+                  _id: item.timetoken,
+                  user: { _id: item.uuid },
+                }),
+              );
               channelMsgs.messages = [...channelMsgs.messages, ...msgs];
               // channelMsgs.messages = [...msgs]
               const newSavedMessages = allMessages.filter(
                 (i) => i.channel !== channelMsgs.channel,
               );
+
               console.log('=== channelMsgs =====: ', channelMsgs);
               console.log('=== newSavedMessages =====: ', newSavedMessages);
               console.log('=== All messages =====: ', allMessages);
@@ -259,9 +268,15 @@ const ChatMessages = ({
               console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
               const lst = msgs[msgs.length - 1].timetoken;
               const fst = msgs[0].timetoken;
+              let allMsgs = msgs.map((item) =>
+                Object.assign(item, {
+                  _id: item.timetoken,
+                  user: { _id: item.uuid },
+                }),
+              );
               setAllMessages([
                 ...allMessages,
-                { channel: cha, fst, lst, messages: msgs },
+                { channel: cha, fst, lst, messages: allMsgs },
               ]);
             }
 

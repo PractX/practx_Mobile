@@ -107,6 +107,9 @@ const PracticeList = ({
         initialNumToRender={5}
         updateCellsBatchingPeriod={5}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingRight: 30,
+        }}
         // style={{}}
         data={joinedPractices}
         numColumns={1}

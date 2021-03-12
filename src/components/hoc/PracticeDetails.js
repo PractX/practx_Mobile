@@ -71,7 +71,7 @@ const PracticeDetails = ({
     <View
       style={{
         backgroundColor: colors.background,
-        minHeight: 560,
+        minHeight: 660,
         marginBottom: 70,
       }}>
       {/* <Icon

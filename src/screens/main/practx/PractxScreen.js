@@ -14,14 +14,12 @@ import {
   View,
   Dimensions,
 } from 'react-native';
-import PracticesBox from '../../../components/hoc/PracticesBox';
+import PracticeSmallBox from '../../../components/hoc/PracticeSmallBox';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Header from '../../../components/hoc/Header';
 import {
-  getJoinedPracticesStart,
   getPracticesAllStart,
-  getPracticesDmsStart,
   setFilter,
 } from '../../../redux/practices/practices.actions';
 import {
@@ -36,17 +34,18 @@ import normalize from '../../../utils/normalize';
 import Error from '../../../components/hoc/Error';
 import BottomSheet from 'reanimated-bottom-sheet';
 import PracticeDetails from '../../../components/hoc/PracticeDetails';
+import MainHeader from '../../../components/hoc/MainHeader';
+import { ScrollView } from 'react-native';
+import { Icon } from 'react-native-elements';
 // import { getAllPracticesStart } from '../../redux/practices/practices.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
 
-const Practices = ({
+const Practx = ({
   navigation,
   getPracticesAllStart,
-  getJoinedPracticesStart,
-  getPracticesDmsStart,
   isFetching,
   practices,
   currentUser,
@@ -98,10 +97,9 @@ const Practices = ({
   useEffect(() => {
     if (isFocused) {
       getPracticesAllStart();
-      getJoinedPracticesStart();
-      getPracticesDmsStart();
     }
-  }, [isFocused]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   React.useEffect(() => {
     // console.log(practices);
 
@@ -148,9 +146,10 @@ const Practices = ({
             elevation: 3,
             borderRadius: 30,
             overflow: 'hidden',
+            // alignSelf: 'center',
           },
         ]}>
-        <Header
+        <MainHeader
           navigation={navigation}
           title="Practices"
           iconRight1={{
@@ -163,71 +162,110 @@ const Practices = ({
           checkState={checkState}
           setCheckState={setCheckState}
           setFilter={setFilter}
+          width={style1 === 'open' ? appwidth - 50 : appwidth}
         />
-        <View
-          style={{
-            height: windowHeight - 100,
-            width: style1 === 'open' ? appwidth - 50 : appwidth,
-            alignSelf: 'center',
-            justifyContent: 'center',
-            marginTop: 50,
-          }}>
-          {practices ? (
-            <FlatList
-              ref={ref}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={() => getPracticesAllStart()}
-                />
-              }
-              // removeClippedSubviews
-              // ListEmptyComponent
-              initialNumToRender={5}
-              updateCellsBatchingPeriod={5}
-              showsVerticalScrollIndicator={false}
-              // style={{ marginBottom: 10 }}
-              data={practices}
-              numColumns={1}
-              renderItem={({ item, index }) => (
-                <PracticesBox
-                  userId={currentUser ? currentUser.id : 0}
-                  id={index}
-                  practice={item}
-                  navigation={navigation}
-                  practiceData={practiceData}
-                  setPracticeData={setPracticeData}
-                />
-              )}
-              keyExtractor={(item, index) => item.display_url}
-              // showsHorizontalScrollIndicator={false}
-              // extraData={selected}
-            />
-          ) : (
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              {isFetching ? (
-                <ActivityIndicator
-                  animating={isFetching}
-                  size={normalize(30)}
+        {practices ? (
+          <ScrollView
+            style={{
+              height: windowHeight,
+              width: style1 === 'open' ? appwidth - 50 : windowWidth,
+              alignSelf: 'center',
+              // justifyContent: 'center',
+              marginTop: 60,
+            }}>
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 30,
+                  width: style1 === 'open' ? appwidth - 50 : appwidth,
+                  alignSelf: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <Text
+                  style={{
+                    fontSize: normalize(15),
+                    fontFamily: 'SofiaProSemiBold',
+                    color: colors.text,
+                  }}>
+                  Suggested for you
+                </Text>
+                <Icon
+                  name="arrow-forward"
+                  type="material-icons"
                   color={colors.text}
+                  size={normalize(21)}
+                  style={{
+                    color: colors.text,
+                    // alignSelf: 'center',
+                  }}
                 />
-              ) : (
-                <Error
-                  title={'OOPS!!!'}
-                  type="internet"
-                  subtitle={
-                    'Unable to get Practices, Please check your internet connectivity'
-                  }
-                  action={getPracticesAllStart}
-                />
-              )}
+              </View>
+              <FlatList
+                ref={ref}
+                horizontal={true}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={() => getPracticesAllStart()}
+                  />
+                }
+                // removeClippedSubviews
+                // ListEmptyComponent
+                initialNumToRender={5}
+                updateCellsBatchingPeriod={5}
+                pagingEnabled={true}
+                showsHorizontalScrollIndicator={false}
+                style={{
+                  paddingLeft: style1 === 'open' ? 0 : 20,
+                  paddingRight: 90,
+                  marginBottom: 70,
+                }}
+                contentContainerStyle={{
+                  paddingRight: 30,
+                }}
+                data={practices}
+                numColumns={1}
+                renderItem={({ item, index }) => (
+                  <PracticeSmallBox
+                    userId={currentUser ? currentUser.id : 0}
+                    id={index}
+                    practice={item}
+                    navigation={navigation}
+                    practiceData={practiceData}
+                    setPracticeData={setPracticeData}
+                  />
+                )}
+                keyExtractor={(item, index) => item.display_url}
+                // showsHorizontalScrollIndicator={false}
+                // extraData={selected}
+              />
             </View>
-          )}
-        </View>
+          </ScrollView>
+        ) : (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            {isFetching ? (
+              <ActivityIndicator
+                animating={isFetching}
+                size={normalize(30)}
+                color={colors.text}
+              />
+            ) : (
+              <Error
+                title={'OOPS!!!'}
+                type="internet"
+                subtitle={
+                  'Unable to get Practices, Please check your internet connectivity'
+                }
+                action={getPracticesAllStart}
+              />
+            )}
+          </View>
+        )}
       </View>
       {practiceData.show && (
         <View
@@ -242,7 +280,7 @@ const Practices = ({
       )}
       <BottomSheet
         ref={bottomSheetRef}
-        snapPoints={[560, 400, 0]}
+        snapPoints={[660, 500, 0]}
         borderRadius={20}
         renderContent={() => (
           <PracticeDetails
@@ -267,9 +305,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   getPracticesAllStart: () => dispatch(getPracticesAllStart()),
-  getJoinedPracticesStart: () => dispatch(getJoinedPracticesStart()),
-  getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
   setFilter: (data) => dispatch(setFilter(data)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Practices);
+export default connect(mapStateToProps, mapDispatchToProps)(Practx);

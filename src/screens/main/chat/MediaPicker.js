@@ -107,12 +107,8 @@ const MediaPicker = ({
             <Icon
               name="arrow-back"
               type="material-icons"
-              color={colors.text}
+              color={'white'}
               size={normalize(23)}
-              style={{
-                color: colors.text,
-                // alignSelf: 'center',
-              }}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -165,7 +161,7 @@ const MediaPicker = ({
           <Icon
             name="send"
             type="material-icons"
-            color={colors.text}
+            color={'white'}
             size={normalize(23)}
             style={{
               color: colors.text,
