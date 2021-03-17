@@ -54,13 +54,17 @@ import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import MediaPicker from './MediaPicker';
 import {
   Actions,
+  Bubble,
+  Day,
   GiftedChat,
   InputToolbar,
+  LoadEarlier,
   Message,
   Send,
 } from 'react-native-gifted-chat';
 import EmojiBoard from 'react-native-emoji-board';
 import runes from 'runes';
+import moment from 'moment';
 
 const { flags, sports, food } = Categories;
 // console.log(Categories);
@@ -91,6 +95,7 @@ const ChatScreen = ({
   // const [channels] = useState();
   const [imageUri, setImageUri] = useState();
   const [messages, addMessages] = useState([]);
+  const [messageDay, setMessageDay] = useState([]);
   const [message, setMessage] = useState('');
   const [inputText, setInputText] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
@@ -102,6 +107,14 @@ const ChatScreen = ({
   const time = d.getTime();
   const pubnub = usePubNub();
 
+  const addTime = (timetoken) => {
+    const unixTimestamp = timetoken / 10000000;
+    const gmtDate = new Date(unixTimestamp * 1000);
+    const localeDateTime = gmtDate.toLocaleString();
+    // const time = localeDateTime.split(', ')[1];
+    // return checkAmPm(time.slice(0, -3));
+    return localeDateTime.split(', ')[0];
+  };
   // console.log('GROUP____', group);
   // const getAllMessages = (cha, num) => {
   //   // const myChannels = [cha];
@@ -156,6 +169,10 @@ const ChatScreen = ({
           message: {
             text: data[0].text,
             userType: 'patient',
+            profile: {
+              id: currentUser.id,
+              name: currentUser.firstname + ' ' + currentUser.lastname,
+            },
           },
           channel: channelName,
         },
@@ -183,6 +200,10 @@ const ChatScreen = ({
           message: {
             text: '',
             userType: 'patient',
+            profile: {
+              id: currentUser.id,
+              name: currentUser.firstname + ' ' + currentUser.lastname,
+            },
           },
           file: fileData,
         },
@@ -199,10 +220,10 @@ const ChatScreen = ({
   };
 
   const getOldMessages = useCallback((cha) => {
-    // setRefreshing(true);
+    setRefreshing(true);
     console.log('=== GET OLD MESSAGES FROM CHANNEL =====: ', cha);
     const channelMsgs = allMessages.find((i) => i.channel === cha);
-    console.log(channelMsgs);
+    // console.log(channelMsgs);
     const channels = [cha];
     if (channelMsgs) {
       pubnub.fetchMessages(
@@ -214,7 +235,9 @@ const ChatScreen = ({
 
         async (status, data) => {
           console.log(status);
+
           if (status.statusCode === 200) {
+            console.log('DATA__', data);
             const msgs = data.channels[channels];
             console.log(
               '=== FOUND OLD MESSAGES FROM CHANNEL =====: ',
@@ -222,13 +245,14 @@ const ChatScreen = ({
               msgs,
               channelMsgs,
             );
-            if (msgs.length && msgs[0].timetoken !== channelMsgs.fst) {
+            if (msgs && msgs.length && msgs[0].timetoken !== channelMsgs.fst) {
               // channelMsgs.lst = msgs[msgs.length - 1].timetoken
               channelMsgs.fst = msgs[0].timetoken;
               let newMsgs = await msgs.map((item) =>
                 Object.assign(item, {
                   _id: item.timetoken,
                   user: { _id: item.uuid },
+                  day: addTime(item.timetoken),
                 }),
               );
               console.log('POOOOO___', newMsgs);
@@ -247,8 +271,8 @@ const ChatScreen = ({
                 addMessages(channelMsgs);
                 setAllMessages([...newSavedMessages, channelMsgs]);
                 // addMessages(channelMsgs);
-                // setRefreshing(false);
-                // setLoader(false);
+                setRefreshing(false);
+                setLoader(false);
                 console.log('Length__ ', channelMsgs.messages.length - 1);
                 // if (channelMsgs.messages.length) {
                 //   cRef.scrollToIndex({
@@ -286,16 +310,82 @@ const ChatScreen = ({
           setRefreshing(false);
         },
       );
+    } else {
+      console.log('Getting newer message');
+      pubnub.fetchMessages(
+        {
+          channels: [channels[0]],
+          count: 25,
+          end: time,
+        },
+
+        (status, data) => {
+          if (status.statusCode === 200) {
+            console.log('=== GETTING MESSAGES FROM CHANNEL =====: ', cha);
+            // addMessage([...data.channels[channels]])
+            const addTime = (msg) => {
+              const unixTimestamp = msg.timetoken / 10000000;
+              const gmtDate = new Date(unixTimestamp * 1000);
+              const localeDateTime = gmtDate.toLocaleString();
+              // const time = localeDateTime.split(', ')[1];
+              // return checkAmPm(time.slice(0, -3));
+              return localeDateTime.split(', ')[0];
+            };
+            const msgs = data.channels[channels];
+            if (msgs.length) {
+              console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
+              const lst = msgs[msgs.length - 1].timetoken;
+              const fst = msgs[0].timetoken;
+              let allMsgs = msgs.map((item) =>
+                Object.assign(item, {
+                  _id: item.timetoken,
+                  user: { _id: item.uuid },
+                  day: addTime(item.timetoken),
+                }),
+              );
+              setAllMessages([
+                ...allMessages,
+                { channel: cha, fst, lst, messages: allMsgs },
+              ]);
+
+              setRefreshing(false);
+            }
+
+            // pubnub.time((status, response)=>{
+            // 	if(!status.error){
+
+            // 		pubnub.objects.setMemberships({
+            // 			channels: [{
+            // 				id: channels[0],
+            // 				custom: {
+            // 						lastReadTimetoken: response.timetoken,
+            // 				}
+            // 			}]
+
+            // 		})
+
+            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
+            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+
+            // 	}
+
+            // })
+            setRefreshing(false);
+          }
+        },
+      );
     }
   }, []);
 
   useMemo(() => {
     if (isFocused || allMessages) {
       console.log('New MESSAgE Available__');
-      allMessages.find((item) => item.channel === channelName) &&
-        addMessages(
-          allMessages.find((item) => item.channel === channelName).messages,
-        );
+
+      addMessages(
+        allMessages.find((item) => item.channel === channelName)
+          ? allMessages.find((item) => item.channel === channelName).messages
+          : [],
+      );
       // if (chatRef !== undefined && messages.length > 1) {
       //   console.log('REF__', chatRef);
       //   chatRef && chatRef.scrollToIndex({ animated: true, index: 20 });
@@ -303,9 +393,14 @@ const ChatScreen = ({
     }
     // console.log('Updated MESSAgE__', messages);
     //
-  }, [allMessages, messages, channelName, isFocused]);
+  }, [allMessages, channelName, isFocused]);
 
   // useMemo(() => {}, [isFocused, chatRef, messages]);
+  const getUniqueListBy = (arr, key) => {
+    return [
+      ...new Map([...arr].reverse().map((item) => [item[key], item])).values(),
+    ];
+  };
 
   useMemo(() => {
     // console.log('Group_SUGGEST', groupSuggest);
@@ -315,17 +410,23 @@ const ChatScreen = ({
       //   allMessages.find((item) => item.channel === channelName).messages,
       // );
       if (
+        allMessages.find((item) => item.channel === channelName) &&
         allMessages.find((item) => item.channel === channelName).messages
           .length <= 1
       ) {
         setLoader(true);
         getOldMessages(channelName);
-      } else {
+      }
+      // else if{
+      //   setLoader(true);
+      // }
+      else {
+        getOldMessages(channelName);
         setLoader(false);
       }
-      allMessages.find((item) => item.channel === channelName)
-        ? setGroupSuggest(false)
-        : setGroupSuggest(true);
+      // allMessages.find((item) => item.channel === channelName)
+      //   ? setGroupSuggest(false)
+      //   : setGroupSuggest(true);
     }
   }, [isFocused]);
 
@@ -354,8 +455,8 @@ const ChatScreen = ({
           {...props}
           icon={() => (
             <Icon
-              name={'plus'}
-              type={'antdesign'}
+              name={showAccessories ? 'x' : 'plus'}
+              type={'feather'}
               // action={setShowEmoji}
               // value={showEmoji}
               size={24}
@@ -588,10 +689,6 @@ const ChatScreen = ({
     );
   };
 
-  // const renderMessage = (props) => {
-  //   console.log(props);
-  // };
-
   return (
     <View
       style={{
@@ -704,34 +801,81 @@ const ChatScreen = ({
         <View style={{ flex: 1, marginTop: 50 }}>
           <GiftedChat
             // ref={(ref) => setChatRef(ref)}
+            // extraData={generatedItems}
+            // shouldUpdateMessage={(props, nextProps) => {
+            //   generatedItems(props);
+            //   // return props.extraData.someData !== nextProps.extraData.someData;
+            // }}
             messages={messages.length ? [...messages].reverse() : []}
             onSend={(text, shouldResetInputToolbar) => {
               // onSend(messages)
-              console.log('HEY_____h');
               setMessage(text);
               sendMessage(text);
               //  values.message = '';
             }}
             // scrollToBottom={true}
             scrollToBottom={true}
-            // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
-            renderMessage={({ currentMessage }) => (
-              <ChatBubble
-                id={currentMessage.timetoken}
-                message={currentMessage}
-                navigation={navigation}
-                practice={practice}
-                practiceDms={practiceDms}
-                patientChatId={currentUser.chatId}
-              />
+            scrollToBottomComponent={() => (
+              <View>
+                <Icon
+                  name={'chevrons-down'}
+                  type={'feather'}
+                  color={colors.mode === 'light' ? colors.text_1 : colors.text}
+                  size={normalize(21)}
+                  style={{
+                    color: colors.text,
+                    // alignSelf: 'center',
+                  }}
+                />
+              </View>
             )}
+            scrollToBottomStyle={{
+              backgroundColor: colors.background_1,
+            }}
+            // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
+            renderMessage={(props) => {
+              return (
+                <>
+                  <ChatBubble
+                    id={props.currentMessage.timetoken}
+                    message={props.currentMessage}
+                    navigation={navigation}
+                    practice={practice}
+                    practiceDms={practiceDms}
+                    patientChatId={currentUser.chatId}
+                  />
+                  {messages &&
+                    messages.length &&
+                    getUniqueListBy(messages, 'day').some(
+                      (item) =>
+                        item.timetoken === props.currentMessage.timetoken,
+                    ) && (
+                      <Day
+                        {...props}
+                        textStyle={{ color: colors.text }}
+                        wrapperStyle={{
+                          backgroundColor: colors.background_1,
+                          paddingVertical: 5,
+                          paddingHorizontal: 12,
+                          borderRadius: 10,
+                        }}
+                        currentMessage={{
+                          createdAt: new Date(
+                            props.currentMessage.timetoken / 1e4,
+                          ),
+                        }}
+                      />
+                    )}
+                </>
+              );
+            }}
             renderChatEmpty={() => <View />}
             user={{
               _id: 1,
             }}
             listViewProps={{
               style: {
-                marginBottom: 20,
+                marginBottom: showAccessories ? 65 : 10,
               },
             }}
             textInputProps={{
@@ -768,15 +912,39 @@ const ChatScreen = ({
                 }}
               />
             )}
-            keyboardShouldPersistTaps={true}
+            keyboardShouldPersistTaps={false}
             // maxInputLength={20}
             inverted={true}
+            renderLoadEarlier={(props) => (
+              <LoadEarlier
+                {...props}
+                label="Load earlier messages"
+                wrapperStyle={{ backgroundColor: 'transparent' }}
+                textStyle={{
+                  fontSize: normalize(12),
+                  textAlign: 'center',
+                  fontFamily: 'SofiaProRegular',
+                  backgroundColor: colors.background_1,
+                  paddingVertical: 6,
+                  paddingHorizontal: 13,
+                  borderRadius: 15,
+                  color: colors.text,
+                }}
+                activityIndicatorStyle={{ padding: 10 }}
+                activityIndicatorColor={
+                  // colors.primary
+                  colors.text
+                }
+                activityIndicatorSize={normalize(25)}
+              />
+            )}
+            // renderLoading
             onLoadEarlier={() => {
-              setRefreshing(true);
+              setRefreshing(refreshing);
               getOldMessages(channelName);
             }}
             isLoadingEarlier={refreshing}
-            loadEarlier={true}
+            loadEarlier={messages.length >= 25 ? true : false}
             infiniteScroll={true}
             maxComposerHeight={100}
             alignTop={true}

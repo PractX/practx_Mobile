@@ -86,6 +86,15 @@ const ChatMessages = ({
   const d = new Date();
   const time = d.getTime();
 
+  const addTime = (timetoken) => {
+    const unixTimestamp = timetoken / 10000000;
+    const gmtDate = new Date(unixTimestamp * 1000);
+    const localeDateTime = gmtDate.toLocaleString();
+    // const time = localeDateTime.split(', ')[1];
+    // return checkAmPm(time.slice(0, -3));
+    return localeDateTime.split(', ')[0];
+  };
+
   // const getMessages = (cha, num) => {
   //   console.log('Chass', cha);
   //   const channels = [cha];
@@ -111,11 +120,13 @@ const ChatMessages = ({
   const getAllChannelMessages = useCallback((dms, subGroups) => {
     // const dmsCha = dms.map((i) => i.channelName); /// When backend guy delete
     const dmsCha = dms.map((i) => i.channelName);
-    // console.log(dmsCha);
-    const subgroupsCha = subGroups.map((i) => i.channelName);
-    const allChannels = [...dmsCha, ...subgroupsCha];
+    let newSubGroups = [];
+    subGroups.map((i) => i.map((j) => newSubGroups.push(j.channelName)));
 
-    // console.log('=== GET MESSAGES FROM ALL CHANNEL =====: ', allChannels);
+    console.log('subgroupsCha__', newSubGroups);
+    const allChannels = [...dmsCha, ...newSubGroups];
+
+    console.log('=== GET MESSAGES FROM ALL CHANNEL =====: ', allChannels);
 
     pubnub.fetchMessages(
       {
@@ -127,26 +138,29 @@ const ChatMessages = ({
       (status, data) => {
         if (status.statusCode === 200) {
           const { channels } = data;
-          const allMsgs = [];
+          let allMsgs = [];
+          // console.log('C_DATA__', channels);
 
-          allChannels.map((i) => {
+          allChannels.map(async (i) => {
             const msgs = channels[i];
             const newMsg = msgs.map((item) =>
               Object.assign(item, {
                 _id: item.timetoken,
                 user: { _id: item.uuid },
+                day: addTime(item.timetoken),
               }),
             );
-            if (newMsg) {
-              const lst = newMsg[newMsg.length - 1].timetoken;
-              const fst = newMsg[0].timetoken;
-
-              allMsgs.push({ channel: i, lst, fst, messages: newMsg });
-            }
-            return i;
+            const lst = newMsg[newMsg.length - 1].timetoken;
+            const fst = newMsg[0].timetoken;
+            // console.log('NEMES', newMsg);
+            allMsgs.push({ channel: i, lst, fst, messages: newMsg });
+            // setAllMessages(allMsgs);
+            // return i;
           });
           console.log('NEW_ALL_MESSAGE+++++', allMsgs);
           setAllMessages(allMsgs);
+          // console.log('NEW_ALL_MESSAGE+++++', allMsgs);
+          // setAllMessages(allMsgs);
 
           // pubnub.time((status, response) => {
           //   if (!status.error) {
@@ -173,7 +187,7 @@ const ChatMessages = ({
       },
     );
 
-    // console.log('___ALLCHANNELS___', allChannels);
+    // console.log('___ALLCHANNELS SUBSCRIBING TO___', allChannels);
 
     pubnub.subscribe({ channels: allChannels });
   }, []);
@@ -190,9 +204,9 @@ const ChatMessages = ({
 
     const channelMsgs = allMessages.find((i) => i.channel === cha);
     const channels = [cha];
-    console.log('Time token____', channelMsgs.lst);
     console.log('Current Date____', time);
     if (channelMsgs) {
+      console.log('Goods___');
       pubnub.fetchMessages(
         {
           channels: [channels[0]],
@@ -215,6 +229,7 @@ const ChatMessages = ({
                 Object.assign(item, {
                   _id: item.timetoken,
                   user: { _id: item.uuid },
+                  day: addTime(item.timetoken),
                 }),
               );
               channelMsgs.messages = [...channelMsgs.messages, ...msgs];
@@ -272,6 +287,7 @@ const ChatMessages = ({
                 Object.assign(item, {
                   _id: item.timetoken,
                   user: { _id: item.uuid },
+                  day: addTime(item.timetoken),
                 }),
               );
               setAllMessages([
@@ -324,8 +340,9 @@ const ChatMessages = ({
   useMemo(() => {
     if (isFocused) {
       getJoinedPracticesStart();
+      getPracticesDmsStart();
     }
-    // getPracticesDmsStart();
+
     // if (!isFetching) {
   }, [isFocused]);
 
@@ -335,12 +352,23 @@ const ChatMessages = ({
       getPracticeSubgroupsStart(currentPracticeId);
       // getMessages();
       // removeChannel();
+      const me = subgroups.find((item) => item.practiceId === currentPracticeId)
+        ? subgroups.find((item) => item.practiceId === currentPracticeId)
+        : [];
+
+      console.log('WORKING__', me);
     }
   }, [currentPracticeId]);
 
-  useEffect(() => {
+  useMemo(() => {
     if (currentPracticeId) {
-      getAllChannelMessages(practiceDms, subgroups);
+      console.log('Getting all channels');
+      if (practiceDms.length) {
+        getAllChannelMessages(
+          practiceDms,
+          subgroups.map((item) => [...item.groups]),
+        );
+      }
     }
   }, [currentPracticeId, subgroups]);
 
@@ -502,7 +530,7 @@ const ChatMessages = ({
 
       // setChannel(channels);
     }
-  }, [allMessages, subgroups, currentPracticeId]);
+  }, [subgroups, currentPracticeId]);
 
   // useEffect(() => {
   //   console.log(joinedPractices);
@@ -596,10 +624,10 @@ const ChatMessages = ({
           setShowStaffs={setShowStaffs}
           getPracticesDmsStart={getPracticesDmsStart}
           currentPracticeId={currentPracticeId}
-          practiceDms={
-            practiceDms &&
-            practiceDms.find((item) => item.practiceId === currentPracticeId)
-          }
+          // practiceDms={
+          //   practiceDms &&
+          //   practiceDms.find((item) => item.practiceId === currentPracticeId)
+          // }
         />
 
         {practiceDms && practiceDms.length && currentPracticeId ? (
@@ -692,7 +720,15 @@ const ChatMessages = ({
                       updateCellsBatchingPeriod={5}
                       showsVerticalScrollIndicator={false}
                       contentContainerStyle={{ flexGrow: 1 }}
-                      data={subgroups}
+                      data={
+                        subgroups.find(
+                          (item) => item.practiceId === currentPracticeId,
+                        )
+                          ? subgroups.find(
+                              (item) => item.practiceId === currentPracticeId,
+                            ).groups
+                          : []
+                      }
                       numColumns={1}
                       renderItem={({ item, index }) => (
                         <GroupBox

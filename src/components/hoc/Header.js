@@ -222,12 +222,13 @@ const Header = ({
       )}
       {searchData && (
         <Pressable
+          onPress={() => navigation.navigate('PractxSearch')}
           style={{
             // top: 0,
             left: 0,
             // right: 0,
             // bottom: 0,
-            width: screenWidth - 150,
+            width: screenWidth - 130,
             flexDirection: 'row',
             justifyContent: 'space-between',
             // position: 'absolute',
@@ -255,29 +256,26 @@ const Header = ({
       )}
       {search && (
         <View
-          style={
-            {
-              // top: 0,
-              // left: 0,
-              // right: 0,
-              // bottom: 0,
-              // justifyContent: 'center',
-              // position: 'absolute',
-              // alignItems: 'center',
-            }
-          }>
+          style={{
+            width: screenWidth - 130,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            // position: 'absolute',
+            alignItems: 'center',
+          }}>
           <TextInput
+            autoFocus={true}
             autoCapitalize={false}
             autoCompleteType={'name'}
             textContentType={'givenName'}
             keyboardType={'default'}
             placeholder={search.placeholder}
-            secureTextEntry={true}
             placeholderTextColor={colors.text_2}
             style={{
               color: colors.text_1,
               fontFamily: 'SofiaProRegular',
               fontSize: normalize(16),
+              width: '100%',
             }}
             // onChangeText={handleChange(name)}
             // onBlur={handleBlur(name)}

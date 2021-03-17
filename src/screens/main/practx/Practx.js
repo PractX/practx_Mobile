@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Dimensions, TextInput, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Practices from './practice/Practices';
+import Practices from './Practices';
 import PractxScreen from './PractxScreen';
+import PractxSearch from './PractxSearch';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,10 @@ const Practx = ({ navigation }) => {
       <Stack.Screen name="Practices">
         {(props) => <Practices {...props} extraData={navigation} />}
       </Stack.Screen>
+      <Stack.Screen name="PractxSearch">
+        {(props) => <PractxSearch {...props} extraData={navigation} />}
+      </Stack.Screen>
+
       {/* <Stack.Screen name="Settings" component={Settings} /> */}
     </Stack.Navigator>
   );

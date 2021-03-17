@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useWindowDimensions } from 'react-native';
 import DrawerContent from './DrawerContent';
-import Practices from './practice/Practices';
+// import Practices from './practice/Practices';
 import Profile from './profile/Profile';
 import EditProfile from './profile/EditProfile';
 // import AddGroup from '../addGroup/AddGroup';

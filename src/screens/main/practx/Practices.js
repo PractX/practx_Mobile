@@ -12,28 +12,28 @@ import {
   View,
   Dimensions,
 } from 'react-native';
-import PracticesBox from '../../../../components/hoc/PracticesBox';
+import PracticesBox from '../../../components/hoc/PracticesBox';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import Header from '../../../../components/hoc/Header';
+import Header from '../../../components/hoc/Header';
 import {
   getJoinedPracticesStart,
   getPracticesAllStart,
   getPracticesDmsStart,
   setFilter,
-} from '../../../../redux/practices/practices.actions';
+} from '../../../redux/practices/practices.actions';
 import {
   selectAllPractices,
   selectFilter,
   selectIsFetching,
-} from '../../../../redux/practices/practices.selector';
-import { selectCurrentUser } from '../../../../redux/user/user.selector';
+} from '../../../redux/practices/practices.selector';
+import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
 import { ActivityIndicator } from 'react-native-paper';
-import normalize from '../../../../utils/normalize';
-import Error from '../../../../components/hoc/Error';
+import normalize from '../../../utils/normalize';
+import Error from '../../../components/hoc/Error';
 import BottomSheet from 'reanimated-bottom-sheet';
-import PracticeDetails from '../../../../components/hoc/PracticeDetails';
+import PracticeDetails from '../../../components/hoc/PracticeDetails';
 // import { getAllPracticesStart } from '../../redux/practices/practices.actions';
 
 const windowWidth = Dimensions.get('window').width;

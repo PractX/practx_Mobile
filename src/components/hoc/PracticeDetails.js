@@ -158,7 +158,7 @@ const PracticeDetails = ({
                 setTimeout(() => {
                   setPracticeId(data.id);
                   navigation.navigate('Chats');
-                }, 2000);
+                }, 1000);
               }}>
               <Icon
                 name="ios-chatbubble"

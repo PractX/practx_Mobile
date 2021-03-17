@@ -6,6 +6,7 @@ import { Dimensions } from 'react-native';
 import normalize from '../../utils/normalize';
 import timeAgo from '../../utils/timeAgo';
 import { usePubNub } from 'pubnub-react';
+import { Day } from 'react-native-gifted-chat';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -30,8 +31,11 @@ const ChatBubble = ({ id, practice, message, patientChatId, index }) => {
     // return checkAmPm(time.slice(0, -3));
     return localeDateTime;
   };
+  // console.log(message.timetoken);
+  // console.log(addTime(message).split(', ')[0]);
   return (
     <View key={index} style={{ width: appwidth, alignSelf: 'center' }}>
+      {/* <Text>{addTime(message).split(', ')[0]}</Text> */}
       {message.uuid === patientChatId ? (
         <View
           style={{

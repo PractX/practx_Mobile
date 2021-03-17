@@ -27,7 +27,7 @@ const PracticeList = ({
   setShowStaffs,
   currentPracticeId,
   getPracticesDmsStart,
-  practiceDms,
+  // practiceDms,
 }) => {
   const { colors } = useTheme();
   const ref = useRef();
@@ -108,7 +108,7 @@ const PracticeList = ({
         updateCellsBatchingPeriod={5}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingRight: 30,
+          paddingRight: 10,
         }}
         // style={{}}
         data={joinedPractices}
@@ -122,7 +122,7 @@ const PracticeList = ({
             setShowStaffs={setShowStaffs}
             currentPracticeId={currentPracticeId}
             getPracticesDmsStart={getPracticesDmsStart}
-            practiceDms={practiceDms}
+            // practiceDms={practiceDms}
           />
         )}
         keyExtractor={(item, index) => item.display_url}

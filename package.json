@@ -25,6 +25,7 @@
 		"babel-plugin-inline-import": "^3.0.0",
 		"babel-plugin-transform-remove-console": "^6.9.4",
 		"formik": "^2.2.6",
+		"moment": "^2.29.1",
 		"native-base": "^2.15.2",
 		"pubnub": "^4.29.11",
 		"pubnub-react": "^2.1.0",
