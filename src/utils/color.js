@@ -35,9 +35,9 @@ export const ColorList = [
     quaternary: '#5654dc',
     quinary: '#ffa873',
     senary: '#fce7ea',
-    background: '#191e32',
-    background_1: '#2f3245',
-    background_2: '#252a3e',
+    background: '#000000',
+    background_1: '#111111',
+    background_2: '#141414',
     card: '#191e32',
     text: '#fdffff',
     text_1: '#9397b1',
@@ -52,6 +52,12 @@ export const ColorList = [
     success: '#24bb73',
   },
 ];
+
+// old Dark theme
+// background: '#191e32',
+// background_1: '#2f3245',
+// background_2: '#252a3e',
+
 //Secondary "#2aa5bc"
 // cursive;
 //casual

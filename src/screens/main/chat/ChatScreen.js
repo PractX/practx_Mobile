@@ -563,21 +563,24 @@ const ChatScreen = ({
             />
           )}
           onPressActionButton={() =>
-            launchCamera({ mediaType: 'video' }, (i) => {
-              if (!i.didCancel) {
-                setMediaFile({
-                  name: i.fileName,
-                  uri: i.uri,
-                  mimeType: i.type,
-                  size: i.fileSize,
-                  height: i.height,
-                  width: i.width,
-                });
-                setShowMediaPick(true);
-              }
-              console.log(mediaFile);
-              console.log('setting Image');
-            })
+            launchCamera(
+              { mediaType: 'video', quality: 'low', videoQuality: 'low' },
+              (i) => {
+                if (!i.didCancel) {
+                  setMediaFile({
+                    name: i.fileName,
+                    uri: i.uri,
+                    mimeType: i.type,
+                    size: i.fileSize,
+                    height: i.height,
+                    width: i.width,
+                  });
+                  setShowMediaPick(true);
+                }
+                console.log(mediaFile);
+                console.log('setting Image');
+              },
+            )
           }
           containerStyle={{ marginLeft: 30 }}
         />
@@ -905,6 +908,8 @@ const ChatScreen = ({
                   backgroundColor: colors.background,
                   // marginHorizontal: 20,
                   borderTopColor: colors.background_1,
+                  borderBottomColor: colors.background_1,
+                  borderWidth: 0.6,
                   borderTopWidth: 1,
                   paddingVertical: 0,
                   // marginTop: 15,

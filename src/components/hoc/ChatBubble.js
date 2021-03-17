@@ -27,9 +27,9 @@ const ChatBubble = ({ id, practice, message, patientChatId, index }) => {
     const unixTimestamp = msg.timetoken / 10000000;
     const gmtDate = new Date(unixTimestamp * 1000);
     const localeDateTime = gmtDate.toLocaleString();
-    // const time = localeDateTime.split(', ')[1];
-    // return checkAmPm(time.slice(0, -3));
-    return localeDateTime;
+    const time = localeDateTime.split(', ')[1];
+    return checkAmPm(time.slice(0, -3));
+    // return localeDateTime;
   };
   // console.log(message.timetoken);
   // console.log(addTime(message).split(', ')[0]);

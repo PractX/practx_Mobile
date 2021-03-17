@@ -48,18 +48,16 @@ const PracticeList = ({
           flexDirection: 'column',
           alignSelf: 'center',
           alignItems: 'center',
-          // borderBottomWidth: 0.8,
-          // borderBottomColor: colors.background_1,
         }}>
         <TouchableOpacity
           onPress={() => {
             requestAnimationFrame(() => {
-              setFilter({
-                opt1: true,
-                opt2: false,
-                opt3: false,
-              });
-              navigation.navigate('Practices');
+              // setFilter({
+              //   opt1: true,
+              //   opt2: false,
+              //   opt3: false,
+              // });
+              navigation.navigate('PractxScreen');
             });
           }}
           style={{

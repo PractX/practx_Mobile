@@ -22,7 +22,10 @@ import {
   joinPractices,
   setPracticeId,
 } from '../../redux/practices/practices.actions';
-import { selectIsLoading } from '../../redux/practices/practices.selector';
+import {
+  selectIsLoading,
+  selectJoinedPractices,
+} from '../../redux/practices/practices.selector';
 import { createStructuredSelector } from 'reselect';
 import BottomSheet from 'reanimated-bottom-sheet';
 
@@ -53,6 +56,7 @@ const PracticeSmallBox = ({
   setPracticeId,
   practiceData,
   setPracticeData,
+  joinedPractices,
 }) => {
   const { colors } = useTheme();
   const pending = practice.requests;
@@ -65,6 +69,8 @@ const PracticeSmallBox = ({
     }
     joinPractices(practiceId);
   };
+  console.log('Hello member', member);
+  console.log('Hello Pending', pending);
 
   useEffect(() => {
     !isLoading && setLoading(false);
@@ -76,7 +82,16 @@ const PracticeSmallBox = ({
         if (practiceData.show) {
           setPracticeData({ show: true, data: null });
         } else {
-          setPracticeData({ show: true, data: practice });
+          setPracticeData({
+            show: true,
+            data: practice,
+            type:
+              member && member.length
+                ? 'member'
+                : pending && pending.length
+                ? 'pending'
+                : 'none-member',
+          });
         }
       }}
       style={{
@@ -102,10 +117,33 @@ const PracticeSmallBox = ({
             height: 95,
             borderRadius: 15,
             backgroundColor: colors.background_1,
+            justifyContent: 'flex-end',
             // marginRight: 15,
           }}
-          resizeMode={FastImage.resizeMode.contain}
-        />
+          resizeMode={FastImage.resizeMode.contain}>
+          {(member && member.length > 0) || (pending && pending.length > 0) ? (
+            <Icon
+              name={member.length ? 'check' : 'clock'}
+              type={member.length ? 'feather' : 'feather'}
+              color={'white'}
+              size={member.length ? normalize(15) : normalize(12)}
+              style={{
+                backgroundColor: member.length
+                  ? colors.tertiary
+                  : '#000000' + 98,
+                width: 20,
+                height: 20,
+                color: 'white',
+                alignSelf: 'flex-end',
+                justifyContent: 'center',
+                borderTopLeftRadius: 15,
+                borderTopRightRadius: 15,
+                borderBottomLeftRadius: 15,
+                borderBottomRightRadius: 15,
+              }}
+            />
+          ) : null}
+        </FastImage>
       </View>
       <View style={{ justifyContent: 'center' }}>
         <Text
@@ -159,6 +197,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = createStructuredSelector({
   isLoading: selectIsLoading,
+  joinedPractices: selectJoinedPractices,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -47,6 +47,7 @@ const appwidth = windowWidth * 0.9;
 
 const Practx = ({
   navigation,
+  extraData,
   getPracticesAllStart,
   getJoinedPracticesStart,
   getPracticesDmsStart,
@@ -90,33 +91,40 @@ const Practx = ({
   useEffect(() => {
     isFetching ? setRefreshing(true) : setRefreshing(false);
   }, [isFetching]);
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('drawerOpen', (e) => {
-      // Do something
-      setStyle1('open');
-    });
 
-    return unsubscribe;
-  }, [navigation]);
   useEffect(() => {
     if (isFocused) {
+      setFilter({
+        opt1: true,
+        opt2: true,
+        opt3: true,
+      });
       getPracticesAllStart();
       getJoinedPracticesStart();
       getPracticesDmsStart();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  React.useEffect(() => {
+    const unsubscribe = extraData.addListener('drawerOpen', (e) => {
+      // Do something
+      setStyle1('open');
+    });
+
+    return unsubscribe;
+  }, [extraData]);
   React.useEffect(() => {
     // console.log(practices);
 
-    const unsubscribe = navigation.addListener('drawerClose', (e) => {
+    const unsubscribe = extraData.addListener('drawerClose', (e) => {
       // Do something
       setStyle1('close');
       // console.log('Close');
     });
 
     return unsubscribe;
-  }, [getPracticesAllStart, navigation]);
+  }, [getPracticesAllStart, extraData]);
 
   return (
     <SafeAreaView
@@ -152,6 +160,11 @@ const Practx = ({
             elevation: 3,
             borderRadius: 30,
             overflow: 'hidden',
+            borderColor:
+              colors.mode === 'dark' ? colors.background_1 + '93' : null,
+            borderBottomWidth: colors.mode === 'dark' ? 3 : 0,
+            borderTopWidth: colors.mode === 'dark' ? 3 : 0,
+            borderLeftWidth: colors.mode === 'dark' ? 1 : 0,
             // alignSelf: 'center',
           },
         ]}>
