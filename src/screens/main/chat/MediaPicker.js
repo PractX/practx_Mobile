@@ -107,12 +107,8 @@ const MediaPicker = ({
             <Icon
               name="arrow-back"
               type="material-icons"
-              color={colors.text}
+              color={'white'}
               size={normalize(23)}
-              style={{
-                color: colors.text,
-                // alignSelf: 'center',
-              }}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -158,11 +154,14 @@ const MediaPicker = ({
             backgroundColor: colors.primary,
             borderRadius: 50,
           }}
-          onPress={() => sendFile(mediaFile)}>
+          onPress={() => {
+            sendFile(mediaFile);
+            setShowMediaPick(false);
+          }}>
           <Icon
             name="send"
             type="material-icons"
-            color={colors.text}
+            color={'white'}
             size={normalize(23)}
             style={{
               color: colors.text,

@@ -27,7 +27,7 @@ const PracticeList = ({
   setShowStaffs,
   currentPracticeId,
   getPracticesDmsStart,
-  practiceDms,
+  // practiceDms,
 }) => {
   const { colors } = useTheme();
   const ref = useRef();
@@ -48,18 +48,16 @@ const PracticeList = ({
           flexDirection: 'column',
           alignSelf: 'center',
           alignItems: 'center',
-          // borderBottomWidth: 0.8,
-          // borderBottomColor: colors.background_1,
         }}>
         <TouchableOpacity
           onPress={() => {
             requestAnimationFrame(() => {
-              setFilter({
-                opt1: true,
-                opt2: false,
-                opt3: false,
-              });
-              navigation.navigate('Practices');
+              // setFilter({
+              //   opt1: true,
+              //   opt2: false,
+              //   opt3: false,
+              // });
+              navigation.navigate('PractxScreen');
             });
           }}
           style={{
@@ -107,6 +105,9 @@ const PracticeList = ({
         initialNumToRender={5}
         updateCellsBatchingPeriod={5}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingRight: 10,
+        }}
         // style={{}}
         data={joinedPractices}
         numColumns={1}
@@ -119,7 +120,7 @@ const PracticeList = ({
             setShowStaffs={setShowStaffs}
             currentPracticeId={currentPracticeId}
             getPracticesDmsStart={getPracticesDmsStart}
-            practiceDms={practiceDms}
+            // practiceDms={practiceDms}
           />
         )}
         keyExtractor={(item, index) => item.display_url}

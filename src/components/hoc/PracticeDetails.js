@@ -50,28 +50,26 @@ const PracticeDetails = ({
   setPracticeData,
 }) => {
   const { colors } = useTheme();
-  const { show, data } = practiceData;
-  // console.log(practiceData);
+  const { show, data, type } = practiceData;
+  console.log(practiceData);
   // const pending = practice.requests;
   // const member = practice.patients.filter((val) => val.id === userId);
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // const joinPractice = (practiceId) => {
-  //   if (practiceId === practice.id) {
-  //     setLoading(true);
-  //   }
-  //   joinPractices(practiceId);
-  // };
+  const joinPractice = (practiceId) => {
+    setLoading(true);
+    joinPractices(practiceId);
+  };
 
-  // useEffect(() => {
-  //   !isLoading && setLoading(false);
-  // }, [isLoading, practice]);
+  useEffect(() => {
+    !isLoading && setLoading(false);
+  }, [isLoading]);
 
   return (
     <View
       style={{
         backgroundColor: colors.background,
-        minHeight: 560,
+        minHeight: 660,
         marginBottom: 70,
       }}>
       {/* <Icon
@@ -138,59 +136,141 @@ const PracticeDetails = ({
               }}>
               {data.email}
             </Text>
+            {type === 'pending' || type === 'none-member' ? (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 20,
+                  right: type === 'pending' ? 20 : 20,
+                }}>
+                {type === 'pending' ? (
+                  <Icon
+                    name="progress-clock"
+                    type="material-community"
+                    color={colors.text_2}
+                    size={normalize(25)}
+                  />
+                ) : (
+                  <Button
+                    title="Join"
+                    onPress={async () => {
+                      await joinPractice(data.id);
+                      // await setPracticeId(practice.id);
+                      // await navigation.navigate('Chats');
+                    }}
+                    type="clear"
+                    icon={
+                      <Icon
+                        name="medical"
+                        type="ionicon"
+                        color={colors.text}
+                        size={normalize(15)}
+                        style={{
+                          color: 'white',
+                          marginRight: 0,
+                          // alignSelf: 'center',
+                        }}
+                      />
+                    }
+                    buttonStyle={{
+                      borderRadius: 10,
+                      // borderColor: colors.tertiary,
+                      paddingVertical: 2,
+                      paddingHorizontal: 10,
+                      alignItems: 'center',
+                    }}
+                    titleStyle={{
+                      fontFamily: 'SofiaProSemiBold',
+                      color: colors.text,
+                      fontSize: normalize(16),
+                      marginLeft: 3,
+                    }}
+                    loadingProps={{ color: colors.text }}
+                    loading={loading}
+                  />
+                )}
+              </View>
+            ) : null}
           </View>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}>
-            <TouchableOpacity
-              style={[
-                styles.buttonAction,
-                {
-                  backgroundColor: colors.background_1,
-                },
-              ]}
-              onPress={async () => {
-                bottomSheetRef.current.snapTo(2);
+          {type === 'member' && (
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}>
+              <TouchableOpacity
+                style={[
+                  styles.buttonAction,
+                  {
+                    backgroundColor: colors.background_1,
+                  },
+                ]}
+                onPress={async () => {
+                  bottomSheetRef.current.snapTo(2);
 
-                setTimeout(() => {
-                  setPracticeId(data.id);
-                  navigation.navigate('Chats');
-                }, 2000);
+                  setTimeout(() => {
+                    setPracticeId(data.id);
+                    navigation.navigate('Chats');
+                  }, 2000);
+                }}>
+                <Icon
+                  name="ios-chatbubble"
+                  type="ionicon"
+                  color={colors.text}
+                  size={normalize(23)}
+                  style={{
+                    color: colors.text,
+                    // alignSelf: 'center',
+                  }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.buttonAction,
+                  {
+                    backgroundColor: colors.background_1,
+                  },
+                ]}
+                onPress={() => console.log('Hello bro')}>
+                <Icon
+                  name="ios-call"
+                  type="ionicon"
+                  color={colors.text}
+                  size={normalize(23)}
+                  style={{
+                    color: colors.text,
+                    // alignSelf: 'center',
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+          {type === 'pending' && (
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
               }}>
               <Icon
-                name="ios-chatbubble"
-                type="ionicon"
-                color={colors.text}
-                size={normalize(23)}
-                style={{
-                  color: colors.text,
-                  // alignSelf: 'center',
-                }}
+                name="clock-outline"
+                type="material-community"
+                color={colors.text_2}
+                size={normalize(15)}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.buttonAction,
-                {
-                  backgroundColor: colors.background_1,
-                },
-              ]}
-              onPress={() => console.log('Hello bro')}>
-              <Icon
-                name="ios-call"
-                type="ionicon"
-                color={colors.text}
-                size={normalize(23)}
+              <Text
                 style={{
-                  color: colors.text,
-                  // alignSelf: 'center',
-                }}
-              />
-            </TouchableOpacity>
-          </View>
+                  color: colors.text_2,
+                  fontSize: normalize(13),
+                  fontFamily: 'SofiaProRegular',
+                  textAlign: 'center',
+                  paddingLeft: 5,
+                }}>
+                Waiting for approval
+              </Text>
+            </View>
+          )}
           <View
             style={{ marginVertical: 10, backgroundColor: colors.background }}>
             <ListItem containerStyle={{ backgroundColor: colors.background }}>

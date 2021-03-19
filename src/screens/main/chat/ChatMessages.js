@@ -86,6 +86,15 @@ const ChatMessages = ({
   const d = new Date();
   const time = d.getTime();
 
+  const addTime = (timetoken) => {
+    const unixTimestamp = timetoken / 10000000;
+    const gmtDate = new Date(unixTimestamp * 1000);
+    const localeDateTime = gmtDate.toLocaleString();
+    // const time = localeDateTime.split(', ')[1];
+    // return checkAmPm(time.slice(0, -3));
+    return localeDateTime.split(', ')[0];
+  };
+
   // const getMessages = (cha, num) => {
   //   console.log('Chass', cha);
   //   const channels = [cha];
@@ -108,39 +117,50 @@ const ChatMessages = ({
   //   );
   // };
 
-  const getAllChannelMessages = (dms, subGroups) => {
+  const getAllChannelMessages = useCallback((dms, subGroups) => {
     // const dmsCha = dms.map((i) => i.channelName); /// When backend guy delete
     const dmsCha = dms.map((i) => i.channelName);
-    console.log(dmsCha);
-    const subgroupsCha = subGroups.map((i) => i.channelName);
-    const allChannels = [...dmsCha, ...subgroupsCha];
+    let newSubGroups = [];
+    subGroups.map((i) => i.map((j) => newSubGroups.push(j.channelName)));
+
+    console.log('subgroupsCha__', newSubGroups);
+    const allChannels = [...dmsCha, ...newSubGroups];
 
     console.log('=== GET MESSAGES FROM ALL CHANNEL =====: ', allChannels);
 
     pubnub.fetchMessages(
       {
         channels: allChannels,
-        count: 25,
+        count: 1,
         end: time,
       },
 
       (status, data) => {
         if (status.statusCode === 200) {
           const { channels } = data;
-          const allMsgs = [];
+          let allMsgs = [];
+          // console.log('C_DATA__', channels);
 
-          allChannels.map((i) => {
+          allChannels.map(async (i) => {
             const msgs = channels[i];
-            if (msgs) {
-              const lst = msgs[msgs.length - 1].timetoken;
-              const fst = msgs[0].timetoken;
-
-              allMsgs.push({ channel: i, lst, fst, messages: msgs });
-            }
-            return i;
+            const newMsg = msgs.map((item) =>
+              Object.assign(item, {
+                _id: item.timetoken,
+                user: { _id: item.uuid },
+                day: addTime(item.timetoken),
+              }),
+            );
+            const lst = newMsg[newMsg.length - 1].timetoken;
+            const fst = newMsg[0].timetoken;
+            // console.log('NEMES', newMsg);
+            allMsgs.push({ channel: i, lst, fst, messages: newMsg });
+            // setAllMessages(allMsgs);
+            // return i;
           });
-          console.log('ALL_MESSAGE+++++', allMsgs);
+          console.log('NEW_ALL_MESSAGE+++++', allMsgs);
           setAllMessages(allMsgs);
+          // console.log('NEW_ALL_MESSAGE+++++', allMsgs);
+          // setAllMessages(allMsgs);
 
           // pubnub.time((status, response) => {
           //   if (!status.error) {
@@ -167,50 +187,60 @@ const ChatMessages = ({
       },
     );
 
-    console.log('___ALLCHANNELS___', allChannels);
+    // console.log('___ALLCHANNELS SUBSCRIBING TO___', allChannels);
 
     pubnub.subscribe({ channels: allChannels });
-  };
+  }, []);
 
-  useMemo(() => {
-    if (isFocused && practiceDms && practiceDms.length) {
-      getAllChannelMessages(practiceDms, subgroups);
-    }
-  }, [isFocused]);
+  // useMemo(() => {
+  //   if (isFocused && practiceDms && practiceDms.length) {
+  //     getAllChannelMessages(practiceDms, subgroups);
+  //   }
+  // }, [isFocused]);
 
   const getMessages = (cha) => {
     console.log('=== GET MESSAGES FROM CHANNEL =====: ', cha);
+    console.log('ALL____', allMessages);
+
     const channelMsgs = allMessages.find((i) => i.channel === cha);
     const channels = [cha];
+    console.log('Current Date____', time);
     if (channelMsgs) {
+      console.log('Goods___');
       pubnub.fetchMessages(
         {
           channels: [channels[0]],
           start: channelMsgs.lst + 1,
+          count: 1,
           end: time,
         },
 
-        (status, data) => {
+        async (status, data) => {
           if (status.statusCode === 200) {
             console.log('=== FOUND MESSAGES FROM CHANNEL =====: ', cha);
             // addMessage([...channelMsgs.messages, ...data.channels[channels]])
             const msgs = data.channels[channels];
-            console.log(
-              '=== FOUND NEW MESSAGES FROM CHANNEL =====: ',
-              cha,
-              msgs,
-            );
+            console.log('=== FOUND NEW MESSAGES FROM CHANNEL =====: ', cha);
 
             console.log('=== msgs =====: ', msgs);
             if (msgs.length && msgs[0].timetoken !== channelMsgs.lst) {
               channelMsgs.lst = msgs[msgs.length - 1].timetoken;
+              await msgs.map((item) =>
+                Object.assign(item, {
+                  _id: item.timetoken,
+                  user: { _id: item.uuid },
+                  day: addTime(item.timetoken),
+                }),
+              );
               channelMsgs.messages = [...channelMsgs.messages, ...msgs];
               // channelMsgs.messages = [...msgs]
               const newSavedMessages = allMessages.filter(
                 (i) => i.channel !== channelMsgs.channel,
               );
+
               console.log('=== channelMsgs =====: ', channelMsgs);
               console.log('=== newSavedMessages =====: ', newSavedMessages);
+              console.log('=== All messages =====: ', allMessages);
               setAllMessages([...newSavedMessages, channelMsgs]);
             }
 
@@ -253,9 +283,16 @@ const ChatMessages = ({
               console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
               const lst = msgs[msgs.length - 1].timetoken;
               const fst = msgs[0].timetoken;
+              let allMsgs = msgs.map((item) =>
+                Object.assign(item, {
+                  _id: item.timetoken,
+                  user: { _id: item.uuid },
+                  day: addTime(item.timetoken),
+                }),
+              );
               setAllMessages([
                 ...allMessages,
-                { channel: cha, fst, lst, messages: msgs },
+                { channel: cha, fst, lst, messages: allMsgs },
               ]);
             }
 
@@ -290,11 +327,50 @@ const ChatMessages = ({
     // };
   };
 
-  // useEffect(() => {
-  //   if (isFocused && currentPracticeId) {
+  // const pract = useCallback(async () => {
+  //   console.log('fetching');
 
+  //   if (currentPracticeId > 0) {
+  //     getPracticeSubgroupsStart(currentPracticeId);
   //   }
-  // }, [isFocused, currentPracticeId]);
+
+  //   // }
+  // }, []);
+
+  useMemo(() => {
+    if (isFocused) {
+      getJoinedPracticesStart();
+      getPracticesDmsStart();
+    }
+
+    // if (!isFetching) {
+  }, [isFocused]);
+
+  useMemo(() => {
+    if (currentPracticeId) {
+      // pract();
+      getPracticeSubgroupsStart(currentPracticeId);
+      // getMessages();
+      // removeChannel();
+      const me = subgroups.find((item) => item.practiceId === currentPracticeId)
+        ? subgroups.find((item) => item.practiceId === currentPracticeId)
+        : [];
+
+      console.log('WORKING__', me);
+    }
+  }, [currentPracticeId]);
+
+  useMemo(() => {
+    if (currentPracticeId) {
+      console.log('Getting all channels');
+      if (practiceDms.length) {
+        getAllChannelMessages(
+          practiceDms,
+          subgroups.map((item) => [...item.groups]),
+        );
+      }
+    }
+  }, [currentPracticeId, subgroups]);
 
   const removeChannel = () => {
     console.log('Deleting');
@@ -321,10 +397,11 @@ const ChatMessages = ({
   };
 
   useEffect(() => {
-    if (isFocused && pubnub) {
+    if (pubnub) {
+      console.log('Add event  listener');
       pubnub.setUUID(currentUser.chatId);
 
-      pubnub.addListener({
+      const listener = {
         message: (messageEvent) => {
           // addMessages([
           //   ...messages,
@@ -390,6 +467,7 @@ const ChatMessages = ({
 
         file: (picture) => {
           console.log('PICTURES____', picture);
+          getMessages(picture.channel);
           // addMessages([
           //   ...messages,
           //   {
@@ -432,7 +510,7 @@ const ChatMessages = ({
           // var timetoken = p.timetoken;  // Current timetoken
           // var uuid = p.uuid; // UUIDs of users who are subscribed to the channel
         },
-      });
+      };
 
       // Fetch messaged from pubnub history..............
 
@@ -443,52 +521,36 @@ const ChatMessages = ({
       // console.log(channels);
 
       // pubnub.subscribe({ channels: channels, withPresence: true });
+      pubnub.addListener(listener);
 
-      // return () => {
-      //   pubnub.unsubscribeAll();
-      // };
+      return () => {
+        console.log('Removing listener');
+        pubnub.removeListener(listener);
+      };
 
       // setChannel(channels);
     }
-  }, [pubnub]);
+  }, [subgroups, currentPracticeId]);
 
-  useEffect(() => {
-    console.log(joinedPractices);
-    // isFetching ? setRefreshing(true) : setRefreshing(false);
-    // pubnub.getMessage('', (msg) => {
-    //   console.log(msg);
-    // });
-    // getMessages(
-    //   practiceDms &&
-    //     practiceDms.length &&
-    //     practiceDms.find((item) => item.practiceId === currentPracticeId)
-    //       .channelName,
-    //   10,
-    // );
-  }, [pubnub]);
-  const pract = async () => {
-    console.log('fetching');
-    await getJoinedPracticesStart();
-    // if (!isFetching) {
-    await getPracticesDmsStart(currentPracticeId);
-
-    // }
-  };
+  // useEffect(() => {
+  //   console.log(joinedPractices);
+  //   // isFetching ? setRefreshing(true) : setRefreshing(false);
+  //   // pubnub.getMessage('', (msg) => {
+  //   //   console.log(msg);
+  //   // });
+  //   // getMessages(
+  //   //   practiceDms &&
+  //   //     practiceDms.length &&
+  //   //     practiceDms.find((item) => item.practiceId === currentPracticeId)
+  //   //       .channelName,
+  //   //   10,
+  //   // );
+  // }, [pubnub]);
 
   useEffect(() => {
     // console.log(currentUser);
     // practiceDms.length && getAllChannelMessages(practiceDms, subgroups);
-    if (currentUser) {
-      if (isFocused || currentPracticeId) {
-        pract();
 
-        // getMessages();
-        // removeChannel();
-        if (currentPracticeId > 0) {
-          getPracticeSubgroupsStart(currentPracticeId);
-        }
-      }
-    }
     const unsubscribe = extraData.addListener('drawerOpen', (e) => {
       // Do something
       setStyle1('open');
@@ -496,8 +558,7 @@ const ChatMessages = ({
     });
 
     return unsubscribe;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [extraData, isFocused, currentPracticeId, currentUser]);
+  }, [extraData, currentPracticeId, currentUser]);
   useMemo(() => {
     // console.log(
     //   practiceDms.find((item) => item.practiceId === currentPracticeId).Practice
@@ -563,10 +624,10 @@ const ChatMessages = ({
           setShowStaffs={setShowStaffs}
           getPracticesDmsStart={getPracticesDmsStart}
           currentPracticeId={currentPracticeId}
-          practiceDms={
-            practiceDms &&
-            practiceDms.find((item) => item.practiceId === currentPracticeId)
-          }
+          // practiceDms={
+          //   practiceDms &&
+          //   practiceDms.find((item) => item.practiceId === currentPracticeId)
+          // }
         />
 
         {practiceDms && practiceDms.length && currentPracticeId ? (
@@ -616,6 +677,7 @@ const ChatMessages = ({
               practiceDms={practiceDms}
               subgroups={subgroups}
               navigation={navigation}
+              newDate={d}
               styling={{
                 width: style1 === 'open' ? appwidth - 50 : appwidth,
               }}
@@ -658,7 +720,15 @@ const ChatMessages = ({
                       updateCellsBatchingPeriod={5}
                       showsVerticalScrollIndicator={false}
                       contentContainerStyle={{ flexGrow: 1 }}
-                      data={subgroups}
+                      data={
+                        subgroups.find(
+                          (item) => item.practiceId === currentPracticeId,
+                        )
+                          ? subgroups.find(
+                              (item) => item.practiceId === currentPracticeId,
+                            ).groups
+                          : []
+                      }
                       numColumns={1}
                       renderItem={({ item, index }) => (
                         <GroupBox

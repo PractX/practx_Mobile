@@ -25,6 +25,7 @@ import { showMessage } from 'react-native-flash-message';
 // const userActive = state => state.user.currentUser;
 const userToken = (state) => state.user.token.key;
 const havePracticeId = (state) => state.practice.currentPracticeId;
+const practiceSubgroups = (state) => state.practice.practiceSubgroups;
 
 export function* willGetAllPractices() {
   const token = yield select(userToken);
@@ -119,33 +120,33 @@ export function* willJoinPractices({ payload: practiceId }) {
   const token = yield select(userToken);
   console.log('going in aoi');
   console.log(token);
-  try {
-    const result = yield joinPracticeApi(practiceId, token).then(function (
-      response,
-    ) {
-      return response.data;
-    });
-    console.log(result);
-    showMessage({
-      message: result.message,
-      type: 'success',
-    });
-    yield put(getPracticesAllStart());
-  } catch (error) {
-    console.log(error.response);
-    if (error.response) {
-      showMessage({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: error.message,
-        type: 'danger',
-      });
-    }
-    yield put(setLoading(false));
-  }
+  // try {
+  //   const result = yield joinPracticeApi(practiceId, token).then(function (
+  //     response,
+  //   ) {
+  //     return response.data;
+  //   });
+  //   console.log(result);
+  //   showMessage({
+  //     message: result.message,
+  //     type: 'success',
+  //   });
+  //   yield put(getPracticesAllStart());
+  // } catch (error) {
+  //   console.log(error.response);
+  //   if (error.response) {
+  //     showMessage({
+  //       message: error.response.data.message,
+  //       type: 'danger',
+  //     });
+  //   } else {
+  //     showMessage({
+  //       message: error.message,
+  //       type: 'danger',
+  //     });
+  //   }
+  //   yield put(setLoading(false));
+  // }
 }
 
 export function* willGetPracticesDms() {
@@ -182,6 +183,7 @@ export function* willGetPracticesDms() {
 
 export function* willGetPracticeSubgroup({ payload: practiceId }) {
   const token = yield select(userToken);
+  const allSubGroups = yield select(practiceSubgroups);
   console.log('getting subgroups');
   console.log(practiceId);
   try {
@@ -190,12 +192,18 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
         return response.data;
       },
     );
-    console.log('SUBGROUPS ______', result);
     // showMessage({
     //   message: result.message,
     //   type: 'success',
     // });
-    yield put(getPracticeSubgroupsSuccess(result.practice.subgroups));
+    let data = [
+      ...allSubGroups,
+      {
+        practiceId: practiceId,
+        groups: result.practice.subgroups,
+      },
+    ];
+    yield put(getPracticeSubgroupsSuccess(getUniqueListBy(data, 'practiceId')));
   } catch (error) {
     console.log(error.response);
     if (error.response) {
@@ -211,6 +219,10 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
     }
     yield put(setLoading(false));
   }
+}
+
+function getUniqueListBy(arr, key) {
+  return [...new Map(arr.map((item) => [item[key], item])).values()];
 }
 
 export function* willChatWithPractice({ payload: practiceId }) {

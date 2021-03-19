@@ -9,8 +9,6 @@ import {
   RefreshControl,
   SafeAreaView,
   Text,
-  TouchableOpacity,
-  TouchableOpacityBase,
   View,
   Dimensions,
 } from 'react-native';
@@ -19,7 +17,9 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Header from '../../../components/hoc/Header';
 import {
+  getJoinedPracticesStart,
   getPracticesAllStart,
+  getPracticesDmsStart,
   setFilter,
 } from '../../../redux/practices/practices.actions';
 import {
@@ -40,14 +40,17 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
 
-const Practices = ({
+const PractxSearch = ({
   navigation,
   getPracticesAllStart,
+  getJoinedPracticesStart,
+  getPracticesDmsStart,
   isFetching,
   practices,
   currentUser,
   setFilter,
   filter,
+  extraData,
 }) => {
   const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
@@ -94,8 +97,10 @@ const Practices = ({
   useEffect(() => {
     if (isFocused) {
       getPracticesAllStart();
+      getJoinedPracticesStart();
+      getPracticesDmsStart();
     }
-  }, []);
+  }, [isFocused]);
   React.useEffect(() => {
     // console.log(practices);
 
@@ -107,6 +112,19 @@ const Practices = ({
 
     return unsubscribe;
   }, [getPracticesAllStart, navigation]);
+
+  useEffect(() => {
+    extraData.setOptions({
+      drawerLockMode: 'locked-closed',
+      swipeEnabled: false,
+    });
+
+    return () =>
+      extraData.setOptions({
+        drawerLockMode: 'locked-closed',
+        swipeEnabled: true,
+      });
+  }, [extraData]);
 
   return (
     <SafeAreaView
@@ -146,108 +164,39 @@ const Practices = ({
         ]}>
         <Header
           navigation={navigation}
-          title="Practices"
-          iconRight1={{
-            name: 'equalizer',
-            type: 'simple-line-icon',
-            onPress: openMenu,
-            buttonType: 'filter',
+          // title="Practices"
+          backArrow={true}
+          // iconRight1={{
+          //   name: 'equalizer',
+          //   type: 'simple-line-icon',
+          //   onPress: openMenu,
+          //   buttonType: 'filter',
+          // }}
+          // notifyIcon={true}
+          search={{
+            placeholder: 'Search for practice',
+            action: () => console.log('search'),
           }}
-          notifyIcon={true}
           checkState={checkState}
           setCheckState={setCheckState}
           setFilter={setFilter}
         />
         <View
           style={{
-            height: windowHeight,
+            height: windowHeight - 100,
             width: style1 === 'open' ? appwidth - 50 : appwidth,
             alignSelf: 'center',
             justifyContent: 'center',
             marginTop: 50,
           }}>
-          {practices ? (
-            <FlatList
-              ref={ref}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={() => getPracticesAllStart()}
-                />
-              }
-              // removeClippedSubviews
-              // ListEmptyComponent
-              initialNumToRender={5}
-              updateCellsBatchingPeriod={5}
-              showsVerticalScrollIndicator={false}
-              style={{ marginBottom: 70 }}
-              data={practices}
-              numColumns={1}
-              renderItem={({ item, index }) => (
-                <PracticesBox
-                  userId={currentUser ? currentUser.id : 0}
-                  id={index}
-                  practice={item}
-                  navigation={navigation}
-                  practiceData={practiceData}
-                  setPracticeData={setPracticeData}
-                />
-              )}
-              keyExtractor={(item, index) => item.display_url}
-              // showsHorizontalScrollIndicator={false}
-              // extraData={selected}
-            />
-          ) : (
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              {isFetching ? (
-                <ActivityIndicator
-                  animating={isFetching}
-                  size={normalize(30)}
-                  color={colors.text}
-                />
-              ) : (
-                <Error
-                  title={'OOPS!!!'}
-                  type="internet"
-                  subtitle={
-                    'Unable to get Practices, Please check your internet connectivity'
-                  }
-                  action={getPracticesAllStart}
-                />
-              )}
-            </View>
-          )}
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          />
         </View>
       </View>
-      {practiceData.show && (
-        <View
-          style={{
-            flex: 1,
-            position: 'absolute',
-            backgroundColor: '#000000b9',
-            height: '100%',
-            width: '100%',
-          }}
-        />
-      )}
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={[560, 400, 0]}
-        borderRadius={20}
-        renderContent={() => (
-          <PracticeDetails
-            bottomSheetRef={bottomSheetRef}
-            navigation={navigation}
-            practiceData={practiceData}
-          />
-        )}
-        initialSnap={2}
-        onCloseEnd={() => setPracticeData({ show: false, data: null })}
-      />
     </SafeAreaView>
   );
 };
@@ -261,7 +210,9 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   getPracticesAllStart: () => dispatch(getPracticesAllStart()),
+  getJoinedPracticesStart: () => dispatch(getJoinedPracticesStart()),
+  getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
   setFilter: (data) => dispatch(setFilter(data)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Practices);
+export default connect(mapStateToProps, mapDispatchToProps)(PractxSearch);

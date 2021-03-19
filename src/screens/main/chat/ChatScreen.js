@@ -50,8 +50,21 @@ import { setAllMessages } from '../../../redux/practices/practices.actions';
 // import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import EmojiSelector, { Categories } from 'react-native-emoji-selector';
 import { Keyboard } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import MediaPicker from './MediaPicker';
+import {
+  Actions,
+  Bubble,
+  Day,
+  GiftedChat,
+  InputToolbar,
+  LoadEarlier,
+  Message,
+  Send,
+} from 'react-native-gifted-chat';
+import EmojiBoard from 'react-native-emoji-board';
+import runes from 'runes';
+import moment from 'moment';
 
 const { flags, sports, food } = Categories;
 // console.log(Categories);
@@ -74,15 +87,19 @@ const ChatScreen = ({
   const inputRef = useRef();
   const { params } = useRoute();
   const isFocused = useIsFocused();
+  const [loader, setLoader] = useState(true);
   const { practice, practiceDms, channelName, subgroups, group, type } = params;
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
-  const [channels] = useState();
+  // const [channels] = useState();
   const [imageUri, setImageUri] = useState();
   const [messages, addMessages] = useState([]);
+  const [messageDay, setMessageDay] = useState([]);
   const [message, setMessage] = useState('');
+  const [inputText, setInputText] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
+  const [showAccessories, setShowAccessories] = useState(false);
   const [showMediaPick, setShowMediaPick] = useState(false);
   const [mediaFile, setMediaFile] = useState();
   const [groupSuggest, setGroupSuggest] = useState(false);
@@ -90,7 +107,15 @@ const ChatScreen = ({
   const time = d.getTime();
   const pubnub = usePubNub();
 
-  console.log('GROUP____', group);
+  const addTime = (timetoken) => {
+    const unixTimestamp = timetoken / 10000000;
+    const gmtDate = new Date(unixTimestamp * 1000);
+    const localeDateTime = gmtDate.toLocaleString();
+    // const time = localeDateTime.split(', ')[1];
+    // return checkAmPm(time.slice(0, -3));
+    return localeDateTime.split(', ')[0];
+  };
+  // console.log('GROUP____', group);
   // const getAllMessages = (cha, num) => {
   //   // const myChannels = [cha];
   //   console.log(cha);
@@ -133,25 +158,29 @@ const ChatScreen = ({
   //   );
   //   pubnub.subscribe({ channels });
   // };
-  const sendMessage = (message) => {
+  const sendMessage = (data) => {
     console.log(channelName);
-    console.log(message);
+    console.log(data[0].text);
     // chatRef.scrollToEnd();
     pubnub.setUUID(currentUser.chatId);
-    if (message) {
+    if (data) {
       pubnub.publish(
         {
           message: {
-            text: message,
+            text: data[0].text,
             userType: 'patient',
+            profile: {
+              id: currentUser.id,
+              name: currentUser.firstname + ' ' + currentUser.lastname,
+            },
           },
           channel: channelName,
         },
         (status, response) => {
-          setMessage('');
+          // setMessage('');
           // handle status, response
           console.log(status);
-          // console.log(response);
+          console.log(response);
         },
       );
     } else {
@@ -168,7 +197,14 @@ const ChatScreen = ({
       pubnub.sendFile(
         {
           channel: channelName,
-          message: '',
+          message: {
+            text: '',
+            userType: 'patient',
+            profile: {
+              id: currentUser.id,
+              name: currentUser.firstname + ' ' + currentUser.lastname,
+            },
+          },
           file: fileData,
         },
         (status, response) => {
@@ -183,136 +219,25 @@ const ChatScreen = ({
     }
   };
 
-  const getMessages = (cha) => {
-    console.log('=== GET MESSAGES FROM CHANNEL =====: ', cha);
-    const channelMsgs = allMessages.find((i) => i.channel === cha);
-    console.log('===  CHANNELS MESSAGES FROM =====: ', channelMsgs);
-    const channels = [cha];
-    if (channelMsgs) {
-      pubnub.fetchMessages(
-        {
-          channels: [channels[0]],
-          start: channelMsgs.lst + 1,
-          end: time,
-        },
-
-        (status, data) => {
-          if (status.statusCode === 200) {
-            console.log('=== FOUND MESSAGES FROM CHANNEL =====: ', cha);
-            // addMessage([...channelMsgs.messages, ...data.channels[channels]])
-            const msgs = data.channels[channels];
-            console.log(
-              '=== FOUND NEW MESSAGES FROM CHANNEL =====: ',
-              cha,
-              msgs,
-            );
-            if (channelMsgs.messages !== msgs) {
-              if (msgs.length && msgs[0].timetoken !== channelMsgs.lst) {
-                channelMsgs.lst = msgs[msgs.length - 1].timetoken;
-                channelMsgs.messages = [...channelMsgs.messages, ...msgs];
-                // channelMsgs.messages = [...msgs]
-                const newSavedMessages = allMessages.filter(
-                  (i) => i.channel !== channelMsgs.channel,
-                );
-                console.log('=== channelMsgs =====: ', channelMsgs);
-                console.log('=== newSavedMessages =====: ', newSavedMessages);
-                setAllMessages([...newSavedMessages, channelMsgs]);
-              }
-            }
-
-            // pubnub.time((status, response)=>{
-            // 	if(!status.error){
-
-            // 		pubnub.objects.setMemberships({
-            // 			channels: [{
-            // 				id: channels[0],
-            // 				custom: {
-            // 						lastReadTimetoken: response.timetoken,
-            // 				}
-            // 			}]
-
-            // 		})
-
-            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
-            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
-
-            // 	}
-
-            // })
-          }
-        },
-      );
-    } else {
-      pubnub.fetchMessages(
-        {
-          channels: [channels[0]],
-          count: 25,
-          end: time,
-        },
-
-        (status, data) => {
-          if (status.statusCode === 200) {
-            console.log('=== GETTING MESSAGES FROM CHANNEL =====: ', cha);
-            // addMessage([...data.channels[channels]])
-            const msgs = data.channels[channels];
-            if (msgs.length) {
-              console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
-              const lst = msgs[msgs.length - 1].timetoken;
-              const fst = msgs[0].timetoken;
-              setAllMessages([
-                ...allMessages,
-                { channel: cha, fst, lst, messages: msgs },
-              ]);
-            }
-
-            // pubnub.time((status, response)=>{
-            // 	if(!status.error){
-
-            // 		pubnub.objects.setMemberships({
-            // 			channels: [{
-            // 				id: channels[0],
-            // 				custom: {
-            // 						lastReadTimetoken: response.timetoken,
-            // 				}
-            // 			}]
-
-            // 		})
-
-            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
-            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
-
-            // 	}
-
-            // })
-          }
-        },
-      );
-    }
-
-    pubnub.subscribe({ channels });
-
-    return () => {
-      pubnub.unsubscribeAll();
-    };
-  };
-
   const getOldMessages = useCallback((cha) => {
-    // setRefreshing(true);
+    setRefreshing(true);
     console.log('=== GET OLD MESSAGES FROM CHANNEL =====: ', cha);
     const channelMsgs = allMessages.find((i) => i.channel === cha);
-    console.log(channelMsgs);
+    // console.log(channelMsgs);
     const channels = [cha];
     if (channelMsgs) {
       pubnub.fetchMessages(
         {
           channels: [channels[0]],
           count: 25,
-          start: channelMsgs.fst - 1,
+          start: channelMsgs.fst,
         },
 
-        (status, data) => {
+        async (status, data) => {
           console.log(status);
+
           if (status.statusCode === 200) {
+            console.log('DATA__', data);
             const msgs = data.channels[channels];
             console.log(
               '=== FOUND OLD MESSAGES FROM CHANNEL =====: ',
@@ -320,20 +245,45 @@ const ChatScreen = ({
               msgs,
               channelMsgs,
             );
-            if (msgs.length && msgs[0].timetoken !== channelMsgs.fst) {
+            if (msgs && msgs.length && msgs[0].timetoken !== channelMsgs.fst) {
               // channelMsgs.lst = msgs[msgs.length - 1].timetoken
               channelMsgs.fst = msgs[0].timetoken;
-              channelMsgs.messages = [...msgs, ...channelMsgs.messages];
-              // channelMsgs.messages = [...msgs]
-              const newSavedMessages = allMessages.filter(
-                (i) => i.channel !== channelMsgs.channel,
+              let newMsgs = await msgs.map((item) =>
+                Object.assign(item, {
+                  _id: item.timetoken,
+                  user: { _id: item.uuid },
+                  day: addTime(item.timetoken),
+                }),
               );
-              console.log('=== channelMsgs =====: ', channelMsgs);
-              console.log('=== newSavedMessages =====: ', newSavedMessages);
-              // dispatch(Actions.saveMsg([...newSavedMessages, channelMsgs]));
-              setAllMessages([...newSavedMessages, channelMsgs]);
-              setRefreshing(false);
+              console.log('POOOOO___', newMsgs);
+              if (newMsgs) {
+                channelMsgs.messages = [...msgs, ...channelMsgs.messages];
+
+                // channelMsgs.messages = [...msgs]
+                const newSavedMessages = allMessages.filter(
+                  (i) => i.channel !== channelMsgs.channel,
+                );
+                console.log('=== channelMsgs =====: ', channelMsgs);
+                console.log('=== newSavedMessages =====: ', newSavedMessages);
+
+                // console.log('NEWWW__', newMsg);
+                // dispatch(Actions.saveMsg([...newSavedMessages, channelMsgs]));
+                addMessages(channelMsgs);
+                setAllMessages([...newSavedMessages, channelMsgs]);
+                // addMessages(channelMsgs);
+                setRefreshing(false);
+                setLoader(false);
+                console.log('Length__ ', channelMsgs.messages.length - 1);
+                // if (channelMsgs.messages.length) {
+                //   cRef.scrollToIndex({
+                //     animate: true,
+                //     index: channelMsgs.messages.length - 1,
+                //   });
+                // }
+                // cRef.scrollToEnd({ animated: true });
+              }
             }
+            setLoader(false);
             setRefreshing(false);
 
             // pubnub.time((status, response)=>{
@@ -356,226 +306,132 @@ const ChatScreen = ({
 
             // })
           }
+          setLoader(false);
           setRefreshing(false);
         },
       );
-    }
+    } else {
+      console.log('Getting newer message');
+      pubnub.fetchMessages(
+        {
+          channels: [channels[0]],
+          count: 25,
+          end: time,
+        },
 
-    return () => {
-      pubnub.unsubscribeAll();
-    };
-  }, []);
-
-  const getAllChannelMessages = (myChannel) => {
-    // const dmsCha = dms.map((i) => i.channelName); /// When backend guy delete
-    // const dmsCha = dms.map((i) => i.channelName);
-    // console.log(dmsCha);
-    // const subgroupsCha = subGroups.map((i) => i.Subgroup.channelName);
-    const allChannels = [myChannel];
-
-    console.log('=== GET MESSAGES FROM ALL CHANNEL =====: ', allChannels);
-
-    pubnub.fetchMessages(
-      {
-        channels: allChannels,
-        count: 25,
-        end: time,
-      },
-
-      (status, data) => {
-        if (status.statusCode === 200) {
-          const { channels } = data;
-          const allMsgs = [];
-
-          allChannels.map((i) => {
-            const msgs = channels[i];
-            if (msgs) {
+        (status, data) => {
+          if (status.statusCode === 200) {
+            console.log('=== GETTING MESSAGES FROM CHANNEL =====: ', cha);
+            // addMessage([...data.channels[channels]])
+            const addTime = (msg) => {
+              const unixTimestamp = msg.timetoken / 10000000;
+              const gmtDate = new Date(unixTimestamp * 1000);
+              const localeDateTime = gmtDate.toLocaleString();
+              // const time = localeDateTime.split(', ')[1];
+              // return checkAmPm(time.slice(0, -3));
+              return localeDateTime.split(', ')[0];
+            };
+            const msgs = data.channels[channels];
+            if (msgs.length) {
+              console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
               const lst = msgs[msgs.length - 1].timetoken;
               const fst = msgs[0].timetoken;
+              let allMsgs = msgs.map((item) =>
+                Object.assign(item, {
+                  _id: item.timetoken,
+                  user: { _id: item.uuid },
+                  day: addTime(item.timetoken),
+                }),
+              );
+              setAllMessages([
+                ...allMessages,
+                { channel: cha, fst, lst, messages: allMsgs },
+              ]);
 
-              allMsgs.push({ channel: i, lst, fst, messages: msgs });
+              setRefreshing(false);
             }
-            return i;
-          });
-          console.log('ALL_MESSAGE+++++', allMsgs);
-          setAllMessages(allMsgs);
 
-          pubnub.time((status, response) => {
-            if (!status.error) {
-              pubnub.objects.setMemberships({
-                channels: [
-                  {
-                    id: allChannels[0],
-                    custom: {
-                      lastReadTimetoken: response.timetoken,
-                    },
-                  },
-                ],
-              });
+            // pubnub.time((status, response)=>{
+            // 	if(!status.error){
 
-              // dispatch(Actions.messagesCountUpdate(allChannels[0]));
-              // console.log(
-              //   allChannels[0],
-              //   '=== MESSAGE COUNT =====:',
-              //   messagesCount[allChannels[0]],
-              // );
-            }
-          });
-        }
-      },
-    );
+            // 		pubnub.objects.setMemberships({
+            // 			channels: [{
+            // 				id: channels[0],
+            // 				custom: {
+            // 						lastReadTimetoken: response.timetoken,
+            // 				}
+            // 			}]
 
-    console.log('___ALLCHANNELS___', allChannels);
+            // 		})
 
-    // pubnub.subscribe({ channels: allChannels });
+            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
+            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+
+            // 	}
+
+            // })
+            setRefreshing(false);
+          }
+        },
+      );
+    }
+  }, []);
+
+  useMemo(() => {
+    if (isFocused || allMessages) {
+      console.log('New MESSAgE Available__');
+
+      addMessages(
+        allMessages.find((item) => item.channel === channelName)
+          ? allMessages.find((item) => item.channel === channelName).messages
+          : [],
+      );
+      // if (chatRef !== undefined && messages.length > 1) {
+      //   console.log('REF__', chatRef);
+      //   chatRef && chatRef.scrollToIndex({ animated: true, index: 20 });
+      // }
+    }
+    // console.log('Updated MESSAgE__', messages);
+    //
+  }, [allMessages, channelName, isFocused]);
+
+  // useMemo(() => {}, [isFocused, chatRef, messages]);
+  const getUniqueListBy = (arr, key) => {
+    return [
+      ...new Map([...arr].reverse().map((item) => [item[key], item])).values(),
+    ];
   };
 
-  // useEffect(() => {
-  //   console.log(
-  //     'CHANNELSS_+++++++',
-  //     practiceDms.find((item) => item.channelName),
-  //   );
-  //   if (pubnub) {
-  //     pubnub.setUUID(currentUser.chatId);
-
-  //     pubnub.addListener({
-  //       message: (messageEvent) => {
-  //         // addMessages([
-  //         //   ...messages,
-  //         //   {
-  //         //     channel: messageEvent.channel,
-  //         //     message: messageEvent.message,
-  //         //     timetoken: messageEvent.timetoken,
-  //         //     uuid: messageEvent.publisher,
-  //         //   },
-  //         // ]);
-  //         getMessages(messageEvent.channel);
-  //         console.log('Events', messageEvent);
-
-  //         pubnub.objects.setMemberships({
-  //           channels: [
-  //             {
-  //               id: messageEvent.channel,
-  //               custom: {
-  //                 lastReadTimetoken: messageEvent.timetoken,
-  //               },
-  //             },
-  //           ],
-  //         });
-
-  //         // Get memberships and all messages count as well
-  //         // pubnub.his
-  //         pubnub.objects
-  //           .getMemberships({
-  //             uuid: messageEvent.publisher,
-  //             include: {
-  //               customFields: true,
-  //             },
-  //           })
-  //           .then((data) => {
-  //             if (data.status === 200) {
-  //               if (data.data.length > 0) {
-  //                 const channels = data.data.map((res) => res.channel.id);
-  //                 const timetoken = data.data.map(
-  //                   (res) => res.custom.lastReadTimetoken,
-  //                 );
-
-  //                 pubnub
-  //                   .messageCounts({
-  //                     channels: channels,
-  //                     channelTimetokens: timetoken,
-  //                   })
-  //                   .then((response) => {
-  //                     // set all messages count to a global variable
-  //                     // dispatch(setMessagesCount(response.channels))
-  //                   })
-  //                   .catch((error) => {
-  //                     console.log(
-  //                       error,
-  //                       '------ Error Message count ======== ',
-  //                     );
-  //                   });
-  //               } else {
-  //                 console.log(data, '------ No Message count ======== ');
-  //               }
-  //             }
-  //           });
-  //       },
-
-  //       file: (picture) => {
-  //         addMessages([
-  //           ...messages,
-  //           {
-  //             channel: picture.channel,
-  //             message: picture.message,
-  //             timetoken: picture.timetoken,
-  //             uuid: picture.publisher,
-  //           },
-  //         ]);
-  //       },
-
-  //       signal: function (s) {
-  //         // handle signal
-  //         var channelName = s.channel; // The channel to which the signal was published
-  //         var channelGroup = s.subscription; // The channel group or wildcard subscription match (if exists)
-  //         var pubTT = s.timetoken; // Publish timetoken
-  //         var msg = s.message; // The Payload
-  //         var publisher = s.publisher; //The Publisher
-  //       },
-
-  //       status: function (s) {
-  //         var affectedChannelGroups = s.affectedChannelGroups; // The channel groups affected in the operation, of type array.
-  //         var affectedChannels = s.affectedChannels; // The channels affected in the operation, of type array.
-  //         var category = s.category; //Returns PNConnectedCategory
-  //         var operation = s.operation; //Returns PNSubscribeOperation
-  //         var lastTimetoken = s.lastTimetoken; //The last timetoken used in the subscribe request, of type long.
-  //         var currentTimetoken = s.currentTimetoken; //The current timetoken fetched in the subscribe response, which is going to be used in the next request, of type long.
-  //         var subscribedChannels = s.subscribedChannels; //All the current subscribed channels, of type array.
-  //       },
-
-  //       presence: function (p) {
-  //         // console.log('============ PRESENCE LISTENER ============', p);
-  //         // handle presence
-  //         // var action = p.action; // Can be join, leave, state-change, or timeout
-  //         // var channelName = p.channel; // The channel to which the message was published
-  //         // var occupancy = p.occupancy; // Number of users subscribed to the channel
-  //         // var state = p.state; // User State
-  //         // var channelGroup = p.subscription; //  The channel group or wildcard subscription match (if exists)
-  //         // var publishTime = p.timestamp; // Publish timetoken
-  //         // var timetoken = p.timetoken;  // Current timetoken
-  //         // var uuid = p.uuid; // UUIDs of users who are subscribed to the channel
-  //       },
-  //     });
-
-  //     // Fetch messaged from pubnub history..............
-
-  //     // if (messages < 1) {
-  //     //   getMessages(channels);
-  //     // }
-
-  //     // console.log(channels);
-
-  //     // pubnub.subscribe({ channels: channels, withPresence: true });
-
-  //     // setChannel(channels);
-  //   }
-  //   return () => {
-  //     pubnub.unsubscribeAll();
-  //   };
-  // }, [pubnub]);
-
-  useEffect(() => {
-    console.log('Group_SUGGEST', groupSuggest);
+  useMemo(() => {
+    // console.log('Group_SUGGEST', groupSuggest);
     if (isFocused) {
-      allMessages.find((item) => item.channel === channelName)
-        ? setGroupSuggest(false)
-        : setGroupSuggest(true);
-      getAllChannelMessages(channelName);
+      // console.log(
+      //   'Chat Ref___',
+      //   allMessages.find((item) => item.channel === channelName).messages,
+      // );
+      if (
+        allMessages.find((item) => item.channel === channelName) &&
+        allMessages.find((item) => item.channel === channelName).messages
+          .length <= 1
+      ) {
+        setLoader(true);
+        getOldMessages(channelName);
+      }
+      // else if{
+      //   setLoader(true);
+      // }
+      else {
+        getOldMessages(channelName);
+        setLoader(false);
+      }
+      // allMessages.find((item) => item.channel === channelName)
+      //   ? setGroupSuggest(false)
+      //   : setGroupSuggest(true);
     }
-  }, [isFocused, groupSuggest]);
+  }, [isFocused]);
 
   useEffect(() => {
-    console.log(inputRef);
+    console.log('rerendering_____');
     // chatRef.scrollToEnd();
     // console.log('ALLLL PROPSSS _____ ', practice);
     extraData.setOptions({
@@ -592,11 +448,256 @@ const ChatScreen = ({
 
   // let dataMsg = [] allMessages.find((item) => item.channel === channelName);
 
+  const renderActions = (props) => {
+    return (
+      <>
+        <Actions
+          {...props}
+          icon={() => (
+            <Icon
+              name={showAccessories ? 'x' : 'plus'}
+              type={'feather'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={24}
+              color={'white'}
+            />
+          )}
+          onPressActionButton={() =>
+            showAccessories
+              ? setShowAccessories(false)
+              : setShowAccessories(true)
+          }
+          containerStyle={{
+            backgroundColor: colors.primary,
+            borderRadius: 100,
+            height: 36,
+            width: 36,
+            marginTop: 10,
+            alignSelf: 'center',
+            justifyContent: 'center',
+          }}
+        />
+        <Actions
+          {...props}
+          icon={() => (
+            <Icon
+              name={showEmoji ? 'keyboard' : 'smile'}
+              type={'font-awesome-5'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={normalize(25)}
+              color={colors.text}
+            />
+          )}
+          onPressActionButton={() => {
+            Keyboard.dismiss();
+            showEmoji ? setShowEmoji(false) : setShowEmoji(true);
+          }}
+          containerStyle={{
+            // backgroundColor: colors.primary,
+            // height: 36,
+            width: 36,
+            marginRight: 10,
+            marginTop: 10,
+            alignSelf: 'center',
+          }}
+        />
+      </>
+    );
+  };
+
+  const renderAccessory = (props) => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start',
+          width: windowWidth,
+          marginVertical: 10,
+          paddingHorizontal: 10,
+        }}>
+        <Actions
+          {...props}
+          options
+          icon={() => (
+            <Icon
+              name={'camera'}
+              type={'font-awesome-5'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={25}
+              color={colors.text_2}
+            />
+          )}
+          onPressActionButton={() =>
+            launchCamera({ mediaType: 'photo' }, (i) => {
+              if (!i.didCancel) {
+                setMediaFile({
+                  name: i.fileName,
+                  uri: i.uri,
+                  mimeType: i.type,
+                  size: i.fileSize,
+                  height: i.height,
+                  width: i.width,
+                });
+                setShowMediaPick(true);
+              }
+              console.log(mediaFile);
+              console.log('setting Image');
+            })
+          }
+        />
+        <Actions
+          {...props}
+          options
+          icon={() => (
+            <Icon
+              name={'video'}
+              type={'font-awesome-5'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={25}
+              color={colors.text_2}
+            />
+          )}
+          onPressActionButton={() =>
+            launchCamera(
+              { mediaType: 'video', quality: 'low', videoQuality: 'low' },
+              (i) => {
+                if (!i.didCancel) {
+                  setMediaFile({
+                    name: i.fileName,
+                    uri: i.uri,
+                    mimeType: i.type,
+                    size: i.fileSize,
+                    height: i.height,
+                    width: i.width,
+                  });
+                  setShowMediaPick(true);
+                }
+                console.log(mediaFile);
+                console.log('setting Image');
+              },
+            )
+          }
+          containerStyle={{ marginLeft: 30 }}
+        />
+        <Actions
+          {...props}
+          options
+          icon={() => (
+            <Icon
+              name={'perm-media'}
+              type={'material-icons'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={25}
+              color={colors.text_2}
+            />
+          )}
+          onPressActionButton={() =>
+            launchImageLibrary({}, (i) => {
+              if (!i.didCancel) {
+                setMediaFile({
+                  name: i.fileName,
+                  uri: i.uri,
+                  mimeType: i.type,
+                  size: i.fileSize,
+                  height: i.height,
+                  width: i.width,
+                });
+                setShowMediaPick(true);
+              }
+              console.log(mediaFile);
+              console.log('setting Image');
+            })
+          }
+          containerStyle={{ marginLeft: 30 }}
+        />
+        <Actions
+          {...props}
+          options
+          icon={() => (
+            <Icon
+              name={'file-medical'}
+              type={'font-awesome-5'}
+              // action={setShowEmoji}
+              // value={showEmoji}
+              size={25}
+              color={colors.text_2}
+            />
+          )}
+          onPressActionButton={() =>
+            showEmoji ? setShowEmoji(false) : setShowEmoji(true)
+          }
+          containerStyle={{ marginLeft: 30 }}
+        />
+      </View>
+    );
+  };
+  // const backspace = (text) => {
+  //   console.log(text.length);
+  //   return runes.substr(text, text.length - 1, 1);
+  // };
+
+  const renderSender = (props) => {
+    return (
+      <Send
+        {...props}
+        alwaysShowSend={true}
+        containerStyle={{
+          borderTopColor: null,
+          borderWidth: 0,
+          alignSelf: 'center',
+          marginRight: 10,
+          justifyContent: 'center',
+        }}>
+        <Button
+          TouchableComponent={() => {
+            // return isLoading ? (
+            //   <ActivityIndicator
+            //     animating={true}
+            //     size={normalize(21)}
+            //     color={colors.text}
+            //   />
+            // ) : (
+            return (
+              <View
+                style={{
+                  backgroundColor: colors.primary,
+                  height: 36,
+                  width: 36,
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  marginLeft: 10,
+                  borderRadius: 10,
+                }}>
+                <Icon
+                  name={'ios-send'}
+                  type={'ionicon'}
+                  color={'white'}
+                  size={normalize(20)}
+                  style={{
+                    alignSelf: 'center',
+                  }}
+                />
+              </View>
+            );
+            // );
+          }}
+        />
+      </Send>
+    );
+  };
+
   return (
     <View
       style={{
         flex: 1,
         justifyContent: 'space-between',
+        // backgroundColor: 'whi',
         // height: '100%',
       }}>
       <Header
@@ -689,238 +790,373 @@ const ChatScreen = ({
           </View>
         </View>
       )}
-      <FlatList
-        ref={(ref) => setChatRef(ref)}
-        // keyExtractor={(item) => item.id.toString()}
-        keyboardDismissMode="on-drag"
-        // maintainVisibleContentPosition={{
-        //   autoscrollToTopThreshold: 10,
-        //   minIndexForVisible: 1,
-        // }}
-        // horizontal={true}
-        // refreshControl={
-        //   <RefreshControl
-        //   // horizontal={true}
-        //   // refreshing={practicesRefreshing}
-        //   // onRefresh={() => getPracticesAllStart()}
-        //   />
-        // }
-        onRefresh={() => getOldMessages(channelName)}
-        refreshing={refreshing}
-        onContentSizeChange={() => chatRef.scrollToEnd({ animated: true })} // scroll it
-        // onLayout={() => chatRef.scrollToEnd({ animated: true })}
-        // inverted={false}
-        // removeClippedSubviews
-        // ListEmptyComponent
-        // contentContainerStyle={{ flexDirection: 'column-reverse' }}
-        // initialNumToRender={5}
-        // updateCellsBatchingPeriod={5}
-        showsVerticalScrollIndicator={true}
-        style={{
-          // flex: 2,
-          // minHeight: windowHeight - 140,
-          backgroundColor: colors.background,
-          marginTop: 55,
-          // marginBottom: 60,
-        }}
-        data={
-          allMessages.find((item) => item.channel === channelName)
-            ? allMessages.find((item) => item.channel === channelName).messages
-            : []
+      {/* <ScrollView
+        contentContainerStyle={
+          {
+            // flexDirection: 'row',
+            // alignSelf: 'flex-end',
+            // flexGrow: 1,
+          }
         }
-        // numColumns={1}
-        renderItem={({ item, index }) => (
-          <ChatBubble
-            id={index}
-            message={item}
-            navigation={navigation}
-            practice={practice}
-            practiceDms={practiceDms}
-            patientChatId={currentUser.chatId}
-          />
-        )}
-        keyExtractor={(item, index) => item.id}
-        // showsHorizontalScrollIndicator={false}
-        // extraData={selected}
-      />
-      <KeyboardAvoidingView>
-        <Animatable.View
-          animation="bounceInLeft"
-          style={{
-            // position: 'absolute',
-            // bottom: 0,
-            width: '100%',
-            // marginTop: -10,
-            // marginBottom: 10,
-            // height: 100,
-            // backgroundColor: colors.background,
-          }}>
-          <Formik
-            innerRef={inputRef}
-            initialValues={{
-              message: '',
+        > */}
+
+      {!loader ? (
+        <View style={{ flex: 1, marginTop: 50 }}>
+          <GiftedChat
+            // ref={(ref) => setChatRef(ref)}
+            // extraData={generatedItems}
+            // shouldUpdateMessage={(props, nextProps) => {
+            //   generatedItems(props);
+            //   // return props.extraData.someData !== nextProps.extraData.someData;
+            // }}
+            messages={messages.length ? [...messages].reverse() : []}
+            onSend={(text, shouldResetInputToolbar) => {
+              // onSend(messages)
+              setMessage(text);
+              sendMessage(text);
+              //  values.message = '';
             }}
-            style={{}}
-            onSubmit={(values) => {
-              // signupPatient(values);
-
-              setMessage(values.message);
-              sendMessage(values.message);
-              values.message = '';
-              // console.log('Lets go');
-            }}>
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              setValues,
-            }) => (
-              <View style={{ margin: 0 }}>
-                <View
+            // scrollToBottom={true}
+            scrollToBottom={true}
+            scrollToBottomComponent={() => (
+              <View>
+                <Icon
+                  name={'chevrons-down'}
+                  type={'feather'}
+                  color={colors.mode === 'light' ? colors.text_1 : colors.text}
+                  size={normalize(21)}
                   style={{
-                    margin: 0,
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: colors.background,
-                    borderTopWidth: 0.8,
-                    borderColor: colors.background_1,
-                    height: 56,
-                  }}>
-                  {/* ------------------- BIO SECTION --------------------------------------- */}
-
-                  <InputBox
-                    handleChange={handleChange}
-                    handleBlur={handleBlur}
-                    valuesType={values.message}
-                    name="message"
-                    placeholder={`Message ${
-                      practice
-                        ? practice.practiceName.length > 18
-                          ? practice.practiceName.substring(0, 11 - 3) + '...'
-                          : practice.practiceName
-                        : group && group.name
-                    }`}
-                    iconLeft={{
-                      name: 'smile',
-                      type: 'font-awesome-5',
-                      action: setShowEmoji,
-                      value: showEmoji,
-                    }}
-                    icon2Name="attachment"
-                    icon2Type="entypo"
-                    icon2Action={() =>
-                      launchImageLibrary({ mediaType: 'photo' }, (i) => {
-                        if (!i.didCancel) {
-                          setMediaFile({
-                            name: i.fileName,
-                            uri: i.uri,
-                            mimeType: i.type,
-                            size: i.fileSize,
-                            height: i.height,
-                            width: i.width,
-                          });
-                          setShowMediaPick(true);
-                        }
-                        console.log(mediaFile);
-                        console.log('setting Image');
-                      })
-                    }
-                    autoCompleteType="name"
-                    textContentType="givenName"
-                    keyboardType="default"
-                    autoCapitalize="sentences"
-                    boxStyle={{
-                      borderRadius: 50,
-                      width: windowWidth - 80,
-                      height: 45,
-                      marginTop: 0,
-                      justifyContent: 'space-between',
-                    }}
-                    styling={{
-                      input: {
-                        fontSize: normalize(15),
-                        color: colors.text,
-                        marginLeft: 6,
-                      },
-                      // icon: {},,
-                    }}
-                  />
-                  <Button
-                    TouchableComponent={() => {
-                      // return isLoading ? (
-                      //   <ActivityIndicator
-                      //     animating={true}
-                      //     size={normalize(21)}
-                      //     color={colors.text}
-                      //   />
-                      // ) : (
-                      return (
-                        <TouchableOpacity
-                          onPress={handleSubmit}
-                          style={{
-                            backgroundColor: colors.primary,
-                            height: 40,
-                            width: 40,
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            // marginTop: 10,
-                            marginLeft: 10,
-                            borderRadius: 10,
-                          }}>
-                          <Icon
-                            name={'ios-send'}
-                            type={'ionicon'}
-                            color={'white'}
-                            size={normalize(21)}
-                            style={{
-                              alignSelf: 'center',
-                            }}
-                          />
-                        </TouchableOpacity>
-                      );
-                      // );
-                    }}
-                  />
-                </View>
-                {showEmoji && (
-                  <View style={{ height: 300 }}>
-                    <EmojiSelector
-                      showTabs={true}
-                      theme={colors.background}
-                      showHistory={true}
-                      showSectionTitles={true}
-                      showSearchBar={false}
-                      // categoriesEnabled={[flags, sports, food]}
-                      columns={10}
-                      // category={Categories.symbols}
-                      onEmojiSelected={(emoji) => {
-                        Keyboard.dismiss();
-                        setValues({ message: (values.message += emoji) });
-                      }}
-                      shouldInclude={
-                        (emoji) => {
-                          // eslint-disable-next-line radix
-                          if (Platform.OS === 'android') {
-                            if (parseInt(emoji.added_in) <= 4.9) {
-                              return emoji;
-                            }
-                          } else {
-                            return emoji;
-                          }
-                        }
-                        // emoji.lib.added_in === '6.0' ||
-                        // emoji.lib.added_in === '6.1'
-                      }
-                    />
-                  </View>
-                )}
+                    color: colors.text,
+                    // alignSelf: 'center',
+                  }}
+                />
               </View>
             )}
-          </Formik>
-        </Animatable.View>
-      </KeyboardAvoidingView>
+            scrollToBottomStyle={{
+              backgroundColor: colors.background_1,
+            }}
+            // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
+            renderMessage={(props) => {
+              return (
+                <>
+                  <ChatBubble
+                    id={props.currentMessage.timetoken}
+                    message={props.currentMessage}
+                    navigation={navigation}
+                    practice={practice}
+                    practiceDms={practiceDms}
+                    patientChatId={currentUser.chatId}
+                  />
+                  {messages &&
+                    messages.length &&
+                    getUniqueListBy(messages, 'day').some(
+                      (item) =>
+                        item.timetoken === props.currentMessage.timetoken,
+                    ) && (
+                      <Day
+                        {...props}
+                        textStyle={{ color: colors.text }}
+                        wrapperStyle={{
+                          backgroundColor: colors.background_1,
+                          paddingVertical: 5,
+                          paddingHorizontal: 12,
+                          borderRadius: 10,
+                        }}
+                        currentMessage={{
+                          createdAt: new Date(
+                            props.currentMessage.timetoken / 1e4,
+                          ),
+                        }}
+                      />
+                    )}
+                </>
+              );
+            }}
+            renderChatEmpty={() => <View />}
+            user={{
+              _id: 1,
+            }}
+            listViewProps={{
+              style: {
+                marginBottom: showAccessories ? 65 : 10,
+              },
+            }}
+            textInputProps={{
+              onFocus: () => setShowEmoji(false),
+            }}
+            text={inputText}
+            onInputTextChanged={(text) => setInputText(text)}
+            // focusTextInput={true}
+            textInputStyle={{
+              backgroundColor: colors.background,
+              color: colors.text,
+              alignSelf: 'center',
+              fontFamily: 'SofiaProRegular',
+            }}
+            // renderInputToolbar={() => <></>}
+            renderInputToolbar={(props) => (
+              <InputToolbar
+                {...props}
+                renderAccessory={() =>
+                  showAccessories ? renderAccessory() : null
+                }
+                renderActions={renderActions}
+                renderSend={renderSender}
+                accessoryStyle={{ height: showAccessories ? null : 0 }}
+                containerStyle={{
+                  // width: windowWidth - 60,
+                  backgroundColor: colors.background,
+                  // marginHorizontal: 20,
+                  borderTopColor: colors.background_1,
+                  borderBottomColor: colors.background_1,
+                  borderWidth: 0.6,
+                  borderTopWidth: 1,
+                  paddingVertical: 0,
+                  // marginTop: 15,
+                  alignItems: 'center',
+                }}
+              />
+            )}
+            keyboardShouldPersistTaps={false}
+            // maxInputLength={20}
+            inverted={true}
+            renderLoadEarlier={(props) => (
+              <LoadEarlier
+                {...props}
+                label="Load earlier messages"
+                wrapperStyle={{ backgroundColor: 'transparent' }}
+                textStyle={{
+                  fontSize: normalize(12),
+                  textAlign: 'center',
+                  fontFamily: 'SofiaProRegular',
+                  backgroundColor: colors.background_1,
+                  paddingVertical: 6,
+                  paddingHorizontal: 13,
+                  borderRadius: 15,
+                  color: colors.text,
+                }}
+                activityIndicatorStyle={{ padding: 10 }}
+                activityIndicatorColor={
+                  // colors.primary
+                  colors.text
+                }
+                activityIndicatorSize={normalize(25)}
+              />
+            )}
+            // renderLoading
+            onLoadEarlier={() => {
+              setRefreshing(refreshing);
+              getOldMessages(channelName);
+            }}
+            isLoadingEarlier={refreshing}
+            loadEarlier={messages.length >= 25 ? true : false}
+            infiniteScroll={true}
+            maxComposerHeight={100}
+            alignTop={true}
+
+            // renderChatFooter={}
+          />
+
+          {/* <FlatList
+          ref={(ref) => setChatRef(ref)}
+          // keyExtractor={(item) => item.id.toString()}
+          keyboardDismissMode="on-drag"
+          // initialScrollIndex={0}
+          // maintainVisibleContentPosition={{
+          //   autoscrollToTopThreshold: 10,
+          //   minIndexForVisible: 1,
+          // }}
+          // horizontal={true}
+          refreshControl={
+            <RefreshControl
+              horizontal={true}
+              refreshing={refreshing}
+              onRefresh={() => getOldMessages(channelName)}
+            />
+          }
+          // getItemLayout
+
+          // onRefresh={() => getOldMessages(channelName)}
+          // refreshing={refreshing}
+          onContentSizeChange={(data, index, extra) => {
+            if (messages.length > 25) {
+              chatRef.scrollToOffset({
+                animated: false,
+                offset: 44894,
+              });
+            } else {
+              chatRef.scrollToEnd({
+                animated: false,
+                index: messages.length - 1,
+              });
+            }
+            console.log(chatRef.getScrollableNode());
+          }} // scroll it
+          onLayout={() =>
+            chatRef.scrollToIndex({
+              animated: false,
+              index: messages.length - 1,
+            })
+          }
+          // initialNumToRender={10}
+          // windowSize={5}
+          // removeClippedSubviews
+          // ListEmptyComponent
+          // initialNumToRender={5}
+          // updateCellsBatchingPeriod={5}
+          // initialScrollIndex={messages.length > 26 ? 25 : null}
+          showsVerticalScrollIndicator={true}
+          style={{
+            // flex: 2,
+            // minHeight: windowHeight - 140,
+            backgroundColor: colors.background,
+            marginTop: 55,
+            // marginBottom: 60,
+          }}
+          data={messages}
+          // numColumns={1}
+          renderItem={({ item, index }) => (
+            <ChatBubble
+              id={item.id}
+              message={item}
+              navigation={navigation}
+              practice={practice}
+              practiceDms={practiceDms}
+              patientChatId={currentUser.chatId}
+            />
+          )}
+          keyExtractor={(item, index) => index}
+          // showsHorizontalScrollIndicator={false}
+          // extraData={selected}
+          // ListFooterComponent={}
+        /> */}
+          {/* //ANCHOR */}
+        </View>
+      ) : (
+        <ActivityIndicator
+          animating={true}
+          size={normalize(30)}
+          color={colors.text}
+          style={{ position: 'absolute', top: '50%', left: '50%' }}
+        />
+      )}
+
+      {/* </ScrollView> */}
+      {/* <KeyboardAvoidingView behavior="height">
+        <InputBox
+          handleChange={handleChange}
+          handleBlur={handleBlur}
+          valuesType={values.message}
+          name="message"
+          placeholder={`Message ${
+            practice
+              ? practice.practiceName.length > 18
+                ? practice.practiceName.substring(0, 11 - 3) + '...'
+                : practice.practiceName
+              : group && group.name
+          }`}
+          iconLeft={{
+            name: 'smile',
+            type: 'font-awesome-5',
+            action: setShowEmoji,
+            value: showEmoji,
+          }}
+          icon2Name="attachment"
+          icon2Type="entypo"
+          icon2Action={() =>
+            launchImageLibrary({ mediaType: 'photo' }, (i) => {
+              if (!i.didCancel) {
+                setMediaFile({
+                  name: i.fileName,
+                  uri: i.uri,
+                  mimeType: i.type,
+                  size: i.fileSize,
+                  height: i.height,
+                  width: i.width,
+                });
+                setShowMediaPick(true);
+              }
+              console.log(mediaFile);
+              console.log('setting Image');
+            })
+          }
+          autoCompleteType="name"
+          textContentType="givenName"
+          keyboardType="default"
+          autoCapitalize="sentences"
+          boxStyle={{
+            borderRadius: 50,
+            width: windowWidth - 80,
+            height: 45,
+            marginTop: 0,
+            justifyContent: 'space-between',
+          }}
+          styling={{
+            input: {
+              fontSize: normalize(15),
+              color: colors.text,
+              marginLeft: 6,
+            },
+            // icon: {},,
+          }}
+        />
+
+
+      </KeyboardAvoidingView> */}
+      {/* {showEmoji && (
+        <View style={{ height: 300 }}>
+          <EmojiSelector
+            showTabs={true}
+            theme={colors.background}
+            showHistory={true}
+            showSectionTitles={true}
+            showSearchBar={false}
+            categoriesEnabled={[flags, sports, food]}
+            columns={10}
+            category={Categories.symbols}
+            onEmojiSelected={(emoji) => {
+              Keyboard.dismiss();
+              setInputText((input) => input + emoji);
+            }}
+            shouldInclude={
+              (emoji) => {
+                // eslint-disable-next-line radix
+                if (Platform.OS === 'android') {
+                  if (parseInt(emoji.added_in) <= 4.9) {
+                    return emoji;
+                  }
+                } else {
+                  return emoji;
+                }
+              }
+              // emoji.lib.added_in === '6.0' ||
+              // emoji.lib.added_in === '6.1'
+            }
+          />
+        </View>
+      )} */}
+      {showEmoji && (
+        <View style={{ height: 280 }}>
+          <EmojiBoard
+            // blackList={[]}
+            showBoard={true}
+            containerStyle={{
+              backgroundColor: colors.background,
+            }}
+            // tabBarStyle={{color: 'green'}}
+            onClick={(emoji) => {
+              Keyboard.dismiss();
+              console.log(emoji);
+              setInputText((input) => input + emoji.code);
+            }}
+            onRemove={() => {
+              // setInputText(backspace(inputText));
+              setInputText(deleteEmoji(inputText));
+            }}
+          />
+        </View>
+      )}
+
       <MediaPicker
         navigation={navigation}
         practice={practice}
@@ -934,6 +1170,21 @@ const ChatScreen = ({
     </View>
   );
 };
+
+// function backspace(text) {
+//   // var newText = text.split('').reverse().join('');
+//   // text.substr;
+//   console.log(runes.prototype);
+//   console.log(text.length);
+//   // text.gsub(/[^[:alnum:][:blank:][:punct:]]/, '').squeeze(' ').strip;
+//   return runes(text).slice(0, -1);
+// }
+
+function deleteEmoji(emojiStr) {
+  let emojisArray = emojiStr.match(/([\uD800-\uDBFF][\uDC00-\uDFFF])/g);
+  emojisArray = emojisArray.splice(0, emojisArray.length - 1);
+  return emojisArray.join('');
+}
 
 const styles = StyleSheet.create({
   formFieldRow: {

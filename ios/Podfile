@@ -10,6 +10,8 @@ target 'practx_Mobile' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
+
   target 'practx_MobileTests' do
     inherit! :complete
     # Pods for testing

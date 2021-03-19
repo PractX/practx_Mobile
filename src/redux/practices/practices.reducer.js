@@ -73,7 +73,6 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isFetching: true,
-        practiceSubgroups: [],
       };
     case PracticesActionTypes.GET_PRACTICE_SUBGROUPS_SUCCESS:
       return {

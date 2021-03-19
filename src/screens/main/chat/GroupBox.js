@@ -46,7 +46,7 @@ const GroupBox = ({
       // const localeDateTime = gmtDate.toLocaleString();
       setNewMessageTime(timeAgo(gmtDate));
     }
-  }, [allMessages]);
+  }, [allMessages, time]);
   // const handleMessage = (event) => {
   //   const message = event.message;
   //   if (typeof message === 'string' || message.hasOwnProperty('text')) {
@@ -132,9 +132,8 @@ const GroupBox = ({
               fontSize: normalize(12),
               fontFamily: 'SofiaProRegular',
             }}>
-            {allMessages
-              ? allMessages.messages.length &&
-                allMessages.messages[allMessages.messages.length - 1].message &&
+            {allMessages && allMessages.messages.length
+              ? allMessages.messages[allMessages.messages.length - 1].message &&
                 allMessages.messages[allMessages.messages.length - 1].message
                   .text
                 ? allMessages.messages[allMessages.messages.length - 1].message
@@ -144,6 +143,9 @@ const GroupBox = ({
                     ].message.text.substring(0, 60 - 3) + '...'
                   : allMessages.messages[allMessages.messages.length - 1]
                       .message.text
+                : allMessages.messages[allMessages.messages.length - 1].message
+                    .file
+                ? ' Photo'
                 : allMessages.messages[allMessages.messages.length - 1]
               : 'ℹ️ Begin conversation'}
           </Text>

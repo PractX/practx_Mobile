@@ -104,7 +104,7 @@ const MainHeader = ({
         style={{
           flexGrow: 100,
         }}
-        onPress={() => console.log('searching')}>
+        onPress={() => navigation.navigate('PractxSearch')}>
         <Text
           style={{
             fontSize: normalize(15),

@@ -146,7 +146,7 @@ const DrawerContent = ({
   //   console.log(currentUser);
   // }, []);
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
       <View
         style={[
           styles.userInfoSection,
@@ -307,11 +307,16 @@ const DrawerContent = ({
                   navigation.dangerouslyGetState().index === 1 ? true : false
                 }
                 activeBackgroundColor={null}
-                label="Chats"
+                label="Practx"
                 onPress={() => {
                   requestAnimationFrame(() => {
+                    setFilter({
+                      opt1: true,
+                      opt2: true,
+                      opt3: true,
+                    });
                     navigation.navigate(
-                      'Chats',
+                      'Practx',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -332,16 +337,11 @@ const DrawerContent = ({
                   navigation.dangerouslyGetState().index === 2 ? true : false
                 }
                 activeBackgroundColor={null}
-                label="Join Practice"
+                label="Chats"
                 onPress={() => {
                   requestAnimationFrame(() => {
-                    setFilter({
-                      opt1: true,
-                      opt2: true,
-                      opt3: true,
-                    });
                     navigation.navigate(
-                      'Practices',
+                      'Chats',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -349,6 +349,7 @@ const DrawerContent = ({
                   });
                 }}
               />
+
               <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
