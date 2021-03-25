@@ -57,6 +57,7 @@ const PracticeSmallBox = ({
   practiceData,
   setPracticeData,
   joinedPractices,
+  sortType,
 }) => {
   const { colors } = useTheme();
   const pending = practice.requests;
@@ -73,7 +74,6 @@ const PracticeSmallBox = ({
   useEffect(() => {
     !isLoading && setLoading(false);
   }, [isLoading, practice]);
-
   return (
     <TouchableOpacity
       onPress={async () => {

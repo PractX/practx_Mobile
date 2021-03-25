@@ -230,7 +230,7 @@ const DrawerContent = ({
         {/* <View> */}
 
         <Drawer.Section style={styles.drawerSection}>
-          <Formik
+          {/* <Formik
             initialValues={{
               search: '',
             }}
@@ -266,18 +266,18 @@ const DrawerContent = ({
                 />
               </View>
             )}
-          </Formik>
+          </Formik> */}
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={{
-              marginBottom: 60,
+              marginBottom: 0,
             }}>
             {/* -------------------------------- Services -------------------------------- */}
             <View
               style={{
                 borderBottomWidth: 0.8,
                 borderBottomColor: colors.background_1,
-                marginTop: 10,
+                marginTop: 20,
                 paddingBottom: 10,
               }}>
               <View
@@ -676,12 +676,13 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   bottomDrawerSection: {
-    marginTop: 5,
+    marginTop: 0,
   },
   preference: {
     flexDirection: 'row',
     // alignItems: 'center',
-    paddingVertical: 15,
+    paddingTop: 15,
+    paddingBottom: 40,
     paddingHorizontal: 20,
   },
 });
