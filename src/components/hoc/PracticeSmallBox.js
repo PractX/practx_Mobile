@@ -69,8 +69,6 @@ const PracticeSmallBox = ({
     }
     joinPractices(practiceId);
   };
-  console.log('Hello member', member);
-  console.log('Hello Pending', pending);
 
   useEffect(() => {
     !isLoading && setLoading(false);
@@ -98,7 +96,7 @@ const PracticeSmallBox = ({
         // borderWidth: 0.9,
         // borderColor: colors.background_1,
         // borderRadius: 30,
-        width: 95,
+        width: 80,
         marginTop: 15,
         marginBottom: 15,
         marginRight: 20,
@@ -113,8 +111,8 @@ const PracticeSmallBox = ({
         <FastImage
           source={{ uri: practice.logo }}
           style={{
-            width: 95,
-            height: 95,
+            width: 85,
+            height: 85,
             borderRadius: 15,
             backgroundColor: colors.background_1,
             justifyContent: 'flex-end',
@@ -148,7 +146,7 @@ const PracticeSmallBox = ({
       <View style={{ justifyContent: 'center' }}>
         <Text
           style={{
-            fontSize: normalize(12),
+            fontSize: normalize(10.5),
             fontFamily: 'SofiaProSemiBold',
             color: colors.text,
           }}>

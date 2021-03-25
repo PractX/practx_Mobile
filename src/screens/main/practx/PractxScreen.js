@@ -207,7 +207,7 @@ const Practx = ({
                     fontFamily: 'SofiaProSemiBold',
                     color: colors.text,
                   }}>
-                  Suggested for you
+                  Joined practices
                 </Text>
                 <Icon
                   name="arrow-forward"
@@ -220,45 +220,97 @@ const Practx = ({
                   }}
                 />
               </View>
-              <FlatList
-                ref={ref}
-                horizontal={true}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={() => getPracticesAllStart()}
-                  />
-                }
-                // removeClippedSubviews
-                // ListEmptyComponent
-                initialNumToRender={5}
-                updateCellsBatchingPeriod={5}
-                pagingEnabled={true}
-                showsHorizontalScrollIndicator={false}
-                style={{
-                  paddingLeft: style1 === 'open' ? 0 : 20,
-                  paddingRight: 90,
-                  marginBottom: 70,
-                }}
-                contentContainerStyle={{
-                  paddingRight: 20,
-                }}
-                data={practices}
-                numColumns={1}
-                renderItem={({ item, index }) => (
-                  <PracticeSmallBox
-                    userId={currentUser ? currentUser.id : 0}
-                    id={index}
-                    practice={item}
-                    navigation={navigation}
-                    practiceData={practiceData}
-                    setPracticeData={setPracticeData}
-                  />
-                )}
-                keyExtractor={(item, index) => item.display_url}
-                // showsHorizontalScrollIndicator={false}
-                // extraData={selected}
-              />
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View
+                  style={{
+                    width: 95,
+                    height: 95,
+                    // marginTop: 15,
+                    marginBottom: 40,
+                    marginLeft: 10,
+                    marginRight: 5,
+                    flexDirection: 'column',
+                    // alignSelf: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      requestAnimationFrame(() => {
+                        // setFilter({
+                        //   opt1: true,
+                        //   opt2: false,
+                        //   opt3: false,
+                        // });
+                        navigation.navigate('PractxScreen');
+                      });
+                    }}
+                    style={{
+                      backgroundColor: colors.background_1,
+                      height: 85,
+                      width: 85,
+                      borderRadius: 15,
+                      justifyContent: 'center',
+                      marginVertical: 5,
+                    }}>
+                    <Icon
+                      name="plus"
+                      type="feather"
+                      color={colors.text}
+                      size={normalize(28)}
+                      style={
+                        {
+                          // alignSelf: 'center',
+                        }
+                      }
+                    />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: colors.text,
+                      fontSize: normalize(13),
+                      fontFamily: 'SofiaProSemiBold',
+                    }}>
+                    Join
+                  </Text>
+                </View>
+                <FlatList
+                  ref={ref}
+                  horizontal={true}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={() => getPracticesAllStart()}
+                    />
+                  }
+                  // removeClippedSubviews
+                  // ListEmptyComponent
+                  initialNumToRender={5}
+                  updateCellsBatchingPeriod={5}
+                  // pagingEnabled={true}
+                  showsHorizontalScrollIndicator={false}
+                  style={{
+                    paddingLeft: style1 === 'open' ? 0 : 0,
+                    paddingRight: 90,
+                    marginBottom: 10,
+                  }}
+                  contentContainerStyle={{
+                    paddingRight: 20,
+                  }}
+                  data={practices}
+                  numColumns={1}
+                  renderItem={({ item, index }) => (
+                    <PracticeSmallBox
+                      userId={currentUser ? currentUser.id : 0}
+                      id={index}
+                      practice={item}
+                      navigation={navigation}
+                      practiceData={practiceData}
+                      setPracticeData={setPracticeData}
+                    />
+                  )}
+                  keyExtractor={(item, index) => item.display_url}
+                />
+              </View>
             </View>
           </ScrollView>
         ) : (
@@ -266,6 +318,7 @@ const Practx = ({
             style={{
               alignItems: 'center',
               justifyContent: 'center',
+              height: '100%',
             }}>
             {isFetching ? (
               <ActivityIndicator

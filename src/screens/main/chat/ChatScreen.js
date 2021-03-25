@@ -206,6 +206,9 @@ const ChatScreen = ({
             },
           },
           file: fileData,
+          callback: function (m) {
+            console.log(m);
+          },
         },
         (status, response) => {
           // setMessage('');
