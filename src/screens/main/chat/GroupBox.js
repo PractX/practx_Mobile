@@ -19,6 +19,7 @@ const GroupBox = ({
   styling,
   allMessages,
   practices,
+  subgroups,
 }) => {
   const { colors } = useTheme();
   const pubnub = usePubNub();
@@ -107,6 +108,9 @@ const GroupBox = ({
               group: item ? item : {},
               channelName: item && item.channelName && item.channelName,
               practiceDms,
+              subgroups: subgroups.find(
+                (items) => items.practiceId === practices.Practice.id,
+              ),
               type: 'group',
             });
           }}

@@ -245,7 +245,7 @@ const Practx = ({
                         //   opt2: false,
                         //   opt3: false,
                         // });
-                        navigation.navigate('PractxScreen');
+                        navigation.navigate('PractxSearch');
                       });
                     }}
                     style={{
@@ -308,7 +308,7 @@ const Practx = ({
                       ? item.patients.filter((val) => val.id === currentUser.id)
                       : [];
                     console.log(pending);
-                    if (member.length || pending.length) {
+                    if (member.length) {
                       return (
                         <PracticeSmallBox
                           userId={currentUser ? currentUser.id : 0}

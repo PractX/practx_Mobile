@@ -42,33 +42,33 @@ const appointmentData = [
   {
     type: 'voice',
   },
-  // {
-  //   type: 'video',
-  // },
-  // {
-  //   type: 'voice',
-  // },
-  // {
-  //   type: 'voice',
-  // },
-  // {
-  //   type: 'voice',
-  // },
-  // {
-  //   type: 'video',
-  // },
-  // {
-  //   type: 'video',
-  // },
-  // {
-  //   type: 'voice',
-  // },
-  // {
-  //   type: 'voice',
-  // },
-  // {
-  //   type: 'video',
-  // },
+  {
+    type: 'video',
+  },
+  {
+    type: 'voice',
+  },
+  {
+    type: 'voice',
+  },
+  {
+    type: 'voice',
+  },
+  {
+    type: 'video',
+  },
+  {
+    type: 'video',
+  },
+  {
+    type: 'voice',
+  },
+  {
+    type: 'voice',
+  },
+  {
+    type: 'video',
+  },
 ];
 
 const Appointments = ({ navigation }) => {

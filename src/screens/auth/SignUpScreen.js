@@ -127,9 +127,9 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
               <View style={{ alignItems: 'center', marginTop: 10 }}>
                 <Text
                   style={{
-                    fontSize: normalize(28),
+                    fontSize: normalize(18),
                     fontFamily: 'SofiaProSemiBold',
-                    color: 'white',
+                    color: colors.text_1,
                   }}>
                   Get Started
                 </Text>
@@ -169,11 +169,18 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                       name="firstname"
                       iconName="user"
                       iconType="feather"
+                      iconSize={14}
                       placeholder="First Name"
                       autoCompleteType="name"
                       textContentType="givenName"
                       keyboardType="default"
                       autoCapitalize="sentences"
+                      styling={{
+                        input: {
+                          fontSize: normalize(14),
+                          color: colors.text_1,
+                        },
+                      }}
                     />
                     <InputBox
                       handleChange={handleChange}
@@ -182,11 +189,18 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                       name="lastname"
                       iconName="user"
                       iconType="feather"
+                      iconSize={14}
                       placeholder="Last Name"
                       autoCompleteType="name"
                       textContentType="familyName"
                       keyboardType="default"
                       autoCapitalize="sentences"
+                      styling={{
+                        input: {
+                          fontSize: normalize(14),
+                          color: colors.text_1,
+                        },
+                      }}
                     />
                     <InputBox
                       handleChange={handleChange}
@@ -195,11 +209,18 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                       name="email"
                       iconName="mail"
                       iconType="feather"
+                      iconSize={14}
                       placeholder="Email"
                       autoCompleteType="email"
                       textContentType="emailAddress"
                       keyboardType="email-address"
                       autoCapitalize="none"
+                      styling={{
+                        input: {
+                          fontSize: normalize(14),
+                          color: colors.text_1,
+                        },
+                      }}
                     />
 
                     {/* --------------------------------------- DATE SECTION --------------------------------------- */}
@@ -222,12 +243,19 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                         name="DD"
                         iconName="calendar"
                         iconType="feather"
+                        iconSize={14}
                         placeholder="DD"
                         autoCompleteType="cc-exp"
                         textContentType="none"
                         keyboardType="numeric"
                         autoCapitalize="none"
                         maxLength={2}
+                        styling={{
+                          input: {
+                            fontSize: normalize(14),
+                            color: colors.text_1,
+                          },
+                        }}
                       />
 
                       <SmallInputBox
@@ -237,12 +265,19 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                         name="MM"
                         iconName="calendar"
                         iconType="feather"
+                        iconSize={14}
                         placeholder="MM"
                         autoCompleteType="cc-exp-month"
                         textContentType="none"
                         keyboardType="numeric"
                         autoCapitalize="none"
                         maxLength={2}
+                        styling={{
+                          input: {
+                            fontSize: normalize(14),
+                            color: colors.text_1,
+                          },
+                        }}
                       />
 
                       <SmallInputBox
@@ -252,12 +287,19 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                         name="YY"
                         iconName="calendar"
                         iconType="feather"
+                        iconSize={14}
                         placeholder="YY"
                         autoCompleteType="cc-exp-year"
                         textContentType="none"
                         keyboardType="numeric"
                         autoCapitalize="none"
                         maxLength={4}
+                        styling={{
+                          input: {
+                            fontSize: normalize(14),
+                            color: colors.text_1,
+                          },
+                        }}
                       />
                     </View>
 
@@ -268,11 +310,18 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                       name="mobileNo"
                       iconName="phone"
                       iconType="feather"
+                      iconSize={14}
                       placeholder="Phone"
                       autoCompleteType="tel"
                       textContentType="telephoneNumber"
                       keyboardType="number-pad"
                       autoCapitalize="none"
+                      styling={{
+                        input: {
+                          fontSize: normalize(14),
+                          color: colors.text_1,
+                        },
+                      }}
                     />
 
                     {/* ------------------- PASSWORD SECTION --------------------------------------- */}
@@ -290,6 +339,12 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                       keyboardType="default"
                       autoCapitalize="none"
                       secureTextEntry={passwordVisibility}
+                      styling={{
+                        input: {
+                          fontSize: normalize(14),
+                          color: colors.text_1,
+                        },
+                      }}
                     />
 
                     <Animatable.View
@@ -314,7 +369,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                           I agree to the
                           <Text
                             style={{
-                              fontSize: normalize(14),
+                              fontSize: normalize(12),
                               color: colors.primary,
                               textDecorationStyle: 'solid',
                               textDecorationLine: 'underline',
@@ -325,7 +380,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                           and{' '}
                           <Text
                             style={{
-                              fontSize: normalize(14),
+                              fontSize: normalize(12),
                               color: colors.primary,
                               textDecorationStyle: 'solid',
                               textDecorationLine: 'underline',
@@ -351,7 +406,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                         ]}
                         titleStyle={{
                           fontFamily: 'SofiaProSemiBold',
-                          fontSize: normalize(16),
+                          fontSize: normalize(14),
                         }}
                         loading={isLoading}
                       />
@@ -365,7 +420,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                           <Text
                             style={{
                               color: colors.primary,
-                              fontSize: normalize(14),
+                              fontSize: normalize(12),
                               fontFamily: 'SofiaProRegular',
                             }}>
                             {' '}
@@ -394,7 +449,7 @@ const styles = StyleSheet.create({
 
   topText: {
     marginTop: 5,
-    fontSize: normalize(16),
+    fontSize: normalize(14),
     fontFamily: 'SofiaProRegular',
   },
 
@@ -427,20 +482,20 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 150,
-    height: 150,
+    width: normalize(130),
+    height: normalize(130),
     alignSelf: 'center',
   },
 
   whiteFont: {
-    fontSize: normalize(14),
+    fontSize: normalize(12),
     fontFamily: 'SofiaProRegular',
   },
   spacer: {
     marginRight: 15,
     borderRadius: 6,
     marginLeft: -10,
-    width: 22,
+    width: 20,
     alignItems: 'center',
   },
 

@@ -107,7 +107,9 @@ const DmsBox = ({
               practice: item && item.Practice && item.Practice,
               channelName: item && item.channelName && item.channelName,
               practiceDms,
-              subgroups: subgroups,
+              subgroups: subgroups.find(
+                (items) => items.practiceId === item.Practice.id,
+              ),
               group: null,
               navigation: navigation,
               type: 'dm',

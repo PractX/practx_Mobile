@@ -753,6 +753,7 @@ const ChatMessages = ({
                           }
                           practiceDms={practiceDms}
                           navigation={navigation}
+                          subgroups={subgroups}
                           // channel
                           styling={{
                             width: style1 === 'open' ? appwidth - 50 : appwidth,

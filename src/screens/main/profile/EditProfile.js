@@ -118,7 +118,7 @@ const EditProfile = ({
           title="Edit Profile"
           backArrow={true}
           iconRight1={{
-            name: 'save-outline',
+            name: 'ios-save-outline',
             type: 'ionicon',
             onPress: saveChanges,
             buttonType: 'save',
@@ -222,7 +222,7 @@ const EditProfile = ({
                       <Text
                         style={{
                           color: colors.text,
-                          fontSize: normalize(17),
+                          fontSize: normalize(14),
                           fontFamily: 'SofiaProSemiBold',
                           textTransform: 'capitalize',
                         }}>
@@ -231,7 +231,7 @@ const EditProfile = ({
                       <Text
                         style={{
                           color: colors.primary_light,
-                          fontSize: normalize(13),
+                          fontSize: normalize(12),
                           fontFamily: 'SofiaProRegular',
                         }}>
                         {currentUser.email}
@@ -246,12 +246,19 @@ const EditProfile = ({
                     name="firstname"
                     iconName="user"
                     iconType="feather"
+                    iconSize={16}
                     placeholder="First Name"
                     autoCompleteType="name"
                     textContentType="givenName"
                     keyboardType="default"
                     autoCapitalize="sentences"
                     boxStyle={{ borderRadius: 50 }}
+                    styling={{
+                      input: {
+                        fontSize: normalize(14),
+                        color: colors.text_1,
+                      },
+                    }}
                   />
                   <InputBox
                     handleChange={handleChange}
@@ -260,12 +267,19 @@ const EditProfile = ({
                     name="lastname"
                     iconName="user"
                     iconType="feather"
+                    iconSize={16}
                     placeholder="Last Name"
                     autoCompleteType="name"
                     textContentType="familyName"
                     keyboardType="default"
                     autoCapitalize="sentences"
                     boxStyle={{ borderRadius: 50 }}
+                    styling={{
+                      input: {
+                        fontSize: normalize(14),
+                        color: colors.text_1,
+                      },
+                    }}
                   />
 
                   {/* --------------------------------------- DATE SECTION --------------------------------------- */}
@@ -288,6 +302,7 @@ const EditProfile = ({
                       name="DD"
                       iconName="calendar"
                       iconType="feather"
+                      iconSize={16}
                       placeholder="DD"
                       autoCompleteType="cc-exp"
                       textContentType="none"
@@ -295,6 +310,12 @@ const EditProfile = ({
                       autoCapitalize="none"
                       maxLength={2}
                       boxStyle={{ borderRadius: 50 }}
+                      styling={{
+                        input: {
+                          fontSize: normalize(14),
+                          color: colors.text_1,
+                        },
+                      }}
                     />
 
                     <SmallInputBox
@@ -304,6 +325,7 @@ const EditProfile = ({
                       name="MM"
                       iconName="calendar"
                       iconType="feather"
+                      iconSize={16}
                       placeholder="MM"
                       autoCompleteType="cc-exp-month"
                       textContentType="none"
@@ -311,6 +333,12 @@ const EditProfile = ({
                       autoCapitalize="none"
                       maxLength={2}
                       boxStyle={{ borderRadius: 50 }}
+                      styling={{
+                        input: {
+                          fontSize: normalize(14),
+                          color: colors.text_1,
+                        },
+                      }}
                     />
 
                     <SmallInputBox
@@ -320,6 +348,7 @@ const EditProfile = ({
                       name="YY"
                       iconName="calendar"
                       iconType="feather"
+                      iconSize={16}
                       placeholder="YY"
                       autoCompleteType="cc-exp-year"
                       textContentType="none"
@@ -327,6 +356,12 @@ const EditProfile = ({
                       autoCapitalize="none"
                       maxLength={4}
                       boxStyle={{ borderRadius: 50 }}
+                      styling={{
+                        input: {
+                          fontSize: normalize(14),
+                          color: colors.text_1,
+                        },
+                      }}
                     />
                   </View>
 
@@ -337,12 +372,19 @@ const EditProfile = ({
                     name="mobileNo"
                     iconName="phone"
                     iconType="feather"
+                    iconSize={16}
                     placeholder="Phone"
                     autoCompleteType="tel"
                     textContentType="telephoneNumber"
                     keyboardType="number-pad"
                     autoCapitalize="none"
                     boxStyle={{ borderRadius: 50 }}
+                    styling={{
+                      input: {
+                        fontSize: normalize(14),
+                        color: colors.text_1,
+                      },
+                    }}
                   />
 
                   {/* ------------------- BIO SECTION --------------------------------------- */}
@@ -360,6 +402,12 @@ const EditProfile = ({
                     keyboardType="default"
                     autoCapitalize="sentences"
                     boxStyle={{ borderRadius: 50 }}
+                    styling={{
+                      input: {
+                        fontSize: normalize(14),
+                        color: colors.text_1,
+                      },
+                    }}
                   />
 
                   <InputBox
@@ -375,6 +423,12 @@ const EditProfile = ({
                     keyboardType="default"
                     autoCapitalize="sentences"
                     boxStyle={{ borderRadius: 50 }}
+                    styling={{
+                      input: {
+                        fontSize: normalize(14),
+                        color: colors.text_1,
+                      },
+                    }}
                   />
                 </View>
               )}

@@ -377,7 +377,7 @@ const DrawerContent = ({
                   });
                 }}
               />
-              <DrawerItem
+              {/* <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
                   fontSize: normalize(13),
@@ -401,7 +401,7 @@ const DrawerContent = ({
                     );
                   });
                 }}
-              />
+              /> */}
               {/* <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',

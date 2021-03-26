@@ -38,8 +38,8 @@ const ChatBubble = ({
     return checkAmPm(time.slice(0, -3));
     // return localeDateTime;
   };
-  console.log(groupPractice);
-  console.log(message);
+  // console.log(groupPractice);
+  // console.log(message);
   // console.log(addTime(message).split(', ')[0]);
   return (
     <View key={index} style={{ width: appwidth, alignSelf: 'center' }}>
@@ -133,7 +133,7 @@ const ChatBubble = ({
           )}
           <Text
             style={{
-              fontSize: normalize(11),
+              fontSize: normalize(10),
               fontFamily: 'SofiaProLight',
               color: colors.text,
               textAlign: 'right',
@@ -281,7 +281,7 @@ const ChatBubble = ({
             )}
             <Text
               style={{
-                fontSize: normalize(11),
+                fontSize: normalize(10),
                 fontFamily: 'SofiaProLight',
                 color: colors.text,
               }}>
