@@ -15,6 +15,7 @@ const SmallInputBox = ({
   name,
   iconName,
   iconType,
+  iconSize,
   placeholder,
   autoCompleteType,
   textContentType,
@@ -22,6 +23,7 @@ const SmallInputBox = ({
   autoCapitalize,
   maxLength,
   boxStyle,
+  styling,
 }) => {
   const { colors } = useTheme();
   return (
@@ -35,7 +37,7 @@ const SmallInputBox = ({
         name={iconName}
         type={iconType}
         color={colors.text_1}
-        size={normalize(18)}
+        size={normalize(iconSize ? iconSize : 18)}
         style={[
           styles.formIcons,
           { color: colors.text_1, alignSelf: 'center' },
@@ -49,7 +51,11 @@ const SmallInputBox = ({
         keyboardType={keyboardType}
         placeholder={placeholder}
         placeholderTextColor={colors.text_2}
-        style={[styles.formTextInput, { color: colors.text_1 }]}
+        style={[
+          styles.formTextInput,
+          styling && styling.input,
+          { color: colors.text_1 },
+        ]}
         onChangeText={handleChange(name)}
         onBlur={handleBlur(name)}
         value={valuesType}

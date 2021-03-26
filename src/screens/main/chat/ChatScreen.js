@@ -88,7 +88,15 @@ const ChatScreen = ({
   const { params } = useRoute();
   const isFocused = useIsFocused();
   const [loader, setLoader] = useState(true);
-  const { practice, practiceDms, channelName, subgroups, group, type } = params;
+  const {
+    practice,
+    practiceDms,
+    channelName,
+    subgroups,
+    group,
+    type,
+    groupPractice,
+  } = params;
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
@@ -115,7 +123,7 @@ const ChatScreen = ({
     // return checkAmPm(time.slice(0, -3));
     return localeDateTime.split(', ')[0];
   };
-  // console.log('GROUP____', group);
+  console.log('GROUP____', subgroups);
   // const getAllMessages = (cha, num) => {
   //   // const myChannels = [cha];
   //   console.log(cha);
@@ -206,6 +214,9 @@ const ChatScreen = ({
             },
           },
           file: fileData,
+          callback: function (m) {
+            console.log(m);
+          },
         },
         (status, response) => {
           // setMessage('');
@@ -404,7 +415,7 @@ const ChatScreen = ({
 
   useMemo(() => {
     // console.log('Group_SUGGEST', groupSuggest);
-    if (isFocused) {
+    if (isFocused || type || group) {
       // console.log(
       //   'Chat Ref___',
       //   allMessages.find((item) => item.channel === channelName).messages,
@@ -428,7 +439,7 @@ const ChatScreen = ({
       //   ? setGroupSuggest(false)
       //   : setGroupSuggest(true);
     }
-  }, [isFocused]);
+  }, [isFocused, type, group]);
 
   useEffect(() => {
     console.log('rerendering_____');
@@ -450,7 +461,7 @@ const ChatScreen = ({
 
   const renderActions = (props) => {
     return (
-      <>
+      <View style={{ flexDirection: 'row' }}>
         <Actions
           {...props}
           icon={() => (
@@ -459,7 +470,7 @@ const ChatScreen = ({
               type={'feather'}
               // action={setShowEmoji}
               // value={showEmoji}
-              size={24}
+              size={22}
               color={'white'}
             />
           )}
@@ -471,9 +482,9 @@ const ChatScreen = ({
           containerStyle={{
             backgroundColor: colors.primary,
             borderRadius: 100,
-            height: 36,
-            width: 36,
-            marginTop: 10,
+            height: 28,
+            width: 28,
+            // marginTop: 10,
             alignSelf: 'center',
             justifyContent: 'center',
           }}
@@ -486,7 +497,7 @@ const ChatScreen = ({
               type={'font-awesome-5'}
               // action={setShowEmoji}
               // value={showEmoji}
-              size={normalize(25)}
+              size={normalize(22)}
               color={colors.text}
             />
           )}
@@ -499,11 +510,11 @@ const ChatScreen = ({
             // height: 36,
             width: 36,
             marginRight: 10,
-            marginTop: 10,
+            // marginTop: 10,
             alignSelf: 'center',
           }}
         />
-      </>
+      </View>
     );
   };
 
@@ -527,7 +538,7 @@ const ChatScreen = ({
               type={'font-awesome-5'}
               // action={setShowEmoji}
               // value={showEmoji}
-              size={25}
+              size={22}
               color={colors.text_2}
             />
           )}
@@ -558,7 +569,7 @@ const ChatScreen = ({
               type={'font-awesome-5'}
               // action={setShowEmoji}
               // value={showEmoji}
-              size={25}
+              size={22}
               color={colors.text_2}
             />
           )}
@@ -593,7 +604,7 @@ const ChatScreen = ({
               type={'material-icons'}
               // action={setShowEmoji}
               // value={showEmoji}
-              size={25}
+              size={22}
               color={colors.text_2}
             />
           )}
@@ -625,7 +636,7 @@ const ChatScreen = ({
               type={'font-awesome-5'}
               // action={setShowEmoji}
               // value={showEmoji}
-              size={25}
+              size={22}
               color={colors.text_2}
             />
           )}
@@ -667,8 +678,8 @@ const ChatScreen = ({
               <View
                 style={{
                   backgroundColor: colors.primary,
-                  height: 36,
-                  width: 36,
+                  height: 33,
+                  width: 33,
                   alignSelf: 'center',
                   justifyContent: 'center',
                   marginLeft: 10,
@@ -678,7 +689,7 @@ const ChatScreen = ({
                   name={'ios-send'}
                   type={'ionicon'}
                   color={'white'}
-                  size={normalize(20)}
+                  size={normalize(16)}
                   style={{
                     alignSelf: 'center',
                   }}
@@ -703,6 +714,13 @@ const ChatScreen = ({
       <Header
         navigation={navigation}
         // title="Edit Profile"
+        subgroups={{
+          show: groupSuggest,
+          onShow: setGroupSuggest,
+          data: subgroups,
+          practiceDms: practiceDms,
+          groupPractice: practice,
+        }}
         backArrow={true}
         headerWithImage={{ chatUser: currentUser, status: 'Active Now' }}
         chatRight={
@@ -727,78 +745,6 @@ const ChatScreen = ({
         group={group}
         // isLoading={isLoading}
       />
-      {groupSuggest && subgroups && subgroups.length > 0 && (
-        <View
-          style={{
-            width: '100%',
-            alignSelf: 'center',
-            flexDirection: 'row',
-            marginTop: 55,
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-          }}>
-          <Text
-            style={{
-              paddingVertical: 7,
-              paddingHorizontal: 10,
-              color: colors.text_2,
-              fontSize: normalize(14),
-              fontFamily: 'SofiaProRegular',
-            }}>
-            Join a group for more conversation❓
-          </Text>
-          <View
-            style={{
-              width: '100%',
-              alignSelf: 'center',
-              flexDirection: 'row',
-              marginTop: 15,
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-            }}>
-            {subgroups.map((item) => (
-              <TouchableOpacity
-                onPress={() => {
-                  // console.log(item);
-                  navigation.navigate('ChatScreen', {
-                    practice: null,
-                    channelName: item && item.channelName && item.channelName,
-                    practiceDms,
-                    subgroups: [],
-                    group: item,
-                    type: 'group',
-                  });
-                }}
-                style={{
-                  marginVertical: 6,
-                  marginHorizontal: 10,
-                  backgroundColor: colors.secondary,
-                  borderRadius: 25,
-                }}>
-                <Text
-                  style={{
-                    paddingVertical: 7,
-                    paddingHorizontal: 10,
-                    color: 'white',
-                    fontSize: normalize(12),
-                    fontFamily: 'SofiaProRegular',
-                  }}>
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-      )}
-      {/* <ScrollView
-        contentContainerStyle={
-          {
-            // flexDirection: 'row',
-            // alignSelf: 'flex-end',
-            // flexGrow: 1,
-          }
-        }
-        > */}
 
       {!loader ? (
         <View style={{ flex: 1, marginTop: 50 }}>
@@ -824,7 +770,7 @@ const ChatScreen = ({
                   name={'chevrons-down'}
                   type={'feather'}
                   color={colors.mode === 'light' ? colors.text_1 : colors.text}
-                  size={normalize(21)}
+                  size={normalize(18)}
                   style={{
                     color: colors.text,
                     // alignSelf: 'center',
@@ -836,41 +782,104 @@ const ChatScreen = ({
               backgroundColor: colors.background_1,
             }}
             // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
-            renderMessage={(props) => {
-              return (
-                <>
-                  <ChatBubble
-                    id={props.currentMessage.timetoken}
-                    message={props.currentMessage}
-                    navigation={navigation}
-                    practice={practice}
-                    practiceDms={practiceDms}
-                    patientChatId={currentUser.chatId}
-                  />
-                  {messages &&
-                    messages.length &&
-                    getUniqueListBy(messages, 'day').some(
-                      (item) =>
-                        item.timetoken === props.currentMessage.timetoken,
-                    ) && (
-                      <Day
-                        {...props}
-                        textStyle={{ color: colors.text }}
-                        wrapperStyle={{
-                          backgroundColor: colors.background_1,
-                          paddingVertical: 5,
-                          paddingHorizontal: 12,
-                          borderRadius: 10,
-                        }}
-                        currentMessage={{
-                          createdAt: new Date(
-                            props.currentMessage.timetoken / 1e4,
-                          ),
-                        }}
-                      />
-                    )}
-                </>
-              );
+            renderMessage={(props, index) => {
+              // console.log('MOMENT__', moment().format('DD/MM/YY'));
+              // console.log(
+              //   'TODAY__ ',
+              //   moment().format('DD/MM/YY'),
+              //   moment().add(-1, 'days').format('DD/MM/YY'),
+              //   'Tester___',
+              //   moment(props.currentMessage.timetoken / 1e4).format('DD/MM/YY'),
+              // );
+              if (messages.length) {
+                return (
+                  <>
+                    <ChatBubble
+                      id={props.currentMessage.timetoken}
+                      message={props.currentMessage}
+                      navigation={navigation}
+                      practice={practice}
+                      groupPractice={groupPractice}
+                      practiceDms={practiceDms}
+                      patientChatId={currentUser.chatId}
+                    />
+                    {messages.length &&
+                      getUniqueListBy(messages, 'day').some(
+                        (item) =>
+                          item.timetoken === props.currentMessage.timetoken,
+                      ) && (
+                        <>
+                          {moment().format('DD/MM/YY') ===
+                            moment(props.currentMessage.timetoken / 1e4).format(
+                              'DD/MM/YY',
+                            ) ||
+                          moment().add(-1, 'days').format('DD/MM/YY') ===
+                            moment(props.currentMessage.timetoken / 1e4).format(
+                              'DD/MM/YY',
+                            ) ? (
+                            <View
+                              style={{
+                                backgroundColor: colors.background_1,
+                                paddingVertical: 5,
+                                paddingHorizontal: 12,
+                                borderRadius: 10,
+                                minWidth: 50,
+                                alignSelf: 'center',
+                              }}>
+                              {moment().format('DD/MM/YY') ===
+                              moment(
+                                props.currentMessage.timetoken / 1e4,
+                              ).format('DD/MM/YY') ? (
+                                <Text
+                                  style={{
+                                    color: colors.text,
+                                    fontSize: normalize(10.5),
+                                    fontFamily: 'SofiaProRegular',
+                                    textAlign: 'center',
+                                  }}>
+                                  Today
+                                </Text>
+                              ) : (
+                                <Text
+                                  style={{
+                                    color: colors.text,
+                                    fontSize: normalize(10.5),
+                                    fontFamily: 'SofiaProRegular',
+                                    textAlign: 'center',
+                                  }}>
+                                  Yesterday
+                                </Text>
+                              )}
+                            </View>
+                          ) : (
+                            <Day
+                              {...props}
+                              textStyle={{
+                                color: colors.text,
+                                fontSize: normalize(10.5),
+                                fontFamily: 'SofiaProRegular',
+                                textAlign: 'center',
+                              }}
+                              wrapperStyle={{
+                                backgroundColor: colors.background_1,
+                                paddingVertical: 5,
+                                paddingHorizontal: 12,
+                                borderRadius: 10,
+                              }}
+                              currentMessage={{
+                                createdAt: new Date(
+                                  props.currentMessage.timetoken / 1e4,
+                                ),
+                              }}
+                            />
+                          )}
+                        </>
+                      )}
+                  </>
+                );
+              } else {
+                return <></>;
+              }
             }}
             renderChatEmpty={() => <View />}
             user={{
@@ -892,6 +901,7 @@ const ChatScreen = ({
               color: colors.text,
               alignSelf: 'center',
               fontFamily: 'SofiaProRegular',
+              fontSize: normalize(14),
             }}
             // renderInputToolbar={() => <></>}
             renderInputToolbar={(props) => (
@@ -926,7 +936,7 @@ const ChatScreen = ({
                 label="Load earlier messages"
                 wrapperStyle={{ backgroundColor: 'transparent' }}
                 textStyle={{
-                  fontSize: normalize(12),
+                  fontSize: normalize(11),
                   textAlign: 'center',
                   fontFamily: 'SofiaProRegular',
                   backgroundColor: colors.background_1,
@@ -1040,7 +1050,6 @@ const ChatScreen = ({
           style={{ position: 'absolute', top: '50%', left: '50%' }}
         />
       )}
-
       {/* </ScrollView> */}
       {/* <KeyboardAvoidingView behavior="height">
         <InputBox
@@ -1140,9 +1149,12 @@ const ChatScreen = ({
           <EmojiBoard
             // blackList={[]}
             showBoard={true}
+            emojiSize={22}
             containerStyle={{
               backgroundColor: colors.background,
             }}
+            categoryHighlightColor={colors.text}
+            categoryDefautColor={colors.text_3}
             // tabBarStyle={{color: 'green'}}
             onClick={(emoji) => {
               Keyboard.dismiss();
@@ -1156,7 +1168,6 @@ const ChatScreen = ({
           />
         </View>
       )}
-
       <MediaPicker
         navigation={navigation}
         practice={practice}

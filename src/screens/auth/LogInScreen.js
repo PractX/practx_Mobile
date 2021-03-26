@@ -59,7 +59,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
   }, [colors.mode]);
 
   return (
-    <Content>
+    <ScrollView>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={{ width: '80%' }}>
           <Animatable.View animation="pulse">
@@ -68,9 +68,9 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
             <View style={{ alignItems: 'center', marginTop: 10 }}>
               <Text
                 style={{
-                  fontSize: normalize(28),
+                  fontSize: normalize(18),
                   fontFamily: 'SofiaProSemiBold',
-                  color: 'white',
+                  color: colors.text_1,
                 }}>
                 Welcome Back
               </Text>
@@ -102,11 +102,18 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                     name="email"
                     iconName="mail"
                     iconType="feather"
+                    iconSize={14}
                     placeholder="Email"
                     autoCompleteType="email"
                     textContentType="emailAddress"
                     keyboardType="email-address"
                     autoCapitalize="none"
+                    styling={{
+                      input: {
+                        fontSize: normalize(14),
+                        color: colors.text_1,
+                      },
+                    }}
                   />
                   <InputBox
                     handleChange={handleChange}
@@ -115,12 +122,19 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                     name="password"
                     iconName="lock-outline"
                     iconType="material-community"
+                    iconSize={14}
                     placeholder="Password"
                     autoCompleteType="password"
                     textContentType="password"
                     keyboardType="default"
                     autoCapitalize="none"
                     secureTextEntry={passwordVisibility}
+                    styling={{
+                      input: {
+                        fontSize: normalize(14),
+                        color: colors.text_1,
+                      },
+                    }}
                   />
                   <Animatable.View
                     animation="bounceInRight"
@@ -164,7 +178,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                       ]}
                       titleStyle={{
                         fontFamily: 'SofiaProSemiBold',
-                        fontSize: normalize(16),
+                        fontSize: normalize(14),
                       }}
                       loading={isLoading}
                     />
@@ -178,7 +192,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                         <Text
                           style={{
                             color: colors.primary,
-                            fontSize: normalize(14),
+                            fontSize: normalize(12),
                           }}>
                           Sign up
                         </Text>
@@ -191,7 +205,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                       <Text
                         style={{
                           color: colors.primary,
-                          fontSize: normalize(14),
+                          fontSize: normalize(12),
                           textAlign: 'center',
                         }}>
                         Verify Account
@@ -204,20 +218,20 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
           </Animatable.View>
         </View>
       </View>
-    </Content>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     width: windowWidth,
-    height: windowHeight,
+    // height: windowHeight,
     alignItems: 'center',
     justifyContent: 'center',
   },
   topText: {
     marginTop: 5,
-    fontSize: normalize(16),
+    fontSize: normalize(14),
     fontFamily: 'SofiaProRegular',
   },
 
@@ -233,7 +247,7 @@ const styles = StyleSheet.create({
   formTextInput: {
     marginLeft: 20,
     width: '90%',
-    fontSize: normalize(17),
+    fontSize: normalize(14),
     fontFamily: 'SofiaProRegular',
   },
 
@@ -247,21 +261,21 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 150,
-    height: 150,
+    width: normalize(130),
+    height: normalize(130),
     alignSelf: 'center',
-    marginTop: -40,
+    marginTop: 20,
   },
 
   whiteFont: {
-    fontSize: normalize(14),
+    fontSize: normalize(12),
     fontFamily: 'SofiaProRegular',
   },
   spacer: {
     marginRight: 15,
     borderRadius: 6,
     marginLeft: -10,
-    width: 22,
+    width: 20,
     alignItems: 'center',
   },
 

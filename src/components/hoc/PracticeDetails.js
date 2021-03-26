@@ -119,7 +119,7 @@ const PracticeDetails = ({
             <Text
               style={{
                 color: colors.text,
-                fontSize: normalize(16),
+                fontSize: normalize(14),
                 fontFamily: 'SofiaProSemiBold',
                 textAlign: 'center',
                 paddingTop: 10,
@@ -129,7 +129,7 @@ const PracticeDetails = ({
             <Text
               style={{
                 color: colors.text,
-                fontSize: normalize(13),
+                fontSize: normalize(12),
                 fontFamily: 'SofiaProRegular',
                 textAlign: 'center',
                 paddingTop: 10,
@@ -148,7 +148,7 @@ const PracticeDetails = ({
                     name="progress-clock"
                     type="material-community"
                     color={colors.text_2}
-                    size={normalize(25)}
+                    size={normalize(20)}
                   />
                 ) : (
                   <Button
@@ -164,7 +164,7 @@ const PracticeDetails = ({
                         name="medical"
                         type="ionicon"
                         color={colors.text}
-                        size={normalize(15)}
+                        size={normalize(12)}
                         style={{
                           color: 'white',
                           marginRight: 0,
@@ -182,7 +182,7 @@ const PracticeDetails = ({
                     titleStyle={{
                       fontFamily: 'SofiaProSemiBold',
                       color: colors.text,
-                      fontSize: normalize(16),
+                      fontSize: normalize(14),
                       marginLeft: 3,
                     }}
                     loadingProps={{ color: colors.text }}
@@ -212,13 +212,13 @@ const PracticeDetails = ({
                   setTimeout(() => {
                     setPracticeId(data.id);
                     navigation.navigate('Chats');
-                  }, 2000);
+                  }, 2200);
                 }}>
                 <Icon
                   name="ios-chatbubble"
                   type="ionicon"
                   color={colors.text}
-                  size={normalize(23)}
+                  size={normalize(20)}
                   style={{
                     color: colors.text,
                     // alignSelf: 'center',
@@ -237,7 +237,7 @@ const PracticeDetails = ({
                   name="ios-call"
                   type="ionicon"
                   color={colors.text}
-                  size={normalize(23)}
+                  size={normalize(20)}
                   style={{
                     color: colors.text,
                     // alignSelf: 'center',
@@ -262,7 +262,7 @@ const PracticeDetails = ({
               <Text
                 style={{
                   color: colors.text_2,
-                  fontSize: normalize(13),
+                  fontSize: normalize(12),
                   fontFamily: 'SofiaProRegular',
                   textAlign: 'center',
                   paddingLeft: 5,
@@ -278,13 +278,23 @@ const PracticeDetails = ({
                 name="pencil"
                 type="material-community"
                 color={colors.text}
-                size={normalize(23)}
+                size={normalize(18)}
               />
               <ListItem.Content>
-                <ListItem.Title style={{ color: colors.text }}>
+                <ListItem.Title
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(13),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   Description
                 </ListItem.Title>
-                <ListItem.Subtitle style={{ color: colors.text_1 }}>
+                <ListItem.Subtitle
+                  style={{
+                    color: colors.text_1,
+                    fontSize: normalize(12),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   {data.description}
                 </ListItem.Subtitle>
               </ListItem.Content>
@@ -295,13 +305,23 @@ const PracticeDetails = ({
                 name="medical-bag"
                 type="material-community"
                 color={colors.text}
-                size={normalize(23)}
+                size={normalize(18)}
               />
               <ListItem.Content>
-                <ListItem.Title style={{ color: colors.text }}>
+                <ListItem.Title
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   Specialty
                 </ListItem.Title>
-                <ListItem.Subtitle style={{ color: colors.text_1 }}>
+                <ListItem.Subtitle
+                  style={{
+                    color: colors.text_1,
+                    fontSize: normalize(12),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   {data.specialty}
                 </ListItem.Subtitle>
               </ListItem.Content>
@@ -312,13 +332,23 @@ const PracticeDetails = ({
                 name="ios-call"
                 type="ionicon"
                 color={colors.text}
-                size={normalize(23)}
+                size={normalize(18)}
               />
               <ListItem.Content>
-                <ListItem.Title style={{ color: colors.text }}>
+                <ListItem.Title
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   Phone
                 </ListItem.Title>
-                <ListItem.Subtitle style={{ color: colors.text_1 }}>
+                <ListItem.Subtitle
+                  style={{
+                    color: colors.text_1,
+                    fontSize: normalize(12),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   {data.mobileNo}
                 </ListItem.Subtitle>
               </ListItem.Content>
@@ -329,13 +359,23 @@ const PracticeDetails = ({
                 name="location-city"
                 type="material-icons"
                 color={colors.text}
-                size={normalize(23)}
+                size={normalize(18)}
               />
               <ListItem.Content>
-                <ListItem.Title style={{ color: colors.text }}>
+                <ListItem.Title
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   Location
                 </ListItem.Title>
-                <ListItem.Subtitle style={{ color: colors.text_1 }}>
+                <ListItem.Subtitle
+                  style={{
+                    color: colors.text_1,
+                    fontSize: normalize(12),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   {data.location}
                 </ListItem.Subtitle>
               </ListItem.Content>
@@ -346,13 +386,23 @@ const PracticeDetails = ({
                 name="address"
                 type="entypo"
                 color={colors.text}
-                size={normalize(23)}
+                size={normalize(18)}
               />
               <ListItem.Content>
-                <ListItem.Title style={{ color: colors.text }}>
+                <ListItem.Title
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   Address
                 </ListItem.Title>
-                <ListItem.Subtitle style={{ color: colors.text_1 }}>
+                <ListItem.Subtitle
+                  style={{
+                    color: colors.text_1,
+                    fontSize: normalize(12),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   {data.address}
                 </ListItem.Subtitle>
               </ListItem.Content>
@@ -363,13 +413,23 @@ const PracticeDetails = ({
                 name="web"
                 type="material-community"
                 color={colors.text}
-                size={normalize(23)}
+                size={normalize(18)}
               />
               <ListItem.Content>
-                <ListItem.Title style={{ color: colors.text }}>
+                <ListItem.Title
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   Website
                 </ListItem.Title>
-                <ListItem.Subtitle style={{ color: colors.text_1 }}>
+                <ListItem.Subtitle
+                  style={{
+                    color: colors.text_1,
+                    fontSize: normalize(12),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
                   {data.website}
                 </ListItem.Subtitle>
               </ListItem.Content>
@@ -384,8 +444,8 @@ const PracticeDetails = ({
 
 const styles = StyleSheet.create({
   buttonAction: {
-    width: 50,
-    height: 50,
+    width: 43,
+    height: 43,
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',

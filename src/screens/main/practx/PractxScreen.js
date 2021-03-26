@@ -126,6 +126,10 @@ const Practx = ({
     return unsubscribe;
   }, [getPracticesAllStart, extraData]);
 
+  function sortRandomly(a, b) {
+    return 0.5 - Math.random();
+  }
+
   return (
     <SafeAreaView
       style={[
@@ -203,7 +207,136 @@ const Practx = ({
                 }}>
                 <Text
                   style={{
-                    fontSize: normalize(15),
+                    fontSize: normalize(13),
+                    fontFamily: 'SofiaProSemiBold',
+                    color: colors.text,
+                  }}>
+                  Joined practices
+                </Text>
+                <Icon
+                  name="arrow-forward"
+                  type="material-icons"
+                  color={colors.text}
+                  size={normalize(16)}
+                  style={{
+                    color: colors.text,
+                    // alignSelf: 'center',
+                  }}
+                />
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View
+                  style={{
+                    width: 95,
+                    height: 95,
+                    // marginTop: 15,
+                    marginBottom: 45,
+                    marginLeft: 10,
+                    marginRight: 5,
+                    flexDirection: 'column',
+                    // alignSelf: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      requestAnimationFrame(() => {
+                        // setFilter({
+                        //   opt1: true,
+                        //   opt2: false,
+                        //   opt3: false,
+                        // });
+                        navigation.navigate('PractxSearch');
+                      });
+                    }}
+                    style={{
+                      backgroundColor: colors.background_1,
+                      height: 85,
+                      width: 85,
+                      borderRadius: 15,
+                      justifyContent: 'center',
+                      marginVertical: 5,
+                    }}>
+                    <Icon
+                      name="plus"
+                      type="feather"
+                      color={colors.text}
+                      size={normalize(25)}
+                      style={
+                        {
+                          // alignSelf: 'center',
+                        }
+                      }
+                    />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: colors.text,
+                      fontSize: normalize(11.5),
+                      fontFamily: 'SofiaProSemiBold',
+                    }}>
+                    Join
+                  </Text>
+                </View>
+                <FlatList
+                  ref={ref}
+                  horizontal={true}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={() => getPracticesAllStart()}
+                    />
+                  }
+                  // removeClippedSubviews
+                  // ListEmptyComponent
+                  initialNumToRender={5}
+                  updateCellsBatchingPeriod={5}
+                  // pagingEnabled={true}
+                  showsHorizontalScrollIndicator={false}
+                  style={{
+                    paddingLeft: style1 === 'open' ? 0 : 0,
+                    paddingRight: 90,
+                    marginBottom: 10,
+                  }}
+                  contentContainerStyle={{
+                    paddingRight: 20,
+                  }}
+                  data={practices}
+                  numColumns={1}
+                  renderItem={({ item, index }) => {
+                    const pending = item.requests;
+                    const member = currentUser
+                      ? item.patients.filter((val) => val.id === currentUser.id)
+                      : [];
+                    console.log(pending);
+                    if (member.length) {
+                      return (
+                        <PracticeSmallBox
+                          userId={currentUser ? currentUser.id : 0}
+                          id={index}
+                          practice={item}
+                          navigation={navigation}
+                          practiceData={practiceData}
+                          setPracticeData={setPracticeData}
+                        />
+                      );
+                    }
+                  }}
+                  keyExtractor={(item, index) => item.display_url}
+                />
+              </View>
+            </View>
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 10,
+                  width: style1 === 'open' ? appwidth - 50 : appwidth,
+                  alignSelf: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <Text
+                  style={{
+                    fontSize: normalize(13),
                     fontFamily: 'SofiaProSemiBold',
                     color: colors.text,
                   }}>
@@ -213,52 +346,53 @@ const Practx = ({
                   name="arrow-forward"
                   type="material-icons"
                   color={colors.text}
-                  size={normalize(21)}
+                  size={normalize(16)}
                   style={{
                     color: colors.text,
                     // alignSelf: 'center',
                   }}
                 />
               </View>
-              <FlatList
-                ref={ref}
-                horizontal={true}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={() => getPracticesAllStart()}
-                  />
-                }
-                // removeClippedSubviews
-                // ListEmptyComponent
-                initialNumToRender={5}
-                updateCellsBatchingPeriod={5}
-                pagingEnabled={true}
-                showsHorizontalScrollIndicator={false}
-                style={{
-                  paddingLeft: style1 === 'open' ? 0 : 20,
-                  paddingRight: 90,
-                  marginBottom: 70,
-                }}
-                contentContainerStyle={{
-                  paddingRight: 20,
-                }}
-                data={practices}
-                numColumns={1}
-                renderItem={({ item, index }) => (
-                  <PracticeSmallBox
-                    userId={currentUser ? currentUser.id : 0}
-                    id={index}
-                    practice={item}
-                    navigation={navigation}
-                    practiceData={practiceData}
-                    setPracticeData={setPracticeData}
-                  />
-                )}
-                keyExtractor={(item, index) => item.display_url}
-                // showsHorizontalScrollIndicator={false}
-                // extraData={selected}
-              />
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <FlatList
+                  ref={ref}
+                  horizontal={true}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={() => getPracticesAllStart()}
+                    />
+                  }
+                  // removeClippedSubviews
+                  // ListEmptyComponent
+                  initialNumToRender={5}
+                  updateCellsBatchingPeriod={5}
+                  // pagingEnabled={true}
+                  showsHorizontalScrollIndicator={false}
+                  style={{
+                    paddingLeft: style1 === 'open' ? 0 : 15,
+                    paddingRight: 90,
+                    marginBottom: 10,
+                  }}
+                  contentContainerStyle={{
+                    paddingRight: 20,
+                  }}
+                  data={practices}
+                  numColumns={1}
+                  renderItem={({ item, index }) => (
+                    <PracticeSmallBox
+                      userId={currentUser ? currentUser.id : 0}
+                      id={index}
+                      practice={item}
+                      navigation={navigation}
+                      practiceData={practiceData}
+                      sortType={'all'}
+                      setPracticeData={setPracticeData}
+                    />
+                  )}
+                  keyExtractor={(item, index) => item.display_url}
+                />
+              </View>
             </View>
           </ScrollView>
         ) : (
@@ -266,6 +400,7 @@ const Practx = ({
             style={{
               alignItems: 'center',
               justifyContent: 'center',
+              height: '100%',
             }}>
             {isFetching ? (
               <ActivityIndicator

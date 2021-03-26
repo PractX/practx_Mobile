@@ -91,7 +91,6 @@ const Practices = ({
       // Do something
       setStyle1('open');
     });
-
     return unsubscribe;
   }, [navigation]);
   useEffect(() => {

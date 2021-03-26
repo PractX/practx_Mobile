@@ -107,7 +107,9 @@ const DmsBox = ({
               practice: item && item.Practice && item.Practice,
               channelName: item && item.channelName && item.channelName,
               practiceDms,
-              subgroups: subgroups,
+              subgroups: subgroups.find(
+                (items) => items.practiceId === item.Practice.id,
+              ),
               group: null,
               navigation: navigation,
               type: 'dm',
@@ -125,7 +127,7 @@ const DmsBox = ({
           <Text
             style={{
               color: colors.text,
-              fontSize: normalize(15),
+              fontSize: normalize(12),
               fontFamily: 'SofiaProSemiBold',
               textTransform: 'capitalize',
             }}>
@@ -134,7 +136,7 @@ const DmsBox = ({
           <Text
             style={{
               color: colors.text,
-              fontSize: normalize(12),
+              fontSize: normalize(11),
               fontFamily: 'SofiaProRegular',
             }}>
             {allMessages && allMessages.messages.length
@@ -163,7 +165,7 @@ const DmsBox = ({
         <Text
           style={{
             color: colors.text,
-            fontSize: normalize(11),
+            fontSize: normalize(10),
             fontFamily: 'SofiaProRegular',
           }}>
           {allMessages && newMessageTime ? newMessageTime : null}

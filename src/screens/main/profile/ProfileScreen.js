@@ -128,7 +128,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
               <Text
                 style={{
                   color: colors.text,
-                  fontSize: normalize(18),
+                  fontSize: normalize(14),
                   fontFamily: 'SofiaProSemiBold',
                 }}>
                 {currentUser &&
@@ -137,7 +137,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
               <Text
                 style={{
                   color: colors.primary_light,
-                  fontSize: normalize(14),
+                  fontSize: normalize(12),
                   fontFamily: 'SofiaProRegular',
                 }}>
                 {currentUser && currentUser.email}
@@ -153,7 +153,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
             <Text
               style={{
                 color: colors.text_1,
-                fontSize: normalize(14),
+                fontSize: normalize(12),
                 fontFamily: 'SofiaProRegular',
               }}>
               {(currentUser && currentUser.bio) || 'No bio'}
@@ -169,7 +169,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
             <Text
               style={{
                 color: colors.text,
-                fontSize: normalize(18),
+                fontSize: normalize(14),
                 fontFamily: 'SofiaProSemiBold',
                 paddingBottom: 5,
               }}>
@@ -178,7 +178,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
             <Text
               style={{
                 color: colors.text_1,
-                fontSize: normalize(14),
+                fontSize: normalize(12),
                 fontFamily: 'SofiaProRegular',
               }}>
               {(currentUser && currentUser.address) || 'No address'}
@@ -195,7 +195,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
             <Text
               style={{
                 color: colors.text,
-                fontSize: normalize(18),
+                fontSize: normalize(14),
                 fontFamily: 'SofiaProSemiBold',
                 paddingBottom: 5,
               }}>
@@ -204,7 +204,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
             <Text
               style={{
                 color: colors.text_1,
-                fontSize: normalize(14),
+                fontSize: normalize(12),
                 fontFamily: 'SofiaProRegular',
               }}>
               {(currentUser && currentUser.insurance) || 'No Insurance details'}
@@ -227,7 +227,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                   marginVertical: 10,
                 }}>
                 <Icon
-                  size={normalize(20)}
+                  size={normalize(18)}
                   color={colors.text}
                   type="material-community"
                   name="account-edit-outline"
@@ -236,13 +236,13 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                   <ListItem.Title
                     style={{
                       color: colors.text,
-                      fontSize: normalize(16),
+                      fontSize: normalize(14),
                       fontFamily: 'SofiaProRegular',
                     }}>
                     Edit Profile
                   </ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron size={normalize(23)} color={colors.text_1} />
+                <ListItem.Chevron size={normalize(20)} color={colors.text_1} />
               </ListItem>
             </TouchableOpacity>
             <ListItem
@@ -255,7 +255,7 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                 marginBottom: 20,
               }}>
               <Icon
-                size={normalize(20)}
+                size={normalize(18)}
                 color={colors.text}
                 type="material-community"
                 name="lock-outline"
@@ -264,13 +264,13 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                 <ListItem.Title
                   style={{
                     color: colors.text,
-                    fontSize: normalize(16),
+                    fontSize: normalize(14),
                     fontFamily: 'SofiaProRegular',
                   }}>
                   Reset Password
                 </ListItem.Title>
               </ListItem.Content>
-              <ListItem.Chevron size={normalize(23)} color={colors.text_1} />
+              <ListItem.Chevron size={normalize(20)} color={colors.text_1} />
             </ListItem>
           </View>
         </ScrollView>

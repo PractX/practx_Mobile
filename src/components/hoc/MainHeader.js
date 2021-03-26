@@ -107,7 +107,7 @@ const MainHeader = ({
         onPress={() => navigation.navigate('PractxSearch')}>
         <Text
           style={{
-            fontSize: normalize(15),
+            fontSize: normalize(13),
             fontFamily: 'SofiaProRegular',
             color: colors.text_1,
           }}>

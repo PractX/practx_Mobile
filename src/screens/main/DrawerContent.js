@@ -185,6 +185,7 @@ const DrawerContent = ({
                 // flexWrap: 'wrap',
                 // flexShrink: 1,
                 fontFamily: 'SofiaProSemiBold',
+                fontSize: normalize(15),
               },
             ]}>
             {/* {currentUser.firstname} */}
@@ -217,6 +218,7 @@ const DrawerContent = ({
                   color: colors.secondary,
                   // flexWrap: 'wrap',
                   // flexShrink: 1,
+                  fontSize: normalize(11),
                   fontFamily: 'SofiaProRegular',
                 },
               ]}>
@@ -230,7 +232,7 @@ const DrawerContent = ({
         {/* <View> */}
 
         <Drawer.Section style={styles.drawerSection}>
-          <Formik
+          {/* <Formik
             initialValues={{
               search: '',
             }}
@@ -247,7 +249,7 @@ const DrawerContent = ({
                   iconName="search"
                   iconType="feather"
                   iconColor={colors.text}
-                  iconSize={16}
+                  iconSize={13}
                   placeholder="Search"
                   placeholderTextColor={colors.text}
                   autoCompleteType="off"
@@ -266,18 +268,18 @@ const DrawerContent = ({
                 />
               </View>
             )}
-          </Formik>
+          </Formik> */}
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={{
-              marginBottom: 60,
+              marginBottom: 0,
             }}>
             {/* -------------------------------- Services -------------------------------- */}
             <View
               style={{
                 borderBottomWidth: 0.8,
                 borderBottomColor: colors.background_1,
-                marginTop: 10,
+                marginTop: 20,
                 paddingBottom: 10,
               }}>
               <View
@@ -297,7 +299,7 @@ const DrawerContent = ({
               <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
-                  fontSize: normalize(16),
+                  fontSize: normalize(13),
                   paddingLeft: 3,
                   // color: colors.text,
                 }}
@@ -327,7 +329,7 @@ const DrawerContent = ({
               <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
-                  fontSize: normalize(16),
+                  fontSize: normalize(13),
                   paddingLeft: 3,
                   // color: colors.text,
                 }}
@@ -353,7 +355,7 @@ const DrawerContent = ({
               <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
-                  fontSize: normalize(16),
+                  fontSize: normalize(13),
                   paddingLeft: 3,
                   // color: colors.text,
                 }}
@@ -375,10 +377,10 @@ const DrawerContent = ({
                   });
                 }}
               />
-              <DrawerItem
+              {/* <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
-                  fontSize: normalize(16),
+                  fontSize: normalize(13),
                   paddingLeft: 3,
                   // color: colors.text,
                 }}
@@ -399,11 +401,11 @@ const DrawerContent = ({
                     );
                   });
                 }}
-              />
+              /> */}
               {/* <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
-                  fontSize: normalize(16),
+                  fontSize: normalize(13),
                   paddingLeft: 3,
                   // color: colors.text,
                 }}
@@ -454,7 +456,7 @@ const DrawerContent = ({
               <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
-                  fontSize: normalize(16),
+                  fontSize: normalize(13),
                   paddingLeft: 3,
                   // color: colors.text,
                 }}
@@ -479,7 +481,7 @@ const DrawerContent = ({
               <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
-                  fontSize: normalize(16),
+                  fontSize: normalize(13),
                   paddingLeft: 3,
                   // color: colors.text,
                 }}
@@ -504,7 +506,7 @@ const DrawerContent = ({
               <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
-                  fontSize: normalize(16),
+                  fontSize: normalize(13),
                   paddingLeft: 3,
                   // color: colors.text,
                 }}
@@ -564,7 +566,7 @@ const DrawerContent = ({
                     color: colors.text,
                     paddingLeft: 20,
                     fontFamily: 'SofiaProSemiBold',
-                    fontSize: normalize(16),
+                    fontSize: normalize(13),
                     // textAlign: 'center',
                   }}>
                   Dark
@@ -575,7 +577,7 @@ const DrawerContent = ({
                     color: colors.text,
                     paddingLeft: 10,
                     fontFamily: 'SofiaProSemiBold',
-                    fontSize: normalize(16),
+                    fontSize: normalize(13),
                   }}>
                   Light
                 </Text>
@@ -621,7 +623,7 @@ const DrawerContent = ({
             labelStyle={{
               fontFamily: 'SofiaProSemiBold',
               color: colors.text,
-              fontSize: normalize(16),
+              fontSize: normalize(13),
             }}
             label={signOutText || 'Log Out'}
             onPress={() => {
@@ -647,7 +649,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: normalize(16),
+    fontSize: normalize(13),
     // paddingLeft: 3,
     marginTop: 3,
     // fontWeight: 'bold',
@@ -676,12 +678,13 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   bottomDrawerSection: {
-    marginTop: 5,
+    marginTop: 0,
   },
   preference: {
     flexDirection: 'row',
     // alignItems: 'center',
-    paddingVertical: 15,
+    paddingTop: 15,
+    paddingBottom: 40,
     paddingHorizontal: 20,
   },
 });

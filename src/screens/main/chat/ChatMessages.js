@@ -641,7 +641,7 @@ const ChatMessages = ({
               <Text
                 style={{
                   color: colors.text,
-                  fontSize: normalize(14),
+                  fontSize: normalize(13),
                   fontFamily: 'SofiaProSemiBold',
                 }}>
                 Direct message
@@ -693,7 +693,7 @@ const ChatMessages = ({
                   <Text
                     style={{
                       color: colors.text,
-                      fontSize: normalize(14),
+                      fontSize: normalize(13),
                       fontFamily: 'SofiaProSemiBold',
                     }}>
                     Groups
@@ -734,6 +734,12 @@ const ChatMessages = ({
                         <GroupBox
                           id={currentPracticeId}
                           item={item}
+                          practices={
+                            practiceDms &&
+                            practiceDms.find(
+                              (it) => it.practiceId === currentPracticeId,
+                            )
+                          }
                           allMessages={
                             practiceDms && allMessages && subgroups
                               ? allMessages.find(
@@ -747,6 +753,7 @@ const ChatMessages = ({
                           }
                           practiceDms={practiceDms}
                           navigation={navigation}
+                          subgroups={subgroups}
                           // channel
                           styling={{
                             width: style1 === 'open' ? appwidth - 50 : appwidth,
