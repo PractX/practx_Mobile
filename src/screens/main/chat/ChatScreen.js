@@ -88,7 +88,15 @@ const ChatScreen = ({
   const { params } = useRoute();
   const isFocused = useIsFocused();
   const [loader, setLoader] = useState(true);
-  const { practice, practiceDms, channelName, subgroups, group, type } = params;
+  const {
+    practice,
+    practiceDms,
+    channelName,
+    subgroups,
+    group,
+    type,
+    groupPractice,
+  } = params;
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
@@ -453,7 +461,7 @@ const ChatScreen = ({
 
   const renderActions = (props) => {
     return (
-      <>
+      <View style={{ flexDirection: 'row' }}>
         <Actions
           {...props}
           icon={() => (
@@ -462,7 +470,7 @@ const ChatScreen = ({
               type={'feather'}
               // action={setShowEmoji}
               // value={showEmoji}
-              size={24}
+              size={22}
               color={'white'}
             />
           )}
@@ -474,9 +482,9 @@ const ChatScreen = ({
           containerStyle={{
             backgroundColor: colors.primary,
             borderRadius: 100,
-            height: 36,
-            width: 36,
-            marginTop: 10,
+            height: 28,
+            width: 28,
+            // marginTop: 10,
             alignSelf: 'center',
             justifyContent: 'center',
           }}
@@ -489,7 +497,7 @@ const ChatScreen = ({
               type={'font-awesome-5'}
               // action={setShowEmoji}
               // value={showEmoji}
-              size={normalize(25)}
+              size={normalize(22)}
               color={colors.text}
             />
           )}
@@ -502,11 +510,11 @@ const ChatScreen = ({
             // height: 36,
             width: 36,
             marginRight: 10,
-            marginTop: 10,
+            // marginTop: 10,
             alignSelf: 'center',
           }}
         />
-      </>
+      </View>
     );
   };
 
@@ -840,6 +848,7 @@ const ChatScreen = ({
             }}
             // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
             renderMessage={(props) => {
+              console.log('Tester___', props.currentMessage);
               return (
                 <>
                   <ChatBubble
@@ -847,6 +856,7 @@ const ChatScreen = ({
                     message={props.currentMessage}
                     navigation={navigation}
                     practice={practice}
+                    groupPractice={groupPractice}
                     practiceDms={practiceDms}
                     patientChatId={currentUser.chatId}
                   />
@@ -858,7 +868,10 @@ const ChatScreen = ({
                     ) && (
                       <Day
                         {...props}
-                        textStyle={{ color: colors.text }}
+                        textStyle={{
+                          color: colors.text,
+                          fontSize: normalize(10),
+                        }}
                         wrapperStyle={{
                           backgroundColor: colors.background_1,
                           paddingVertical: 5,
@@ -929,7 +942,7 @@ const ChatScreen = ({
                 label="Load earlier messages"
                 wrapperStyle={{ backgroundColor: 'transparent' }}
                 textStyle={{
-                  fontSize: normalize(12),
+                  fontSize: normalize(11),
                   textAlign: 'center',
                   fontFamily: 'SofiaProRegular',
                   backgroundColor: colors.background_1,
@@ -1143,9 +1156,12 @@ const ChatScreen = ({
           <EmojiBoard
             // blackList={[]}
             showBoard={true}
+            emojiSize={22}
             containerStyle={{
               backgroundColor: colors.background,
             }}
+            categoryHighlightColor={colors.text}
+            categoryDefautColor={colors.text_3}
             // tabBarStyle={{color: 'green'}}
             onClick={(emoji) => {
               Keyboard.dismiss();

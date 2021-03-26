@@ -12,7 +12,14 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
 
-const ChatBubble = ({ id, practice, message, patientChatId, index }) => {
+const ChatBubble = ({
+  id,
+  practice,
+  groupPractice,
+  message,
+  patientChatId,
+  index,
+}) => {
   const { colors } = useTheme();
   const pubnub = usePubNub();
   // console.log('Bubble ID', id);
@@ -31,7 +38,8 @@ const ChatBubble = ({ id, practice, message, patientChatId, index }) => {
     return checkAmPm(time.slice(0, -3));
     // return localeDateTime;
   };
-  // console.log(message.timetoken);
+  console.log(groupPractice);
+  console.log(message);
   // console.log(addTime(message).split(', ')[0]);
   return (
     <View key={index} style={{ width: appwidth, alignSelf: 'center' }}>
@@ -47,10 +55,10 @@ const ChatBubble = ({ id, practice, message, patientChatId, index }) => {
           {message.messageType === 4 ? (
             <View
               style={{
-                height: 251,
+                height: 252,
                 backgroundColor: colors.primary,
                 alignItems: 'center',
-                width: 251,
+                width: 252,
                 justifyContent: 'center',
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
@@ -114,7 +122,7 @@ const ChatBubble = ({ id, practice, message, patientChatId, index }) => {
               }}>
               <Text
                 style={{
-                  fontSize: normalize(14),
+                  fontSize: normalize(12),
                   fontFamily: 'SofiaProRegular',
                   color: 'white',
                   textAlign: 'left',
@@ -125,11 +133,13 @@ const ChatBubble = ({ id, practice, message, patientChatId, index }) => {
           )}
           <Text
             style={{
-              fontSize: normalize(12),
-              fontFamily: 'SofiaProRegular',
+              fontSize: normalize(11),
+              fontFamily: 'SofiaProLight',
               color: colors.text,
+              textAlign: 'right',
+              paddingRight: 10,
             }}>
-            Message sent {addTime(message)}
+            {addTime(message)}
           </Text>
         </View>
       ) : (
@@ -143,8 +153,10 @@ const ChatBubble = ({ id, practice, message, patientChatId, index }) => {
           <FastImage
             source={{
               uri:
-                (practice && practice.logo) ||
-                'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
+                message.message.userType === 'staff' && groupPractice
+                  ? groupPractice.logo
+                  : (practice && practice.logo) ||
+                    'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
             }}
             style={[
               {
@@ -169,10 +181,10 @@ const ChatBubble = ({ id, practice, message, patientChatId, index }) => {
             {message.messageType === 4 ? (
               <View
                 style={{
-                  height: 251,
-                  backgroundColor: colors.primary,
+                  height: 252,
+                  backgroundColor: colors.background_1,
                   alignItems: 'center',
-                  width: 251,
+                  width: 252,
                   justifyContent: 'center',
                   borderTopLeftRadius: 20,
                   borderTopRightRadius: 20,
@@ -232,9 +244,33 @@ const ChatBubble = ({ id, practice, message, patientChatId, index }) => {
                   borderBottomRightRadius: 20,
                   padding: 15,
                 }}>
+                {message.message.userType === 'staff' && (
+                  <Text
+                    style={{
+                      fontSize: normalize(10),
+                      fontFamily: 'SofiaProLight',
+                      color: colors.text_2,
+                      textAlign: 'left',
+                      paddingBottom: 5,
+                    }}>
+                    Staff
+                  </Text>
+                )}
+                {message.message.userType === 'patient' && (
+                  <Text
+                    style={{
+                      fontSize: normalize(10),
+                      fontFamily: 'SofiaProLight',
+                      color: colors.text_2,
+                      textAlign: 'left',
+                      paddingBottom: 5,
+                    }}>
+                    {message.message.profile.name}
+                  </Text>
+                )}
                 <Text
                   style={{
-                    fontSize: normalize(14),
+                    fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                     color: colors.text,
                     textAlign: 'left',
@@ -245,11 +281,11 @@ const ChatBubble = ({ id, practice, message, patientChatId, index }) => {
             )}
             <Text
               style={{
-                fontSize: normalize(12),
-                fontFamily: 'SofiaProRegular',
+                fontSize: normalize(11),
+                fontFamily: 'SofiaProLight',
                 color: colors.text,
               }}>
-              Message sent {addTime(message)}
+              {addTime(message)}
             </Text>
           </View>
         </View>

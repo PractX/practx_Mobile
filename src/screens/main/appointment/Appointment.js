@@ -76,7 +76,7 @@ const Appointment = ({ type, styling }) => {
           <View style={styles.cardhead}>
             <Text
               style={{
-                fontSize: normalize(14),
+                fontSize: normalize(12),
                 fontFamily: 'SofiaProSemiBold',
                 color: colors.text,
               }}>
@@ -87,7 +87,7 @@ const Appointment = ({ type, styling }) => {
           <Text
             style={{
               marginTop: 5,
-              fontSize: normalize(12),
+              fontSize: normalize(11),
               fontFamily: 'SofiaProRegular',
               color: theme.text2,
             }}>

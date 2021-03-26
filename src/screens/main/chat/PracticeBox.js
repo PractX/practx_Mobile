@@ -79,7 +79,7 @@ const PracticesBox = ({
       <Text
         style={{
           color: colors.text,
-          fontSize: normalize(11),
+          fontSize: normalize(10),
           fontFamily: 'SofiaProSemiBold',
         }}>
         {}

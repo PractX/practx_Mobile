@@ -42,30 +42,33 @@ const appointmentData = [
   {
     type: 'voice',
   },
-  {
-    type: 'video',
-  },
-  {
-    type: 'voice',
-  },
-  {
-    type: 'voice',
-  },
-  {
-    type: 'voice',
-  },
-  {
-    type: 'video',
-  },
-  {
-    type: 'video',
-  },
-  {
-    type: 'voice',
-  },
-  {
-    type: 'voice',
-  },
+  // {
+  //   type: 'video',
+  // },
+  // {
+  //   type: 'voice',
+  // },
+  // {
+  //   type: 'voice',
+  // },
+  // {
+  //   type: 'voice',
+  // },
+  // {
+  //   type: 'video',
+  // },
+  // {
+  //   type: 'video',
+  // },
+  // {
+  //   type: 'voice',
+  // },
+  // {
+  //   type: 'voice',
+  // },
+  // {
+  //   type: 'video',
+  // },
 ];
 
 const Appointments = ({ navigation }) => {
@@ -244,9 +247,9 @@ const Appointments = ({ navigation }) => {
               // textDayFontWeight: '300',
               // textMonthFontWeight: 'bold',
               // textDayHeaderFontWeight: '300',
-              textDayFontSize: normalize(16),
-              textMonthFontSize: normalize(17),
-              textDayHeaderFontSize: normalize(15),
+              textDayFontSize: normalize(11),
+              textMonthFontSize: normalize(13),
+              textDayHeaderFontSize: normalize(12),
             }}
           />
         </View>
@@ -266,40 +269,45 @@ const Appointments = ({ navigation }) => {
               marginBottom: 5,
               color: colors.text,
               fontFamily: 'SofiaProSemiBold',
-              fontSize: normalize(16),
+              fontSize: normalize(13),
             }}>
             Today's Appointment
           </Text>
           {appointmentData ? (
-            <FlatList
-              ref={ref}
-              // refreshControl={
-              //   <RefreshControl
-              //     refreshing={refreshing}
-              //     onRefresh={() => getPracticesAllStart()}
-              //   />
-              // }
-              // removeClippedSubviews
-              // ListEmptyComponent
-              initialNumToRender={5}
-              updateCellsBatchingPeriod={5}
-              showsVerticalScrollIndicator={true}
-              // style={{ width: '100%', backgroundColor: 'blue' }}
-              data={appointmentData}
-              numColumns={1}
-              renderItem={({ item, index }) => (
-                <Appointment
-                  id={index}
-                  type={item.type}
-                  styling={{
-                    width: style1 === 'open' ? appwidth - 50 : appwidth,
-                  }}
-                />
-              )}
-              keyExtractor={(item, index) => item.display_url}
-              // showsHorizontalScrollIndicator={false}
-              // extraData={selected}
-            />
+            <View
+              style={{
+                height: windowHeight - 450,
+              }}>
+              <FlatList
+                ref={ref}
+                // refreshControl={
+                //   <RefreshControl
+                //     refreshing={refreshing}
+                //     onRefresh={() => getPracticesAllStart()}
+                //   />
+                // }
+                // removeClippedSubviews
+                // ListEmptyComponent
+                initialNumToRender={5}
+                updateCellsBatchingPeriod={5}
+                showsVerticalScrollIndicator={true}
+                style={{ marginBottom: 50 }}
+                data={appointmentData}
+                numColumns={1}
+                renderItem={({ item, index }) => (
+                  <Appointment
+                    id={index}
+                    type={item.type}
+                    styling={{
+                      width: style1 === 'open' ? appwidth - 50 : appwidth,
+                    }}
+                  />
+                )}
+                keyExtractor={(item, index) => item.display_url}
+                // showsHorizontalScrollIndicator={false}
+                // extraData={selected}
+              />
+            </View>
           ) : (
             <View
               style={{

@@ -124,13 +124,13 @@ const PracticeSmallBox = ({
               name={member.length ? 'check' : 'clock'}
               type={member.length ? 'feather' : 'feather'}
               color={'white'}
-              size={member.length ? normalize(15) : normalize(12)}
+              size={member.length ? normalize(10) : normalize(9)}
               style={{
                 backgroundColor: member.length
                   ? colors.tertiary
                   : '#000000' + 98,
-                width: 20,
-                height: 20,
+                width: 17,
+                height: 17,
                 color: 'white',
                 alignSelf: 'flex-end',
                 justifyContent: 'center',
@@ -146,12 +146,12 @@ const PracticeSmallBox = ({
       <View style={{ justifyContent: 'center' }}>
         <Text
           style={{
-            fontSize: normalize(10.5),
+            fontSize: normalize(10),
             fontFamily: 'SofiaProSemiBold',
             color: colors.text,
           }}>
-          {practice.practiceName && practice.practiceName.length > 15
-            ? practice.practiceName.substring(0, 15 - 3) + '...'
+          {practice.practiceName && practice.practiceName.length > 14
+            ? practice.practiceName.substring(0, 14 - 3) + '...'
             : practice.practiceName}
         </Text>
         <View
@@ -164,12 +164,12 @@ const PracticeSmallBox = ({
             name="medical-bag"
             type="material-community"
             color={colors.text}
-            size={normalize(10)}
+            size={normalize(9)}
           />
           <Text
             style={{
               color: colors.text_2,
-              fontSize: normalize(11),
+              fontSize: normalize(10),
               fontFamily: 'SofiaProRegular',
               textTransform: 'capitalize',
               marginLeft: 3,

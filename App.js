@@ -104,7 +104,7 @@ const App = ({ themeMode, user, token }) => {
           {isLoading ? (
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
-          ) : user === null && token === null ? (
+          ) : (user === null && token === null) || (user === null && token) ? (
             // No token found, user isn't signed in
             <Stack.Screen name="AuthScreen" component={AuthScreen} />
           ) : (

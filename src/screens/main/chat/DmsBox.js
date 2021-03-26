@@ -125,7 +125,7 @@ const DmsBox = ({
           <Text
             style={{
               color: colors.text,
-              fontSize: normalize(15),
+              fontSize: normalize(12),
               fontFamily: 'SofiaProSemiBold',
               textTransform: 'capitalize',
             }}>
@@ -134,7 +134,7 @@ const DmsBox = ({
           <Text
             style={{
               color: colors.text,
-              fontSize: normalize(12),
+              fontSize: normalize(11),
               fontFamily: 'SofiaProRegular',
             }}>
             {allMessages && allMessages.messages.length
@@ -163,7 +163,7 @@ const DmsBox = ({
         <Text
           style={{
             color: colors.text,
-            fontSize: normalize(11),
+            fontSize: normalize(10),
             fontFamily: 'SofiaProRegular',
           }}>
           {allMessages && newMessageTime ? newMessageTime : null}

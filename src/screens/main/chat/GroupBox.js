@@ -18,6 +18,7 @@ const GroupBox = ({
   practiceDms,
   styling,
   allMessages,
+  practices,
 }) => {
   const { colors } = useTheme();
   const pubnub = usePubNub();
@@ -34,7 +35,6 @@ const GroupBox = ({
   //   allMessages.messages[allMessages.messages.length - 1].timetoken / 10000000,
   // );
   console.log(item);
-  console.log(allMessages);
 
   useEffect(() => {
     if (allMessages) {
@@ -102,6 +102,8 @@ const GroupBox = ({
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ChatScreen', {
+              groupPractice:
+                practices && practices.Practice && practices.Practice,
               group: item ? item : {},
               channelName: item && item.channelName && item.channelName,
               practiceDms,
@@ -120,7 +122,7 @@ const GroupBox = ({
           <Text
             style={{
               color: colors.text,
-              fontSize: normalize(15),
+              fontSize: normalize(12),
               fontFamily: 'SofiaProSemiBold',
               textTransform: 'capitalize',
             }}>
@@ -129,7 +131,7 @@ const GroupBox = ({
           <Text
             style={{
               color: colors.text,
-              fontSize: normalize(12),
+              fontSize: normalize(11),
               fontFamily: 'SofiaProRegular',
             }}>
             {allMessages && allMessages.messages.length
@@ -141,12 +143,16 @@ const GroupBox = ({
                   ? allMessages.messages[
                       allMessages.messages.length - 1
                     ].message.text.substring(0, 60 - 3) + '...'
-                  : allMessages.messages[allMessages.messages.length - 1]
-                      .message.text
+                  : allMessages.messages[
+                      allMessages.messages.length - 1
+                    ].message.text.replace('\n', '')
                 : allMessages.messages[allMessages.messages.length - 1].message
                     .file
                 ? ' Photo'
-                : allMessages.messages[allMessages.messages.length - 1]
+                : allMessages.messages[allMessages.messages.length - 1].replace(
+                    '\n',
+                    '',
+                  )
               : 'ℹ️ Begin conversation'}
           </Text>
         </TouchableOpacity>
@@ -156,7 +162,7 @@ const GroupBox = ({
         <Text
           style={{
             color: colors.text,
-            fontSize: normalize(11),
+            fontSize: normalize(10),
             fontFamily: 'SofiaProRegular',
           }}>
           {allMessages && newMessageTime ? newMessageTime : null}

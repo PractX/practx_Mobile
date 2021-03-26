@@ -84,7 +84,7 @@ const Header = ({
               name="arrow-back"
               type="material-icons"
               color={colors.text}
-              size={normalize(21)}
+              size={normalize(18)}
               style={{
                 color: colors.text,
                 // alignSelf: 'center',
@@ -137,7 +137,7 @@ const Header = ({
                 <Text
                   style={{
                     color: colors.text,
-                    fontSize: normalize(15),
+                    fontSize: normalize(13),
                     fontFamily: 'SofiaProSemiBold',
                   }}>
                   {practice
@@ -182,8 +182,8 @@ const Header = ({
           <View
             style={{
               backgroundColor: colors.text,
-              width: 22,
-              height: 1.7,
+              width: 21,
+              height: 1.6,
               marginTop: 4,
               alignSelf: 'flex-start',
             }}
@@ -191,8 +191,8 @@ const Header = ({
           <View
             style={{
               backgroundColor: colors.primary,
-              width: 11,
-              height: 1.8,
+              width: 10,
+              height: 1.6,
               marginTop: 4,
               alignSelf: 'flex-start',
             }}
@@ -212,7 +212,7 @@ const Header = ({
           }}>
           <Text
             style={{
-              fontSize: normalize(17.5),
+              fontSize: normalize(14),
               fontFamily: 'SofiaProSemiBold',
               color: colors.text,
             }}>
@@ -236,7 +236,7 @@ const Header = ({
           }}>
           <Text
             style={{
-              fontSize: normalize(17.5),
+              fontSize: normalize(14),
               fontFamily: 'SofiaProRegular',
               color: colors.text,
             }}>
@@ -274,7 +274,7 @@ const Header = ({
             style={{
               color: colors.text_1,
               fontFamily: 'SofiaProRegular',
-              fontSize: normalize(16),
+              fontSize: normalize(14),
               width: '100%',
             }}
             // onChangeText={handleChange(name)}
@@ -449,7 +449,7 @@ const Header = ({
               name="ios-notifications-outline"
               type="ionicon"
               color={colors.text}
-              size={normalize(21)}
+              size={normalize(18)}
               style={{
                 color: colors.text,
                 marginLeft: 25,

@@ -207,7 +207,7 @@ const Practx = ({
                 }}>
                 <Text
                   style={{
-                    fontSize: normalize(15),
+                    fontSize: normalize(13),
                     fontFamily: 'SofiaProSemiBold',
                     color: colors.text,
                   }}>
@@ -217,7 +217,7 @@ const Practx = ({
                   name="arrow-forward"
                   type="material-icons"
                   color={colors.text}
-                  size={normalize(21)}
+                  size={normalize(16)}
                   style={{
                     color: colors.text,
                     // alignSelf: 'center',
@@ -230,7 +230,7 @@ const Practx = ({
                     width: 95,
                     height: 95,
                     // marginTop: 15,
-                    marginBottom: 40,
+                    marginBottom: 45,
                     marginLeft: 10,
                     marginRight: 5,
                     flexDirection: 'column',
@@ -260,7 +260,7 @@ const Practx = ({
                       name="plus"
                       type="feather"
                       color={colors.text}
-                      size={normalize(28)}
+                      size={normalize(25)}
                       style={
                         {
                           // alignSelf: 'center',
@@ -271,7 +271,7 @@ const Practx = ({
                   <Text
                     style={{
                       color: colors.text,
-                      fontSize: normalize(13),
+                      fontSize: normalize(11.5),
                       fontFamily: 'SofiaProSemiBold',
                     }}>
                     Join
@@ -304,9 +304,9 @@ const Practx = ({
                   numColumns={1}
                   renderItem={({ item, index }) => {
                     const pending = item.requests;
-                    const member = item.patients.filter(
-                      (val) => val.id === currentUser.id,
-                    );
+                    const member = currentUser
+                      ? item.patients.filter((val) => val.id === currentUser.id)
+                      : [];
                     console.log(pending);
                     if (member.length || pending.length) {
                       return (
@@ -336,7 +336,7 @@ const Practx = ({
                 }}>
                 <Text
                   style={{
-                    fontSize: normalize(15),
+                    fontSize: normalize(13),
                     fontFamily: 'SofiaProSemiBold',
                     color: colors.text,
                   }}>
@@ -346,7 +346,7 @@ const Practx = ({
                   name="arrow-forward"
                   type="material-icons"
                   color={colors.text}
-                  size={normalize(21)}
+                  size={normalize(16)}
                   style={{
                     color: colors.text,
                     // alignSelf: 'center',
