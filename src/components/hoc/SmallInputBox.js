@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Dimensions, TextInput, StyleSheet } from 'react-native';
+import {
+  View,
+  Dimensions,
+  TextInput,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 import { normalize } from 'react-native-elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import { Icon, Button } from 'react-native-elements';
@@ -70,7 +76,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 10,
     paddingHorizontal: 0,
-    // paddingVertical: 0,
+    paddingVertical: Platform.OS === 'ios' ? 15 : 0,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 15,

@@ -1,9 +1,15 @@
 import React from 'react';
-import { View, Dimensions, TextInput, StyleSheet } from 'react-native';
-import { normalize } from 'react-native-elements';
+import {
+  View,
+  Dimensions,
+  TextInput,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import { Icon, Button } from 'react-native-elements';
 import { Keyboard } from 'react-native';
+import normalize from '../../utils/normalize';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -130,7 +136,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 10,
     paddingHorizontal: 15,
-    paddingVertical: 0,
+    paddingVertical: Platform.OS === 'ios' ? 15 : 0,
     marginTop: 15,
     alignItems: 'center',
   },

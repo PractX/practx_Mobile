@@ -4,7 +4,7 @@ import * as Animatable from 'react-native-animatable';
 import { Formik } from 'formik';
 
 import { Text, Content, CheckBox } from 'native-base';
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 
 import {
   View,
@@ -14,16 +14,17 @@ import {
   TextInput,
   ScrollView,
   Pressable,
+  TouchableOpacity,
 } from 'react-native';
 
 import { LOGO, LOGO2 } from '../../../assets/images';
 import { useTheme } from '@react-navigation/native';
 import InputBox from '../../components/hoc/InputBox';
-import { normalize } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { verifyAccount } from '../../redux/user/user.actions';
 import { createStructuredSelector } from 'reselect';
 import { selectIsLoading } from '../../redux/user/user.selector';
+import normalize from '../../utils/normalize';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -76,14 +77,35 @@ function VerifyAccount({ navigation, verifyAccount, isLoading }) {
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={{ width: '80%' }}>
           <Animatable.View animation="pulse">
+            <TouchableOpacity
+              style={{
+                width: 40,
+                height: 30,
+                top: 18,
+                left: 5,
+                position: 'absolute',
+              }}
+              onPress={() => navigation.goBack()}>
+              <Icon
+                name="arrow-back"
+                type="material-icons"
+                color={colors.text}
+                size={normalize(18)}
+                style={{
+                  color: colors.text,
+                  // alignSelf: 'center',
+                }}
+              />
+            </TouchableOpacity>
             <Image style={styles.logo} source={logo} resizeMode="contain" />
 
             <View style={{ alignItems: 'center', marginTop: 20 }}>
               <Text
                 style={{
-                  fontSize: normalize(25),
+                  fontSize: normalize(18),
                   fontFamily: 'SofiaProSemiBold',
-                  color: 'white',
+                  color: colors.text_1,
+                  marginBottom: 5,
                 }}>
                 Verify Account
               </Text>
@@ -116,12 +138,19 @@ function VerifyAccount({ navigation, verifyAccount, isLoading }) {
                     name="verificationKey"
                     iconName="key"
                     iconType="feather"
+                    iconSize={15}
                     placeholder="Verification Key"
                     autoCompleteType="off"
                     textContentType="password"
                     keyboardType="default"
                     autoCapitalize="none"
                     secureTextEntry={passwordVisibility}
+                    styling={{
+                      input: {
+                        fontSize: normalize(15),
+                        color: colors.text_1,
+                      },
+                    }}
                   />
 
                   {/*--------------------------------------- SUBMIT BUTTON -----------------------------------*/}
@@ -137,7 +166,7 @@ function VerifyAccount({ navigation, verifyAccount, isLoading }) {
                       ]}
                       titleStyle={{
                         fontFamily: 'SofiaProSemiBold',
-                        fontSize: normalize(16),
+                        fontSize: normalize(14),
                       }}
                       loading={isLoading}
                     />
@@ -151,7 +180,7 @@ function VerifyAccount({ navigation, verifyAccount, isLoading }) {
                         <Text
                           style={{
                             color: colors.primary,
-                            fontSize: normalize(14),
+                            fontSize: normalize(12),
                           }}>
                           {' '}
                           Sign up
@@ -168,7 +197,7 @@ function VerifyAccount({ navigation, verifyAccount, isLoading }) {
                         <Text
                           style={{
                             color: colors.primary,
-                            fontSize: normalize(14),
+                            fontSize: normalize(12),
                           }}>
                           {' '}
                           Login
@@ -191,11 +220,12 @@ const styles = StyleSheet.create({
     width: windowWidth,
     height: windowHeight,
     alignItems: 'center',
-    justifyContent: 'space-around',
+    // justifyContent: 'space-around',
+    marginTop: 20,
   },
   topText: {
     marginTop: 5,
-    fontSize: normalize(16),
+    fontSize: normalize(14),
     fontFamily: 'SofiaProRegular',
   },
 
@@ -204,13 +234,13 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 150,
-    height: 150,
+    width: normalize(130),
+    height: normalize(130),
     alignSelf: 'center',
   },
 
   whiteFont: {
-    fontSize: normalize(14),
+    fontSize: normalize(12),
     fontFamily: 'SofiaProRegular',
   },
   spacer: {

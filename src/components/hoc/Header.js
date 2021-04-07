@@ -69,7 +69,8 @@ const Header = ({
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          height: subgroups && subgroups.show ? 50 : '100%',
+          // height: subgroups && subgroups.show ? 50 : '100%',
+          height: 50,
           // backgroundColor: colors.background,
         }}>
         {backArrow ? (

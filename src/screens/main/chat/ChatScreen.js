@@ -704,11 +704,12 @@ const ChatScreen = ({
   };
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
         justifyContent: 'space-between',
         // backgroundColor: 'whi',
+        // marginTop: 50,
         // height: '100%',
       }}>
       <Header
@@ -1178,7 +1179,7 @@ const ChatScreen = ({
         setMediaFile={setMediaFile}
         sendFile={sendFile}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
