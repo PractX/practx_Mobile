@@ -10,7 +10,6 @@ import {
   Dimensions,
   TextInput,
   StyleSheet,
-  SafeAreaView,
   KeyboardAvoidingView,
   FlatList,
   StatusBar,
@@ -63,7 +62,7 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import EmojiBoard from 'react-native-emoji-board';
-import runes from 'runes';
+import { SafeAreaView } from 'react-navigation';
 import moment from 'moment';
 
 const { flags, sports, food } = Categories;
@@ -461,7 +460,7 @@ const ChatScreen = ({
 
   const renderActions = (props) => {
     return (
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Actions
           {...props}
           icon={() => (
@@ -484,7 +483,7 @@ const ChatScreen = ({
             borderRadius: 100,
             height: 28,
             width: 28,
-            // marginTop: 10,
+            marginTop: 8,
             alignSelf: 'center',
             justifyContent: 'center',
           }}
@@ -497,7 +496,7 @@ const ChatScreen = ({
               type={'font-awesome-5'}
               // action={setShowEmoji}
               // value={showEmoji}
-              size={normalize(22)}
+              size={normalize(Platform.OS === 'ios' ? 20 : 22)}
               color={colors.text}
             />
           )}
@@ -507,10 +506,11 @@ const ChatScreen = ({
           }}
           containerStyle={{
             // backgroundColor: colors.primary,
-            // height: 36,
-            width: 36,
+            height: 28,
+            width: 28,
             marginRight: 10,
-            // marginTop: 10,
+            marginTop: 10,
+            // marginBottom: 30,
             alignSelf: 'center',
           }}
         />
@@ -704,271 +704,270 @@ const ChatScreen = ({
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        justifyContent: 'space-between',
-        // backgroundColor: 'whi',
-        // marginTop: 50,
-        // height: '100%',
-      }}>
-      <Header
-        navigation={navigation}
-        // title="Edit Profile"
-        subgroups={{
-          show: groupSuggest,
-          onShow: setGroupSuggest,
-          data: subgroups,
-          practiceDms: practiceDms,
-          groupPractice: practice,
-        }}
-        backArrow={true}
-        headerWithImage={{ chatUser: currentUser, status: 'Active Now' }}
-        chatRight={
-          type === 'dm'
-            ? [
-                {
-                  name: 'calendar-today',
-                  type: 'material-community',
-                  onPress: () => navigation.navigate('Appointments', {}),
-                  buttonType: 'save',
-                },
-                {
-                  name: 'ios-call',
-                  type: 'ionicon',
-                  onPress: null,
-                  buttonType: 'save',
-                },
-              ]
-            : null
-        }
-        practice={practice}
-        group={group}
-        // isLoading={isLoading}
-      />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        <Header
+          navigation={navigation}
+          // title="Edit Profile"
+          subgroups={{
+            show: groupSuggest,
+            onShow: setGroupSuggest,
+            data: subgroups,
+            practiceDms: practiceDms,
+            groupPractice: practice,
+          }}
+          backArrow={true}
+          headerWithImage={{ chatUser: currentUser, status: 'Active Now' }}
+          chatRight={
+            type === 'dm'
+              ? [
+                  {
+                    name: 'calendar-today',
+                    type: 'material-community',
+                    onPress: () => navigation.navigate('Appointments', {}),
+                    buttonType: 'save',
+                  },
+                  {
+                    name: 'ios-call',
+                    type: 'ionicon',
+                    onPress: null,
+                    buttonType: 'save',
+                  },
+                ]
+              : null
+          }
+          practice={practice}
+          group={group}
+          // isLoading={isLoading}
+        />
 
-      {!loader ? (
-        <View style={{ flex: 1, marginTop: 50 }}>
-          <GiftedChat
-            // ref={(ref) => setChatRef(ref)}
-            // extraData={generatedItems}
-            // shouldUpdateMessage={(props, nextProps) => {
-            //   generatedItems(props);
-            //   // return props.extraData.someData !== nextProps.extraData.someData;
-            // }}
-            messages={messages.length ? [...messages].reverse() : []}
-            onSend={(text, shouldResetInputToolbar) => {
-              // onSend(messages)
-              setMessage(text);
-              sendMessage(text);
-              //  values.message = '';
-            }}
-            // scrollToBottom={true}
-            scrollToBottom={true}
-            scrollToBottomComponent={() => (
-              <View>
-                <Icon
-                  name={'chevrons-down'}
-                  type={'feather'}
-                  color={colors.mode === 'light' ? colors.text_1 : colors.text}
-                  size={normalize(18)}
-                  style={{
-                    color: colors.text,
-                    // alignSelf: 'center',
-                  }}
-                />
-              </View>
-            )}
-            scrollToBottomStyle={{
-              backgroundColor: colors.background_1,
-            }}
-            // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
-            renderMessage={(props, index) => {
-              // console.log('MOMENT__', moment().format('DD/MM/YY'));
-              // console.log(
-              //   'TODAY__ ',
-              //   moment().format('DD/MM/YY'),
-              //   moment().add(-1, 'days').format('DD/MM/YY'),
-              //   'Tester___',
-              //   moment(props.currentMessage.timetoken / 1e4).format('DD/MM/YY'),
-              // );
-              if (messages.length) {
-                return (
-                  <>
-                    <ChatBubble
-                      id={props.currentMessage.timetoken}
-                      message={props.currentMessage}
-                      navigation={navigation}
-                      practice={practice}
-                      groupPractice={groupPractice}
-                      practiceDms={practiceDms}
-                      patientChatId={currentUser.chatId}
-                    />
-                    {messages.length &&
-                      getUniqueListBy(messages, 'day').some(
-                        (item) =>
-                          item.timetoken === props.currentMessage.timetoken,
-                      ) && (
-                        <>
-                          {moment().format('DD/MM/YY') ===
-                            moment(props.currentMessage.timetoken / 1e4).format(
-                              'DD/MM/YY',
-                            ) ||
-                          moment().add(-1, 'days').format('DD/MM/YY') ===
-                            moment(props.currentMessage.timetoken / 1e4).format(
-                              'DD/MM/YY',
-                            ) ? (
-                            <View
-                              style={{
-                                backgroundColor: colors.background_1,
-                                paddingVertical: 5,
-                                paddingHorizontal: 12,
-                                borderRadius: 10,
-                                minWidth: 50,
-                                alignSelf: 'center',
-                              }}>
-                              {moment().format('DD/MM/YY') ===
+        {!loader ? (
+          <View style={{ flex: 1, marginTop: 50 }}>
+            <GiftedChat
+              // ref={(ref) => setChatRef(ref)}
+              // extraData={generatedItems}
+              // shouldUpdateMessage={(props, nextProps) => {
+              //   generatedItems(props);
+              //   // return props.extraData.someData !== nextProps.extraData.someData;
+              // }}
+              messages={messages.length ? [...messages].reverse() : []}
+              onSend={(text, shouldResetInputToolbar) => {
+                // onSend(messages)
+                setMessage(text);
+                sendMessage(text);
+                //  values.message = '';
+              }}
+              // scrollToBottom={true}
+              scrollToBottom={true}
+              scrollToBottomComponent={() => (
+                <View>
+                  <Icon
+                    name={'chevrons-down'}
+                    type={'feather'}
+                    color={
+                      colors.mode === 'light' ? colors.text_1 : colors.text
+                    }
+                    size={normalize(18)}
+                    style={{
+                      color: colors.text,
+                      // alignSelf: 'center',
+                    }}
+                  />
+                </View>
+              )}
+              scrollToBottomStyle={{
+                backgroundColor: colors.background_1,
+              }}
+              // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
+              renderMessage={(props, index) => {
+                // console.log('MOMENT__', moment().format('DD/MM/YY'));
+                // console.log(
+                //   'TODAY__ ',
+                //   moment().format('DD/MM/YY'),
+                //   moment().add(-1, 'days').format('DD/MM/YY'),
+                //   'Tester___',
+                //   moment(props.currentMessage.timetoken / 1e4).format('DD/MM/YY'),
+                // );
+                if (messages.length) {
+                  return (
+                    <>
+                      <ChatBubble
+                        id={props.currentMessage.timetoken}
+                        message={props.currentMessage}
+                        navigation={navigation}
+                        practice={practice}
+                        groupPractice={groupPractice}
+                        practiceDms={practiceDms}
+                        patientChatId={currentUser.chatId}
+                      />
+                      {messages.length &&
+                        getUniqueListBy(messages, 'day').some(
+                          (item) =>
+                            item.timetoken === props.currentMessage.timetoken,
+                        ) && (
+                          <>
+                            {moment().format('DD/MM/YY') ===
+                              moment(
+                                props.currentMessage.timetoken / 1e4,
+                              ).format('DD/MM/YY') ||
+                            moment().add(-1, 'days').format('DD/MM/YY') ===
                               moment(
                                 props.currentMessage.timetoken / 1e4,
                               ).format('DD/MM/YY') ? (
-                                <Text
-                                  style={{
-                                    color: colors.text,
-                                    fontSize: normalize(10.5),
-                                    fontFamily: 'SofiaProRegular',
-                                    textAlign: 'center',
-                                  }}>
-                                  Today
-                                </Text>
-                              ) : (
-                                <Text
-                                  style={{
-                                    color: colors.text,
-                                    fontSize: normalize(10.5),
-                                    fontFamily: 'SofiaProRegular',
-                                    textAlign: 'center',
-                                  }}>
-                                  Yesterday
-                                </Text>
-                              )}
-                            </View>
-                          ) : (
-                            <Day
-                              {...props}
-                              textStyle={{
-                                color: colors.text,
-                                fontSize: normalize(10.5),
-                                fontFamily: 'SofiaProRegular',
-                                textAlign: 'center',
-                              }}
-                              wrapperStyle={{
-                                backgroundColor: colors.background_1,
-                                paddingVertical: 5,
-                                paddingHorizontal: 12,
-                                borderRadius: 10,
-                              }}
-                              currentMessage={{
-                                createdAt: new Date(
+                              <View
+                                style={{
+                                  backgroundColor: colors.background_1,
+                                  paddingVertical: 5,
+                                  paddingHorizontal: 12,
+                                  borderRadius: 10,
+                                  minWidth: 50,
+                                  alignSelf: 'center',
+                                }}>
+                                {moment().format('DD/MM/YY') ===
+                                moment(
                                   props.currentMessage.timetoken / 1e4,
-                                ),
-                              }}
-                            />
-                          )}
-                        </>
-                      )}
-                  </>
-                );
-              } else {
-                return <></>;
-              }
-            }}
-            renderChatEmpty={() => <View />}
-            user={{
-              _id: 1,
-            }}
-            listViewProps={{
-              style: {
-                marginBottom: showAccessories ? 65 : 10,
-              },
-            }}
-            textInputProps={{
-              onFocus: () => setShowEmoji(false),
-            }}
-            text={inputText}
-            onInputTextChanged={(text) => setInputText(text)}
-            // focusTextInput={true}
-            textInputStyle={{
-              backgroundColor: colors.background,
-              color: colors.text,
-              alignSelf: 'center',
-              fontFamily: 'SofiaProRegular',
-              fontSize: normalize(14),
-            }}
-            // renderInputToolbar={() => <></>}
-            renderInputToolbar={(props) => (
-              <InputToolbar
-                {...props}
-                renderAccessory={() =>
-                  showAccessories ? renderAccessory() : null
+                                ).format('DD/MM/YY') ? (
+                                  <Text
+                                    style={{
+                                      color: colors.text,
+                                      fontSize: normalize(10.5),
+                                      fontFamily: 'SofiaProRegular',
+                                      textAlign: 'center',
+                                    }}>
+                                    Today
+                                  </Text>
+                                ) : (
+                                  <Text
+                                    style={{
+                                      color: colors.text,
+                                      fontSize: normalize(10.5),
+                                      fontFamily: 'SofiaProRegular',
+                                      textAlign: 'center',
+                                    }}>
+                                    Yesterday
+                                  </Text>
+                                )}
+                              </View>
+                            ) : (
+                              <Day
+                                {...props}
+                                textStyle={{
+                                  color: colors.text,
+                                  fontSize: normalize(10.5),
+                                  fontFamily: 'SofiaProRegular',
+                                  textAlign: 'center',
+                                }}
+                                wrapperStyle={{
+                                  backgroundColor: colors.background_1,
+                                  paddingVertical: 5,
+                                  paddingHorizontal: 12,
+                                  borderRadius: 10,
+                                }}
+                                currentMessage={{
+                                  createdAt: new Date(
+                                    props.currentMessage.timetoken / 1e4,
+                                  ),
+                                }}
+                              />
+                            )}
+                          </>
+                        )}
+                    </>
+                  );
+                } else {
+                  return <></>;
                 }
-                renderActions={renderActions}
-                renderSend={renderSender}
-                accessoryStyle={{ height: showAccessories ? null : 0 }}
-                containerStyle={{
-                  // width: windowWidth - 60,
-                  backgroundColor: colors.background,
-                  // marginHorizontal: 20,
-                  borderTopColor: colors.background_1,
-                  borderBottomColor: colors.background_1,
-                  borderWidth: 0.6,
-                  borderTopWidth: 1,
-                  paddingVertical: 0,
-                  // marginTop: 15,
-                  alignItems: 'center',
-                }}
-              />
-            )}
-            keyboardShouldPersistTaps={false}
-            // maxInputLength={20}
-            inverted={true}
-            renderLoadEarlier={(props) => (
-              <LoadEarlier
-                {...props}
-                label="Load earlier messages"
-                wrapperStyle={{ backgroundColor: 'transparent' }}
-                textStyle={{
-                  fontSize: normalize(11),
-                  textAlign: 'center',
-                  fontFamily: 'SofiaProRegular',
-                  backgroundColor: colors.background_1,
-                  paddingVertical: 6,
-                  paddingHorizontal: 13,
-                  borderRadius: 15,
-                  color: colors.text,
-                }}
-                activityIndicatorStyle={{ padding: 10 }}
-                activityIndicatorColor={
-                  // colors.primary
-                  colors.text
-                }
-                activityIndicatorSize={normalize(25)}
-              />
-            )}
-            // renderLoading
-            onLoadEarlier={() => {
-              setRefreshing(refreshing);
-              getOldMessages(channelName);
-            }}
-            isLoadingEarlier={refreshing}
-            loadEarlier={messages.length >= 25 ? true : false}
-            infiniteScroll={true}
-            maxComposerHeight={100}
-            alignTop={true}
+              }}
+              renderChatEmpty={() => <View />}
+              user={{
+                _id: 1,
+              }}
+              listViewProps={{
+                style: {
+                  marginBottom: showAccessories ? 65 : 10,
+                },
+              }}
+              textInputProps={{
+                onFocus: () => setShowEmoji(false),
+              }}
+              text={inputText}
+              onInputTextChanged={(text) => setInputText(text)}
+              // focusTextInput={true}
+              textInputStyle={{
+                backgroundColor: colors.background,
+                color: colors.text,
+                alignSelf: 'center',
+                fontFamily: 'SofiaProRegular',
+                fontSize: normalize(14),
+                alignItems: 'center',
+                marginTop: 10,
+              }}
+              // renderInputToolbar={() => <></>}
+              renderInputToolbar={(props) => (
+                <InputToolbar
+                  {...props}
+                  renderAccessory={() =>
+                    showAccessories ? renderAccessory() : null
+                  }
+                  renderActions={renderActions}
+                  renderSend={renderSender}
+                  accessoryStyle={{ height: showAccessories ? null : 0 }}
+                  containerStyle={{
+                    // width: windowWidth - 60,
+                    backgroundColor: colors.background,
+                    // marginHorizontal: 20,
+                    borderTopColor: colors.background_1,
+                    borderBottomColor: colors.background_1,
+                    borderWidth: 0.6,
+                    borderTopWidth: 1,
+                    paddingVertical: 2,
+                    // marginTop: 15,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                />
+              )}
+              keyboardShouldPersistTaps={false}
+              // maxInputLength={20}
+              inverted={true}
+              renderLoadEarlier={(props) => (
+                <LoadEarlier
+                  {...props}
+                  label="Load earlier messages"
+                  wrapperStyle={{ backgroundColor: 'transparent' }}
+                  textStyle={{
+                    fontSize: normalize(11),
+                    textAlign: 'center',
+                    fontFamily: 'SofiaProRegular',
+                    backgroundColor: colors.background_1,
+                    paddingVertical: 6,
+                    paddingHorizontal: 13,
+                    borderRadius: 15,
+                    color: colors.text,
+                  }}
+                  activityIndicatorStyle={{ padding: 10 }}
+                  activityIndicatorColor={
+                    // colors.primary
+                    colors.text
+                  }
+                  activityIndicatorSize={normalize(25)}
+                />
+              )}
+              // renderLoading
+              onLoadEarlier={() => {
+                setRefreshing(refreshing);
+                getOldMessages(channelName);
+              }}
+              isLoadingEarlier={refreshing}
+              loadEarlier={messages.length >= 25 ? true : false}
+              infiniteScroll={true}
+              maxComposerHeight={100}
+              alignTop={true}
 
-            // renderChatFooter={}
-          />
+              // renderChatFooter={}
+            />
 
-          {/* <FlatList
+            {/* <FlatList
           ref={(ref) => setChatRef(ref)}
           // keyExtractor={(item) => item.id.toString()}
           keyboardDismissMode="on-drag"
@@ -1041,18 +1040,18 @@ const ChatScreen = ({
           // extraData={selected}
           // ListFooterComponent={}
         /> */}
-          {/* //ANCHOR */}
-        </View>
-      ) : (
-        <ActivityIndicator
-          animating={true}
-          size={normalize(30)}
-          color={colors.text}
-          style={{ position: 'absolute', top: '50%', left: '50%' }}
-        />
-      )}
-      {/* </ScrollView> */}
-      {/* <KeyboardAvoidingView behavior="height">
+            {/* //ANCHOR */}
+          </View>
+        ) : (
+          <ActivityIndicator
+            animating={true}
+            size={normalize(30)}
+            color={colors.text}
+            style={{ position: 'absolute', top: '50%', left: '50%' }}
+          />
+        )}
+        {/* </ScrollView> */}
+        {/* <KeyboardAvoidingView behavior="height">
         <InputBox
           handleChange={handleChange}
           handleBlur={handleBlur}
@@ -1113,7 +1112,7 @@ const ChatScreen = ({
 
 
       </KeyboardAvoidingView> */}
-      {/* {showEmoji && (
+        {/* {showEmoji && (
         <View style={{ height: 300 }}>
           <EmojiSelector
             showTabs={true}
@@ -1145,40 +1144,41 @@ const ChatScreen = ({
           />
         </View>
       )} */}
-      {showEmoji && (
-        <View style={{ height: 280 }}>
-          <EmojiBoard
-            // blackList={[]}
-            showBoard={true}
-            emojiSize={22}
-            containerStyle={{
-              backgroundColor: colors.background,
-            }}
-            categoryHighlightColor={colors.text}
-            categoryDefautColor={colors.text_3}
-            // tabBarStyle={{color: 'green'}}
-            onClick={(emoji) => {
-              Keyboard.dismiss();
-              console.log(emoji);
-              setInputText((input) => input + emoji.code);
-            }}
-            onRemove={() => {
-              // setInputText(backspace(inputText));
-              setInputText(deleteEmoji(inputText));
-            }}
-          />
-        </View>
-      )}
-      <MediaPicker
-        navigation={navigation}
-        practice={practice}
-        group={group}
-        showMediaPick={showMediaPick}
-        setShowMediaPick={setShowMediaPick}
-        mediaFile={mediaFile}
-        setMediaFile={setMediaFile}
-        sendFile={sendFile}
-      />
+        {showEmoji && (
+          <View style={{ height: 280 }}>
+            <EmojiBoard
+              // blackList={[]}
+              showBoard={true}
+              emojiSize={22}
+              containerStyle={{
+                backgroundColor: colors.background,
+              }}
+              categoryHighlightColor={colors.text}
+              categoryDefautColor={colors.text_3}
+              // tabBarStyle={{color: 'green'}}
+              onClick={(emoji) => {
+                Keyboard.dismiss();
+                console.log(emoji);
+                setInputText((input) => input + emoji.code);
+              }}
+              onRemove={() => {
+                // setInputText(backspace(inputText));
+                setInputText(deleteEmoji(inputText));
+              }}
+            />
+          </View>
+        )}
+        <MediaPicker
+          navigation={navigation}
+          practice={practice}
+          group={group}
+          showMediaPick={showMediaPick}
+          setShowMediaPick={setShowMediaPick}
+          mediaFile={mediaFile}
+          setMediaFile={setMediaFile}
+          sendFile={sendFile}
+        />
+      </View>
     </SafeAreaView>
   );
 };

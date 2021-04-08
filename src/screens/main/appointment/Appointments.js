@@ -27,7 +27,7 @@ import Appointment from './Appointment';
 import Header from '../../../components/hoc/Header';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { useTheme } from '@react-navigation/native';
 import normalize from '../../../utils/normalize';
 import { FlatList } from 'react-native';
@@ -110,7 +110,7 @@ const Appointments = ({ navigation }) => {
     return unsubscribe;
   }, [navigation]);
   return (
-    <View
+    <SafeAreaView
       style={[
         style1 === 'open' && {
           borderWidth: 18,
@@ -338,7 +338,7 @@ const Appointments = ({ navigation }) => {
           )}
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

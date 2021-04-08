@@ -62,6 +62,7 @@ import InputBox from '../../components/hoc/InputBox';
 import ToggleSwitch from 'toggle-switch-react-native';
 import { Keyboard } from 'react-native';
 import { setFilter } from '../../redux/practices/practices.actions';
+import { SafeAreaView } from 'react-navigation';
 
 const DrawerContent = ({
   navigation,
@@ -146,7 +147,7 @@ const DrawerContent = ({
   //   console.log(currentUser);
   // }, []);
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View
         style={[
           styles.userInfoSection,
@@ -633,7 +634,7 @@ const DrawerContent = ({
         </View>
       )}
       {/* </Drawer.Section> */}
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
