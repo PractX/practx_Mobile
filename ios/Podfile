@@ -8,7 +8,6 @@ target 'practx_Mobile' do
 
   use_react_native!(:path => config["reactNativePath"])
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
 
@@ -21,7 +20,8 @@ target 'practx_Mobile' do
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable these next few lines.
-  use_flipper!
+  # use_flipper!({ 'Flipper-Folly' => '2.3.0' }, configurations: ['Debug', 'Staging'])
+  use_flipper!({ 'Flipper-Folly' => '2.3.0'}) #To fix build error
   post_install do |installer|
     flipper_post_install(installer)
   end

@@ -22,12 +22,12 @@ import {
   TextInput,
   ScrollView,
   Pressable,
+  TouchableOpacity,
 } from 'react-native';
 
 import { LOGO, LOGO2 } from '../../../assets/images';
 import InputBox from '../../components/hoc/InputBox';
 import SmallInputBox from '../../components/hoc/SmallInputBox';
-import { normalize } from 'react-native-elements';
 import { useTheme } from '@react-navigation/native';
 import { signUpStart } from '../../redux/user/user.actions';
 import { connect } from 'react-redux';
@@ -36,6 +36,7 @@ import {
   selectCurrentUser,
   selectIsLoading,
 } from '../../redux/user/user.selector';
+import normalize from '../../utils/normalize';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -122,6 +123,26 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
             {/* ------------------- LOGO SECTION --------------------------------------- */}
 
             <Animatable.View animation="pulse">
+              <TouchableOpacity
+                style={{
+                  width: 40,
+                  height: 30,
+                  top: 15,
+                  left: 5,
+                  position: 'absolute',
+                }}
+                onPress={() => navigation.goBack()}>
+                <Icon
+                  name="arrow-back"
+                  type="material-icons"
+                  color={colors.text}
+                  size={normalize(18)}
+                  style={{
+                    color: colors.text,
+                    // alignSelf: 'center',
+                  }}
+                />
+              </TouchableOpacity>
               <Image style={styles.logo} source={logo} resizeMode="contain" />
 
               <View style={{ alignItems: 'center', marginTop: 10 }}>
@@ -130,6 +151,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                     fontSize: normalize(18),
                     fontFamily: 'SofiaProSemiBold',
                     color: colors.text_1,
+                    marginBottom: 5,
                   }}>
                   Get Started
                 </Text>
@@ -333,6 +355,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                       name="password"
                       iconName="lock-outline"
                       iconType="material-community"
+                      iconSize={14}
                       placeholder="Password"
                       autoCompleteType="password"
                       textContentType="password"

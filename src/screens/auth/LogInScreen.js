@@ -13,7 +13,7 @@ import {
   TextInput,
   ScrollView,
   Pressable,
-  Alert,
+  Platform,
   AccessibilityInfo,
 } from 'react-native';
 import { Button } from 'react-native-elements';
@@ -21,7 +21,6 @@ import { Text, Content, CheckBox } from 'native-base';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 // import * as Actions from '../redux/auth/actions';
 import { LOGO, LOGO2 } from '../../../assets/images';
-import { normalize } from 'react-native-elements';
 import InputBox from '../../components/hoc/InputBox';
 import { createStructuredSelector } from 'reselect';
 import { signInStart } from '../../redux/user/user.actions';
@@ -29,6 +28,7 @@ import {
   selectCurrentUser,
   selectIsLoading,
 } from '../../redux/user/user.selector';
+import normalize from '../../utils/normalize';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -71,6 +71,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                   fontSize: normalize(18),
                   fontFamily: 'SofiaProSemiBold',
                   color: colors.text_1,
+                  marginBottom: 5,
                 }}>
                 Welcome Back
               </Text>
@@ -102,7 +103,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                     name="email"
                     iconName="mail"
                     iconType="feather"
-                    iconSize={14}
+                    iconSize={normalize(14)}
                     placeholder="Email"
                     autoCompleteType="email"
                     textContentType="emailAddress"
@@ -122,7 +123,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                     name="password"
                     iconName="lock-outline"
                     iconType="material-community"
-                    iconSize={14}
+                    iconSize={normalize(14)}
                     placeholder="Password"
                     autoCompleteType="password"
                     textContentType="password"
@@ -228,6 +229,7 @@ const styles = StyleSheet.create({
     // height: windowHeight,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 30,
   },
   topText: {
     marginTop: 5,
@@ -264,7 +266,7 @@ const styles = StyleSheet.create({
     width: normalize(130),
     height: normalize(130),
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: Platform.OS === 'ios' ? 30 : 0,
   },
 
   whiteFont: {
