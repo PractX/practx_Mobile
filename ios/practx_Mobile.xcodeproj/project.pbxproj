@@ -21,6 +21,8 @@
 		2DCD954D1E0B4F2C00145EB5 /* practx_MobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* practx_MobileTests.m */; };
 		2E5209725049490D9C1AB0AB /* SofiaProExtraLight-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1259EEEC26D84EC087B345C4 /* SofiaProExtraLight-Italic.ttf */; };
 		34844D4C3CA4438FA5CF4A59 /* SofiaProUltraLight-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BE1DE18B07BA4E2D8B93EA0C /* SofiaProUltraLight-Italic.ttf */; };
+		4179A37B2621B4EE0031F3AD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		4179A3802621B5090031F3AD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		48231CD893644FB18C15A16B /* SofiaProBold-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F391D8315A4F4C8D8BDD51E0 /* SofiaProBold-Italic.ttf */; };
 		5A22E7BFB29245BEACF20F8B /* SofiaProLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E48C4F2CC074715867A754C /* SofiaProLight.ttf */; };
 		5C15B57CECEB42B292C086AC /* FuturaStd-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2D8FEDDCBD0C4855A79E81E1 /* FuturaStd-Bold.otf */; };
@@ -89,6 +91,7 @@
 		3621853C8BDD4C139ED17D28 /* Roboto_medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_medium.ttf; path = "../node_modules/native-base/Fonts/Roboto_medium.ttf"; sourceTree = "<group>"; };
 		37CC7A2F737D47EB9FDDB05A /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		3E48C4F2CC074715867A754C /* SofiaProLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SofiaProLight.ttf; path = ../assets/fonts/SofiaProLight.ttf; sourceTree = "<group>"; };
+		4179A3332620DD890031F3AD /* practx_Mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = practx_Mobile.entitlements; path = practx_Mobile/practx_Mobile.entitlements; sourceTree = "<group>"; };
 		41A8E591261C5DD400DAA8F5 /* Roboto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Roboto.ttf; path = ../android/app/src/main/assets/fonts/Roboto.ttf; sourceTree = "<group>"; };
 		41A8E592261C5DD400DAA8F5 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Solid.ttf; path = ../android/app/src/main/assets/fonts/FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
 		41A8E593261C5DD400DAA8F5 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SimpleLineIcons.ttf; path = ../android/app/src/main/assets/fonts/SimpleLineIcons.ttf; sourceTree = "<group>"; };
@@ -296,6 +299,7 @@
 		13B07FAE1A68108700A75B9A /* practx_Mobile */ = {
 			isa = PBXGroup;
 			children = (
+				4179A3332620DD890031F3AD /* practx_Mobile.entitlements */,
 				417F7E18261C5062000DBEFF /* Fonts */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -510,7 +514,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = WDJMX2SN3F;
+						DevelopmentTeam = ZL992SVF67;
 						LastSwiftMigration = 1120;
 						ProvisioningStyle = Automatic;
 					};
@@ -551,6 +555,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4179A37B2621B4EE0031F3AD /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -602,6 +607,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4179A3802621B5090031F3AD /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -964,10 +970,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = practx_Mobile/practx_Mobile.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WDJMX2SN3F;
+				DEVELOPMENT_TEAM = ZL992SVF67;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = practx_Mobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -976,11 +983,12 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.bcapturetech.practx;
 				PRODUCT_NAME = practx_Mobile;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -991,10 +999,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = practx_Mobile/practx_Mobile.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WDJMX2SN3F;
+				DEVELOPMENT_TEAM = ZL992SVF67;
 				INFOPLIST_FILE = practx_Mobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1002,10 +1011,11 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.bcapturetech.practx;
 				PRODUCT_NAME = practx_Mobile;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
