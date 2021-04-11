@@ -1,6 +1,6 @@
 {
 	"name": "practx_Mobile",
-	"version": "1.0.0-rc.7",
+	"version": "1.0.1",
 	"private": true,
 	"scripts": {
 		"android": "react-native run-android",
