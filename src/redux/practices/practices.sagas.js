@@ -101,11 +101,13 @@ export function* willGetJoinedPractices() {
     const result = yield getJoinedPracticeApi(token).then(function (response) {
       return response.data.patient;
     });
-    console.log(result);
+    console.log('Result__', result);
     // setPracticeId;
     yield put(getJoinedPracticesSuccess(result.practices));
   } catch (error) {
+    console.log(error);
     console.log(error.response);
+    yield put(setLoading(false));
     // yield put(
     //   signInFailure(
     //     error.response
@@ -120,33 +122,33 @@ export function* willJoinPractices({ payload: practiceId }) {
   const token = yield select(userToken);
   console.log('going in aoi');
   console.log(token);
-  // try {
-  //   const result = yield joinPracticeApi(practiceId, token).then(function (
-  //     response,
-  //   ) {
-  //     return response.data;
-  //   });
-  //   console.log(result);
-  //   showMessage({
-  //     message: result.message,
-  //     type: 'success',
-  //   });
-  //   yield put(getPracticesAllStart());
-  // } catch (error) {
-  //   console.log(error.response);
-  //   if (error.response) {
-  //     showMessage({
-  //       message: error.response.data.message,
-  //       type: 'danger',
-  //     });
-  //   } else {
-  //     showMessage({
-  //       message: error.message,
-  //       type: 'danger',
-  //     });
-  //   }
-  //   yield put(setLoading(false));
-  // }
+  try {
+    const result = yield joinPracticeApi(practiceId, token).then(function (
+      response,
+    ) {
+      return response.data;
+    });
+    console.log(result);
+    showMessage({
+      message: result.message,
+      type: 'success',
+    });
+    yield put(getPracticesAllStart());
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      showMessage({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    yield put(setLoading(false));
+  }
 }
 
 export function* willGetPracticesDms() {
