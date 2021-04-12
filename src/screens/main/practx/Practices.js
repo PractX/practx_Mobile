@@ -259,7 +259,7 @@ const Practices = ({
       <BottomSheet
         ref={bottomSheetRef}
         snapPoints={[560, 400, 0]}
-        borderRadius={20}
+        borderRadius={40}
         renderContent={() => (
           <PracticeDetails
             bottomSheetRef={bottomSheetRef}

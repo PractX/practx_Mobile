@@ -282,7 +282,9 @@ const Practx = ({
                   horizontal={true}
                   refreshControl={
                     <RefreshControl
-                      refreshing={refreshing}
+                      refreshing={
+                        practices && practices.length > 0 ? false : refreshing
+                      }
                       onRefresh={() => getPracticesAllStart()}
                     />
                   }
@@ -336,7 +338,7 @@ const Practx = ({
                 }}>
                 <Text
                   style={{
-                    fontSize: normalize(13),
+                    fontSize: normalize(12),
                     fontFamily: 'SofiaProSemiBold',
                     color: colors.text,
                   }}>
@@ -346,7 +348,7 @@ const Practx = ({
                   name="arrow-forward"
                   type="material-icons"
                   color={colors.text}
-                  size={normalize(16)}
+                  size={normalize(15)}
                   style={{
                     color: colors.text,
                     // alignSelf: 'center',
@@ -359,7 +361,9 @@ const Practx = ({
                   horizontal={true}
                   refreshControl={
                     <RefreshControl
-                      refreshing={refreshing}
+                      refreshing={
+                        practices && practices.length > 0 ? false : refreshing
+                      }
                       onRefresh={() => getPracticesAllStart()}
                     />
                   }
@@ -435,7 +439,7 @@ const Practx = ({
       <BottomSheet
         ref={bottomSheetRef}
         snapPoints={[660, 500, 0]}
-        borderRadius={20}
+        borderRadius={40}
         renderContent={() => (
           <PracticeDetails
             bottomSheetRef={bottomSheetRef}

@@ -6,6 +6,7 @@ import {
   View,
   Text,
   StatusBar,
+  Platform,
 } from 'react-native';
 import {
   NavigationContainer,
@@ -93,6 +94,7 @@ const App = ({ themeMode, user, token }) => {
   }, [themeMode]);
   return (
     <>
+      {/* <SafeAreaView style={{ flex: 2, backgroundColor: state.color }}> */}
       <StatusBar backgroundColor={state.color} barStyle={state.scheme} />
       <NavigationContainer
         theme={state.theme}
@@ -122,12 +124,14 @@ const App = ({ themeMode, user, token }) => {
           width: '70%',
           alignSelf: 'center',
           zIndex: 20000,
+          top: Platform.OS === 'ios' ? 30 : 0,
           // alignItems: 'center',
         }}
         titleStyle={{ textAlign: 'left', fontFamily: 'SofiaProRegular' }}
         duration={4000}
         icon={{ icon: 'auto', position: 'right' }}
       />
+      {/* </SafeAreaView> */}
     </>
   );
 };

@@ -182,12 +182,12 @@ const Header = ({
               flexDirection: 'column',
               // marginTop: 20,
               // marginLeft: 20,
-              // backgroundColor: 'green',
               marginHorizontal: 20,
               marginVertical: 15,
               width: 40,
               height: 30,
               alignItems: 'center',
+              zIndex: 1,
             }}
             onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
             <View

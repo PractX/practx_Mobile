@@ -48,6 +48,7 @@ const PracticeDetails = ({
   setPracticeId,
   practiceData,
   setPracticeData,
+  joinPractices,
 }) => {
   const { colors } = useTheme();
   const { show, data, type } = practiceData;
@@ -80,15 +81,24 @@ const PracticeDetails = ({
         size={normalize(18)}
         style={[{ alignSelf: 'center' }]}
       /> */}
-      <View
+      <TouchableOpacity
         style={{
-          alignSelf: 'center',
-          backgroundColor: colors.text_1,
-          width: 20,
-          height: 1,
-          marginTop: 10,
+          justifyContent: 'center',
         }}
-      />
+        onPress={() => {
+          console.log(bottomSheetRef.current);
+          bottomSheetRef.current.snapTo(2);
+        }}>
+        <View
+          style={{
+            alignSelf: 'center',
+            backgroundColor: colors.text_1,
+            width: 20,
+            height: 3,
+            marginTop: 10,
+          }}
+        />
+      </TouchableOpacity>
 
       {practiceData.data && (
         <View style={{ width: windowWidth }}>
@@ -153,8 +163,9 @@ const PracticeDetails = ({
                 ) : (
                   <Button
                     title="Join"
-                    onPress={async () => {
-                      await joinPractice(data.id);
+                    onPress={() => {
+                      console.log('Joining');
+                      joinPractice(data.id);
                       // await setPracticeId(practice.id);
                       // await navigation.navigate('Chats');
                     }}
