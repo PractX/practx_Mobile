@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { setPracticeId } from '../../../redux/practices/practices.actions';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import StaffList from './StaffList';
 
 const PracticesBox = ({

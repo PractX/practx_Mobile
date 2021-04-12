@@ -55,7 +55,7 @@ import { showMessage } from 'react-native-flash-message';
 // import NumDownloads from '../helpers/numDownloads';
 // import { SvgXml } from 'react-native-svg';
 // import { checkInternetConnection } from 'react-native-offline';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import { Formik } from 'formik';
 import InputBox from '../../components/hoc/InputBox';
@@ -549,40 +549,48 @@ const DrawerContent = ({
                       name="moon"
                       color={colors.background}
                       type="ionicon"
-                      size={13}
+                      size={normalize(12)}
                     />
                   ) : (
                     <Icon
                       name="sun"
                       color={colors.text}
                       type="feather"
-                      size={13}
+                      size={normalize(12)}
                     />
                   )
                 }
               />
-              {isEnabled ? (
-                <Text
-                  style={{
-                    color: colors.text,
-                    paddingLeft: 20,
-                    fontFamily: 'SofiaProSemiBold',
-                    fontSize: normalize(13),
-                    // textAlign: 'center',
-                  }}>
-                  Dark
-                </Text>
-              ) : (
-                <Text
-                  style={{
-                    color: colors.text,
-                    paddingLeft: 10,
-                    fontFamily: 'SofiaProSemiBold',
-                    fontSize: normalize(13),
-                  }}>
-                  Light
-                </Text>
-              )}
+              <View
+                style={{
+                  color: colors.text,
+                  paddingLeft: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                {isEnabled ? (
+                  <Text
+                    style={{
+                      color: colors.text,
+                      fontFamily: 'SofiaProSemiBold',
+                      fontSize: normalize(13),
+                      textAlign: 'center',
+                    }}>
+                    Dark
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      color: colors.text,
+                      fontFamily: 'SofiaProSemiBold',
+                      fontSize: normalize(13),
+                      textAlign: 'center',
+                      alignSelf: 'center',
+                    }}>
+                    Light
+                  </Text>
+                )}
+              </View>
               {/* <Switch
                 // trackColor={{ false: '#767577', true: '#81b0ff' }}
                 // thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}

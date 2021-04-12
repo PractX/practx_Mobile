@@ -9,7 +9,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import PracticesBox from './PracticeBox';
 import StaffList from './StaffList';
 

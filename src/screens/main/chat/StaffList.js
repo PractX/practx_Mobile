@@ -9,7 +9,7 @@ import {
 import { Button, Icon } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import { ActivityIndicator } from 'react-native-paper';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 
 const StaffList = ({
   showStaffs,

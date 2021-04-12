@@ -13,7 +13,7 @@ import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import { ListItem, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';

@@ -24,7 +24,7 @@ import { connect } from 'react-redux';
 import { verifyAccount } from '../../redux/user/user.actions';
 import { createStructuredSelector } from 'reselect';
 import { selectIsLoading } from '../../redux/user/user.selector';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;

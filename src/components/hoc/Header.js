@@ -8,7 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import { DrawerActions, useTheme } from '@react-navigation/native';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import { Button, Icon } from 'react-native-elements';
 import {
   Menu,
@@ -73,7 +73,31 @@ const Header = ({
           // height: 50,
           // backgroundColor: colors.background,
         }}>
-        {backArrow ? (
+        {backArrow && !practice && !group && (
+          <TouchableOpacity
+            style={{
+              width: 40,
+              height: 30,
+              alignItems: 'flex-start',
+              paddingTop: 5,
+              zIndex: 20,
+              marginLeft: 20,
+              marginVertical: 15,
+            }}
+            onPress={() => navigation.goBack()}>
+            <Icon
+              name="arrow-back"
+              type="material-icons"
+              color={colors.text}
+              size={normalize(18)}
+              style={{
+                color: colors.text,
+                // alignSelf: 'center',
+              }}
+            />
+          </TouchableOpacity>
+        )}
+        {(backArrow && practice) || (backArrow && group) ? (
           <View
             style={{
               justifyContent: 'center',
@@ -88,6 +112,7 @@ const Header = ({
                 height: 30,
                 alignItems: 'flex-start',
                 paddingTop: 5,
+                zIndex: 20,
               }}
               onPress={() => navigation.goBack()}>
               <Icon
@@ -176,39 +201,43 @@ const Header = ({
             ) : null}
           </View>
         ) : (
-          <TouchableOpacity
-            style={{
-              justifyContent: 'center',
-              flexDirection: 'column',
-              // marginTop: 20,
-              // marginLeft: 20,
-              marginHorizontal: 20,
-              marginVertical: 15,
-              width: 40,
-              height: 30,
-              alignItems: 'center',
-              zIndex: 1,
-            }}
-            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-            <View
-              style={{
-                backgroundColor: colors.text,
-                width: 21,
-                height: 1.6,
-                marginTop: 4,
-                alignSelf: 'flex-start',
-              }}
-            />
-            <View
-              style={{
-                backgroundColor: colors.primary,
-                width: 10,
-                height: 1.6,
-                marginTop: 4,
-                alignSelf: 'flex-start',
-              }}
-            />
-          </TouchableOpacity>
+          <>
+            {!backArrow && (
+              <TouchableOpacity
+                style={{
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  // marginTop: 20,
+                  // marginLeft: 20,
+                  marginHorizontal: 20,
+                  marginVertical: 15,
+                  width: 40,
+                  height: 30,
+                  alignItems: 'center',
+                  zIndex: 2,
+                }}
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+                <View
+                  style={{
+                    backgroundColor: colors.text,
+                    width: 21,
+                    height: 1.6,
+                    marginTop: 4,
+                    alignSelf: 'flex-start',
+                  }}
+                />
+                <View
+                  style={{
+                    backgroundColor: colors.primary,
+                    width: 10,
+                    height: 1.6,
+                    marginTop: 4,
+                    alignSelf: 'flex-start',
+                  }}
+                />
+              </TouchableOpacity>
+            )}
+          </>
         )}
         {title && (
           <View

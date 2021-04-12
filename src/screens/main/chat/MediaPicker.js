@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text, Dimensions, Button, Platform } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import Modal from 'react-native-modal';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';

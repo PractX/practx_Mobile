@@ -30,7 +30,7 @@ import {
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
 import { ActivityIndicator } from 'react-native-paper';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import Error from '../../../components/hoc/Error';
 import BottomSheet from 'reanimated-bottom-sheet';
 import PracticeDetails from '../../../components/hoc/PracticeDetails';

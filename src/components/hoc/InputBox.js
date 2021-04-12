@@ -9,7 +9,7 @@ import {
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import { Icon, Button } from 'react-native-elements';
 import { Keyboard } from 'react-native';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;

@@ -17,7 +17,7 @@ import { SafeAreaView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import Header from '../../../components/hoc/Header';
 import FastImage from 'react-native-fast-image';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 
 const Stack = createStackNavigator();
 

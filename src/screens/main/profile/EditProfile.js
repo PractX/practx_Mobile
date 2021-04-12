@@ -18,7 +18,7 @@ import {
   selectCurrentUser,
   selectIsLoading,
 } from '../../../redux/user/user.selector';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import { ListItem, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';

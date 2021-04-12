@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions, TouchableOpacity } from 'react-native';
 import { View, Text } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import timeAgo from '../../../utils/timeAgo';
 
 const windowWidth = Dimensions.get('window').width;

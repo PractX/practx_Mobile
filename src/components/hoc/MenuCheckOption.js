@@ -2,7 +2,7 @@ import React from 'react';
 import { CheckBox, Text } from 'native-base';
 import { StyleSheet, View } from 'react-native';
 import { MenuOption } from 'react-native-popup-menu';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 
 const MenuCheckOption = ({
   name,

@@ -36,7 +36,7 @@ import {
   selectCurrentUser,
   selectIsLoading,
 } from '../../redux/user/user.selector';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;

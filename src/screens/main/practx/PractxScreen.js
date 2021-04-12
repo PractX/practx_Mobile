@@ -32,7 +32,7 @@ import {
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
 import { ActivityIndicator } from 'react-native-paper';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import Error from '../../../components/hoc/Error';
 import BottomSheet from 'reanimated-bottom-sheet';
 import PracticeDetails from '../../../components/hoc/PracticeDetails';
@@ -106,21 +106,23 @@ const Practx = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    console.log('navigations', extraData);
     const unsubscribe = extraData.addListener('drawerOpen', (e) => {
       // Do something
       setStyle1('open');
+      console.log('Open');
     });
 
     return unsubscribe;
   }, [extraData]);
-  React.useEffect(() => {
+  useEffect(() => {
     // console.log(practices);
 
     const unsubscribe = extraData.addListener('drawerClose', (e) => {
       // Do something
       setStyle1('close');
-      // console.log('Close');
+      console.log('Close');
     });
 
     return unsubscribe;
@@ -129,6 +131,8 @@ const Practx = ({
   function sortRandomly(a, b) {
     return 0.5 - Math.random();
   }
+
+  console.log(style1);
 
   return (
     <SafeAreaView
@@ -161,7 +165,7 @@ const Practx = ({
             shadowOpacity: 0.1,
             shadowRadius: 2,
             // Android
-            elevation: 3,
+            elevation: 9,
             borderRadius: 30,
             overflow: 'hidden',
             borderColor:
@@ -173,7 +177,7 @@ const Practx = ({
           },
         ]}>
         <MainHeader
-          navigation={navigation}
+          navigation={extraData}
           title="Practices"
           iconRight1={{
             name: 'equalizer',

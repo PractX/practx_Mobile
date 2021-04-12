@@ -14,7 +14,7 @@ import {
 import { Button, Icon } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import {

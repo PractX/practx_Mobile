@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import { Dimensions } from 'react-native';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import timeAgo from '../../utils/timeAgo';
 import { usePubNub } from 'pubnub-react';
 import { Day } from 'react-native-gifted-chat';
