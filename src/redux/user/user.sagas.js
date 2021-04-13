@@ -203,8 +203,8 @@ export function* verifyAcct({ payload: verificationKey }) {
         type: 'success',
       });
       yield delay(3000);
-      yield put(signInSuccess(result.patient));
       yield put(setToken(token));
+      yield put(signInSuccess(result.patient));
     }
   } catch (error) {
     console.log(error.response);
