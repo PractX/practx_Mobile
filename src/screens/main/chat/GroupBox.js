@@ -35,7 +35,6 @@ const GroupBox = ({
   //   'Last____',
   //   allMessages.messages[allMessages.messages.length - 1].timetoken / 10000000,
   // );
-  console.log(item);
 
   useEffect(() => {
     if (allMessages) {
@@ -142,19 +141,22 @@ const GroupBox = ({
               ? allMessages.messages[allMessages.messages.length - 1].message &&
                 allMessages.messages[allMessages.messages.length - 1].message
                   .text
-                ? allMessages.messages[allMessages.messages.length - 1].message
-                    .text.length > 60
+                ? allMessages.messages[
+                    allMessages.messages.length - 1
+                  ].message.text.replace(/(\r\n|\n|\r)/gm, '').length > 60
                   ? allMessages.messages[
                       allMessages.messages.length - 1
-                    ].message.text.substring(0, 60 - 3) + '...'
+                    ].message.text
+                      .replace(/(\r\n|\n|\r)/gm, '')
+                      .substring(0, 60 - 3) + '...'
                   : allMessages.messages[
                       allMessages.messages.length - 1
-                    ].message.text.replace('\n', '')
+                    ].message.text.replace(/(\r\n|\n|\r)/gm, '')
                 : allMessages.messages[allMessages.messages.length - 1].message
                     .file
                 ? ' Photo'
                 : allMessages.messages[allMessages.messages.length - 1].replace(
-                    '\n',
+                    /(\r\n|\n|\r)/gm,
                     '',
                   )
               : 'ℹ️ Begin conversation'}

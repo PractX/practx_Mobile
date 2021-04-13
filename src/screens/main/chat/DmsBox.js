@@ -156,7 +156,10 @@ const DmsBox = ({
                 : allMessages.messages[allMessages.messages.length - 1].message
                     .file
                 ? ' Photo'
-                : allMessages.messages[allMessages.messages.length - 1]
+                : allMessages.messages[allMessages.messages.length - 1].replace(
+                    /(\r\n|\n|\r)/gm,
+                    '',
+                  )
               : `ℹ️ Chat with ${
                   item && item.Practice && item.Practice.practiceName
                 }`}

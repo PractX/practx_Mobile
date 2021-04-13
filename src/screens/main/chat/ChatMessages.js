@@ -131,7 +131,7 @@ const ChatMessages = ({
     pubnub.fetchMessages(
       {
         channels: allChannels,
-        count: 1,
+        count: 10,
         end: time,
       },
 
@@ -361,6 +361,11 @@ const ChatMessages = ({
   }, [currentPracticeId]);
 
   useMemo(() => {
+    // console.log(
+    //   'Checkin GROUP DATA__',
+    //   subgroups.find((item) => item.practiceId === currentPracticeId).groups
+    //     .length > 0,
+    // );
     if (currentPracticeId) {
       console.log('Getting all channels');
       if (practiceDms.length) {
@@ -699,7 +704,13 @@ const ChatMessages = ({
                     Groups
                   </Text>
                 </View>
-                {subgroups.length > 0 ? (
+                {currentPracticeId &&
+                subgroups.length > 0 &&
+                subgroups.find(
+                  (item) => item.practiceId === currentPracticeId,
+                ) &&
+                subgroups.find((item) => item.practiceId === currentPracticeId)
+                  .groups.length > 0 ? (
                   <View
                     style={{
                       height: windowHeight - 400,
@@ -770,7 +781,7 @@ const ChatMessages = ({
                     {practiceDms === null || isFetching ? (
                       <ActivityIndicator
                         animating={isFetching}
-                        size={normalize(35)}
+                        size={normalize(25)}
                         color={colors.text}
                       />
                     ) : (
@@ -779,14 +790,14 @@ const ChatMessages = ({
                           name="deleteusergroup"
                           type="antdesign"
                           color={colors.text_2}
-                          size={normalize(50)}
+                          size={normalize(35)}
                           style={{ color: colors.text_1, alignSelf: 'center' }}
                         />
                         <Text
                           style={{
                             color: colors.text_2,
                             alignSelf: 'center',
-                            fontSize: normalize(16),
+                            fontSize: normalize(14),
                             fontFamily: 'SofiaProRegular',
                             textAlign: 'center',
                           }}>

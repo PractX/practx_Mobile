@@ -102,7 +102,7 @@ const ChatScreen = ({
   // const [channels] = useState();
   const [imageUri, setImageUri] = useState();
   const [messages, addMessages] = useState([]);
-  const [messageDay, setMessageDay] = useState([]);
+  const [sending, setSending] = useState(false);
   const [message, setMessage] = useState('');
   const [inputText, setInputText] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
@@ -122,7 +122,6 @@ const ChatScreen = ({
     // return checkAmPm(time.slice(0, -3));
     return localeDateTime.split(', ')[0];
   };
-  console.log('GROUP____', subgroups);
   // const getAllMessages = (cha, num) => {
   //   // const myChannels = [cha];
   //   console.log(cha);
@@ -168,6 +167,8 @@ const ChatScreen = ({
   const sendMessage = (data) => {
     console.log(channelName);
     console.log(data[0].text);
+    console.log('SENDING____');
+    setSending(true);
     // chatRef.scrollToEnd();
     pubnub.setUUID(currentUser.chatId);
     if (data) {
@@ -188,6 +189,8 @@ const ChatScreen = ({
           // handle status, response
           console.log(status);
           console.log(response);
+          console.log('SENT____');
+          setSending(false);
         },
       );
     } else {
@@ -198,6 +201,8 @@ const ChatScreen = ({
   const sendFile = (fileData) => {
     console.log(channelName);
     console.log(fileData);
+    console.log('SENDING____');
+    setSending(true);
     // chatRef.scrollToEnd();
     pubnub.setUUID(currentUser.chatId);
     if (fileData) {
@@ -222,6 +227,8 @@ const ChatScreen = ({
           // handle status, response
           console.log(status);
           console.log(response);
+          console.log('SENT____');
+          setSending(false);
         },
       );
     } else {
@@ -422,7 +429,7 @@ const ChatScreen = ({
       if (
         allMessages.find((item) => item.channel === channelName) &&
         allMessages.find((item) => item.channel === channelName).messages
-          .length <= 1
+          .length < 10
       ) {
         setLoader(true);
         getOldMessages(channelName);
@@ -574,24 +581,21 @@ const ChatScreen = ({
             />
           )}
           onPressActionButton={() =>
-            launchCamera(
-              { mediaType: 'video', quality: 'low', videoQuality: 'low' },
-              (i) => {
-                if (!i.didCancel) {
-                  setMediaFile({
-                    name: i.fileName,
-                    uri: i.uri,
-                    mimeType: i.type,
-                    size: i.fileSize,
-                    height: i.height,
-                    width: i.width,
-                  });
-                  setShowMediaPick(true);
-                }
-                console.log(mediaFile);
-                console.log('setting Image');
-              },
-            )
+            launchCamera({ mediaType: 'video' }, (i) => {
+              if (!i.didCancel) {
+                setMediaFile({
+                  name: i.fileName,
+                  uri: i.uri,
+                  mimeType: i.type,
+                  size: i.fileSize,
+                  height: i.height,
+                  width: i.width,
+                });
+                setShowMediaPick(true);
+              }
+              console.log(mediaFile);
+              console.log('setting Image');
+            })
           }
           containerStyle={{ marginLeft: 30 }}
         />
@@ -887,6 +891,7 @@ const ChatScreen = ({
                   marginBottom: showAccessories ? 65 : 10,
                 },
               }}
+              // isTyping={true}
               textInputProps={{
                 onFocus: () => setShowEmoji(false),
               }}
@@ -903,6 +908,34 @@ const ChatScreen = ({
                 marginTop: 10,
               }}
               // renderInputToolbar={() => <></>}
+              renderFooter={() =>
+                sending && (
+                  <View
+                    style={{
+                      marginTop: 10,
+                      marginBottom: 30,
+                      justifyContent: 'flex-end',
+                      width: appwidth,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontFamily: 'SofiaProRegular-Italic',
+                        fontSize: normalize(14),
+                      }}>
+                      Sending...
+                    </Text>
+                    <ActivityIndicator
+                      animating={true}
+                      size={normalize(15)}
+                      color={colors.text}
+                      style={{ alignSelf: 'center' }}
+                    />
+                  </View>
+                )
+              }
               renderInputToolbar={(props) => (
                 <InputToolbar
                   {...props}
@@ -959,7 +992,7 @@ const ChatScreen = ({
                 getOldMessages(channelName);
               }}
               isLoadingEarlier={refreshing}
-              loadEarlier={messages.length >= 25 ? true : false}
+              loadEarlier={messages.length >= 10 ? true : false}
               infiniteScroll={true}
               maxComposerHeight={100}
               alignTop={true}

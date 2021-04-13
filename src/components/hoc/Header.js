@@ -40,8 +40,7 @@ const Header = ({
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
-  // console.log(screenWidth, '&', screenWidth / 2);
-  console.log(subgroups);
+  // console.log(screenWidth, '&', screenWidth / 2)
 
   // const advanceCheck = (type) => {
   //   if (type === 'opt1') {
