@@ -89,7 +89,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
             <Formik
               initialValues={{
                 email: 'jaskyparrot@gmail.com',
-                password: 'test123',
+                password: 'pass123',
               }}
               onSubmit={(values) => {
                 login(values);
@@ -103,7 +103,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                     name="email"
                     iconName="mail"
                     iconType="feather"
-                    iconSize={normalize(14)}
+                    iconSize={16}
                     placeholder="Email"
                     autoCompleteType="email"
                     textContentType="emailAddress"
@@ -123,7 +123,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                     name="password"
                     iconName="lock-outline"
                     iconType="material-community"
-                    iconSize={normalize(14)}
+                    iconSize={16}
                     placeholder="Password"
                     autoCompleteType="password"
                     textContentType="password"

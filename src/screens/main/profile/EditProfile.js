@@ -49,7 +49,7 @@ const EditProfile = ({
   const [imageUri, setImageUri] = useState();
 
   const saveChanges = () => {
-    // console.log(imageUri);
+    console.log(imageUri);
     // console.log(inputRef.current.values);
     let newData = {
       ...inputRef.current.values,

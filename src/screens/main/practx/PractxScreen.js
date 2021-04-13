@@ -132,8 +132,6 @@ const Practx = ({
     return 0.5 - Math.random();
   }
 
-  console.log(style1);
-
   return (
     <SafeAreaView
       style={[
@@ -162,8 +160,8 @@ const Practx = ({
               width: 0,
               height: 2,
             },
-            shadowOpacity: 0.1,
-            shadowRadius: 2,
+            shadowOpacity: 0.32,
+            shadowRadius: 5.46,
             // Android
             elevation: 9,
             borderRadius: 30,
@@ -313,7 +311,6 @@ const Practx = ({
                     const member = currentUser
                       ? item.patients.filter((val) => val.id === currentUser.id)
                       : [];
-                    console.log(pending);
                     if (member.length) {
                       return (
                         <PracticeSmallBox

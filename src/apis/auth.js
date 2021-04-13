@@ -5,6 +5,7 @@ import {
   REACT_APP_SIGNIN,
   REACT_APP_VERIFY,
   REACT_APP_FORGET_PASSWORD,
+  REACT_APP_CHANGE_PASSWORD,
 } from '@env';
 export const signUpApi = async (
   email,
@@ -52,6 +53,23 @@ export const verifyAccountApi = async (verificationKey) => {
 export const forgetPasswordApi = async (email) => {
   const url = REACT_APP_API + REACT_APP_FORGET_PASSWORD;
   const collectionsMap = await Axios.post(url, { email });
+  return collectionsMap;
+};
+
+export const changePasswordApi = async (
+  token,
+  { oldPassword, newPassword },
+) => {
+  console.log(newPassword);
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const collectionsMap = await Axios.post(
+    REACT_APP_API + REACT_APP_CHANGE_PASSWORD,
+    { oldPassword, newPassword },
+    { headers: headers },
+  );
   return collectionsMap;
 };
 // export const signInByTokenApi = async (token) => {

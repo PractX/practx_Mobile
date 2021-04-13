@@ -26,6 +26,7 @@ import {
   signUpSuccess,
   forgetPasswordSuccess,
   userPaymentFailure,
+  setLoading,
 } from './user.actions';
 import {
   editProfileApi,
@@ -311,6 +312,74 @@ export function* willEditProfile({ payload: profileDetails }) {
   }
 }
 
+export function* willChangePassword({ payload: passwordDetails }) {
+  // console.log(profileDetails);
+  const token = yield select(userToken);
+  console.log(passwordDetails);
+  try {
+    // console.log(email);
+    // const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+    const result = yield changePasswordApi(token, passwordDetails).then(
+      function (response) {
+        return response.data;
+      },
+    );
+    console.log(result);
+    showMessage({
+      message: 'Password was changed successfully',
+      type: 'success',
+    });
+    // yield delay(5000);
+    yield yield put(setLoading(false));
+    // yield put(navigation.navigate('verifyAccount'));
+  } catch (error) {
+    console.log(error);
+    console.log(error.response);
+    let eMsg = '';
+    if (error.response) {
+      if (error.response.data.errors) {
+        error.response.data.errors.map(function (i, err) {
+          if (error.response.data.errors.length > 1) {
+            eMsg += err + 1 + '. ' + i + '\n';
+            console.log(eMsg);
+          } else {
+            eMsg += i;
+            console.log(eMsg);
+          }
+        });
+        showMessage({
+          message: eMsg,
+          type: 'danger',
+        });
+      } else {
+        showMessage({
+          message: error.response.data.includes('Too Large')
+            ? 'Profile Image file too large'
+            : error.response.data,
+          type: 'danger',
+        });
+      }
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+
+    yield put(
+      signUpFailure(
+        error.response
+          ? error.response.data.errors ||
+            error.response.data.errors ||
+            error.response.data.includes('Too Large')
+            ? 'Profile Image file too large'
+            : error.response.data
+          : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
+      ),
+    );
+  }
+}
+
 export function* isForgetPassword({ payload: email }) {
   console.log(email);
   try {
@@ -367,41 +436,41 @@ export function* isForgetPassword({ payload: email }) {
   }
 }
 
-export function* signByToken({ payload: token }) {
-  try {
-    const result = yield signInByTokenApi(token).then(function (response) {
-      return response.data.data;
-    });
-    const tokens = {
-      key: result.token,
-      expire: tokenExpiration(),
-    };
-    if (result) {
-      const download = yield getDownloadsApi(tokens.key).then(function (
-        response,
-      ) {
-        return response.data.data;
-      });
-      const subscription = yield getSubscriptionApi(tokens.key).then(function (
-        response,
-      ) {
-        return response.data.data;
-      });
-      yield put(setToken(tokens));
-      yield put(setSubscription(subscription.subscription));
-      yield put(setDownloads(download.downloads));
-      yield put(signInSuccess(result.user));
-    }
-  } catch (error) {
-    yield put(
-      signInFailure(
-        error.response
-          ? error.response.data.message || error.response.data.error
-          : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
-      ),
-    );
-  }
-}
+// export function* signByToken({ payload: token }) {
+//   try {
+//     const result = yield signInByTokenApi(token).then(function (response) {
+//       return response.data.data;
+//     });
+//     const tokens = {
+//       key: result.token,
+//       expire: tokenExpiration(),
+//     };
+//     if (result) {
+//       const download = yield getDownloadsApi(tokens.key).then(function (
+//         response,
+//       ) {
+//         return response.data.data;
+//       });
+//       const subscription = yield getSubscriptionApi(tokens.key).then(function (
+//         response,
+//       ) {
+//         return response.data.data;
+//       });
+//       yield put(setToken(tokens));
+//       yield put(setSubscription(subscription.subscription));
+//       yield put(setDownloads(download.downloads));
+//       yield put(signInSuccess(result.user));
+//     }
+//   } catch (error) {
+//     yield put(
+//       signInFailure(
+//         error.response
+//           ? error.response.data.message || error.response.data.error
+//           : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
+//       ),
+//     );
+//   }
+// }
 
 const tokenExpiration = () => {
   const loginExp = new Date();
@@ -437,34 +506,34 @@ export function* isResendConfirmEmail() {
   }
 }
 
-export function* isChangePassword({ payload: { old_password, new_password } }) {
-  const token = yield select(userToken);
-  try {
-    const result = yield changePasswordApi(
-      token,
-      old_password,
-      new_password,
-    ).then(function (response) {
-      return response.data.data;
-    });
-    if (result) {
-      yield put(setMessage({ type: 'success', message: result.message }));
-      yield delay(6000);
-      yield put(setMessage(null));
-    }
-  } catch (error) {
-    yield put(
-      setMessage({
-        type: 'error',
-        message: error.response
-          ? error.response.data.message || error.response.data.error
-          : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
-      }),
-    );
-    yield delay(8000);
-    yield put(setMessage(null));
-  }
-}
+// export function* isChangePassword({ payload: { old_password, new_password } }) {
+//   const token = yield select(userToken);
+//   try {
+//     const result = yield changePasswordApi(
+//       token,
+//       old_password,
+//       new_password,
+//     ).then(function (response) {
+//       return response.data.data;
+//     });
+//     if (result) {
+//       yield put(setMessage({ type: 'success', message: result.message }));
+//       yield delay(6000);
+//       yield put(setMessage(null));
+//     }
+//   } catch (error) {
+//     yield put(
+//       setMessage({
+//         type: 'error',
+//         message: error.response
+//           ? error.response.data.message || error.response.data.error
+//           : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
+//       }),
+//     );
+//     yield delay(8000);
+//     yield put(setMessage(null));
+//   }
+// }
 
 export function* isResetPassword({ payload: { token, new_password } }) {
   try {
@@ -563,10 +632,14 @@ export function* onEditProfileStart() {
   yield takeLatest(UserActionTypes.EDIT_PROFILE, willEditProfile);
 }
 
-// verifyAcct;
-export function* onSignInByTokenStart() {
-  yield takeLatest(UserActionTypes.SIGN_IN_BY_TOKEN_START, signByToken);
+export function* onChangePasswordStart() {
+  yield takeLatest(UserActionTypes.CHANGE_PASSWORD, willChangePassword);
 }
+
+// verifyAcct;
+// export function* onSignInByTokenStart() {
+//   yield takeLatest(UserActionTypes.SIGN_IN_BY_TOKEN_START, signByToken);
+// }
 
 export function* onResendConfirmEmail() {
   yield takeLatest(
@@ -574,11 +647,6 @@ export function* onResendConfirmEmail() {
     isResendConfirmEmail,
   );
 }
-
-export function* onChangePassword() {
-  yield takeLatest(UserActionTypes.CHANGE_PASSWORD, isChangePassword);
-}
-
 export function* onForgetPassword() {
   yield takeLatest(UserActionTypes.FORGET_PASSWORD_START, isForgetPassword);
 }
@@ -608,9 +676,9 @@ export function* userSagas() {
     call(onSignInStart),
     call(OnVerifyAccount),
     call(onEditProfileStart),
-    call(onSignInByTokenStart),
+    call(onChangePasswordStart),
+    // call(onSignInByTokenStart),
     call(onResendConfirmEmail),
-    call(onChangePassword),
     call(onForgetPassword),
     call(onResetPassword),
     call(onCheckUserSession),

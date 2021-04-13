@@ -298,9 +298,14 @@ const Appointments = ({ navigation }) => {
                   <Appointment
                     id={index}
                     type={item.type}
-                    styling={{
-                      width: style1 === 'open' ? appwidth - 50 : appwidth,
-                    }}
+                    styling={[
+                      {
+                        width: style1 === 'open' ? appwidth - 50 : appwidth,
+                      },
+                      index === appointmentData.length - 1 && {
+                        paddingBottom: 60,
+                      },
+                    ]}
                   />
                 )}
                 keyExtractor={(item, index) => item.display_url}

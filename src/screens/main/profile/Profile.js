@@ -3,6 +3,7 @@ import { View, Dimensions, TextInput, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from './ProfileScreen';
 import EditProfile from './EditProfile';
+import ResetPassword from './ResetPassword';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,9 @@ const Profile = ({ navigation }) => {
       </Stack.Screen>
       <Stack.Screen name="EditProfile">
         {(props) => <EditProfile {...props} extraData={navigation} />}
+      </Stack.Screen>
+      <Stack.Screen name="ResetPassword">
+        {(props) => <ResetPassword {...props} extraData={navigation} />}
       </Stack.Screen>
       {/* <Stack.Screen name="Settings" component={Settings} /> */}
     </Stack.Navigator>
