@@ -894,7 +894,10 @@ const ChatScreen = ({
                   }}>
                   <Text
                     style={{
-                      color: colors.quinary,
+                      color:
+                        colors.mode === 'dark'
+                          ? colors.quinary
+                          : colors.primary,
                       fontSize: normalize(12),
                       fontFamily: 'SofiaProLight',
                       backgroundColor: colors.background_1,
