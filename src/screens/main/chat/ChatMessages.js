@@ -810,8 +810,8 @@ const ChatMessages = ({
             ) : (
               <>
                 <Icon
-                  name="chat-alert-outline"
-                  type="material-community"
+                  name="ios-chatbubbles-outline"
+                  type="ionicon"
                   color={colors.text_2}
                   size={normalize(50)}
                   style={{ color: colors.text_1, alignSelf: 'center' }}
@@ -820,7 +820,7 @@ const ChatMessages = ({
                   style={{
                     color: colors.text_2,
                     alignSelf: 'center',
-                    fontSize: normalize(16),
+                    fontSize: normalize(15),
                     fontFamily: 'SofiaProRegular',
                     textAlign: 'center',
                   }}>

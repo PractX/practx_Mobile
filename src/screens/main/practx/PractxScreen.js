@@ -219,7 +219,7 @@ const Practx = ({
                   name="arrow-forward"
                   type="material-icons"
                   color={colors.text}
-                  size={normalize(16)}
+                  size={normalize(15)}
                   style={{
                     color: colors.text,
                     // alignSelf: 'center',

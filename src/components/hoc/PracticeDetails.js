@@ -89,13 +89,14 @@ const PracticeDetails = ({
           console.log(bottomSheetRef.current);
           bottomSheetRef.current.snapTo(2);
         }}>
-        <View
+        <Icon
+          name="linear-scale"
+          type="marterialIcon"
+          color={colors.text}
+          size={normalize(20)}
           style={{
-            alignSelf: 'center',
-            backgroundColor: colors.text_1,
-            width: 20,
-            height: 3,
-            marginTop: 10,
+            marginRight: 0,
+            // alignSelf: 'center',
           }}
         />
       </TouchableOpacity>
@@ -379,7 +380,7 @@ const PracticeDetails = ({
                     fontSize: normalize(14),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  Location
+                  City
                 </ListItem.Title>
                 <ListItem.Subtitle
                   style={{
@@ -387,7 +388,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.location}
+                  {data.city}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -419,6 +420,63 @@ const PracticeDetails = ({
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
+
+            <ListItem containerStyle={{ backgroundColor: colors.background }}>
+              <Icon
+                name="map"
+                type="ionicon"
+                color={colors.text}
+                size={normalize(18)}
+              />
+              <ListItem.Content>
+                <ListItem.Title
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
+                  State
+                </ListItem.Title>
+                <ListItem.Subtitle
+                  style={{
+                    color: colors.text_1,
+                    fontSize: normalize(12),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
+                  {data.state}
+                </ListItem.Subtitle>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+
+            <ListItem containerStyle={{ backgroundColor: colors.background }}>
+              <Icon
+                name="flag"
+                type="entypo"
+                color={colors.text}
+                size={normalize(18)}
+              />
+              <ListItem.Content>
+                <ListItem.Title
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
+                  Country
+                </ListItem.Title>
+                <ListItem.Subtitle
+                  style={{
+                    color: colors.text_1,
+                    fontSize: normalize(12),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
+                  {data.country}
+                </ListItem.Subtitle>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+
             <ListItem containerStyle={{ backgroundColor: colors.background }}>
               <Icon
                 name="web"

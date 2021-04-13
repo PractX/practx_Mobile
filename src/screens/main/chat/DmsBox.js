@@ -21,7 +21,6 @@ const DmsBox = ({
   subgroups,
 }) => {
   const { colors } = useTheme();
-  const pubnub = usePubNub();
   // const [{ messages }, setNewMessage] = useState(allMessages);
   // const { messages } = newMessages && newMessages;
   const [newMessageTime, setNewMessageTime] = useState('');
