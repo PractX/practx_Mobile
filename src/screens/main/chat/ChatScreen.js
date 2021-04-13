@@ -431,6 +431,7 @@ const ChatScreen = ({
         allMessages.find((item) => item.channel === channelName).messages
           .length < 10
       ) {
+        console.log('message is less than 10');
         setLoader(true);
         getOldMessages(channelName);
       }
@@ -882,7 +883,32 @@ const ChatScreen = ({
                   return <></>;
                 }
               }}
-              renderChatEmpty={() => <View />}
+              renderChatEmpty={() => (
+                <View
+                  style={{
+                    marginVertical: 20,
+                    marginHorizontal: 30,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    transform: [{ scaleY: -1 }],
+                  }}>
+                  <Text
+                    style={{
+                      color: colors.quinary,
+                      fontSize: normalize(12),
+                      fontFamily: 'SofiaProLight',
+                      backgroundColor: colors.background_1,
+                      borderRadius: 10,
+                      paddingVertical: 5,
+                      paddingHorizontal: 10,
+                      textAlign: 'center',
+                    }}>
+                    {type === 'dm'
+                      ? `This is the beginning of your first message, chatting with ${practice.practiceName}`
+                      : `This is the beginning and the first message in ${group.name}`}
+                  </Text>
+                </View>
+              )}
               user={{
                 _id: 1,
               }}
