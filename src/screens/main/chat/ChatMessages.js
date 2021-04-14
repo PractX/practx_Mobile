@@ -713,7 +713,7 @@ const ChatMessages = ({
                   .groups.length > 0 ? (
                   <View
                     style={{
-                      height: windowHeight - 400,
+                      height: windowHeight - 350,
                     }}>
                     <FlatList
                       ref={ref}
@@ -766,9 +766,23 @@ const ChatMessages = ({
                           navigation={navigation}
                           subgroups={subgroups}
                           // channel
-                          styling={{
-                            width: style1 === 'open' ? appwidth - 50 : appwidth,
-                          }}
+                          styling={[
+                            {
+                              width:
+                                style1 === 'open' ? appwidth - 50 : appwidth,
+                            },
+                            subgroups.find(
+                              (item) => item.practiceId === currentPracticeId,
+                            ) &&
+                              index ===
+                                subgroups.find(
+                                  (item) =>
+                                    item.practiceId === currentPracticeId,
+                                ).groups.length -
+                                  1 && {
+                                paddingBottom: 60,
+                              },
+                          ]}
                         />
                       )}
                       keyExtractor={(item, index) => item.display_url}
