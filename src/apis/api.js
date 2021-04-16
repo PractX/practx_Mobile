@@ -6,7 +6,7 @@ import {
   REACT_APP_EDIT_PROFILE,
   REACT_APP_GET_PRACTICES_DMS,
   REACT_APP_GET_SUBGROUPS,
-  REACT_APP_CHANGE_PASSWORD,
+  REACT_APP_SEARCH_PRACTICES,
 } from '@env';
 import { Platform } from 'react-native';
 
@@ -125,3 +125,13 @@ export const editProfileApi = async (token, data) => {
 //   const data = await Axios.get(apiUrl);
 //   return data;
 // };
+
+export const searchPracticesApi = async (token, searchData) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const url = REACT_APP_API + REACT_APP_SEARCH_PRACTICES + `${searchData}`;
+  const collectionsMap = await Axios.get(url, { headers: headers });
+  return collectionsMap;
+};

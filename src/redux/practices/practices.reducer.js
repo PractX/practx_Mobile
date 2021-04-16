@@ -11,6 +11,8 @@ const INITIAL_STATE = {
   practiceSubgroups: [],
   error: null,
   allMessages: [],
+  searchResult: null,
+  // searchData: false,
 };
 
 const practicesReducer = (state = INITIAL_STATE, action) => {
@@ -27,6 +29,19 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         practiceDms: null,
         practiceSubgroups: [],
         allMessages: [],
+        searchResult: false,
+      };
+
+    // case PracticesActionTypes.SET_SEARCH_DATA:
+    //   return {
+    //     ...state,
+    //     searchData: action.payload,
+    //   };
+
+    case PracticesActionTypes.SET_SEARCH_RESULT:
+      return {
+        ...state,
+        searchResult: action.payload,
       };
 
     case PracticesActionTypes.SET_ALL_MESSAGES:
