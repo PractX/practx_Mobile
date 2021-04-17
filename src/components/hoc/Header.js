@@ -40,7 +40,9 @@ const Header = ({
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
-  // console.log(screenWidth, '&', screenWidth / 2)
+  const [searchRef, setSearchRef] = useState();
+  const [searchText, setSearchText] = useState('');
+  console.log(searchText);
 
   // const advanceCheck = (type) => {
   //   if (type === 'opt1') {
@@ -303,6 +305,7 @@ const Header = ({
               alignItems: 'center',
             }}>
             <TextInput
+              ref={(input) => setSearchRef(input)}
               autoFocus={true}
               autoCapitalize={false}
               autoCompleteType={'name'}
@@ -316,12 +319,38 @@ const Header = ({
                 fontSize: normalize(14),
                 width: '100%',
               }}
-              // onChangeText={handleChange(name)}
+              onChangeText={(text) => {
+                setSearchText(text);
+                text.length >= 2 &&
+                  setTimeout(() => {
+                    search.action(text);
+                  }, 2000);
+              }}
               // onBlur={handleBlur(name)}
               // value={valuesType}
               // onFocus={() => iconLeft && iconLeft.action(false)}
             />
           </View>
+        )}
+        {search && searchText.length > 0 && (
+          <TouchableOpacity
+            style={{
+              alignItems: 'center',
+              paddingTop: 5,
+              zIndex: 20,
+            }}
+            onPress={() => searchRef.clear()}>
+            <Icon
+              name="x"
+              type="feather"
+              color={colors.text}
+              size={normalize(18)}
+              style={{
+                color: colors.text,
+                // alignSelf: 'center',
+              }}
+            />
+          </TouchableOpacity>
         )}
         <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
           {iconRight1 && iconRight1.buttonType === 'filter' && (

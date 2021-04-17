@@ -21,6 +21,7 @@ import {
   getPracticesAllStart,
   getPracticesDmsStart,
   setFilter,
+  setSearchData,
 } from '../../../redux/practices/practices.actions';
 import {
   selectAllPractices,
@@ -51,6 +52,7 @@ const PractxSearch = ({
   setFilter,
   filter,
   extraData,
+  setSearchData,
 }) => {
   const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
@@ -175,7 +177,7 @@ const PractxSearch = ({
           // notifyIcon={true}
           search={{
             placeholder: 'Search for practice',
-            action: () => console.log('search'),
+            action: (data) => setSearchData(data),
           }}
           checkState={checkState}
           setCheckState={setCheckState}
@@ -213,6 +215,7 @@ const mapDispatchToProps = (dispatch) => ({
   getJoinedPracticesStart: () => dispatch(getJoinedPracticesStart()),
   getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
   setFilter: (data) => dispatch(setFilter(data)),
+  setSearchData: (searchData) => dispatch(setSearchData(searchData)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PractxSearch);
