@@ -27,14 +27,16 @@ import {
   selectAllPractices,
   selectFilter,
   selectIsFetching,
+  selectSearchResult,
 } from '../../../redux/practices/practices.selector';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
 import { ActivityIndicator } from 'react-native-paper';
-import { normalize } from 'react-native-elements';
+import { Icon, normalize } from 'react-native-elements';
 import Error from '../../../components/hoc/Error';
 import BottomSheet from 'reanimated-bottom-sheet';
 import PracticeDetails from '../../../components/hoc/PracticeDetails';
+import { TouchableOpacity } from 'react-native';
 // import { getAllPracticesStart } from '../../redux/practices/practices.actions';
 
 const windowWidth = Dimensions.get('window').width;
@@ -53,6 +55,7 @@ const PractxSearch = ({
   filter,
   extraData,
   setSearchData,
+  searchResult,
 }) => {
   const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
@@ -181,7 +184,6 @@ const PractxSearch = ({
           }}
           checkState={checkState}
           setCheckState={setCheckState}
-          setFilter={setFilter}
         />
         <View
           style={{
@@ -195,8 +197,78 @@ const PractxSearch = ({
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-            }}
-          />
+            }}>
+            <FlatList
+              ref={ref}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={() => getPracticesAllStart()}
+                />
+              }
+              // removeClippedSubviews
+              // ListEmptyComponent
+              initialNumToRender={5}
+              updateCellsBatchingPeriod={5}
+              showsVerticalScrollIndicator={false}
+              // style={{ marginBottom: 10 }}
+              data={searchResult && searchResult.length > 0 ? searchResult : []}
+              numColumns={1}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: appwidth - 20,
+                    marginTop: 30,
+                  }}
+                  onPress={() => navigation.navigate('Practices')}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Icon
+                      name="search"
+                      type="fontisto"
+                      color={colors.text}
+                      size={normalize(17)}
+                      style={{
+                        color: colors.text,
+                        marginRight: 20,
+                        // alignSelf: 'center',
+                      }}
+                    />
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontSize: normalize(13),
+                        fontFamily: 'SofiaProRegular',
+                      }}>
+                      {item.practiceName}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={{
+                      alignItems: 'center',
+                      paddingTop: 5,
+                      zIndex: 20,
+                    }}
+                    onPress={() => console.log('go')}>
+                    <Icon
+                      name="arrow-up-left"
+                      type="feather"
+                      color={colors.text}
+                      size={normalize(18)}
+                      style={{
+                        color: colors.text,
+                        // alignSelf: 'center',
+                      }}
+                    />
+                  </TouchableOpacity>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item, index) => item.display_url}
+              // showsHorizontalScrollIndicator={false}
+              // extraData={selected}
+            />
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -208,6 +280,7 @@ const mapStateToProps = createStructuredSelector({
   isFetching: selectIsFetching,
   practices: selectAllPractices,
   filter: selectFilter,
+  searchResult: selectSearchResult,
 });
 
 const mapDispatchToProps = (dispatch) => ({

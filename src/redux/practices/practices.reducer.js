@@ -12,7 +12,7 @@ const INITIAL_STATE = {
   error: null,
   allMessages: [],
   searchResult: null,
-  // searchData: false,
+  searchData: null,
 };
 
 const practicesReducer = (state = INITIAL_STATE, action) => {
@@ -32,16 +32,18 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         searchResult: false,
       };
 
-    // case PracticesActionTypes.SET_SEARCH_DATA:
-    //   return {
-    //     ...state,
-    //     searchData: action.payload,
-    //   };
+    case PracticesActionTypes.SET_SEARCH_DATA:
+      return {
+        ...state,
+        searchData: action.payload,
+        isFetching: true,
+      };
 
     case PracticesActionTypes.SET_SEARCH_RESULT:
       return {
         ...state,
         searchResult: action.payload,
+        isFetching: false,
       };
 
     case PracticesActionTypes.SET_ALL_MESSAGES:
