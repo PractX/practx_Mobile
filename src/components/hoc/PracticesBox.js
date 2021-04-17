@@ -54,8 +54,8 @@ const PracticeBox = ({
   setPracticeData,
 }) => {
   const { colors } = useTheme();
-  const pending = practice.requests;
-  const member = practice.patients.filter((val) => val.id === userId);
+  const pending = 'practice.requests';
+  const member = 'practice.patients.filter((val) => val.id === userId)';
   const [loading, setLoading] = useState(false);
 
   const joinPractice = (practiceId) => {
