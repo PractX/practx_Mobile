@@ -54,7 +54,7 @@ const Header = ({
   return (
     <View
       style={{
-        position: searchData && !searchData.hideTitle ? 'absolute' : 'relative',
+        position: searchData && searchData.hideTitle ? 'relative' : 'absolute',
         zIndex: 100,
         height: subgroups && subgroups.show ? null : 50,
         width: Math.round(Dimensions.get('window').width),
@@ -346,6 +346,7 @@ const Header = ({
               placeholder={search.placeholder}
               placeholderTextColor={colors.text_2}
               returnKeyType="search"
+              onSubmitEditing={() => search.onSubmit()}
               style={{
                 color: colors.text,
                 fontFamily: 'SofiaProRegular',
@@ -357,7 +358,7 @@ const Header = ({
                 text.length >= 2 &&
                   setTimeout(() => {
                     search.action(text);
-                  }, 2000);
+                  }, 0);
               }}
               // onBlur={handleBlur(name)}
               // value={valuesType}

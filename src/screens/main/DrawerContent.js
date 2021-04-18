@@ -319,7 +319,7 @@ const DrawerContent = ({
                       opt3: true,
                     });
                     navigation.navigate(
-                      'Practx',
+                      'PractxScreen',
                       // , {
                       //   screen: 'Home',
                       // }

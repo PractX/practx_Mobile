@@ -44,8 +44,9 @@ const theme = {
 
 const PracticeDetails = ({
   bottomSheetRef,
-  isLoading,
   navigation,
+  isLoading,
+  mainNavigation,
   setPracticeId,
   setPracticepractice,
   joinPractices,
@@ -53,6 +54,7 @@ const PracticeDetails = ({
   const { colors } = useTheme();
   const { params } = useRoute();
   const { practice, userId, searchData } = params;
+  console.log(practice);
   const pending = practice.requests;
   const member = practice.patients.filter((val) => val.id === userId);
   // const pending = practice.requests;
@@ -153,14 +155,15 @@ const PracticeDetails = ({
               }}>
               {practice.email}
             </Text>
-            {pending || (!pending && !member) ? (
+            {pending.length > 0 ||
+            (!pending.length > 0 && !member.length > 0) ? (
               <View
                 style={{
                   position: 'absolute',
                   top: 20,
                   right: pending ? 20 : 20,
                 }}>
-                {pending ? (
+                {pending.length > 0 ? (
                   <Icon
                     name="progress-clock"
                     type="material-community"
@@ -210,7 +213,7 @@ const PracticeDetails = ({
               </View>
             ) : null}
           </View>
-          {member && (
+          {member.length > 0 && (
             <View
               style={{
                 justifyContent: 'center',
@@ -224,13 +227,9 @@ const PracticeDetails = ({
                     backgroundColor: colors.background_1,
                   },
                 ]}
-                onPress={async () => {
-                  bottomSheetRef.current.snapTo(2);
-
-                  setTimeout(() => {
-                    setPracticeId(practice.id);
-                    navigation.navigate('Chats');
-                  }, 2200);
+                onPress={() => {
+                  setPracticeId(practice.id);
+                  navigation.navigate('Chats');
                 }}>
                 <Icon
                   name="ios-chatbubble"
@@ -264,7 +263,7 @@ const PracticeDetails = ({
               </TouchableOpacity>
             </View>
           )}
-          {pending && (
+          {pending.length > 0 && (
             <View
               style={{
                 justifyContent: 'center',

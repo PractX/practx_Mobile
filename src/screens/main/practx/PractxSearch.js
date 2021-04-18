@@ -27,6 +27,7 @@ import {
   selectAllPractices,
   selectFilter,
   selectIsFetching,
+  selectSearchData,
   selectSearchResult,
 } from '../../../redux/practices/practices.selector';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
@@ -56,6 +57,7 @@ const PractxSearch = ({
   extraData,
   setSearchData,
   searchResult,
+  searchData,
 }) => {
   const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
@@ -180,7 +182,10 @@ const PractxSearch = ({
           // notifyIcon={true}
           search={{
             placeholder: 'Search for practice',
-            action: (data) => setSearchData(data),
+            action: (data) => {
+              setSearchData(data);
+            },
+            onSubmit: () => navigation.navigate('Practices'),
           }}
           checkState={checkState}
           setCheckState={setCheckState}
@@ -200,12 +205,7 @@ const PractxSearch = ({
             }}>
             <FlatList
               ref={ref}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={() => getPracticesAllStart()}
-                />
-              }
+              refreshControl={<RefreshControl refreshing={false} />}
               // removeClippedSubviews
               // ListEmptyComponent
               initialNumToRender={5}
@@ -222,7 +222,15 @@ const PractxSearch = ({
                     width: appwidth - 20,
                     marginTop: 30,
                   }}
-                  onPress={() => navigation.navigate('Practices')}>
+                  // onPress={() => navigation.navigate('Practices')}
+                  onPress={() =>
+                    navigation.navigate('SinglePractice', {
+                      navigation,
+                      practice: item,
+                      userId: currentUser ? currentUser.id : 0,
+                      searchData,
+                    })
+                  }>
                   <View style={{ flexDirection: 'row' }}>
                     <Icon
                       name="search"
@@ -281,6 +289,7 @@ const mapStateToProps = createStructuredSelector({
   practices: selectAllPractices,
   filter: selectFilter,
   searchResult: selectSearchResult,
+  searchData: selectSearchData,
 });
 
 const mapDispatchToProps = (dispatch) => ({
