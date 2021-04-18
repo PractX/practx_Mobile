@@ -256,7 +256,7 @@ const Practx = ({
                       width: 85,
                       borderRadius: 15,
                       justifyContent: 'center',
-                      marginVertical: 5,
+                      marginVertical: 8,
                     }}>
                     <Icon
                       name="plus"

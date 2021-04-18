@@ -24,6 +24,8 @@ import {
 import { selectIsLoading } from '../../redux/practices/practices.selector';
 import { createStructuredSelector } from 'reselect';
 import BottomSheet from 'reanimated-bottom-sheet';
+import { TouchableOpacity } from 'react-native';
+import SinglePractice from '../../screens/main/practx/SinglePractice';
 
 const Stack = createStackNavigator();
 
@@ -43,19 +45,16 @@ const theme = {
 const PracticeBox = ({
   joinPractices,
   practice,
-  getpractx,
-  token,
-  id,
   userId,
   isLoading,
   navigation,
-  setPracticeId,
+  searchData,
   practiceData,
   setPracticeData,
 }) => {
   const { colors } = useTheme();
-  const pending = 'practice.requests';
-  const member = 'practice.patients.filter((val) => val.id === userId)';
+  const pending = practice.requests;
+  const member = practice.patients.filter((val) => val.id === userId);
   const [loading, setLoading] = useState(false);
 
   const joinPractice = (practiceId) => {
@@ -70,294 +69,100 @@ const PracticeBox = ({
   }, [isLoading, practice]);
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('SinglePractice', {
+          navigation,
+          practice,
+          userId,
+          searchData,
+        })
+      }
       style={{
-        borderWidth: 0.9,
-        borderColor: colors.background_1,
-        borderRadius: 30,
         marginTop: 15,
-        marginBottom: 15,
+        marginBottom: 10,
+        flexDirection: 'row',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
       }}>
-      <View
+      <FastImage
+        source={{ uri: practice.logo }}
         style={{
-          padding: 20,
-          flexDirection: 'row',
-          borderBottomWidth: 0.8,
-          borderColor: colors.background_1,
-        }}>
-        <FastImage
-          source={{ uri: practice.logo }}
+          width: 60,
+          height: 60,
+          borderRadius: 15,
+          backgroundColor: colors.background_1,
+          marginRight: 15,
+        }}
+        resizeMode={FastImage.resizeMode.cover}
+      />
+
+      <View style={{ justifyContent: 'space-around' }}>
+        <Text
           style={{
-            width: 60,
-            height: 60,
-            borderRadius: 15,
-            backgroundColor: colors.background_1,
-            marginRight: 15,
-          }}
-          resizeMode={FastImage.resizeMode.cover}
-        />
-
-        <View style={{ justifyContent: 'center' }}>
-          <Text
-            style={{
-              fontSize: normalize(16),
-              fontFamily: 'SofiaProSemiBold',
-              color: colors.text,
-            }}>
-            {practice.practiceName}
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              // justifyContent: 'center',
-            }}>
-            <Text
-              style={{
-                color: colors.text_2,
-                fontSize: normalize(15),
-                fontFamily: 'SofiaProSemiBold',
-              }}>
-              Specialty:{'  '}
-            </Text>
-            <Text
-              style={{
-                color: colors.text_2,
-                fontSize: normalize(14),
-                fontFamily: 'SofiaProRegular',
-                textTransform: 'capitalize',
-              }}>
-              {practice.specialty && practice.specialty.length > 20
-                ? practice.specialty.substring(0, 20 - 3) + '...'
-                : practice.specialty}
-            </Text>
-          </View>
-        </View>
-      </View>
-
-      <View style={{ padding: 20 }}>
+            fontSize: normalize(13),
+            fontFamily: 'SofiaProSemiBold',
+            color: colors.text,
+          }}>
+          {practice.practiceName}
+        </Text>
         <View
           style={{
             flexDirection: 'row',
-            marginBottom: 20,
-            justifyContent: 'space-between',
+            alignItems: 'center',
+            // justifyContent: 'center',
           }}>
-          <View
+          {/* <Text
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
+              color: colors.text_2,
+              fontSize: normalize(12),
+              fontFamily: 'SofiaProSemiBold',
             }}>
-            <Icon
-              name="location-city"
-              type="material-icons"
-              color={colors.text}
-              size={normalize(18)}
-              style={{
-                color: colors.text,
-                // alignSelf: 'center',
-              }}
-            />
-            <Text
-              style={{
-                fontSize: normalize(15),
-                fontFamily: 'SofiaProRegular',
-                color: colors.text,
-                paddingLeft: 10,
-              }}>
-              {practice.location
-                ? practice.location.length > 10
-                  ? practice.location.substring(0, 10 - 3) + '...'
-                  : practice.location
-                : 'No location'}
-            </Text>
-          </View>
-          <View
+            Specialty:{'  '}
+          </Text> */}
+          <Text
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
+              color: colors.text_2,
+              fontSize: normalize(11),
+              fontFamily: 'SofiaProRegular',
+              textTransform: 'capitalize',
             }}>
-            <Icon
-              name="doctor"
-              type="material-community"
-              color={colors.text}
-              size={normalize(18)}
-              style={{
-                color: colors.text,
-                // alignSelf: 'center',
-              }}
-            />
-            <Text
-              style={{
-                fontSize: normalize(15),
-                fontFamily: 'SofiaProRegular',
-                color: colors.text,
-                paddingLeft: 10,
-              }}>
-              60k
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Icon
-              name="ios-people-sharp"
-              type="ionicon"
-              color={colors.text}
-              size={normalize(18)}
-              style={{
-                color: colors.text,
-                // alignSelf: 'center',
-              }}
-            />
-            <Text
-              style={{
-                fontSize: normalize(15),
-                fontFamily: 'SofiaProRegular',
-                color: colors.text,
-                paddingLeft: 10,
-              }}>
-              450k
-            </Text>
-          </View>
+            {practice.specialty && practice.specialty.length > 32
+              ? practice.specialty.substring(0, 32 - 3) + '...'
+              : practice.specialty}
+          </Text>
         </View>
-
-        {pending.length > 0 ? (
-          <Button
-            title="Pending"
-            onPress={() => joinPractice(practice.id)}
-            type="outline"
-            rounded
-            disabled
-            buttonStyle={[styles.buttonAction, { borderColor: colors.primary }]}
-            titleStyle={{
-              fontFamily: 'SofiaProSemiBold',
-              fontSize: normalize(16),
-              color: colors.primary,
-            }}
-            loading={loading}
-          />
-        ) : member.length > 0 ? (
-          <View
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <Icon
+            name="location-city"
+            type="material-icons"
+            color={colors.text}
+            size={normalize(13)}
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: appwidth,
-            }}>
-            <Button
-              title="Chat"
-              onPress={async () => {
-                await setPracticeId(practice.id);
-                await navigation.navigate('Chats');
-              }}
-              icon={
-                <Icon
-                  name="ios-chatbubble"
-                  type="ionicon"
-                  color={'white'}
-                  size={normalize(16)}
-                  style={{
-                    color: 'white',
-                    paddingRight: 5,
-                    // alignSelf: 'center',
-                  }}
-                />
-              }
-              rounded
-              buttonStyle={[
-                styles.buttonAction,
-                { backgroundColor: colors.primary, width: appwidth / 3.8 },
-              ]}
-              titleStyle={{
-                fontFamily: 'SofiaProSemiBold',
-                fontSize: normalize(14),
-              }}
-              loading={loading}
-            />
-
-            <Button
-              title="View"
-              onPress={async () => {
-                if (practiceData.show) {
-                  setPracticeData({ show: true, data: null });
-                } else {
-                  setPracticeData({ show: true, data: practice });
-                }
-              }}
-              icon={
-                <Icon
-                  name="ios-eye"
-                  type="ionicon"
-                  color={'white'}
-                  size={normalize(16)}
-                  style={{
-                    color: 'white',
-                    paddingRight: 5,
-                    // alignSelf: 'center',
-                  }}
-                />
-              }
-              rounded
-              buttonStyle={[
-                styles.buttonAction,
-                { backgroundColor: colors.primary, width: appwidth / 3.8 },
-              ]}
-              titleStyle={{
-                fontFamily: 'SofiaProSemiBold',
-                fontSize: normalize(14),
-              }}
-              loading={loading}
-            />
-            <Button
-              title="Call"
-              onPress={async () => {
-                await setPracticeId(practice.id);
-                await navigation.navigate('Chats');
-              }}
-              icon={
-                <Icon
-                  name="ios-call"
-                  type="ionicon"
-                  color={'white'}
-                  size={normalize(16)}
-                  style={{
-                    color: 'white',
-                    paddingRight: 5,
-                    // alignSelf: 'center',
-                  }}
-                />
-              }
-              rounded
-              buttonStyle={[
-                styles.buttonAction,
-                { backgroundColor: colors.primary, width: appwidth / 3.8 },
-              ]}
-              titleStyle={{
-                fontFamily: 'SofiaProSemiBold',
-                fontSize: normalize(14),
-              }}
-              loading={loading}
-            />
-          </View>
-        ) : (
-          <Button
-            title="Join"
-            onPress={() => joinPractice(practice.id)}
-            rounded
-            buttonStyle={[
-              styles.buttonAction,
-              { backgroundColor: colors.tertiary },
-            ]}
-            titleStyle={{
-              fontFamily: 'SofiaProSemiBold',
-              fontSize: normalize(17),
+              color: colors.text,
+              // alignSelf: 'center',
             }}
-            loading={loading}
           />
-        )}
+          <Text
+            style={{
+              fontSize: normalize(10),
+              fontFamily: 'SofiaProRegular',
+              color: colors.text,
+              paddingLeft: 5,
+            }}>
+            {practice.state
+              ? practice.state.length > 28
+                ? practice.state.substring(0, 38 - 3) + '...'
+                : practice.state
+              : 'No location'}
+          </Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -54,14 +54,13 @@ const Header = ({
   return (
     <View
       style={{
-        position: 'absolute',
+        position: searchData && !searchData.hideTitle ? 'absolute' : 'relative',
         zIndex: 100,
         height: subgroups && subgroups.show ? null : 50,
         width: Math.round(Dimensions.get('window').width),
         borderBottomColor: colors.background_1,
-        borderBottomWidth: 0.8,
+        borderBottomWidth: searchData && searchData.hideBorder ? 0 : 0.8,
         flexDirection: 'column',
-        // alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: colors.background,
       }}>
@@ -261,39 +260,72 @@ const Header = ({
             </Text>
           </View>
         )}
+        {/* !searchData.hideTitle */}
         {searchData && (
-          <Pressable
-            onPress={() => navigation.navigate('PractxSearch')}
-            style={{
-              // top: 0,
-              left: 0,
-              // right: 0,
-              // bottom: 0,
-              width: screenWidth - 130,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              // position: 'absolute',
-              alignItems: 'center',
-            }}>
-            <Text
+          <>
+            {!searchData.hideTitle ? (
+              <Pressable
+                onPress={() => navigation.navigate('PractxSearch')}
+                style={{
+                  // top: 0,
+                  left: 0,
+                  // right: 0,
+                  // bottom: 0,
+                  width: screenWidth - 130,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  // position: 'absolute',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProRegular',
+                    color: colors.text,
+                  }}>
+                  {searchData.name}
+                </Text>
+              </Pressable>
+            ) : (
+              <View
+                style={{
+                  // top: 0,
+                  left: 0,
+                  // right: 0,
+                  // bottom: 0,
+                  width: screenWidth - 130,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  // position: 'absolute',
+                  alignItems: 'center',
+                }}
+              />
+            )}
+            <Pressable
+              onPress={() => navigation.navigate('PractxSearch')}
               style={{
-                fontSize: normalize(14),
-                fontFamily: 'SofiaProRegular',
-                color: colors.text,
+                // top: 0,
+                left: 0,
+                // right: 0,
+                // bottom: 0,
+                width: screenWidth - 130,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                // position: 'absolute',
+                alignItems: 'center',
               }}>
-              {searchData.name}
-            </Text>
-            <Icon
-              name={'search'}
-              type={'ionicon'}
-              color={colors.text}
-              size={normalize(21)}
-              style={{
-                color: colors.text,
-                // alignSelf: 'center',
-              }}
-            />
-          </Pressable>
+              <Icon
+                name={'search'}
+                type={'ionicon'}
+                color={colors.text}
+                size={normalize(18)}
+                style={{
+                  color: colors.text,
+                  // alignSelf: 'center',
+                }}
+              />
+            </Pressable>
+          </>
         )}
         {search && (
           <View
