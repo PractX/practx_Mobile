@@ -76,6 +76,16 @@ export const setFilter = (data) => ({
   payload: data,
 });
 
+export const setSearchData = (data) => ({
+  type: PracticesActionTypes.SET_SEARCH_DATA,
+  payload: data,
+});
+
+export const setSearchResult = (data) => ({
+  type: PracticesActionTypes.SET_SEARCH_RESULT,
+  payload: data,
+});
+
 export const clearPracticeData = () => ({
   type: PracticesActionTypes.CLEAR_PRACTICE_DATA,
 });

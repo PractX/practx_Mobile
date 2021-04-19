@@ -32,7 +32,7 @@ import {
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
 import { ActivityIndicator } from 'react-native-paper';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import Error from '../../../components/hoc/Error';
 import BottomSheet from 'reanimated-bottom-sheet';
 import PracticeDetails from '../../../components/hoc/PracticeDetails';
@@ -106,21 +106,23 @@ const Practx = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    console.log('navigations', extraData);
     const unsubscribe = extraData.addListener('drawerOpen', (e) => {
       // Do something
       setStyle1('open');
+      console.log('Open');
     });
 
     return unsubscribe;
   }, [extraData]);
-  React.useEffect(() => {
+  useEffect(() => {
     // console.log(practices);
 
     const unsubscribe = extraData.addListener('drawerClose', (e) => {
       // Do something
       setStyle1('close');
-      // console.log('Close');
+      console.log('Close');
     });
 
     return unsubscribe;
@@ -158,10 +160,10 @@ const Practx = ({
               width: 0,
               height: 2,
             },
-            shadowOpacity: 0.1,
-            shadowRadius: 2,
+            shadowOpacity: 0.32,
+            shadowRadius: 5.46,
             // Android
-            elevation: 3,
+            elevation: 9,
             borderRadius: 30,
             overflow: 'hidden',
             borderColor:
@@ -173,7 +175,7 @@ const Practx = ({
           },
         ]}>
         <MainHeader
-          navigation={navigation}
+          navigation={extraData}
           title="Practices"
           iconRight1={{
             name: 'equalizer',
@@ -217,7 +219,7 @@ const Practx = ({
                   name="arrow-forward"
                   type="material-icons"
                   color={colors.text}
-                  size={normalize(16)}
+                  size={normalize(15)}
                   style={{
                     color: colors.text,
                     // alignSelf: 'center',
@@ -254,7 +256,7 @@ const Practx = ({
                       width: 85,
                       borderRadius: 15,
                       justifyContent: 'center',
-                      marginVertical: 5,
+                      marginVertical: 8,
                     }}>
                     <Icon
                       name="plus"
@@ -309,7 +311,6 @@ const Practx = ({
                     const member = currentUser
                       ? item.patients.filter((val) => val.id === currentUser.id)
                       : [];
-                    console.log(pending);
                     if (member.length) {
                       return (
                         <PracticeSmallBox

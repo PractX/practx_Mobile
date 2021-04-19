@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions, TouchableOpacity } from 'react-native';
 import { View, Text } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import timeAgo from '../../../utils/timeAgo';
 
 const windowWidth = Dimensions.get('window').width;
@@ -21,7 +21,6 @@ const DmsBox = ({
   subgroups,
 }) => {
   const { colors } = useTheme();
-  const pubnub = usePubNub();
   // const [{ messages }, setNewMessage] = useState(allMessages);
   // const { messages } = newMessages && newMessages;
   const [newMessageTime, setNewMessageTime] = useState('');
@@ -157,7 +156,10 @@ const DmsBox = ({
                 : allMessages.messages[allMessages.messages.length - 1].message
                     .file
                 ? ' Photo'
-                : allMessages.messages[allMessages.messages.length - 1]
+                : allMessages.messages[allMessages.messages.length - 1].replace(
+                    /(\r\n|\n|\r)/gm,
+                    '',
+                  )
               : `ℹ️ Chat with ${
                   item && item.Practice && item.Practice.practiceName
                 }`}

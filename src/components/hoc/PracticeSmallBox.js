@@ -12,10 +12,10 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import { Button, Icon, normalize as norm } from 'react-native-elements';
+import { Button, Icon, normalize } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
-import normalize from '../../utils/normalize';
+// import { normalize } from 'react-native-elements';
 
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
@@ -147,7 +147,7 @@ const PracticeSmallBox = ({
       <View style={{ justifyContent: 'center' }}>
         <Text
           style={{
-            fontSize: norm(10),
+            fontSize: normalize(10),
             fontFamily: 'SofiaProSemiBold',
             color: colors.text,
           }}>

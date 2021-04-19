@@ -8,7 +8,7 @@ import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 // import LoginIcon from '../assets/svg/padlock.svg';
 import { useTheme } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 
 const Error = (props) => {
   const { colors } = useTheme();

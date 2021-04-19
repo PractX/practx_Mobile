@@ -26,11 +26,13 @@ import {
   selectAllPractices,
   selectFilter,
   selectIsFetching,
+  selectSearchData,
+  selectSearchResult,
 } from '../../../redux/practices/practices.selector';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
 import { ActivityIndicator } from 'react-native-paper';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import Error from '../../../components/hoc/Error';
 import BottomSheet from 'reanimated-bottom-sheet';
 import PracticeDetails from '../../../components/hoc/PracticeDetails';
@@ -51,12 +53,14 @@ const Practices = ({
   setFilter,
   filter,
   extraData,
+  searchResult,
+  searchData,
 }) => {
   const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
-  const [checkState, setCheckState] = useState(filter);
+  // const [checkState, setCheckState] = useState(filter);
   const ref = useRef(null);
   const isFocused = useIsFocused();
   const [practiceData, setPracticeData] = useState({
@@ -173,12 +177,14 @@ const Practices = ({
           // }}
           // notifyIcon={true}
           searchData={{
-            name: 'John',
+            name:
+              searchData && searchData.length > 0
+                ? searchData
+                : 'Search for a practice',
             action: () => console.log('search'),
           }}
-          checkState={checkState}
-          setCheckState={setCheckState}
-          setFilter={setFilter}
+          // checkState={checkState}
+          // setCheckState={setCheckState}
         />
         <View
           style={{
@@ -188,22 +194,17 @@ const Practices = ({
             justifyContent: 'center',
             marginTop: 50,
           }}>
-          {practices ? (
+          {searchResult ? (
             <FlatList
               ref={ref}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={() => getPracticesAllStart()}
-                />
-              }
+              refreshControl={<RefreshControl refreshing={false} />}
               // removeClippedSubviews
               // ListEmptyComponent
               initialNumToRender={5}
               updateCellsBatchingPeriod={5}
               showsVerticalScrollIndicator={false}
-              // style={{ marginBottom: 10 }}
-              data={practices}
+              style={{ marginBottom: 20 }}
+              data={searchResult}
               numColumns={1}
               renderItem={({ item, index }) => (
                 <PracticesBox
@@ -213,6 +214,7 @@ const Practices = ({
                   navigation={navigation}
                   practiceData={practiceData}
                   setPracticeData={setPracticeData}
+                  searchData={searchData}
                 />
               )}
               keyExtractor={(item, index) => item.display_url}
@@ -279,6 +281,8 @@ const mapStateToProps = createStructuredSelector({
   isFetching: selectIsFetching,
   practices: selectAllPractices,
   filter: selectFilter,
+  searchResult: selectSearchResult,
+  searchData: selectSearchData,
 });
 
 const mapDispatchToProps = (dispatch) => ({

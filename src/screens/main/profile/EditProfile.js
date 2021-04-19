@@ -18,7 +18,7 @@ import {
   selectCurrentUser,
   selectIsLoading,
 } from '../../../redux/user/user.selector';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import { ListItem, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
@@ -49,7 +49,7 @@ const EditProfile = ({
   const [imageUri, setImageUri] = useState();
 
   const saveChanges = () => {
-    // console.log(imageUri);
+    console.log(imageUri);
     // console.log(inputRef.current.values);
     let newData = {
       ...inputRef.current.values,
@@ -298,13 +298,13 @@ const EditProfile = ({
                     <SmallInputBox
                       handleChange={handleChange}
                       handleBlur={handleBlur}
-                      valuesType={values.DD}
-                      name="DD"
+                      valuesType={values.MM}
+                      name="MM"
                       iconName="calendar"
                       iconType="feather"
                       iconSize={16}
-                      placeholder="DD"
-                      autoCompleteType="cc-exp"
+                      placeholder="MM"
+                      autoCompleteType="cc-exp-month"
                       textContentType="none"
                       keyboardType="numeric"
                       autoCapitalize="none"
@@ -321,13 +321,13 @@ const EditProfile = ({
                     <SmallInputBox
                       handleChange={handleChange}
                       handleBlur={handleBlur}
-                      valuesType={values.MM}
-                      name="MM"
+                      valuesType={values.DD}
+                      name="DD"
                       iconName="calendar"
                       iconType="feather"
                       iconSize={16}
-                      placeholder="MM"
-                      autoCompleteType="cc-exp-month"
+                      placeholder="DD"
+                      autoCompleteType="cc-exp"
                       textContentType="none"
                       keyboardType="numeric"
                       autoCapitalize="none"

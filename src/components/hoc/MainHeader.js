@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { DrawerActions, useTheme } from '@react-navigation/native';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import { Button, Icon } from 'react-native-elements';
 import {
   Menu,

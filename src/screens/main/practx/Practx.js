@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Practices from './Practices';
 import PractxScreen from './PractxScreen';
 import PractxSearch from './PractxSearch';
+import SinglePractice from './SinglePractice';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,9 @@ const Practx = ({ navigation }) => {
       </Stack.Screen>
       <Stack.Screen name="PractxSearch">
         {(props) => <PractxSearch {...props} extraData={navigation} />}
+      </Stack.Screen>
+      <Stack.Screen name="SinglePractice">
+        {(props) => <SinglePractice {...props} extraData={navigation} />}
       </Stack.Screen>
 
       {/* <Stack.Screen name="Settings" component={Settings} /> */}

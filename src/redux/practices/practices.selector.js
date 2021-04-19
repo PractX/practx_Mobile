@@ -115,5 +115,14 @@ export const selectAllMessages = createSelector(
   [selectPractices],
   (practices) => practices.allMessages,
 );
+
+export const selectSearchResult = createSelector(
+  [selectPractices],
+  (practices) => practices.searchResult,
+);
+export const selectSearchData = createSelector(
+  [selectPractices],
+  (practices) => practices.searchData,
+);
 // joinedPractice;
 // export const selectToken = createSelector([selectUser], (user) => user.token);

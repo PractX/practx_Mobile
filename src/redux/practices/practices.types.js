@@ -22,6 +22,8 @@ const SettingsActionTypes = {
   SET_PRACTICE_ID: 'SET_PRACTICE_ID',
   SET_LOADING: 'SET_LOADING',
   SET_FILTER: 'SET_FILTER',
+  SET_SEARCH_DATA: 'SET_SEARCH_DATA',
+  SET_SEARCH_RESULT: 'SET_SEARCH_RESULT',
 };
 
 export default SettingsActionTypes;

@@ -36,7 +36,7 @@ import {
   selectCurrentUser,
   selectIsLoading,
 } from '../../redux/user/user.selector';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -54,7 +54,6 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
 
   useEffect(() => {
-    console.log(colors.mode);
     if (colors.mode === 'dark') {
       // practxLogo-dark
       setLogo(LOGO);
@@ -172,8 +171,8 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                 initialValues={{
                   firstname: '',
                   lastname: '',
-                  DD: '',
                   MM: '',
+                  DD: '',
                   YY: '',
                   mobileNo: '',
                   email: '',
@@ -261,13 +260,13 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                       <SmallInputBox
                         handleChange={handleChange}
                         handleBlur={handleBlur}
-                        valuesType={values.DD}
-                        name="DD"
+                        valuesType={values.MM}
+                        name="MM"
                         iconName="calendar"
                         iconType="feather"
                         iconSize={14}
-                        placeholder="DD"
-                        autoCompleteType="cc-exp"
+                        placeholder="MM"
+                        autoCompleteType="cc-exp-month"
                         textContentType="none"
                         keyboardType="numeric"
                         autoCapitalize="none"
@@ -279,17 +278,16 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                           },
                         }}
                       />
-
                       <SmallInputBox
                         handleChange={handleChange}
                         handleBlur={handleBlur}
-                        valuesType={values.MM}
-                        name="MM"
+                        valuesType={values.DD}
+                        name="DD"
                         iconName="calendar"
                         iconType="feather"
                         iconSize={14}
-                        placeholder="MM"
-                        autoCompleteType="cc-exp-month"
+                        placeholder="DD"
+                        autoCompleteType="cc-exp"
                         textContentType="none"
                         keyboardType="numeric"
                         autoCapitalize="none"

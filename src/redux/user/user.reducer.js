@@ -22,6 +22,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isLoading: true,
       };
+    case UserActionTypes.CHANGE_PASSWORD:
+      return {
+        ...state,
+        isLoading: true,
+      };
     case UserActionTypes.VERIFY_ACCOUNT:
       return {
         ...state,

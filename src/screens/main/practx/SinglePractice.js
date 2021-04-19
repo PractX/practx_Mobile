@@ -14,17 +14,18 @@ import {
 } from 'react-native';
 import { Button, Icon, ListItem } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useTheme } from '@react-navigation/native';
+import { useRoute, useTheme } from '@react-navigation/native';
 import { normalize } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import {
   joinPractices,
   setPracticeId,
-} from '../../redux/practices/practices.actions';
-import { selectIsLoading } from '../../redux/practices/practices.selector';
+} from '../../../redux/practices/practices.actions';
+import { selectIsLoading } from '../../../redux/practices/practices.selector';
 import { createStructuredSelector } from 'reselect';
 import BottomSheet from 'reanimated-bottom-sheet';
+import Header from '../../../components/hoc/Header';
 
 const Stack = createStackNavigator();
 
@@ -43,16 +44,19 @@ const theme = {
 
 const PracticeDetails = ({
   bottomSheetRef,
-  isLoading,
   navigation,
+  isLoading,
+  mainNavigation,
   setPracticeId,
-  practiceData,
-  setPracticeData,
+  setPracticepractice,
   joinPractices,
 }) => {
   const { colors } = useTheme();
-  const { show, data, type } = practiceData;
-  console.log(practiceData);
+  const { params } = useRoute();
+  const { practice, userId, searchData } = params;
+  console.log(practice);
+  const pending = practice.requests;
+  const member = practice.patients.filter((val) => val.id === userId);
   // const pending = practice.requests;
   // const member = practice.patients.filter((val) => val.id === userId);
   const [loading, setLoading] = useState(false);
@@ -67,7 +71,7 @@ const PracticeDetails = ({
   }, [isLoading]);
 
   return (
-    <View
+    <ScrollView
       style={{
         backgroundColor: colors.background,
         minHeight: 660,
@@ -81,28 +85,32 @@ const PracticeDetails = ({
         size={normalize(18)}
         style={[{ alignSelf: 'center' }]}
       /> */}
-      <TouchableOpacity
-        style={{
-          justifyContent: 'center',
+      <Header
+        navigation={navigation}
+        // title="Practices"
+        backArrow={true}
+        // iconRight1={{
+        //   name: 'equalizer',
+        //   type: 'simple-line-icon',
+        //   onPress: openMenu,
+        //   buttonType: 'filter',
+        // }}
+        // notifyIcon={true}
+        searchData={{
+          name:
+            searchData && searchData.length > 0
+              ? searchData
+              : 'Search for a practice',
+          action: () => console.log('search'),
+          hideBorder: true,
+          hideTitle: true,
         }}
-        onPress={() => {
-          console.log(bottomSheetRef.current);
-          bottomSheetRef.current.snapTo(2);
-        }}>
-        <Icon
-          name="linear-scale"
-          type="marterialIcon"
-          color={colors.text}
-          size={normalize(20)}
-          style={{
-            marginRight: 0,
-            // alignSelf: 'center',
-          }}
-        />
-      </TouchableOpacity>
+        // checkState={checkState}
+        // setCheckState={setCheckState}
+      />
 
-      {practiceData.data && (
-        <View style={{ width: windowWidth }}>
+      {practice && (
+        <View style={{ width: windowWidth, marginTop: 10 }}>
           <View
             style={{
               padding: 20,
@@ -115,7 +123,7 @@ const PracticeDetails = ({
             }}>
             <FastImage
               source={{
-                uri: data.logo ? data.logo : '',
+                uri: practice.logo ? practice.logo : '',
               }}
               style={{
                 width: 100,
@@ -135,7 +143,7 @@ const PracticeDetails = ({
                 textAlign: 'center',
                 paddingTop: 10,
               }}>
-              {data.practiceName}
+              {practice.practiceName}
             </Text>
             <Text
               style={{
@@ -145,16 +153,17 @@ const PracticeDetails = ({
                 textAlign: 'center',
                 paddingTop: 10,
               }}>
-              {data.email}
+              {practice.email}
             </Text>
-            {type === 'pending' || type === 'none-member' ? (
+            {pending.length > 0 ||
+            (!pending.length > 0 && !member.length > 0) ? (
               <View
                 style={{
                   position: 'absolute',
                   top: 20,
-                  right: type === 'pending' ? 20 : 20,
+                  right: pending ? 20 : 20,
                 }}>
-                {type === 'pending' ? (
+                {pending.length > 0 ? (
                   <Icon
                     name="progress-clock"
                     type="material-community"
@@ -166,7 +175,7 @@ const PracticeDetails = ({
                     title="Join"
                     onPress={() => {
                       console.log('Joining');
-                      joinPractice(data.id);
+                      joinPractice(practice.id);
                       // await setPracticeId(practice.id);
                       // await navigation.navigate('Chats');
                     }}
@@ -204,7 +213,7 @@ const PracticeDetails = ({
               </View>
             ) : null}
           </View>
-          {type === 'member' && (
+          {member.length > 0 && (
             <View
               style={{
                 justifyContent: 'center',
@@ -218,13 +227,9 @@ const PracticeDetails = ({
                     backgroundColor: colors.background_1,
                   },
                 ]}
-                onPress={async () => {
-                  bottomSheetRef.current.snapTo(2);
-
-                  setTimeout(() => {
-                    setPracticeId(data.id);
-                    navigation.navigate('Chats');
-                  }, 2200);
+                onPress={() => {
+                  setPracticeId(practice.id);
+                  navigation.navigate('Chats');
                 }}>
                 <Icon
                   name="ios-chatbubble"
@@ -258,7 +263,7 @@ const PracticeDetails = ({
               </TouchableOpacity>
             </View>
           )}
-          {type === 'pending' && (
+          {pending.length > 0 && (
             <View
               style={{
                 justifyContent: 'center',
@@ -307,7 +312,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.description}
+                  {practice.description}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -334,7 +339,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.specialty}
+                  {practice.specialty}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -361,7 +366,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.mobileNo}
+                  {practice.mobileNo}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -388,7 +393,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.city}
+                  {practice.city}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -415,7 +420,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.address}
+                  {practice.address}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -443,7 +448,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.state}
+                  {practice.state}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -471,7 +476,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.country}
+                  {practice.country}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -499,7 +504,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.website}
+                  {practice.website}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -507,7 +512,7 @@ const PracticeDetails = ({
           </View>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 };
 

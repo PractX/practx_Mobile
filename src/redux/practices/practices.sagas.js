@@ -7,6 +7,7 @@ import {
   getPracticesDmsApi,
   getPracticeSubGroupApi,
   joinPracticeApi,
+  searchPracticesApi,
 } from '../../apis/api';
 import PracticesActionTypes from './practices.types';
 import { REACT_APP_MONT } from '@env';
@@ -18,6 +19,7 @@ import {
   getPracticesDmsSuccess,
   getPracticeSubgroupsSuccess,
   setLoading,
+  setSearchResult,
   // setPracticeId,
 } from './practices.actions';
 import { showMessage } from 'react-native-flash-message';
@@ -91,6 +93,40 @@ export function* willGetAllPractices() {
           : eMsg || 'Please check your connectivity, And try again',
       ),
     );
+  }
+}
+
+export function* willSearchPractices({ payload: searchData }) {
+  const token = yield select(userToken);
+  // console.log('going in aoi');
+  // yield put(setPracticeId(55));
+  // console.log(practiceId);
+  try {
+    const result = yield searchPracticesApi(token, searchData).then(function (
+      response,
+    ) {
+      return response.data;
+    });
+    console.log(result);
+    // showMessage({
+    //   message: result.message,
+    //   type: 'success',
+    // });
+    yield put(setSearchResult(result.practices));
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      showMessage({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    yield put(setLoading(false));
   }
 }
 
@@ -267,6 +303,11 @@ export function* onGetAllPractices() {
     willGetAllPractices,
   );
 }
+
+export function* onSearchPractices() {
+  yield takeLatest(PracticesActionTypes.SET_SEARCH_DATA, willSearchPractices);
+}
+
 export function* onJoinPractices() {
   yield takeLatest(PracticesActionTypes.JOIN_PRACTICES, willJoinPractices);
 }
@@ -298,6 +339,7 @@ export function* onGetJoinedPractices() {
 export function* practicesSagas() {
   yield all([
     call(onGetAllPractices),
+    call(onSearchPractices),
     call(onGetJoinedPractices),
     call(onJoinPractices),
     call(onGetPracticesDms),

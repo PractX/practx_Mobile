@@ -13,7 +13,7 @@ import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import { ListItem, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
@@ -245,33 +245,40 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
                 <ListItem.Chevron size={normalize(20)} color={colors.text_1} />
               </ListItem>
             </TouchableOpacity>
-            <ListItem
-              containerStyle={{
-                backgroundColor: 'transparent',
-                borderWidth: 1,
-                borderColor: colors.background_1,
-                paddingVertical: 12,
-                borderRadius: 15,
-                marginBottom: 20,
-              }}>
-              <Icon
-                size={normalize(18)}
-                color={colors.text}
-                type="material-community"
-                name="lock-outline"
-              />
-              <ListItem.Content>
-                <ListItem.Title
-                  style={{
-                    color: colors.text,
-                    fontSize: normalize(14),
-                    fontFamily: 'SofiaProRegular',
-                  }}>
-                  Reset Password
-                </ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron size={normalize(20)} color={colors.text_1} />
-            </ListItem>
+            <TouchableOpacity
+              onPress={() =>
+                requestAnimationFrame(() => {
+                  navigation.navigate('ResetPassword');
+                })
+              }>
+              <ListItem
+                containerStyle={{
+                  backgroundColor: 'transparent',
+                  borderWidth: 1,
+                  borderColor: colors.background_1,
+                  paddingVertical: 12,
+                  borderRadius: 15,
+                  marginBottom: 20,
+                }}>
+                <Icon
+                  size={normalize(18)}
+                  color={colors.text}
+                  type="material-community"
+                  name="lock-outline"
+                />
+                <ListItem.Content>
+                  <ListItem.Title
+                    style={{
+                      color: colors.text,
+                      fontSize: normalize(14),
+                      fontFamily: 'SofiaProRegular',
+                    }}>
+                    Reset Password
+                  </ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron size={normalize(20)} color={colors.text_1} />
+              </ListItem>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>

@@ -24,7 +24,7 @@ import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import { ListItem, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
@@ -131,7 +131,7 @@ const ChatMessages = ({
     pubnub.fetchMessages(
       {
         channels: allChannels,
-        count: 1,
+        count: 10,
         end: time,
       },
 
@@ -361,6 +361,11 @@ const ChatMessages = ({
   }, [currentPracticeId]);
 
   useMemo(() => {
+    // console.log(
+    //   'Checkin GROUP DATA__',
+    //   subgroups.find((item) => item.practiceId === currentPracticeId).groups
+    //     .length > 0,
+    // );
     if (currentPracticeId) {
       console.log('Getting all channels');
       if (practiceDms.length) {
@@ -699,10 +704,16 @@ const ChatMessages = ({
                     Groups
                   </Text>
                 </View>
-                {subgroups.length > 0 ? (
+                {currentPracticeId &&
+                subgroups.length > 0 &&
+                subgroups.find(
+                  (item) => item.practiceId === currentPracticeId,
+                ) &&
+                subgroups.find((item) => item.practiceId === currentPracticeId)
+                  .groups.length > 0 ? (
                   <View
                     style={{
-                      height: windowHeight - 400,
+                      height: windowHeight - 350,
                     }}>
                     <FlatList
                       ref={ref}
@@ -755,9 +766,23 @@ const ChatMessages = ({
                           navigation={navigation}
                           subgroups={subgroups}
                           // channel
-                          styling={{
-                            width: style1 === 'open' ? appwidth - 50 : appwidth,
-                          }}
+                          styling={[
+                            {
+                              width:
+                                style1 === 'open' ? appwidth - 50 : appwidth,
+                            },
+                            subgroups.find(
+                              (item) => item.practiceId === currentPracticeId,
+                            ) &&
+                              index ===
+                                subgroups.find(
+                                  (item) =>
+                                    item.practiceId === currentPracticeId,
+                                ).groups.length -
+                                  1 && {
+                                paddingBottom: 60,
+                              },
+                          ]}
                         />
                       )}
                       keyExtractor={(item, index) => item.display_url}
@@ -770,7 +795,7 @@ const ChatMessages = ({
                     {practiceDms === null || isFetching ? (
                       <ActivityIndicator
                         animating={isFetching}
-                        size={normalize(35)}
+                        size={normalize(25)}
                         color={colors.text}
                       />
                     ) : (
@@ -779,14 +804,14 @@ const ChatMessages = ({
                           name="deleteusergroup"
                           type="antdesign"
                           color={colors.text_2}
-                          size={normalize(50)}
+                          size={normalize(35)}
                           style={{ color: colors.text_1, alignSelf: 'center' }}
                         />
                         <Text
                           style={{
                             color: colors.text_2,
                             alignSelf: 'center',
-                            fontSize: normalize(16),
+                            fontSize: normalize(14),
                             fontFamily: 'SofiaProRegular',
                             textAlign: 'center',
                           }}>
@@ -810,8 +835,8 @@ const ChatMessages = ({
             ) : (
               <>
                 <Icon
-                  name="chat-alert-outline"
-                  type="material-community"
+                  name="ios-chatbubbles-outline"
+                  type="ionicon"
                   color={colors.text_2}
                   size={normalize(50)}
                   style={{ color: colors.text_1, alignSelf: 'center' }}
@@ -820,7 +845,7 @@ const ChatMessages = ({
                   style={{
                     color: colors.text_2,
                     alignSelf: 'center',
-                    fontSize: normalize(16),
+                    fontSize: normalize(15),
                     fontFamily: 'SofiaProRegular',
                     textAlign: 'center',
                   }}>

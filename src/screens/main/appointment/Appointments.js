@@ -29,7 +29,7 @@ import Header from '../../../components/hoc/Header';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView } from 'react-navigation';
 import { useTheme } from '@react-navigation/native';
-import normalize from '../../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import { FlatList } from 'react-native';
 
 // const Stack = createStackNavigator();
@@ -276,7 +276,7 @@ const Appointments = ({ navigation }) => {
           {appointmentData ? (
             <View
               style={{
-                height: windowHeight - 450,
+                height: windowHeight - 370,
               }}>
               <FlatList
                 ref={ref}
@@ -298,9 +298,14 @@ const Appointments = ({ navigation }) => {
                   <Appointment
                     id={index}
                     type={item.type}
-                    styling={{
-                      width: style1 === 'open' ? appwidth - 50 : appwidth,
-                    }}
+                    styling={[
+                      {
+                        width: style1 === 'open' ? appwidth - 50 : appwidth,
+                      },
+                      index === appointmentData.length - 1 && {
+                        paddingBottom: 60,
+                      },
+                    ]}
                   />
                 )}
                 keyExtractor={(item, index) => item.display_url}

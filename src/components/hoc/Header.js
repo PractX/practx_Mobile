@@ -8,7 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import { DrawerActions, useTheme } from '@react-navigation/native';
-import normalize from '../../utils/normalize';
+import { normalize } from 'react-native-elements';
 import { Button, Icon } from 'react-native-elements';
 import {
   Menu,
@@ -40,8 +40,9 @@ const Header = ({
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
-  // console.log(screenWidth, '&', screenWidth / 2);
-  console.log(subgroups);
+  const [searchRef, setSearchRef] = useState();
+  const [searchText, setSearchText] = useState('');
+  console.log(searchText);
 
   // const advanceCheck = (type) => {
   //   if (type === 'opt1') {
@@ -53,14 +54,13 @@ const Header = ({
   return (
     <View
       style={{
-        position: 'absolute',
+        position: searchData && searchData.hideTitle ? 'relative' : 'absolute',
         zIndex: 100,
         height: subgroups && subgroups.show ? null : 50,
         width: Math.round(Dimensions.get('window').width),
         borderBottomColor: colors.background_1,
-        borderBottomWidth: 0.8,
+        borderBottomWidth: searchData && searchData.hideBorder ? 0 : 0.8,
         flexDirection: 'column',
-        // alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: colors.background,
       }}>
@@ -73,7 +73,31 @@ const Header = ({
           // height: 50,
           // backgroundColor: colors.background,
         }}>
-        {backArrow ? (
+        {backArrow && !practice && !group && (
+          <TouchableOpacity
+            style={{
+              width: 40,
+              height: 30,
+              alignItems: 'flex-start',
+              paddingTop: 5,
+              zIndex: 20,
+              marginLeft: 20,
+              marginVertical: 15,
+            }}
+            onPress={() => navigation.goBack()}>
+            <Icon
+              name="arrow-back"
+              type="material-icons"
+              color={colors.text}
+              size={normalize(18)}
+              style={{
+                color: colors.text,
+                // alignSelf: 'center',
+              }}
+            />
+          </TouchableOpacity>
+        )}
+        {(backArrow && practice) || (backArrow && group) ? (
           <View
             style={{
               justifyContent: 'center',
@@ -88,6 +112,7 @@ const Header = ({
                 height: 30,
                 alignItems: 'flex-start',
                 paddingTop: 5,
+                zIndex: 20,
               }}
               onPress={() => navigation.goBack()}>
               <Icon
@@ -176,39 +201,43 @@ const Header = ({
             ) : null}
           </View>
         ) : (
-          <TouchableOpacity
-            style={{
-              justifyContent: 'center',
-              flexDirection: 'column',
-              // marginTop: 20,
-              // marginLeft: 20,
-              marginHorizontal: 20,
-              marginVertical: 15,
-              width: 40,
-              height: 30,
-              alignItems: 'center',
-              zIndex: 1,
-            }}
-            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-            <View
-              style={{
-                backgroundColor: colors.text,
-                width: 21,
-                height: 1.6,
-                marginTop: 4,
-                alignSelf: 'flex-start',
-              }}
-            />
-            <View
-              style={{
-                backgroundColor: colors.primary,
-                width: 10,
-                height: 1.6,
-                marginTop: 4,
-                alignSelf: 'flex-start',
-              }}
-            />
-          </TouchableOpacity>
+          <>
+            {!backArrow && (
+              <TouchableOpacity
+                style={{
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  // marginTop: 20,
+                  // marginLeft: 20,
+                  marginHorizontal: 20,
+                  marginVertical: 15,
+                  width: 40,
+                  height: 30,
+                  alignItems: 'center',
+                  zIndex: 2,
+                }}
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+                <View
+                  style={{
+                    backgroundColor: colors.text,
+                    width: 21,
+                    height: 1.6,
+                    marginTop: 4,
+                    alignSelf: 'flex-start',
+                  }}
+                />
+                <View
+                  style={{
+                    backgroundColor: colors.primary,
+                    width: 10,
+                    height: 1.6,
+                    marginTop: 4,
+                    alignSelf: 'flex-start',
+                  }}
+                />
+              </TouchableOpacity>
+            )}
+          </>
         )}
         {title && (
           <View
@@ -231,39 +260,72 @@ const Header = ({
             </Text>
           </View>
         )}
+        {/* !searchData.hideTitle */}
         {searchData && (
-          <Pressable
-            onPress={() => navigation.navigate('PractxSearch')}
-            style={{
-              // top: 0,
-              left: 0,
-              // right: 0,
-              // bottom: 0,
-              width: screenWidth - 130,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              // position: 'absolute',
-              alignItems: 'center',
-            }}>
-            <Text
+          <>
+            {!searchData.hideTitle ? (
+              <Pressable
+                onPress={() => navigation.navigate('PractxSearch')}
+                style={{
+                  // top: 0,
+                  left: 0,
+                  // right: 0,
+                  // bottom: 0,
+                  width: screenWidth - 130,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  // position: 'absolute',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProRegular',
+                    color: colors.text,
+                  }}>
+                  {searchData.name}
+                </Text>
+              </Pressable>
+            ) : (
+              <View
+                style={{
+                  // top: 0,
+                  left: 0,
+                  // right: 0,
+                  // bottom: 0,
+                  width: screenWidth - 130,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  // position: 'absolute',
+                  alignItems: 'center',
+                }}
+              />
+            )}
+            <Pressable
+              onPress={() => navigation.navigate('PractxSearch')}
               style={{
-                fontSize: normalize(14),
-                fontFamily: 'SofiaProRegular',
-                color: colors.text,
+                // top: 0,
+                left: 0,
+                // right: 0,
+                // bottom: 0,
+                width: screenWidth - 130,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                // position: 'absolute',
+                alignItems: 'center',
               }}>
-              {searchData.name}
-            </Text>
-            <Icon
-              name={'search'}
-              type={'ionicon'}
-              color={colors.text}
-              size={normalize(21)}
-              style={{
-                color: colors.text,
-                // alignSelf: 'center',
-              }}
-            />
-          </Pressable>
+              <Icon
+                name={'search'}
+                type={'ionicon'}
+                color={colors.text}
+                size={normalize(18)}
+                style={{
+                  color: colors.text,
+                  // alignSelf: 'center',
+                }}
+              />
+            </Pressable>
+          </>
         )}
         {search && (
           <View
@@ -275,6 +337,7 @@ const Header = ({
               alignItems: 'center',
             }}>
             <TextInput
+              ref={(input) => setSearchRef(input)}
               autoFocus={true}
               autoCapitalize={false}
               autoCompleteType={'name'}
@@ -282,225 +345,276 @@ const Header = ({
               keyboardType={'default'}
               placeholder={search.placeholder}
               placeholderTextColor={colors.text_2}
+              returnKeyType="search"
+              onSubmitEditing={() => search.onSubmit()}
               style={{
-                color: colors.text_1,
+                color: colors.text,
                 fontFamily: 'SofiaProRegular',
                 fontSize: normalize(14),
                 width: '100%',
               }}
-              // onChangeText={handleChange(name)}
+              onChangeText={(text) => {
+                setSearchText(text);
+                text.length >= 2 &&
+                  setTimeout(() => {
+                    search.action(text);
+                  }, 0);
+              }}
               // onBlur={handleBlur(name)}
               // value={valuesType}
               // onFocus={() => iconLeft && iconLeft.action(false)}
             />
           </View>
         )}
-        <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
-          {iconRight1 && iconRight1.buttonType === 'filter' && (
-            <Menu>
-              <MenuTrigger
-                // text="Select option"
-                children={
-                  <Icon
-                    name={iconRight1.name}
-                    type={iconRight1.type}
-                    color={colors.text}
-                    size={normalize(19)}
-                    style={{
-                      color: colors.text,
-                      alignSelf: 'center',
-                    }}
-                  />
-                }
-              />
-              <MenuOptions
-                customStyles={{
-                  optionsWrapper: {
-                    backgroundColor: colors.background,
-                    borderWidth: 0.8,
-                    borderColor: colors.background_1,
-                  },
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    backgroundColor: colors.background_1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 5,
-                  }}>
-                  <Text
-                    style={{
-                      color: colors.text,
-                      fontSize: normalize(16),
-                      fontFamily: 'SofiaProRegular',
-                    }}>
-                    Filter By
-                  </Text>
-                </View>
-                <MenuCheckOption
-                  name="None Member"
-                  setCheckState={setCheckState}
-                  checkState={checkState}
-                  checkStateType={['opt1', checkState.opt1]}
-                  colors={colors}
-                />
-                <MenuCheckOption
-                  name="Pending Member"
-                  setCheckState={setCheckState}
-                  checkState={checkState}
-                  checkStateType={['opt2', checkState.opt2]}
-                  colors={colors}
-                />
-                <MenuCheckOption
-                  name="Member"
-                  setCheckState={setCheckState}
-                  checkState={checkState}
-                  checkStateType={['opt3', checkState.opt3]}
-                  colors={colors}
-                />
-                <View style={{ marginVertical: 10 }}>
-                  <MenuOption
-                    text="Filter"
-                    onSelect={() => setFilter(checkState)}
-                    customStyles={{
-                      optionWrapper: {
-                        width: '50%',
-                        alignSelf: 'center',
-                        backgroundColor: colors.tertiary,
-                        borderRadius: 5,
-                        // paddingVertical: 4,
-                      },
-                      optionText: {
-                        color: 'white',
-                        fontFamily: 'SofiaProRegular',
-                        fontSize: normalize(15),
-                        textAlign: 'center',
-                      },
-                    }}
-                  />
-                </View>
-              </MenuOptions>
-            </Menu>
-          )}
-          {iconRight1 && iconRight1.buttonType === 'save' && (
-            <Button
-              // onPress={handleSubmit}
-              TouchableComponent={() => {
-                return isLoading ? (
-                  <ActivityIndicator
-                    animating={true}
-                    size={normalize(18)}
-                    color={colors.text}
-                  />
-                ) : (
-                  <TouchableOpacity onPress={() => iconRight1.onPress()}>
+        {search && searchText.length > 0 ? (
+          <TouchableOpacity
+            style={{
+              alignItems: 'center',
+              paddingTop: 5,
+              zIndex: 20,
+              marginHorizontal: 20,
+            }}
+            onPress={() => searchRef.clear()}>
+            <Icon
+              name="x"
+              type="feather"
+              color={colors.text}
+              size={normalize(18)}
+              style={{
+                color: colors.text,
+                // alignSelf: 'center',
+              }}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={{
+              alignItems: 'center',
+              paddingTop: 5,
+              zIndex: 20,
+              marginHorizontal: 30,
+            }}
+            onPress={() => searchRef.clear()}>
+            {/* <Icon
+              name="x"
+              type="feather"
+              color={colors.text}
+              size={normalize(18)}
+              style={{
+                color: colors.text,
+                // alignSelf: 'center',
+              }}
+            /> */}
+          </TouchableOpacity>
+        )}
+        {iconRight1 && (
+          <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
+            {iconRight1.buttonType === 'filter' && (
+              <Menu>
+                <MenuTrigger
+                  // text="Select option"
+                  children={
                     <Icon
                       name={iconRight1.name}
                       type={iconRight1.type}
                       color={colors.text}
-                      size={normalize(18)}
+                      size={normalize(19)}
                       style={{
                         color: colors.text,
-                        // alignSelf: 'center',
+                        alignSelf: 'center',
                       }}
                     />
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          )}
-          {chatRight && (
-            <>
+                  }
+                />
+                <MenuOptions
+                  customStyles={{
+                    optionsWrapper: {
+                      backgroundColor: colors.background,
+                      borderWidth: 0.8,
+                      borderColor: colors.background_1,
+                    },
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      backgroundColor: colors.background_1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: 5,
+                    }}>
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontSize: normalize(16),
+                        fontFamily: 'SofiaProRegular',
+                      }}>
+                      Filter By
+                    </Text>
+                  </View>
+                  <MenuCheckOption
+                    name="None Member"
+                    setCheckState={setCheckState}
+                    checkState={checkState}
+                    checkStateType={['opt1', checkState.opt1]}
+                    colors={colors}
+                  />
+                  <MenuCheckOption
+                    name="Pending Member"
+                    setCheckState={setCheckState}
+                    checkState={checkState}
+                    checkStateType={['opt2', checkState.opt2]}
+                    colors={colors}
+                  />
+                  <MenuCheckOption
+                    name="Member"
+                    setCheckState={setCheckState}
+                    checkState={checkState}
+                    checkStateType={['opt3', checkState.opt3]}
+                    colors={colors}
+                  />
+                  <View style={{ marginVertical: 10 }}>
+                    <MenuOption
+                      text="Filter"
+                      onSelect={() => setFilter(checkState)}
+                      customStyles={{
+                        optionWrapper: {
+                          width: '50%',
+                          alignSelf: 'center',
+                          backgroundColor: colors.tertiary,
+                          borderRadius: 5,
+                          // paddingVertical: 4,
+                        },
+                        optionText: {
+                          color: 'white',
+                          fontFamily: 'SofiaProRegular',
+                          fontSize: normalize(15),
+                          textAlign: 'center',
+                        },
+                      }}
+                    />
+                  </View>
+                </MenuOptions>
+              </Menu>
+            )}
+            {iconRight1.buttonType === 'save' && (
               <Button
                 // onPress={handleSubmit}
-                TouchableComponent={() => (
-                  <TouchableOpacity onPress={() => chatRight[0].onPress()}>
-                    <Icon
-                      name={chatRight[0].name}
-                      type={chatRight[0].type}
-                      color={colors.text}
+                TouchableComponent={() => {
+                  return isLoading ? (
+                    <ActivityIndicator
+                      animating={true}
                       size={normalize(18)}
-                      style={{
-                        borderRadius: 5,
-                        // backgroundColor: colors.primary,
-                        padding: 5,
-                        color: colors.text,
-                        // alignSelf: 'center',
-                      }}
-                    />
-                  </TouchableOpacity>
-                )}
-              />
-              <Button
-                // onPress={handleSubmit}
-                TouchableComponent={() => (
-                  <TouchableOpacity onPress={() => chatRight[1].onPress()}>
-                    <Icon
-                      name={chatRight[1].name}
-                      type={chatRight[1].type}
                       color={colors.text}
-                      size={normalize(18)}
-                      style={{
-                        borderRadius: 5,
-                        // backgroundColor: colors.quaternary,
-                        padding: 5,
-                        color: colors.text,
-                        marginLeft: 15,
-                      }}
                     />
-                  </TouchableOpacity>
-                )}
+                  ) : (
+                    <TouchableOpacity onPress={() => iconRight1.onPress()}>
+                      <Icon
+                        name={iconRight1.name}
+                        type={iconRight1.type}
+                        color={colors.text}
+                        size={normalize(18)}
+                        style={{
+                          color: colors.text,
+                          // alignSelf: 'center',
+                        }}
+                      />
+                    </TouchableOpacity>
+                  );
+                }}
               />
-            </>
-          )}
-          {subgroups &&
-            subgroups.data &&
-            subgroups.data.groups &&
-            subgroups.data.groups.length > 0 && (
-              <TouchableOpacity
-                onPress={() => subgroups.onShow(!subgroups.show)}>
+            )}
+            {chatRight && (
+              <>
+                <Button
+                  // onPress={handleSubmit}
+                  TouchableComponent={() => (
+                    <TouchableOpacity onPress={() => chatRight[0].onPress()}>
+                      <Icon
+                        name={chatRight[0].name}
+                        type={chatRight[0].type}
+                        color={colors.text}
+                        size={normalize(18)}
+                        style={{
+                          borderRadius: 5,
+                          // backgroundColor: colors.primary,
+                          padding: 5,
+                          color: colors.text,
+                          // alignSelf: 'center',
+                        }}
+                      />
+                    </TouchableOpacity>
+                  )}
+                />
+                <Button
+                  // onPress={handleSubmit}
+                  TouchableComponent={() => (
+                    <TouchableOpacity onPress={() => chatRight[1].onPress()}>
+                      <Icon
+                        name={chatRight[1].name}
+                        type={chatRight[1].type}
+                        color={colors.text}
+                        size={normalize(18)}
+                        style={{
+                          borderRadius: 5,
+                          // backgroundColor: colors.quaternary,
+                          padding: 5,
+                          color: colors.text,
+                          marginLeft: 15,
+                        }}
+                      />
+                    </TouchableOpacity>
+                  )}
+                />
+              </>
+            )}
+            {subgroups &&
+              subgroups.data &&
+              subgroups.data.groups &&
+              subgroups.data.groups.length > 0 && (
+                <TouchableOpacity
+                  onPress={() => subgroups.onShow(!subgroups.show)}>
+                  <Icon
+                    name={subgroups.show ? 'arrowup' : 'arrowdown'}
+                    type={'antdesign'}
+                    color={colors.text}
+                    size={normalize(18)}
+                    style={{
+                      borderRadius: 5,
+                      // backgroundColor: colors.quaternary,
+                      padding: 5,
+                      color: colors.text,
+                      marginLeft: 15,
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
+            {notifyIcon && (
+              <TouchableOpacity onPress={() => console.log('hello world')}>
                 <Icon
-                  name={subgroups.show ? 'arrowup' : 'arrowdown'}
-                  type={'antdesign'}
+                  name="ios-notifications-outline"
+                  type="ionicon"
                   color={colors.text}
                   size={normalize(18)}
                   style={{
-                    borderRadius: 5,
-                    // backgroundColor: colors.quaternary,
-                    padding: 5,
                     color: colors.text,
-                    marginLeft: 15,
+                    marginLeft: 25,
+                  }}
+                />
+                <View
+                  style={{
+                    position: 'absolute',
+                    right: 3,
+                    top: 2,
+                    width: 6,
+                    height: 6,
+                    backgroundColor: colors.primary,
+                    borderRadius: 50,
                   }}
                 />
               </TouchableOpacity>
             )}
-          {notifyIcon && (
-            <TouchableOpacity onPress={() => console.log('hello world')}>
-              <Icon
-                name="ios-notifications-outline"
-                type="ionicon"
-                color={colors.text}
-                size={normalize(18)}
-                style={{
-                  color: colors.text,
-                  marginLeft: 25,
-                }}
-              />
-              <View
-                style={{
-                  position: 'absolute',
-                  right: 3,
-                  top: 2,
-                  width: 6,
-                  height: 6,
-                  backgroundColor: colors.primary,
-                  borderRadius: 50,
-                }}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
+          </View>
+        )}
       </View>
       {subgroups && subgroups.show && (
         <View

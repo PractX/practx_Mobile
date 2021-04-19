@@ -6,6 +6,7 @@ import {
   REACT_APP_EDIT_PROFILE,
   REACT_APP_GET_PRACTICES_DMS,
   REACT_APP_GET_SUBGROUPS,
+  REACT_APP_SEARCH_PRACTICES,
 } from '@env';
 import { Platform } from 'react-native';
 
@@ -78,20 +79,6 @@ export const chatWithPracticeApi = async (practiceId, token) => {
   return collectionsMap;
 };
 
-// export const editProfileApi = async (token, data) => {
-//   console.log(data);
-//   const headers = {
-//     'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
-//     Authorization: token,
-//   };
-//   const collectionsMap = await Axios.patch(
-//     REACT_APP_API + REACT_APP_EDIT_PROFILE,
-//     data,
-//     { headers: headers },
-//   );
-//   return collectionsMap;
-// };
-
 export const editProfileApi = async (token, data) => {
   // console.log(data.avatar);
   // console.log(data);
@@ -99,20 +86,20 @@ export const editProfileApi = async (token, data) => {
   const form = await new FormData();
   // const form2 = await new FormData();
   // form.append('avatar');
-  console.log(data);
-  const newData = {
-    ...data,
-    avatar: {
-      uri:
-        Platform.OS === 'android'
-          ? `${data.avatar.uri}`
-          : `file://${data.avatar.uri}`,
-      type: 'image/jpeg',
-      name: data.avatar.fileName,
-    },
-  };
-
-  console.log(data);
+  data.avatar === undefined && delete data.avatar;
+  const newData = data.avatar
+    ? {
+        ...data,
+        avatar: {
+          uri:
+            Platform.OS === 'android'
+              ? `${data.avatar.uri}`
+              : `file://${data.avatar.uri}`,
+          type: 'image/jpeg',
+          name: data.avatar.fileName,
+        },
+      }
+    : { ...data };
   for (const key in newData) {
     form.append(key, newData[key]);
   }
@@ -138,3 +125,13 @@ export const editProfileApi = async (token, data) => {
 //   const data = await Axios.get(apiUrl);
 //   return data;
 // };
+
+export const searchPracticesApi = async (token, searchData) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const url = REACT_APP_API + REACT_APP_SEARCH_PRACTICES + `${searchData}`;
+  const collectionsMap = await Axios.get(url, { headers: headers });
+  return collectionsMap;
+};
