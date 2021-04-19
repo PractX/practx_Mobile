@@ -8,10 +8,12 @@ import {
   FlatList,
   RefreshControl,
   SafeAreaView,
+  TouchableOpacity,
   Text,
   View,
   Dimensions,
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import PracticesBox from '../../../components/hoc/PracticesBox';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -20,12 +22,13 @@ import {
   getJoinedPracticesStart,
   getPracticesAllStart,
   getPracticesDmsStart,
-  setFilter,
+  setSearchData,
 } from '../../../redux/practices/practices.actions';
 import {
   selectAllPractices,
   selectFilter,
-  selectIsFetching,
+  selectisSearching,
+  selectIsSearching,
   selectSearchData,
   selectSearchResult,
 } from '../../../redux/practices/practices.selector';
@@ -47,20 +50,20 @@ const Practices = ({
   getPracticesAllStart,
   getJoinedPracticesStart,
   getPracticesDmsStart,
-  isFetching,
+  isSearching,
   practices,
   currentUser,
-  setFilter,
+  setSearchData,
   filter,
   extraData,
-  searchResult,
   searchData,
+  searchResult,
 }) => {
   const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
-  // const [checkState, setCheckState] = useState(filter);
+  const [checkState, setCheckState] = useState(filter);
   const ref = useRef(null);
   const isFocused = useIsFocused();
   const [practiceData, setPracticeData] = useState({
@@ -88,8 +91,8 @@ const Practices = ({
   });
 
   useEffect(() => {
-    isFetching ? setRefreshing(true) : setRefreshing(false);
-  }, [isFetching]);
+    isSearching ? setRefreshing(true) : setRefreshing(false);
+  }, [isSearching]);
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('drawerOpen', (e) => {
       // Do something
@@ -103,6 +106,7 @@ const Practices = ({
       getJoinedPracticesStart();
       getPracticesDmsStart();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
   React.useEffect(() => {
     // console.log(practices);
@@ -177,14 +181,11 @@ const Practices = ({
           // }}
           // notifyIcon={true}
           searchData={{
-            name:
-              searchData && searchData.length > 0
-                ? searchData
-                : 'Search for a practice',
-            action: () => console.log('search'),
+            name: searchData,
+            action: () => navigation.navigate('PractxSearch'),
           }}
-          // checkState={checkState}
-          // setCheckState={setCheckState}
+          checkState={checkState}
+          setCheckState={setCheckState}
         />
         <View
           style={{
@@ -194,12 +195,56 @@ const Practices = ({
             justifyContent: 'center',
             marginTop: 50,
           }}>
-          {searchResult ? (
+          {practices ? (
             <FlatList
               ref={ref}
-              refreshControl={<RefreshControl refreshing={false} />}
               // removeClippedSubviews
-              // ListEmptyComponent
+              ListEmptyComponent={() => (
+                <View style={{ marginTop: windowHeight / 3 }}>
+                  {isSearching ? (
+                    <ActivityIndicator
+                      animating={isSearching}
+                      size={normalize(30)}
+                      color={colors.text}
+                    />
+                  ) : (
+                    <View style={{ alignItems: 'center' }}>
+                      <Icon
+                        name="search-off"
+                        type="material-icons"
+                        color={colors.text_1}
+                        size={normalize(50)}
+                      />
+                      <Text
+                        style={{
+                          color: colors.text_1,
+                          fontSize: normalize(13),
+                          fontFamily: 'SofiaProSemiBold',
+                        }}>
+                        No Practice Found
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => setSearchData(searchData)}
+                        style={{
+                          alignItems: 'center',
+                          backgroundColor: colors.primary,
+                          marginTop: 20,
+                          borderRadius: 10,
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: normalize(13),
+                            color: 'white',
+                            paddingVertical: 6,
+                            paddingHorizontal: 15,
+                          }}>
+                          Try again
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              )}
               initialNumToRender={5}
               updateCellsBatchingPeriod={5}
               showsVerticalScrollIndicator={false}
@@ -207,15 +252,21 @@ const Practices = ({
               data={searchResult}
               numColumns={1}
               renderItem={({ item, index }) => (
-                <PracticesBox
-                  userId={currentUser ? currentUser.id : 0}
-                  id={index}
-                  practice={item}
-                  navigation={navigation}
-                  practiceData={practiceData}
-                  setPracticeData={setPracticeData}
-                  searchData={searchData}
-                />
+                <>
+                  <PracticesBox
+                    userId={currentUser ? currentUser.id : 0}
+                    id={index}
+                    practice={item}
+                    navigation={navigation}
+                    practiceData={practiceData}
+                    setPracticeData={setPracticeData}
+                  />
+                  <View
+                    style={{
+                      height: practices.length === index + 1 ? 40 : 0,
+                    }}
+                  />
+                </>
               )}
               keyExtractor={(item, index) => item.display_url}
               // showsHorizontalScrollIndicator={false}
@@ -227,9 +278,9 @@ const Practices = ({
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              {isFetching ? (
+              {isSearching ? (
                 <ActivityIndicator
-                  animating={isFetching}
+                  animating={isSearching}
                   size={normalize(30)}
                   color={colors.text}
                 />
@@ -258,38 +309,24 @@ const Practices = ({
           }}
         />
       )}
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={[560, 400, 0]}
-        borderRadius={40}
-        renderContent={() => (
-          <PracticeDetails
-            bottomSheetRef={bottomSheetRef}
-            navigation={navigation}
-            practiceData={practiceData}
-          />
-        )}
-        initialSnap={2}
-        onCloseEnd={() => setPracticeData({ show: false, data: null })}
-      />
     </SafeAreaView>
   );
 };
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
-  isFetching: selectIsFetching,
+  isSearching: selectIsSearching,
   practices: selectAllPractices,
   filter: selectFilter,
-  searchResult: selectSearchResult,
   searchData: selectSearchData,
+  searchResult: selectSearchResult,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getPracticesAllStart: () => dispatch(getPracticesAllStart()),
   getJoinedPracticesStart: () => dispatch(getJoinedPracticesStart()),
   getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
-  setFilter: (data) => dispatch(setFilter(data)),
+  setSearchData: (searchData) => dispatch(setSearchData(searchData)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Practices);

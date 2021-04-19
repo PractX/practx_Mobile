@@ -37,11 +37,13 @@ const Header = ({
   search,
   searchData,
   subgroups,
+  setTextInput,
+  searchText,
+  setSearchText,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
   const [searchRef, setSearchRef] = useState();
-  const [searchText, setSearchText] = useState('');
   console.log(searchText);
 
   // const advanceCheck = (type) => {
@@ -264,7 +266,7 @@ const Header = ({
         {searchData && (
           <>
             {!searchData.hideTitle ? (
-              <Pressable
+              <TouchableOpacity
                 onPress={() => navigation.navigate('PractxSearch')}
                 style={{
                   // top: 0,
@@ -285,7 +287,7 @@ const Header = ({
                   }}>
                   {searchData.name}
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             ) : (
               <View
                 style={{
@@ -301,7 +303,7 @@ const Header = ({
                 }}
               />
             )}
-            <Pressable
+            <TouchableOpacity
               onPress={() => navigation.navigate('PractxSearch')}
               style={{
                 // top: 0,
@@ -324,7 +326,7 @@ const Header = ({
                   // alignSelf: 'center',
                 }}
               />
-            </Pressable>
+            </TouchableOpacity>
           </>
         )}
         {search && (
@@ -337,7 +339,10 @@ const Header = ({
               alignItems: 'center',
             }}>
             <TextInput
-              ref={(input) => setSearchRef(input)}
+              ref={(input) => {
+                setSearchRef(input);
+                setTextInput(input);
+              }}
               autoFocus={true}
               autoCapitalize={false}
               autoCompleteType={'name'}

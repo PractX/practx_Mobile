@@ -20,6 +20,7 @@ import {
   getPracticeSubgroupsSuccess,
   setLoading,
   setSearchResult,
+  setSearching,
   // setPracticeId,
 } from './practices.actions';
 import { showMessage } from 'react-native-flash-message';
@@ -126,7 +127,7 @@ export function* willSearchPractices({ payload: searchData }) {
         type: 'danger',
       });
     }
-    yield put(setLoading(false));
+    yield put(setSearching(false));
   }
 }
 

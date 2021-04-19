@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   practices: null,
   isLoading: null,
   isFetching: null,
+  isSearching: null,
   filter: { opt1: true, opt2: true, opt3: true },
   joinedPractices: null,
   currentPracticeId: 0,
@@ -11,8 +12,9 @@ const INITIAL_STATE = {
   practiceSubgroups: [],
   error: null,
   allMessages: [],
-  searchResult: null,
+  searchResult: [],
   searchData: null,
+  searchHistory: [],
 };
 
 const practicesReducer = (state = INITIAL_STATE, action) => {
@@ -29,21 +31,36 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         practiceDms: null,
         practiceSubgroups: [],
         allMessages: [],
-        searchResult: false,
+        searchResult: [],
+        searchData: null,
+        searchHistory: [],
+      };
+
+    case PracticesActionTypes.SET_SEARCH_HISTORY:
+      return {
+        ...state,
+        searchHistory: action.payload,
       };
 
     case PracticesActionTypes.SET_SEARCH_DATA:
       return {
         ...state,
         searchData: action.payload,
-        isFetching: true,
+        searchResult: [],
+        isSearching: true,
       };
 
     case PracticesActionTypes.SET_SEARCH_RESULT:
       return {
         ...state,
         searchResult: action.payload,
-        isFetching: false,
+        isSearching: false,
+      };
+
+    case PracticesActionTypes.SET_SEARCHING:
+      return {
+        ...state,
+        isSearching: action.payload,
       };
 
     case PracticesActionTypes.SET_ALL_MESSAGES:
