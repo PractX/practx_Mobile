@@ -194,7 +194,7 @@ const Practices = ({
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}
-                  onRefresh={() => getPracticesAllStart()}
+                  // onRefresh={() => getPracticesAllStart()}
                 />
               }
               // removeClippedSubviews
@@ -202,7 +202,7 @@ const Practices = ({
               initialNumToRender={5}
               updateCellsBatchingPeriod={5}
               showsVerticalScrollIndicator={false}
-              // style={{ marginBottom: 10 }}
+              style={{ marginBottom: 20 }}
               data={practices}
               numColumns={1}
               renderItem={({ item, index }) => (
