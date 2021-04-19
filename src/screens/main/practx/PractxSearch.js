@@ -135,20 +135,9 @@ const PractxSearch = ({
 
   return (
     <SafeAreaView
-      style={[
-        style1 === 'open' && {
-          borderWidth: 18,
-          // borderColor: colors.background_1,
-          borderTopColor: 'transparent',
-          borderBottomColor: 'transparent',
-          borderLeftColor: colors.background_1,
-          borderRightColor: 'transparent',
-          flex: 1,
-          // borderRadius: 240,
-          borderTopLeftRadius: 110,
-          borderBottomLeftRadius: 110,
-        },
-      ]}>
+      style={{
+        flex: 1,
+      }}>
       <View
         style={[
           style1 === 'open' && {
@@ -195,88 +184,81 @@ const PractxSearch = ({
             height: windowHeight - 100,
             width: style1 === 'open' ? appwidth - 50 : appwidth,
             alignSelf: 'center',
-            justifyContent: 'center',
             marginTop: 50,
           }}>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <FlatList
-              ref={ref}
-              refreshControl={<RefreshControl refreshing={false} />}
-              // removeClippedSubviews
-              // ListEmptyComponent
-              initialNumToRender={5}
-              updateCellsBatchingPeriod={5}
-              showsVerticalScrollIndicator={false}
-              // style={{ marginBottom: 10 }}
-              data={searchResult && searchResult.length > 0 ? searchResult : []}
-              numColumns={1}
-              renderItem={({ item, index }) => (
+          <FlatList
+            ref={ref}
+            // refreshControl={<RefreshControl refreshing={false} />}
+            // removeClippedSubviews
+            // ListEmptyComponent
+            initialNumToRender={5}
+            updateCellsBatchingPeriod={5}
+            showsVerticalScrollIndicator={false}
+            // style={{ marginBottom: 10 }}
+            data={searchResult && searchResult.length > 0 ? searchResult : []}
+            numColumns={1}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: appwidth - 20,
+                  marginTop: 30,
+                }}
+                // onPress={() => navigation.navigate('Practices')}
+                onPress={() =>
+                  navigation.navigate('SinglePractice', {
+                    navigation,
+                    practice: item,
+                    userId: currentUser ? currentUser.id : 0,
+                    searchData,
+                  })
+                }>
+                <View style={{ flexDirection: 'row' }}>
+                  <Icon
+                    name="search"
+                    type="fontisto"
+                    color={colors.text}
+                    size={normalize(17)}
+                    style={{
+                      color: colors.text,
+                      marginRight: 20,
+                      // alignSelf: 'center',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: colors.text,
+                      fontSize: normalize(13),
+                      fontFamily: 'SofiaProRegular',
+                    }}>
+                    {item.practiceName}
+                  </Text>
+                </View>
                 <TouchableOpacity
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    width: appwidth - 20,
-                    marginTop: 30,
+                    alignItems: 'center',
+                    paddingTop: 5,
+                    zIndex: 20,
                   }}
-                  // onPress={() => navigation.navigate('Practices')}
-                  onPress={() =>
-                    navigation.navigate('SinglePractice', {
-                      navigation,
-                      practice: item,
-                      userId: currentUser ? currentUser.id : 0,
-                      searchData,
-                    })
-                  }>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Icon
-                      name="search"
-                      type="fontisto"
-                      color={colors.text}
-                      size={normalize(17)}
-                      style={{
-                        color: colors.text,
-                        marginRight: 20,
-                        // alignSelf: 'center',
-                      }}
-                    />
-                    <Text
-                      style={{
-                        color: colors.text,
-                        fontSize: normalize(13),
-                        fontFamily: 'SofiaProRegular',
-                      }}>
-                      {item.practiceName}
-                    </Text>
-                  </View>
-                  <TouchableOpacity
+                  onPress={() => console.log('go')}>
+                  <Icon
+                    name="arrow-up-left"
+                    type="feather"
+                    color={colors.text}
+                    size={normalize(18)}
                     style={{
-                      alignItems: 'center',
-                      paddingTop: 5,
-                      zIndex: 20,
+                      color: colors.text,
+                      // alignSelf: 'center',
                     }}
-                    onPress={() => console.log('go')}>
-                    <Icon
-                      name="arrow-up-left"
-                      type="feather"
-                      color={colors.text}
-                      size={normalize(18)}
-                      style={{
-                        color: colors.text,
-                        // alignSelf: 'center',
-                      }}
-                    />
-                  </TouchableOpacity>
+                  />
                 </TouchableOpacity>
-              )}
-              keyExtractor={(item, index) => item.display_url}
-              // showsHorizontalScrollIndicator={false}
-              // extraData={selected}
-            />
-          </View>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item, index) => item.display_url}
+            // showsHorizontalScrollIndicator={false}
+            // extraData={selected}
+          />
         </View>
       </View>
     </SafeAreaView>

@@ -26,8 +26,6 @@ import {
   selectAllPractices,
   selectFilter,
   selectIsFetching,
-  selectSearchData,
-  selectSearchResult,
 } from '../../../redux/practices/practices.selector';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
@@ -53,14 +51,12 @@ const Practices = ({
   setFilter,
   filter,
   extraData,
-  searchResult,
-  searchData,
 }) => {
   const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
-  // const [checkState, setCheckState] = useState(filter);
+  const [checkState, setCheckState] = useState(filter);
   const ref = useRef(null);
   const isFocused = useIsFocused();
   const [practiceData, setPracticeData] = useState({
@@ -177,14 +173,12 @@ const Practices = ({
           // }}
           // notifyIcon={true}
           searchData={{
-            name:
-              searchData && searchData.length > 0
-                ? searchData
-                : 'Search for a practice',
+            name: 'John',
             action: () => console.log('search'),
           }}
-          // checkState={checkState}
-          // setCheckState={setCheckState}
+          checkState={checkState}
+          setCheckState={setCheckState}
+          setFilter={setFilter}
         />
         <View
           style={{
@@ -194,17 +188,22 @@ const Practices = ({
             justifyContent: 'center',
             marginTop: 50,
           }}>
-          {searchResult ? (
+          {practices ? (
             <FlatList
               ref={ref}
-              refreshControl={<RefreshControl refreshing={false} />}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={() => getPracticesAllStart()}
+                />
+              }
               // removeClippedSubviews
               // ListEmptyComponent
               initialNumToRender={5}
               updateCellsBatchingPeriod={5}
               showsVerticalScrollIndicator={false}
-              style={{ marginBottom: 20 }}
-              data={searchResult}
+              // style={{ marginBottom: 10 }}
+              data={practices}
               numColumns={1}
               renderItem={({ item, index }) => (
                 <PracticesBox
@@ -214,7 +213,6 @@ const Practices = ({
                   navigation={navigation}
                   practiceData={practiceData}
                   setPracticeData={setPracticeData}
-                  searchData={searchData}
                 />
               )}
               keyExtractor={(item, index) => item.display_url}
@@ -281,8 +279,6 @@ const mapStateToProps = createStructuredSelector({
   isFetching: selectIsFetching,
   practices: selectAllPractices,
   filter: selectFilter,
-  searchResult: selectSearchResult,
-  searchData: selectSearchData,
 });
 
 const mapDispatchToProps = (dispatch) => ({
