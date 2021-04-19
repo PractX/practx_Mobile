@@ -2,6 +2,7 @@ import {
   DrawerActions,
   useIsFocused,
   useTheme,
+  useFocusEffect,
 } from '@react-navigation/native';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -22,6 +23,7 @@ import {
   getPracticesDmsStart,
   setFilter,
   setSearchData,
+  setSearchHistory,
 } from '../../../redux/practices/practices.actions';
 import {
   selectAllPractices,
@@ -29,6 +31,7 @@ import {
   selectIsFetching,
   selectSearchData,
   selectSearchResult,
+  selectSearchHistory,
 } from '../../../redux/practices/practices.selector';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
@@ -58,12 +61,16 @@ const PractxSearch = ({
   setSearchData,
   searchResult,
   searchData,
+  setSearchHistory,
+  searchHistory,
 }) => {
   const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
   const [checkState, setCheckState] = useState(filter);
+  const [textInput, setTextInput] = useState();
+  const [searchText, setSearchText] = useState('');
   const ref = useRef(null);
   const isFocused = useIsFocused();
   const [practiceData, setPracticeData] = useState({
@@ -86,6 +93,16 @@ const PractxSearch = ({
     console.log('opening');
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      if (textInput) {
+        console.log(textInput.getNativeRef());
+        console.log('Welcome___now');
+        textInput.focus();
+      }
+    }, [textInput]),
+  );
+
   useEffect(() => {
     practiceData.show && bottomSheetRef.current.snapTo(0);
   });
@@ -107,6 +124,7 @@ const PractxSearch = ({
       getJoinedPracticesStart();
       getPracticesDmsStart();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
   React.useEffect(() => {
     // console.log(practices);
@@ -169,12 +187,25 @@ const PractxSearch = ({
           //   buttonType: 'filter',
           // }}
           // notifyIcon={true}
+          setTextInput={setTextInput}
+          searchText={searchText}
+          setSearchText={setSearchText}
           search={{
             placeholder: 'Search for practice',
             action: (data) => {
               setSearchData(data);
             },
-            onSubmit: () => navigation.navigate('Practices'),
+            onSubmit: () => {
+              if (searchHistory.length > 3) {
+                let newHistory = searchHistory;
+                newHistory.shift();
+                newHistory.push(searchData);
+                setSearchHistory([...new Set(newHistory)]);
+              } else {
+                setSearchHistory([...searchHistory, searchData]);
+              }
+              navigation.navigate('Practices');
+            },
           }}
           checkState={checkState}
           setCheckState={setCheckState}
@@ -184,76 +215,228 @@ const PractxSearch = ({
             height: windowHeight - 100,
             width: style1 === 'open' ? appwidth - 50 : appwidth,
             alignSelf: 'center',
+            justifyContent: 'center',
             marginTop: 50,
           }}>
           <FlatList
             ref={ref}
-            // refreshControl={<RefreshControl refreshing={false} />}
+            refreshControl={<RefreshControl refreshing={refreshing} />}
+            keyboardShouldPersistTaps={'handled'}
             // removeClippedSubviews
-            // ListEmptyComponent
+            ListEmptyComponent={() => (
+              <View>
+                {searchHistory.length > 0 ? (
+                  searchHistory.map((data) => (
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: 'row',
+                        alignSelf: 'center',
+                        justifyContent: 'space-between',
+                        width: appwidth - 20,
+                        marginTop: 30,
+                      }}
+                      // onPress={() => navigation.navigate('Practices')}
+                      onPress={
+                        () => {
+                          setSearchData(data);
+                          setSearchText(data);
+                          navigation.navigate('Practices');
+                        }
+                        // navigation.navigate('SinglePractice', {
+                        //   navigation,
+                        //   practice: item,
+                        //   userId: currentUser ? currentUser.id : 0,
+                        //   searchData,
+                        // })
+                      }>
+                      <View style={{ flexDirection: 'row' }}>
+                        <Icon
+                          name="history"
+                          type="fontisto"
+                          color={colors.text}
+                          size={normalize(17)}
+                          style={{
+                            color: colors.text,
+                            marginRight: 20,
+                            // alignSelf: 'center',
+                          }}
+                        />
+                        <Text
+                          style={{
+                            color: colors.text,
+                            fontSize: normalize(13),
+                            fontFamily: 'SofiaProRegular',
+                          }}>
+                          {data}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        style={{
+                          alignItems: 'center',
+                          paddingTop: 5,
+                          zIndex: 20,
+                        }}
+                        onPress={() => console.log('go')}>
+                        <Icon
+                          name="arrow-up-left"
+                          type="feather"
+                          color={colors.text}
+                          size={normalize(18)}
+                          style={{
+                            color: colors.text,
+                            // alignSelf: 'center',
+                          }}
+                        />
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+                  ))
+                ) : (
+                  <View
+                    style={{
+                      marginTop: windowHeight / 4,
+                      alignItems: 'center',
+                    }}>
+                    <Icon
+                      name="search-off"
+                      type="material-icons"
+                      color={colors.text_1}
+                      size={normalize(50)}
+                    />
+                    <Text
+                      style={{
+                        color: colors.text_1,
+                        fontSize: normalize(13),
+                        fontFamily: 'SofiaProSemiBold',
+                      }}>
+                      No Practice Found
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )}
             initialNumToRender={5}
             updateCellsBatchingPeriod={5}
             showsVerticalScrollIndicator={false}
-            // style={{ marginBottom: 10 }}
+            style={{ marginBottom: 20 }}
             data={searchResult && searchResult.length > 0 ? searchResult : []}
             numColumns={1}
             renderItem={({ item, index }) => (
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  width: appwidth - 20,
-                  marginTop: 30,
-                }}
-                // onPress={() => navigation.navigate('Practices')}
-                onPress={() =>
-                  navigation.navigate('SinglePractice', {
-                    navigation,
-                    practice: item,
-                    userId: currentUser ? currentUser.id : 0,
-                    searchData,
-                  })
-                }>
-                <View style={{ flexDirection: 'row' }}>
-                  <Icon
-                    name="search"
-                    type="fontisto"
-                    color={colors.text}
-                    size={normalize(17)}
-                    style={{
-                      color: colors.text,
-                      marginRight: 20,
-                      // alignSelf: 'center',
-                    }}
-                  />
-                  <Text
-                    style={{
-                      color: colors.text,
-                      fontSize: normalize(13),
-                      fontFamily: 'SofiaProRegular',
-                    }}>
-                    {item.practiceName}
-                  </Text>
-                </View>
+              <>
+                {index === 0 &&
+                  searchHistory
+                    .filter((it) => it === searchData)
+                    .map((data, i) => (
+                      <TouchableOpacity
+                        style={{
+                          flexDirection: 'row',
+                          alignSelf: 'center',
+                          justifyContent: 'space-between',
+                          width: appwidth - 20,
+                          marginTop: 30,
+                          // marginBottom: searchHistory.length === i + 1 ? 0 : 0,
+                        }}
+                        // onPress={() => navigation.navigate('Practices')}
+                        onPress={() => navigation.navigate('Practices')}>
+                        <View style={{ flexDirection: 'row' }}>
+                          <Icon
+                            name="history"
+                            type="fontisto"
+                            color={colors.text}
+                            size={normalize(17)}
+                            style={{
+                              color: colors.text,
+                              marginRight: 20,
+                              // alignSelf: 'center',
+                            }}
+                          />
+                          <Text
+                            style={{
+                              color: colors.text,
+                              fontSize: normalize(13),
+                              fontFamily: 'SofiaProRegular',
+                            }}>
+                            {data}
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          style={{
+                            alignItems: 'center',
+                            paddingTop: 5,
+                            zIndex: 20,
+                          }}
+                          onPress={() => console.log('go')}>
+                          <Icon
+                            name="arrow-up-left"
+                            type="feather"
+                            color={colors.text}
+                            size={normalize(18)}
+                            style={{
+                              color: colors.text,
+                              // alignSelf: 'center',
+                            }}
+                          />
+                        </TouchableOpacity>
+                      </TouchableOpacity>
+                    ))}
                 <TouchableOpacity
                   style={{
-                    alignItems: 'center',
-                    paddingTop: 5,
-                    zIndex: 20,
+                    flexDirection: 'row',
+                    alignSelf: 'center',
+                    justifyContent: 'space-between',
+                    width: appwidth - 20,
+                    marginTop: 30,
+                    marginBottom: searchResult.length === index + 1 ? 40 : 0,
                   }}
-                  onPress={() => console.log('go')}>
-                  <Icon
-                    name="arrow-up-left"
-                    type="feather"
-                    color={colors.text}
-                    size={normalize(18)}
+                  // onPress={() => navigation.navigate('Practices')}
+                  onPress={() =>
+                    navigation.navigate('SinglePractice', {
+                      navigation,
+                      practice: item,
+                      userId: currentUser ? currentUser.id : 0,
+                      searchData,
+                    })
+                  }>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Icon
+                      name="search"
+                      type="fontisto"
+                      color={colors.text}
+                      size={normalize(17)}
+                      style={{
+                        color: colors.text,
+                        marginRight: 20,
+                        // alignSelf: 'center',
+                      }}
+                    />
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontSize: normalize(13),
+                        fontFamily: 'SofiaProRegular',
+                      }}>
+                      {item.practiceName}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
                     style={{
-                      color: colors.text,
-                      // alignSelf: 'center',
+                      alignItems: 'center',
+                      paddingTop: 5,
+                      zIndex: 20,
                     }}
-                  />
+                    onPress={() => console.log('go')}>
+                    <Icon
+                      name="arrow-up-left"
+                      type="feather"
+                      color={colors.text}
+                      size={normalize(18)}
+                      style={{
+                        color: colors.text,
+                        // alignSelf: 'center',
+                      }}
+                    />
+                  </TouchableOpacity>
                 </TouchableOpacity>
-              </TouchableOpacity>
+              </>
             )}
             keyExtractor={(item, index) => item.display_url}
             // showsHorizontalScrollIndicator={false}
@@ -272,6 +455,7 @@ const mapStateToProps = createStructuredSelector({
   filter: selectFilter,
   searchResult: selectSearchResult,
   searchData: selectSearchData,
+  searchHistory: selectSearchHistory,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -280,6 +464,7 @@ const mapDispatchToProps = (dispatch) => ({
   getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
   setFilter: (data) => dispatch(setFilter(data)),
   setSearchData: (searchData) => dispatch(setSearchData(searchData)),
+  setSearchHistory: (history) => dispatch(setSearchHistory(history)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PractxSearch);

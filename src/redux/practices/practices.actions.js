@@ -4,6 +4,11 @@ export const getPracticesAllStart = () => ({
   type: PracticesActionTypes.GET_ALL_PRACTICES_START,
 });
 
+export const setSearchHistory = (history) => ({
+  type: PracticesActionTypes.SET_SEARCH_HISTORY,
+  payload: history,
+});
+
 export const getPracticesAllSuccess = (list) => ({
   type: PracticesActionTypes.GET_ALL_PRACTICES_SUCCESS,
   payload: list,
@@ -68,6 +73,11 @@ export const joinPractices = (id) => ({
 
 export const setLoading = (action) => ({
   type: PracticesActionTypes.SET_LOADING,
+  payload: action,
+});
+
+export const setSearching = (action) => ({
+  type: PracticesActionTypes.SET_SEARCHING,
   payload: action,
 });
 

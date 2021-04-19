@@ -82,6 +82,11 @@ export const selectIsFetching = createSelector(
   (practices) => practices.isFetching,
 );
 
+export const selectIsSearching = createSelector(
+  [selectPractices],
+  (practices) => practices.isSearching,
+);
+
 export const selectJoinedPractices = createSelector(
   [selectPractices],
   (practices) => practices.joinedPractices,
@@ -123,6 +128,11 @@ export const selectSearchResult = createSelector(
 export const selectSearchData = createSelector(
   [selectPractices],
   (practices) => practices.searchData,
+);
+
+export const selectSearchHistory = createSelector(
+  [selectPractices],
+  (practices) => practices.searchHistory,
 );
 // joinedPractice;
 // export const selectToken = createSelector([selectUser], (user) => user.token);
