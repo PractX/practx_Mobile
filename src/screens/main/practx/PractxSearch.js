@@ -42,6 +42,7 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import PracticeDetails from '../../../components/hoc/PracticeDetails';
 import { TouchableOpacity } from 'react-native';
 // import { getAllPracticesStart } from '../../redux/practices/practices.actions';
+// import Voice from '@react-native-voice/voice';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
