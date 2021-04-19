@@ -93,9 +93,31 @@ const PracticeBox = ({
           borderRadius: 15,
           backgroundColor: colors.background_1,
           marginRight: 15,
+          justifyContent: 'flex-end',
+          // marginRight: 15,
         }}
-        resizeMode={FastImage.resizeMode.cover}
-      />
+        resizeMode={FastImage.resizeMode.contain}>
+        {(member && member.length > 0) || (pending && pending.length > 0) ? (
+          <Icon
+            name={member.length ? 'check' : 'clock'}
+            type={member.length ? 'feather' : 'feather'}
+            color={'white'}
+            size={member.length ? normalize(9) : normalize(7)}
+            style={{
+              backgroundColor: member.length ? colors.tertiary : '#000000' + 98,
+              width: 14,
+              height: 14,
+              color: 'white',
+              alignSelf: 'flex-end',
+              justifyContent: 'center',
+              borderTopLeftRadius: 15,
+              borderTopRightRadius: 15,
+              borderBottomLeftRadius: 15,
+              borderBottomRightRadius: 15,
+            }}
+          />
+        ) : null}
+      </FastImage>
 
       <View style={{ justifyContent: 'space-around' }}>
         <Text

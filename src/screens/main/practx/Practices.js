@@ -197,13 +197,7 @@ const Practices = ({
           {searchResult ? (
             <FlatList
               ref={ref}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={() => getPracticesAllStart()}
-                  navigation={navigation}
-                />
-              }
+              refreshControl={<RefreshControl refreshing={false} />}
               // removeClippedSubviews
               // ListEmptyComponent
               initialNumToRender={5}
