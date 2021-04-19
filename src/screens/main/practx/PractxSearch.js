@@ -324,6 +324,8 @@ const PractxSearch = ({
             renderItem={({ item, index }) => (
               <>
                 {index === 0 &&
+                  searchHistory &&
+                  searchHistory.length > 0 &&
                   searchHistory
                     .filter((it) => it === searchData)
                     .map((data, i) => (

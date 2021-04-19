@@ -12,7 +12,7 @@ const INITIAL_STATE = {
   practiceSubgroups: [],
   error: null,
   allMessages: [],
-  searchResult: null,
+  searchResult: [],
   searchData: null,
   searchHistory: [],
 };
@@ -31,7 +31,7 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         practiceDms: null,
         practiceSubgroups: [],
         allMessages: [],
-        searchResult: null,
+        searchResult: [],
         searchData: null,
         searchHistory: [],
       };
