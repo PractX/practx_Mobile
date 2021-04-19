@@ -266,7 +266,7 @@ const Header = ({
         {searchData && (
           <>
             {!searchData.hideTitle ? (
-              <Pressable
+              <TouchableOpacity
                 onPress={() => navigation.navigate('PractxSearch')}
                 style={{
                   // top: 0,
@@ -287,7 +287,7 @@ const Header = ({
                   }}>
                   {searchData.name}
                 </Text>
-              </Pressable>
+              </TouchableOpacity>
             ) : (
               <View
                 style={{
@@ -303,7 +303,7 @@ const Header = ({
                 }}
               />
             )}
-            <Pressable
+            <TouchableOpacity
               onPress={() => navigation.navigate('PractxSearch')}
               style={{
                 // top: 0,
@@ -326,7 +326,7 @@ const Header = ({
                   // alignSelf: 'center',
                 }}
               />
-            </Pressable>
+            </TouchableOpacity>
           </>
         )}
         {search && (
