@@ -21,6 +21,10 @@ import MenuCheckOption from './MenuCheckOption';
 import { ActivityIndicator } from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const appwidth = windowWidth * 0.9;
+
 const Header = ({
   navigation,
   title,
@@ -63,7 +67,8 @@ const Header = ({
         borderBottomColor: colors.background_1,
         borderBottomWidth: searchData && searchData.hideBorder ? 0 : 0.8,
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between',
+        alignItems: 'center',
         backgroundColor: colors.background,
       }}>
       <View
@@ -72,8 +77,8 @@ const Header = ({
           alignItems: 'center',
           justifyContent: 'space-between',
           height: subgroups && subgroups.show ? 50 : '100%',
+          width: appwidth,
           // height: 50,
-          // backgroundColor: colors.background,
         }}>
         {backArrow && !practice && !group && (
           <TouchableOpacity
@@ -83,7 +88,6 @@ const Header = ({
               alignItems: 'flex-start',
               paddingTop: 5,
               zIndex: 20,
-              marginLeft: 20,
               marginVertical: 15,
             }}
             onPress={() => navigation.goBack()}>
@@ -105,12 +109,11 @@ const Header = ({
               justifyContent: 'center',
               flexDirection: 'row',
               alignItems: 'center',
-              marginLeft: 20,
               marginVertical: 15,
             }}>
             <TouchableOpacity
               style={{
-                width: 40,
+                width: 28,
                 height: 30,
                 alignItems: 'flex-start',
                 paddingTop: 5,
@@ -179,10 +182,10 @@ const Header = ({
                     }}>
                     {practice
                       ? practice.practiceName &&
-                        practice.practiceName.length > 18
+                        practice.practiceName.length > 14
                         ? practice.practiceName.substring(0, 11 - 3) + '...'
                         : practice.practiceName
-                      : group && group.name.length > 18
+                      : group && group.name.length > 14
                       ? group.name.substring(0, 11 - 3) + '...'
                       : group.name}
                   </Text>
@@ -209,9 +212,7 @@ const Header = ({
                 style={{
                   justifyContent: 'center',
                   flexDirection: 'column',
-                  // marginTop: 20,
-                  // marginLeft: 20,
-                  marginHorizontal: 20,
+                  marginHorizontal: 0,
                   marginVertical: 15,
                   width: 40,
                   height: 30,
@@ -377,7 +378,7 @@ const Header = ({
               alignItems: 'center',
               paddingTop: 5,
               zIndex: 20,
-              marginHorizontal: 20,
+              marginLeft: 20,
             }}
             onPress={() => searchRef.clear()}>
             <Icon
@@ -397,24 +398,24 @@ const Header = ({
               alignItems: 'center',
               paddingTop: 5,
               zIndex: 20,
-              marginHorizontal: 30,
+              marginLeft: 20,
             }}
-            onPress={() => searchRef.clear()}>
-            {/* <Icon
+            onPress={() => null}>
+            <Icon
               name="x"
               type="feather"
-              color={colors.text}
+              color={colors.background}
               size={normalize(18)}
               style={{
                 color: colors.text,
                 // alignSelf: 'center',
               }}
-            /> */}
+            />
           </TouchableOpacity>
         )}
         {iconRight1 && (
-          <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
-            {iconRight1.buttonType === 'filter' && (
+          <View style={{ flexDirection: 'row' }}>
+            {/* {iconRight1.buttonType === 'filter' && (
               <Menu>
                 <MenuTrigger
                   // text="Select option"
@@ -500,8 +501,8 @@ const Header = ({
                   </View>
                 </MenuOptions>
               </Menu>
-            )}
-            {iconRight1.buttonType === 'save' && (
+            )} */}
+            {iconRight1 && iconRight1.buttonType === 'save' && (
               <Button
                 // onPress={handleSubmit}
                 TouchableComponent={() => {
@@ -528,6 +529,10 @@ const Header = ({
                 }}
               />
             )}
+          </View>
+        )}
+        {chatRight || subgroups ? (
+          <View style={{ flexDirection: 'row' }}>
             {chatRight && (
               <>
                 <Button
@@ -619,7 +624,7 @@ const Header = ({
               </TouchableOpacity>
             )}
           </View>
-        )}
+        ) : null}
       </View>
       {subgroups && subgroups.show && (
         <View

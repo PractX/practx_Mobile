@@ -239,7 +239,7 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
       ...allSubGroups,
       {
         practiceId: practiceId,
-        groups: result.practice.subgroups,
+        groups: result.subgroups,
       },
     ];
     yield put(getPracticeSubgroupsSuccess(getUniqueListBy(data, 'practiceId')));
