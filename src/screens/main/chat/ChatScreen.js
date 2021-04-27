@@ -392,6 +392,7 @@ const ChatScreen = ({
         },
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useMemo(() => {
@@ -446,12 +447,11 @@ const ChatScreen = ({
       //   ? setGroupSuggest(false)
       //   : setGroupSuggest(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused, type, group]);
 
   useEffect(() => {
     console.log('rerendering_____');
-    // chatRef.scrollToEnd();
-    // console.log('ALLLL PROPSSS _____ ', practice);
     extraData.setOptions({
       drawerLockMode: 'locked-closed',
       swipeEnabled: false,

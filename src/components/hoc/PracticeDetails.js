@@ -407,7 +407,7 @@ const PracticeDetails = ({
                     fontSize: normalize(14),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  Address
+                  Street
                 </ListItem.Title>
                 <ListItem.Subtitle
                   style={{
@@ -415,7 +415,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.address}
+                  {data.street}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -472,6 +472,34 @@ const PracticeDetails = ({
                     fontFamily: 'SofiaProRegular',
                   }}>
                   {data.country}
+                </ListItem.Subtitle>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+
+            <ListItem containerStyle={{ backgroundColor: colors.background }}>
+              <Icon
+                name="map-marker-distance"
+                type="material-community"
+                color={colors.text}
+                size={normalize(18)}
+              />
+              <ListItem.Content>
+                <ListItem.Title
+                  style={{
+                    color: colors.text,
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
+                  Zip
+                </ListItem.Title>
+                <ListItem.Subtitle
+                  style={{
+                    color: colors.text_1,
+                    fontSize: normalize(12),
+                    fontFamily: 'SofiaProRegular',
+                  }}>
+                  {data.zip}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />

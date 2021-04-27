@@ -20,10 +20,7 @@ import {
   Drawer,
   TouchableRipple,
 } from 'react-native-paper';
-// import BgImg1 from '../assets/icon/bg.png';
-// import BgImg2 from '../assets/icon/bg0.png';
-// import Logo from '../assets/icon/logo.png';s
-// import { Avatar, Button, Badge, normalize } from 'react-native-elements';
+import VersionInfo from 'react-native-version-info';
 import {
   DrawerContentScrollView,
   DrawerItem,
@@ -92,6 +89,9 @@ const DrawerContent = ({
   };
 
   // console.log(currentUser);
+  console.log(VersionInfo.appVersion);
+  // console.log(VersionInfo.buildVersion);
+  // console.log(VersionInfo.bundleIdentifier);
 
   const signOut = () => {
     setSignOutText('Logging Out...');
@@ -610,13 +610,13 @@ const DrawerContent = ({
         {/* </Drawer.Section>s */}
       </View>
       {/* </DrawerContentScrollView> */}
-
       {/* <Drawer.Section
         style={[
           styles.bottomDrawerSection,
           { borderWidth: 0 },
           // { borderTopWidth: 1, borderColor: colors.background_1 },
         ]}> */}
+      {/* VersionInfo.appVersion */}
       {currentUser && (
         <View style={{ backgroundColor: colors.background }}>
           <DrawerItem
@@ -635,6 +635,25 @@ const DrawerContent = ({
               fontSize: normalize(13),
             }}
             label={signOutText || 'Log Out'}
+            onPress={() => {
+              signOut();
+            }}
+          />
+          <DrawerItem
+            style={[
+              styles.bottomDrawerSection,
+              {
+                width: '75%',
+                alignSelf: 'center',
+              },
+            ]}
+            labelStyle={{
+              fontFamily: 'SofiaProSemiBold',
+              color: colors.text_2,
+              fontSize: normalize(14),
+              alignSelf: 'center',
+            }}
+            label={'Practx Version ' + VersionInfo.appVersion}
             onPress={() => {
               signOut();
             }}
