@@ -53,20 +53,6 @@ export const getPracticesDmsApi = async (token) => {
   return collectionsMap;
 };
 
-export const getPracticeSubGroupApi = async (token, practiceId) => {
-  const headers = {
-    'Content-Type': 'application/json',
-    Authorization: token,
-  };
-  const url =
-    REACT_APP_API +
-    REACT_APP_PRACTICES +
-    `/${practiceId}` +
-    REACT_APP_GET_SUBGROUPS;
-  const collectionsMap = await Axios.get(url, { headers: headers });
-  return collectionsMap;
-};
-
 export const chatWithPracticeApi = async (practiceId, token) => {
   // console.log(token);
   const headers = {
@@ -118,13 +104,49 @@ export const editProfileApi = async (token, data) => {
   console.log(collectionsMap);
   return collectionsMap;
 };
-// Twitter Route
-// export const twitterVideoApi = async (url, token) => {
-//   const apiUrl =
-//     REACT_APP_WAVE_DL_API + REACT_APP_TWITTER_VIDEO + `?url=${url}`;
-//   const data = await Axios.get(apiUrl);
-//   return data;
-// };
+
+export const getPracticeSubGroupApi = async (token, practiceId) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const url =
+    REACT_APP_API +
+    REACT_APP_PRACTICES +
+    `/${practiceId}` +
+    REACT_APP_GET_SUBGROUPS;
+  const collectionsMap = await Axios.get(url, { headers: headers });
+  return collectionsMap;
+};
+
+export const chatWithSubgroupApi = async (practiceId, subgroupId, token) => {
+  // console.log(token);
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const url =
+    REACT_APP_API +
+    REACT_APP_JOIN_PRACTICES +
+    '/' +
+    practiceId +
+    REACT_APP_GET_SUBGROUPS +
+    '/' +
+    subgroupId;
+  const collectionsMap = await Axios.post(url, {}, { headers: headers });
+  return collectionsMap;
+};
+
+export const getAllSubgroupApi = async (token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const apiUrl =
+    REACT_APP_API + REACT_APP_JOIN_PRACTICES + REACT_APP_GET_SUBGROUPS;
+  const data = await Axios.get(apiUrl, { headers: headers });
+  return data;
+};
 
 export const searchPracticesApi = async (token, searchData) => {
   const headers = {

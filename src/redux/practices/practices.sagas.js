@@ -1,6 +1,8 @@
 import { takeLatest, put, all, call, delay, select } from 'redux-saga/effects';
 import {
   chatWithPracticeApi,
+  chatWithSubgroupApi,
+  getAllSubgroupApi,
   getJoinedPracticeApi,
   getMontApi,
   getPracticesApi,
@@ -223,6 +225,7 @@ export function* willGetPracticesDms() {
 export function* willGetPracticeSubgroup({ payload: practiceId }) {
   const token = yield select(userToken);
   const allSubGroups = yield select(practiceSubgroups);
+  let subgroupsArr = [];
   console.log('getting subgroups');
   console.log(practiceId);
   try {
@@ -235,14 +238,31 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
     //   message: result.message,
     //   type: 'success',
     // });
-    let data = [
-      ...allSubGroups,
-      {
-        practiceId: practiceId,
-        groups: result.subgroups,
-      },
-    ];
-    yield put(getPracticeSubgroupsSuccess(getUniqueListBy(data, 'practiceId')));
+    console.log('Data >>>>', result);
+    if (result.subgroups.length > 0) {
+      result.subgroups.forEach(async (element) => {
+        let fold = await willChatWithSubgroup(
+          practiceId,
+          element.id,
+          token,
+        ).then((res) => res);
+        console.log('Started ++++ subgroups', fold);
+        // subgroupsArr.push(fold);
+      });
+      // yield put(willChatWithSubgroup());
+      let data = [
+        ...allSubGroups,
+        {
+          practiceId: practiceId,
+          groups: subgroupsArr,
+        },
+      ];
+      yield put(
+        getPracticeSubgroupsSuccess(getUniqueListBy(data, 'practiceId')),
+      );
+    } else {
+      console.log('No subgroups');
+    }
   } catch (error) {
     console.log(error.response);
     if (error.response) {
@@ -257,6 +277,74 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
       });
     }
     yield put(setLoading(false));
+  }
+}
+
+async function willChatWithSubgroup(practiceId, subgroupId, token) {
+  console.log('going in aoi');
+  // const currentPracticeId = yield select(havePracticeId);
+  console.log(token);
+  try {
+    const result = await chatWithSubgroupApi(
+      practiceId,
+      subgroupId,
+      token,
+    ).then(function (response) {
+      return response.data;
+    });
+    console.log('Started CHat', result);
+    // showMessage({
+    //   message: result.message,
+    //   type: 'success',
+    // });
+    // yield put(getPracticesDmsSuccess(result.dms));
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      showMessage({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    setLoading(false);
+  }
+}
+
+async function getAllSubgroup(token) {
+  console.log('going in aoi');
+  // const currentPracticeId = yield select(havePracticeId);
+  console.log(token);
+  try {
+    const result = await getAllSubgroupApi(token).then(function (response) {
+      return response.data;
+    });
+    console.log('All Subgroups', result);
+    // showMessage({
+    //   message: result.message,
+    //   type: 'success',
+    // });
+    // yield put(getPracticesDmsSuccess(result.dms));
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      showMessage({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    setLoading(false);
   }
 }
 
@@ -328,6 +416,12 @@ export function* onChatWithPractice() {
   yield takeLatest(
     PracticesActionTypes.CHAT_WITH_PRACTICE_START,
     willChatWithPractice,
+  );
+}
+export function* onChatWithSubgroup() {
+  yield takeLatest(
+    PracticesActionTypes.CHAT_WITH_SUBGROUP_START,
+    willChatWithSubgroup,
   );
 }
 export function* onGetJoinedPractices() {

@@ -56,6 +56,16 @@ export const chatWithPracticeSuccess = (data) => ({
   payload: data,
 });
 
+export const chatWithSubgroupStart = (data) => ({
+  type: PracticesActionTypes.CHAT_WITH_SUBGROUP_START,
+  payload: data,
+});
+
+export const chatWithSubgroupSuccess = (data) => ({
+  type: PracticesActionTypes.CHAT_WITH_SUBGROUP_SUCCESS,
+  payload: data,
+});
+
 export const setAllMessages = (data) => ({
   type: PracticesActionTypes.SET_ALL_MESSAGES,
   payload: data,
