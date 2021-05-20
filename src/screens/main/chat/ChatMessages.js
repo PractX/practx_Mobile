@@ -121,7 +121,7 @@ const ChatMessages = ({
     // const dmsCha = dms.map((i) => i.channelName); /// When backend guy delete
     const dmsCha = dms.map((i) => i.channelName);
     let newSubGroups = [];
-    subGroups.map((i) => i.map((j) => newSubGroups.push(j.channelName)));
+    subGroups.map((i) => i.map((j) => newSubGroups.push(j.subgroupChats[0].PatientSubgroup.channelName)));
 
     console.log('subgroupsCha__', newSubGroups);
     const allChannels = [...dmsCha, ...newSubGroups];
@@ -368,6 +368,7 @@ const ChatMessages = ({
     // );
     if (currentPracticeId) {
       console.log('Getting all channels');
+      console.log("All Subgroups", subgroups)
       if (practiceDms.length) {
         getAllChannelMessages(
           practiceDms,
@@ -754,10 +755,10 @@ const ChatMessages = ({
                           allMessages={
                             practiceDms && allMessages && subgroups
                               ? allMessages.find(
-                                  (it) => it.channel === item.channelName,
+                                  (it) => it.channel === item.subgroupChats[0].PatientSubgroup.channelName,
                                 )
                                 ? allMessages.find(
-                                    (it) => it.channel === item.channelName,
+                                    (it) => it.channel === item.subgroupChats[0].PatientSubgroup.channelName,
                                   )
                                 : null
                               : null

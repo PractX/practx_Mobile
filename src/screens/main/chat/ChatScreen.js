@@ -822,6 +822,7 @@ const ChatScreen = ({
                               <View
                                 style={{
                                   backgroundColor: colors.background_1,
+                                  marginTop: 5,
                                   paddingVertical: 5,
                                   paddingHorizontal: 12,
                                   borderRadius: 10,
@@ -863,6 +864,7 @@ const ChatScreen = ({
                                   textAlign: 'center',
                                 }}
                                 wrapperStyle={{
+                                  marginTop: 5,
                                   backgroundColor: colors.background_1,
                                   paddingVertical: 5,
                                   paddingHorizontal: 12,

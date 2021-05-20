@@ -240,29 +240,34 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
     // });
     console.log('Data >>>>', result);
     if (result.subgroups.length > 0) {
-      result.subgroups.forEach(async (element) => {
-        let fold = await willChatWithSubgroup(
+      yield result.subgroups.forEach((element) => {
+        const fold =  willChatWithSubgroup(
           practiceId,
           element.id,
           token,
         ).then((res) => res);
-        console.log('Started ++++ subgroups', fold);
+        // console.log('Started ++++ subgroups', fold);
         // subgroupsArr.push(fold);
       });
-      // yield put(willChatWithSubgroup());
-      let data = [
-        ...allSubGroups,
-        {
-          practiceId: practiceId,
-          groups: subgroupsArr,
-        },
-      ];
-      yield put(
-        getPracticeSubgroupsSuccess(getUniqueListBy(data, 'practiceId')),
-      );
+
+      // let data = [
+      //   ...allSubGroups,
+      //   {
+      //     practiceId: practiceId,
+      //     groups: subgroupsArr,practiceId
+      //   },
+      // ];
+      // yield put(
+      //   getPracticeSubgroupsSuccess(getUniqueListBy(data, 'practiceId')),
+      // );
     } else {
       console.log('No subgroups');
     }
+    const subgroups  = yield getAllSubgroup(token, practiceId, allSubGroups).then((res) => {
+      return res;
+    });
+    console.log('Res >>', subgroups);
+    yield put(getPracticeSubgroupsSuccess(getUniqueListBy(subgroups, 'practiceId')))
   } catch (error) {
     console.log(error.response);
     if (error.response) {
@@ -281,7 +286,6 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
 }
 
 async function willChatWithSubgroup(practiceId, subgroupId, token) {
-  console.log('going in aoi');
   // const currentPracticeId = yield select(havePracticeId);
   console.log(token);
   try {
@@ -292,7 +296,6 @@ async function willChatWithSubgroup(practiceId, subgroupId, token) {
     ).then(function (response) {
       return response.data;
     });
-    console.log('Started CHat', result);
     // showMessage({
     //   message: result.message,
     //   type: 'success',
@@ -316,21 +319,38 @@ async function willChatWithSubgroup(practiceId, subgroupId, token) {
   }
 }
 
-async function getAllSubgroup(token) {
-  console.log('going in aoi');
+async function getAllSubgroup(token, practiceId, allSubGroups) {
   // const currentPracticeId = yield select(havePracticeId);
-  console.log(token);
   try {
     const result = await getAllSubgroupApi(token).then(function (response) {
       return response.data;
     });
-    console.log('All Subgroups', result);
-    // showMessage({
-    //   message: result.message,
-    //   type: 'success',
-    // });
-    // yield put(getPracticesDmsSuccess(result.dms));
-    return result;
+    if (result) {
+      const practice = result.subgroupChats.practices.find(
+        (practice) => practice.id === practiceId,
+      );
+      // console.log('All Subgroups', result.subgroupChats.practices);
+      // console.log(
+      //   'Single practice',
+      //   result.subgroupChats.practices.find(
+      //     (practice) => practice.id === practiceId,
+      //   ),
+      // );
+      let data = [
+        ...allSubGroups,
+        {
+          practiceId: practiceId,
+          groups: practice.subgroups,
+        },
+      ];
+
+      // showMessage({
+      //   message: result.message,
+      //   type: 'success',
+      // });
+      // yield put(getPracticesDmsSuccess(result.dms));
+      return data;
+    }
   } catch (error) {
     console.log(error.response);
     if (error.response) {

@@ -28,6 +28,8 @@ const GroupBox = ({
   const [newMessageTime, setNewMessageTime] = useState('');
   const d = new Date();
   const time = d.getTime();
+
+  console.log("The whole Item", item)
   // const addTime = (message) => {
 
   // };
@@ -105,7 +107,7 @@ const GroupBox = ({
               groupPractice:
                 practices && practices.Practice && practices.Practice,
               group: item ? item : {},
-              channelName: item && item.channelName && item.channelName,
+              channelName: item && item.subgroupChats && item.subgroupChats[0].PatientSubgroup.channelName,
               practiceDms,
               subgroups: subgroups.find(
                 (items) => items.practiceId === practices.Practice.id,

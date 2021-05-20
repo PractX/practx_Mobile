@@ -663,7 +663,7 @@ const Header = ({
                     practice: null,
                     groupPractice: subgroups.groupPractice,
                     group: item,
-                    channelName: item && item.channelName && item.channelName,
+                    channelName: item && item.subgroupChats && item.subgroupChats[0].PatientSubgroup.channelName,
                     practiceDms: subgroups.practiceDms,
                     type: 'group',
                   });
