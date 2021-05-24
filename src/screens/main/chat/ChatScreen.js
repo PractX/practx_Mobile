@@ -170,7 +170,7 @@ const ChatScreen = ({
     console.log('SENDING____');
     setSending(true);
     // chatRef.scrollToEnd();
-    pubnub.setUUID(currentUser.chatId);
+    pubnub.setUUID(currentUser ? currentUser.chatId : 0);
     if (data) {
       pubnub.publish(
         {
@@ -204,7 +204,7 @@ const ChatScreen = ({
     console.log('SENDING____');
     setSending(true);
     // chatRef.scrollToEnd();
-    pubnub.setUUID(currentUser.chatId);
+    pubnub.setUUID(currentUser ? currentUser.chatId : 0);
     if (fileData) {
       pubnub.sendFile(
         {
@@ -803,7 +803,7 @@ const ChatScreen = ({
                         practice={practice}
                         groupPractice={groupPractice}
                         practiceDms={practiceDms}
-                        patientChatId={currentUser.chatId}
+                        patientChatId={currentUser ? currentUser.chatId : 0}
                       />
                       {messages.length &&
                         getUniqueListBy(messages, 'day').some(
@@ -1096,7 +1096,7 @@ const ChatScreen = ({
               navigation={navigation}
               practice={practice}
               practiceDms={practiceDms}
-              patientChatId={currentUser.chatId}
+              patientChatId={currentUser ?currentUser.chatId : 0}
             />
           )}
           keyExtractor={(item, index) => index}

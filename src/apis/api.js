@@ -7,6 +7,7 @@ import {
   REACT_APP_GET_PRACTICES_DMS,
   REACT_APP_GET_SUBGROUPS,
   REACT_APP_SEARCH_PRACTICES,
+  REACT_APP_GET_PRACTICES_STAFF,
 } from '@env';
 import { Platform } from 'react-native';
 
@@ -144,6 +145,21 @@ export const getAllSubgroupApi = async (token) => {
   };
   const apiUrl =
     REACT_APP_API + REACT_APP_JOIN_PRACTICES + REACT_APP_GET_SUBGROUPS;
+  const data = await Axios.get(apiUrl, { headers: headers });
+  return data;
+};
+
+export const getAllPracticeStaffApi = async (token, practiceId) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const apiUrl =
+    REACT_APP_API +
+    REACT_APP_JOIN_PRACTICES +
+    '/' +
+    practiceId +
+    REACT_APP_GET_PRACTICES_STAFF;
   const data = await Axios.get(apiUrl, { headers: headers });
   return data;
 };

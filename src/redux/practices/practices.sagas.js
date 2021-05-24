@@ -241,12 +241,10 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
     console.log('Data >>>>', result);
     if (result.subgroups.length > 0) {
       yield result.subgroups.forEach((element) => {
-        const fold =  willChatWithSubgroup(
-          practiceId,
-          element.id,
-          token,
-        ).then((res) => res);
-        // console.log('Started ++++ subgroups', fold);
+        const fold = willChatWithSubgroup(practiceId, element.id, token).then(
+          (res) => res,
+        );
+        console.log('Started ++++ subgroups', fold);
         // subgroupsArr.push(fold);
       });
 
@@ -263,11 +261,17 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
     } else {
       console.log('No subgroups');
     }
-    const subgroups  = yield getAllSubgroup(token, practiceId, allSubGroups).then((res) => {
+    const subgroups = yield getAllSubgroup(
+      token,
+      practiceId,
+      allSubGroups,
+    ).then((res) => {
       return res;
     });
     console.log('Res >>', subgroups);
-    yield put(getPracticeSubgroupsSuccess(getUniqueListBy(subgroups, 'practiceId')))
+    yield put(
+      getPracticeSubgroupsSuccess(getUniqueListBy(subgroups, 'practiceId')),
+    );
   } catch (error) {
     console.log(error.response);
     if (error.response) {
