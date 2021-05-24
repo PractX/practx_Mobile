@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   currentPracticeId: 0,
   practiceDms: null,
   practiceSubgroups: [],
+  practiceStaffs: [],
   error: null,
   allMessages: [],
   searchResult: [],
@@ -102,6 +103,19 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         isFetching: false,
         isLoading: false,
         practiceDms: action.payload,
+      };
+    case PracticesActionTypes.GET_PRACTICE_STAFF_START:
+      return {
+        ...state,
+        isFetching: true,
+        practiceStaffs: [],
+      };
+    case PracticesActionTypes.GET_PRACTICE_STAFF_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        isLoading: false,
+        practiceStaffs: action.payload,
       };
     case PracticesActionTypes.GET_PRACTICE_SUBGROUPS_START:
       return {

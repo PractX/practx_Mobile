@@ -46,6 +46,15 @@ export const getPracticeSubgroupsSuccess = (data) => ({
   payload: data,
 });
 
+export const getPracticeStaffStart = (id) => ({
+  type: PracticesActionTypes.GET_PRACTICE_STAFF_START,
+  payload: id,
+});
+export const getPracticeStaffSuccess = (data) => ({
+  type: PracticesActionTypes.GET_PRACTICE_STAFF_SUCCESS,
+  payload: data,
+});
+
 export const chatWithPracticeStart = (data) => ({
   type: PracticesActionTypes.CHAT_WITH_PRACTICE_START,
   payload: data,

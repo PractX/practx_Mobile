@@ -20,6 +20,7 @@ import { CheckBox } from 'native-base';
 import MenuCheckOption from './MenuCheckOption';
 import { ActivityIndicator } from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
+import firstLetterWord from '../../utils/firstLetterWord';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -44,11 +45,12 @@ const Header = ({
   setTextInput,
   searchText,
   setSearchText,
+  textImage,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
   const [searchRef, setSearchRef] = useState();
-  console.log(searchText);
+  console.log(practice);
 
   // const advanceCheck = (type) => {
   //   if (type === 'opt1') {
@@ -137,30 +139,31 @@ const Header = ({
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <FastImage
-                  source={{
-                    uri: practice
-                      ? practice.logo ||
-                        'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
-                      : group &&
-                        'https://cdn.raceroster.com/assets/images/team-placeholder.png',
-                  }}
-                  style={[
-                    {
-                      width: 40,
-                      height: 40,
-                      borderRadius: 15,
-                      backgroundColor: colors.background_1,
-                      marginVertical: 5,
-                      justifyContent: 'flex-end',
-                    },
-                    // currentPracticeId === practice.id && {
-                    //   borderWidth: 1,
-                    //   borderColor: colors.text,
-                    // },
-                  ]}
-                  resizeMode={FastImage.resizeMode.cover}>
-                  {/* {currentPracticeId === practice.id && <Icon
+                {practice ? (
+                  <FastImage
+                    source={{
+                      uri:
+                        practice.logo ||
+                        'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
+                      // : group &&
+                      //   'https://cdn.raceroster.com/assets/images/team-placeholder.png',
+                    }}
+                    style={[
+                      {
+                        width: 40,
+                        height: 40,
+                        borderRadius: 15,
+                        backgroundColor: colors.background_1,
+                        marginVertical: 5,
+                        justifyContent: 'flex-end',
+                      },
+                      // currentPracticeId === practice.id && {
+                      //   borderWidth: 1,
+                      //   borderColor: colors.text,
+                      // },
+                    ]}
+                    resizeMode={FastImage.resizeMode.cover}>
+                    {/* {currentPracticeId === practice.id && <Icon
             name={'primitive-dot'}
             type={'octicon'}
             color={colors.text}
@@ -172,8 +175,37 @@ const Header = ({
               },
             ]}
           />} */}
-                </FastImage>
-                <View style={{ flexDirection: 'column', paddingLeft: 10 }}>
+                  </FastImage>
+                ) : (
+                  <View
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 15,
+                      backgroundColor: colors.background_1,
+                      overflow: 'hidden',
+                      justifyContent: 'center',
+                      marginVertical: 5,
+                    }}>
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontSize: normalize(18),
+                        fontFamily: 'SofiaProSemiBold',
+                        textTransform: 'capitalize',
+                        textAlign: 'center',
+                      }}>
+                      {group && group.name.indexOf(' ') >= 0
+                        ? firstLetterWord(group.name)
+                        : group.name.substring(0, 2)}
+                    </Text>
+                  </View>
+                )}
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    paddingLeft: 10,
+                  }}>
                   <Text
                     style={{
                       color: colors.text,
@@ -189,18 +221,18 @@ const Header = ({
                       ? group.name.substring(0, 11 - 3) + '...'
                       : group.name}
                   </Text>
-                  <Text
-                    style={{
-                      color: colors.text,
-                      fontSize: normalize(12),
-                      fontFamily: 'SofiaProRegular',
-                    }}>
-                    {practice
-                      ? practice.specialty && practice.specialty.length > 18
+                  {practice && practice.specialty && (
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontSize: normalize(12),
+                        fontFamily: 'SofiaProRegular',
+                      }}>
+                      {practice.specialty.length > 18
                         ? practice.specialty.substring(0, 18 - 3) + '...'
-                        : practice.specialty
-                      : ''}
-                  </Text>
+                        : practice.specialty}
+                    </Text>
+                  )}
                 </View>
               </View>
             ) : null}
@@ -663,7 +695,10 @@ const Header = ({
                     practice: null,
                     groupPractice: subgroups.groupPractice,
                     group: item,
-                    channelName: item && item.subgroupChats && item.subgroupChats[0].PatientSubgroup.channelName,
+                    channelName:
+                      item &&
+                      item.subgroupChats &&
+                      item.subgroupChats[0].PatientSubgroup.channelName,
                     practiceDms: subgroups.practiceDms,
                     type: 'group',
                   });

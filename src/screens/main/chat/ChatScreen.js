@@ -44,7 +44,10 @@ import { ActivityIndicator } from 'react-native-paper';
 import ChatBubble from '../../../components/hoc/ChatBubble';
 import { usePubNub } from 'pubnub-react';
 import { RefreshControl } from 'react-native';
-import { selectAllMessages } from '../../../redux/practices/practices.selector';
+import {
+  selectAllMessages,
+  selectPracticeStaffs,
+} from '../../../redux/practices/practices.selector';
 import { setAllMessages } from '../../../redux/practices/practices.actions';
 // import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import EmojiSelector, { Categories } from 'react-native-emoji-selector';
@@ -80,6 +83,7 @@ const ChatScreen = ({
   isLoading,
   allMessages,
   setAllMessages,
+  practiceStaffs,
 }) => {
   const [chatRef, setChatRef] = useState();
   const { colors } = useTheme();
@@ -721,6 +725,7 @@ const ChatScreen = ({
             practiceDms: practiceDms,
             groupPractice: practice,
           }}
+          textImage={true}
           backArrow={true}
           headerWithImage={{ chatUser: currentUser, status: 'Active Now' }}
           chatRight={
@@ -795,6 +800,7 @@ const ChatScreen = ({
                 // );
                 if (messages.length) {
                   return (
+                    //ANCHOR
                     <>
                       <ChatBubble
                         id={props.currentMessage.timetoken}
@@ -804,6 +810,7 @@ const ChatScreen = ({
                         groupPractice={groupPractice}
                         practiceDms={practiceDms}
                         patientChatId={currentUser ? currentUser.chatId : 0}
+                        practiceStaff={practiceStaffs}
                       />
                       {messages.length &&
                         getUniqueListBy(messages, 'day').some(
@@ -1274,6 +1281,7 @@ const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
   isLoading: selectIsLoading,
   allMessages: selectAllMessages,
+  practiceStaffs: selectPracticeStaffs,
 });
 
 const mapDispatchToProps = (dispatch) => ({

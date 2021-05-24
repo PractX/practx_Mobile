@@ -116,6 +116,11 @@ export const selectPracticeSubgroups = createSelector(
   (practices) => practices.practiceSubgroups,
 );
 
+export const selectPracticeStaffs = createSelector(
+  [selectPractices],
+  (practices) => practices.practiceStaffs,
+);
+
 export const selectAllMessages = createSelector(
   [selectPractices],
   (practices) => practices.allMessages,

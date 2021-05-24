@@ -2,6 +2,7 @@ import { takeLatest, put, all, call, delay, select } from 'redux-saga/effects';
 import {
   chatWithPracticeApi,
   chatWithSubgroupApi,
+  getAllPracticeStaffApi,
   getAllSubgroupApi,
   getJoinedPracticeApi,
   getMontApi,
@@ -23,6 +24,7 @@ import {
   setLoading,
   setSearchResult,
   setSearching,
+  getPracticeStaffSuccess,
   // setPracticeId,
 } from './practices.actions';
 import { showMessage } from 'react-native-flash-message';
@@ -222,6 +224,42 @@ export function* willGetPracticesDms() {
   }
 }
 
+export function* willGetPracticeStaff({ payload: practiceId }) {
+  const token = yield select(userToken);
+  // const allSubGroups = yield select(practiceSubgroups);
+  let subgroupsArr = [];
+  console.log('getting subgroups');
+  console.log('PracticeID >>', practiceId);
+  try {
+    const result = yield getAllPracticeStaffApi(token, practiceId).then(
+      function (response) {
+        return response.data;
+      },
+    );
+    // showMessage({
+    //   message: result.message,
+    //   type: 'success',
+    // });
+    // console.log('PracticeID Data >>>>', result.practiceStaffs);
+
+    yield put(getPracticeStaffSuccess(result.practiceStaffs.staffs));
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      showMessage({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    yield put(setLoading(false));
+  }
+}
+
 export function* willGetPracticeSubgroup({ payload: practiceId }) {
   const token = yield select(userToken);
   const allSubGroups = yield select(practiceSubgroups);
@@ -238,7 +276,7 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
     //   message: result.message,
     //   type: 'success',
     // });
-    console.log('Data >>>>', result);
+    console.log('Data >>>>', result.subgroups);
     if (result.subgroups.length > 0) {
       yield result.subgroups.forEach((element) => {
         const fold = willChatWithSubgroup(practiceId, element.id, token).then(
@@ -436,6 +474,12 @@ export function* onGetPracticeSubgroups() {
     willGetPracticeSubgroup,
   );
 }
+export function* onGetPracticeStaff() {
+  yield takeLatest(
+    PracticesActionTypes.GET_PRACTICE_STAFF_START,
+    willGetPracticeStaff,
+  );
+}
 export function* onChatWithPractice() {
   yield takeLatest(
     PracticesActionTypes.CHAT_WITH_PRACTICE_START,
@@ -464,5 +508,6 @@ export function* practicesSagas() {
     call(onGetPracticesDms),
     call(onGetPracticeSubgroups),
     call(onChatWithPractice),
+    call(onGetPracticeStaff),
   ]);
 }

@@ -36,6 +36,7 @@ import {
   getPracticeSubgroupsStart,
   setFilter,
   setAllMessages,
+  getPracticeStaffStart,
 } from '../../../redux/practices/practices.actions';
 import { RefreshControl } from 'react-native';
 import {
@@ -71,6 +72,7 @@ const ChatMessages = ({
   practiceDms,
   chatWithPracticeStart,
   getPracticeSubgroupsStart,
+  getPracticeStaffStart,
   subgroups,
   allMessages,
   setAllMessages,
@@ -354,6 +356,7 @@ const ChatMessages = ({
     if (currentPracticeId) {
       // pract();
       getPracticeSubgroupsStart(currentPracticeId);
+      getPracticeStaffStart(currentPracticeId);
       // getMessages();
       // removeChannel();
       const me = subgroups.find((item) => item.practiceId === currentPracticeId)
@@ -889,6 +892,7 @@ const mapDispatchToProps = (dispatch) => ({
   chatWithPracticeStart: (data) => dispatch(chatWithPracticeStart(data)),
   getPracticeSubgroupsStart: (id) => dispatch(getPracticeSubgroupsStart(id)),
   setAllMessages: (msg) => dispatch(setAllMessages(msg)),
+  getPracticeStaffStart: (id) => dispatch(getPracticeStaffStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatMessages);
