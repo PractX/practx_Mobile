@@ -35,7 +35,8 @@ const ChatBubble = ({
     const unixTimestamp = msg.timetoken / 10000000;
     const gmtDate = new Date(unixTimestamp * 1000);
     const localeDateTime = gmtDate.toLocaleString();
-    const time = localeDateTime.split(', ')[1];
+    const time = localeDateTime.split(', ')[1].substring(5);
+    // console.log('new time >>>', time, '---Old time >>', localeDateTime);
     return checkAmPm(time.slice(0, -3));
     // return localeDateTime;
   };
