@@ -39,8 +39,6 @@ const ChatBubble = ({
     return checkAmPm(time.slice(0, -3));
     // return localeDateTime;
   };
-  console.log(groupPractice);
-  console.log(message.message);
   // console.log(addTime(message).split(', ')[0]);
   return (
     <View key={index} style={{ width: appwidth, alignSelf: 'center' }}>

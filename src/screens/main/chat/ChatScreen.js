@@ -169,9 +169,9 @@ const ChatScreen = ({
   //   pubnub.subscribe({ channels });
   // };
   const sendMessage = (data) => {
-    console.log(channelName);
-    console.log(data[0].text);
-    console.log('SENDING____');
+    // console.log(channelName);
+    // console.log(data[0].text);
+    // console.log('SENDING____');
     setSending(true);
     // chatRef.scrollToEnd();
     pubnub.setUUID(currentUser ? currentUser.chatId : 0);
@@ -191,9 +191,9 @@ const ChatScreen = ({
         (status, response) => {
           // setMessage('');
           // handle status, response
-          console.log(status);
-          console.log(response);
-          console.log('SENT____');
+          // console.log(status);
+          // console.log(response);
+          // console.log('SENT____');
           setSending(false);
         },
       );
@@ -203,9 +203,9 @@ const ChatScreen = ({
   };
 
   const sendFile = (fileData) => {
-    console.log(channelName);
-    console.log(fileData);
-    console.log('SENDING____');
+    // console.log(channelName);
+    // console.log(fileData);
+    // console.log('SENDING____');
     setSending(true);
     // chatRef.scrollToEnd();
     pubnub.setUUID(currentUser ? currentUser.chatId : 0);
@@ -229,9 +229,9 @@ const ChatScreen = ({
         (status, response) => {
           // setMessage('');
           // handle status, response
-          console.log(status);
-          console.log(response);
-          console.log('SENT____');
+          // console.log(status);
+          // console.log(response);
+          // console.log('SENT____');
           setSending(false);
         },
       );
