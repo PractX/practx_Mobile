@@ -71,7 +71,19 @@ const DmsBox = ({
   // }, [item, pubnub]);
   return (
     <TouchableOpacity
-      onPress={() => console.log('clicking')}
+      onPress={() => {
+        navigation.navigate('ChatScreen', {
+          practice: item && item.Practice && item.Practice,
+          channelName: item && item.channelName && item.channelName,
+          practiceDms,
+          subgroups: subgroups.find(
+            (items) => items.practiceId === item.Practice.id,
+          ),
+          group: null,
+          navigation: navigation,
+          type: 'dm',
+        });
+      }}
       style={[
         styling,
         {
@@ -84,22 +96,29 @@ const DmsBox = ({
         },
       ]}>
       <View style={{ flexDirection: 'row' }}>
-        <FastImage
-          source={{
-            uri:
-              item && item.Practice && item.Practice.logo
-                ? item.Practice.logo
-                : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
-          }}
+        <View
           style={{
             width: 50,
             height: 50,
             borderRadius: 15,
             backgroundColor: colors.background_1,
-            marginVertical: 5,
-          }}
-          resizeMode={FastImage.resizeMode.cover}
-        />
+            overflow: 'hidden',
+          }}>
+          <FastImage
+            source={{
+              uri:
+                item && item.Practice && item.Practice.logo
+                  ? item.Practice.logo
+                  : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
+            }}
+            style={{
+              width: 50,
+              height: 50,
+              // marginVertical: 5,
+            }}
+            resizeMode={FastImage.resizeMode.cover}
+          />
+        </View>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ChatScreen', {

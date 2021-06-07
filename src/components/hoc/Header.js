@@ -20,6 +20,11 @@ import { CheckBox } from 'native-base';
 import MenuCheckOption from './MenuCheckOption';
 import { ActivityIndicator } from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
+import firstLetterWord from '../../utils/firstLetterWord';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const appwidth = windowWidth * 0.9;
 
 const Header = ({
   navigation,
@@ -40,11 +45,12 @@ const Header = ({
   setTextInput,
   searchText,
   setSearchText,
+  textImage,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
   const [searchRef, setSearchRef] = useState();
-  console.log(searchText);
+  console.log(practice);
 
   // const advanceCheck = (type) => {
   //   if (type === 'opt1') {
@@ -63,7 +69,8 @@ const Header = ({
         borderBottomColor: colors.background_1,
         borderBottomWidth: searchData && searchData.hideBorder ? 0 : 0.8,
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between',
+        alignItems: 'center',
         backgroundColor: colors.background,
       }}>
       <View
@@ -72,8 +79,8 @@ const Header = ({
           alignItems: 'center',
           justifyContent: 'space-between',
           height: subgroups && subgroups.show ? 50 : '100%',
+          width: appwidth,
           // height: 50,
-          // backgroundColor: colors.background,
         }}>
         {backArrow && !practice && !group && (
           <TouchableOpacity
@@ -83,7 +90,6 @@ const Header = ({
               alignItems: 'flex-start',
               paddingTop: 5,
               zIndex: 20,
-              marginLeft: 20,
               marginVertical: 15,
             }}
             onPress={() => navigation.goBack()}>
@@ -105,12 +111,11 @@ const Header = ({
               justifyContent: 'center',
               flexDirection: 'row',
               alignItems: 'center',
-              marginLeft: 20,
               marginVertical: 15,
             }}>
             <TouchableOpacity
               style={{
-                width: 40,
+                width: 28,
                 height: 30,
                 alignItems: 'flex-start',
                 paddingTop: 5,
@@ -134,30 +139,31 @@ const Header = ({
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <FastImage
-                  source={{
-                    uri: practice
-                      ? practice.logo ||
-                        'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
-                      : group &&
-                        'https://cdn.raceroster.com/assets/images/team-placeholder.png',
-                  }}
-                  style={[
-                    {
-                      width: 40,
-                      height: 40,
-                      borderRadius: 15,
-                      backgroundColor: colors.background_1,
-                      marginVertical: 5,
-                      justifyContent: 'flex-end',
-                    },
-                    // currentPracticeId === practice.id && {
-                    //   borderWidth: 1,
-                    //   borderColor: colors.text,
-                    // },
-                  ]}
-                  resizeMode={FastImage.resizeMode.cover}>
-                  {/* {currentPracticeId === practice.id && <Icon
+                {practice ? (
+                  <FastImage
+                    source={{
+                      uri:
+                        practice.logo ||
+                        'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
+                      // : group &&
+                      //   'https://cdn.raceroster.com/assets/images/team-placeholder.png',
+                    }}
+                    style={[
+                      {
+                        width: 40,
+                        height: 40,
+                        borderRadius: 15,
+                        backgroundColor: colors.background_1,
+                        marginVertical: 5,
+                        justifyContent: 'flex-end',
+                      },
+                      // currentPracticeId === practice.id && {
+                      //   borderWidth: 1,
+                      //   borderColor: colors.text,
+                      // },
+                    ]}
+                    resizeMode={FastImage.resizeMode.cover}>
+                    {/* {currentPracticeId === practice.id && <Icon
             name={'primitive-dot'}
             type={'octicon'}
             color={colors.text}
@@ -169,8 +175,37 @@ const Header = ({
               },
             ]}
           />} */}
-                </FastImage>
-                <View style={{ flexDirection: 'column', paddingLeft: 10 }}>
+                  </FastImage>
+                ) : (
+                  <View
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 15,
+                      backgroundColor: colors.background_1,
+                      overflow: 'hidden',
+                      justifyContent: 'center',
+                      marginVertical: 5,
+                    }}>
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontSize: normalize(18),
+                        fontFamily: 'SofiaProSemiBold',
+                        textTransform: 'capitalize',
+                        textAlign: 'center',
+                      }}>
+                      {group && group.name.indexOf(' ') >= 0
+                        ? firstLetterWord(group.name)
+                        : group.name.substring(0, 2)}
+                    </Text>
+                  </View>
+                )}
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    paddingLeft: 10,
+                  }}>
                   <Text
                     style={{
                       color: colors.text,
@@ -179,25 +214,25 @@ const Header = ({
                     }}>
                     {practice
                       ? practice.practiceName &&
-                        practice.practiceName.length > 18
+                        practice.practiceName.length > 14
                         ? practice.practiceName.substring(0, 11 - 3) + '...'
                         : practice.practiceName
-                      : group && group.name.length > 18
+                      : group && group.name.length > 14
                       ? group.name.substring(0, 11 - 3) + '...'
                       : group.name}
                   </Text>
-                  <Text
-                    style={{
-                      color: colors.text,
-                      fontSize: normalize(12),
-                      fontFamily: 'SofiaProRegular',
-                    }}>
-                    {practice
-                      ? practice.specialty && practice.specialty.length > 18
+                  {practice && practice.specialty && (
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontSize: normalize(12),
+                        fontFamily: 'SofiaProRegular',
+                      }}>
+                      {practice.specialty.length > 18
                         ? practice.specialty.substring(0, 18 - 3) + '...'
-                        : practice.specialty
-                      : ''}
-                  </Text>
+                        : practice.specialty}
+                    </Text>
+                  )}
                 </View>
               </View>
             ) : null}
@@ -209,9 +244,7 @@ const Header = ({
                 style={{
                   justifyContent: 'center',
                   flexDirection: 'column',
-                  // marginTop: 20,
-                  // marginLeft: 20,
-                  marginHorizontal: 20,
+                  marginHorizontal: 0,
                   marginVertical: 15,
                   width: 40,
                   height: 30,
@@ -377,7 +410,7 @@ const Header = ({
               alignItems: 'center',
               paddingTop: 5,
               zIndex: 20,
-              marginHorizontal: 20,
+              marginLeft: 20,
             }}
             onPress={() => searchRef.clear()}>
             <Icon
@@ -397,24 +430,24 @@ const Header = ({
               alignItems: 'center',
               paddingTop: 5,
               zIndex: 20,
-              marginHorizontal: 30,
+              marginLeft: 20,
             }}
-            onPress={() => searchRef.clear()}>
-            {/* <Icon
+            onPress={() => null}>
+            <Icon
               name="x"
               type="feather"
-              color={colors.text}
+              color={colors.background}
               size={normalize(18)}
               style={{
                 color: colors.text,
                 // alignSelf: 'center',
               }}
-            /> */}
+            />
           </TouchableOpacity>
         )}
         {iconRight1 && (
-          <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
-            {iconRight1.buttonType === 'filter' && (
+          <View style={{ flexDirection: 'row' }}>
+            {/* {iconRight1.buttonType === 'filter' && (
               <Menu>
                 <MenuTrigger
                   // text="Select option"
@@ -500,8 +533,8 @@ const Header = ({
                   </View>
                 </MenuOptions>
               </Menu>
-            )}
-            {iconRight1.buttonType === 'save' && (
+            )} */}
+            {iconRight1 && iconRight1.buttonType === 'save' && (
               <Button
                 // onPress={handleSubmit}
                 TouchableComponent={() => {
@@ -528,6 +561,10 @@ const Header = ({
                 }}
               />
             )}
+          </View>
+        )}
+        {chatRight || subgroups ? (
+          <View style={{ flexDirection: 'row' }}>
             {chatRight && (
               <>
                 <Button
@@ -619,7 +656,7 @@ const Header = ({
               </TouchableOpacity>
             )}
           </View>
-        )}
+        ) : null}
       </View>
       {subgroups && subgroups.show && (
         <View
@@ -658,7 +695,10 @@ const Header = ({
                     practice: null,
                     groupPractice: subgroups.groupPractice,
                     group: item,
-                    channelName: item && item.channelName && item.channelName,
+                    channelName:
+                      item &&
+                      item.subgroupChats &&
+                      item.subgroupChats[0].PatientSubgroup.channelName,
                     practiceDms: subgroups.practiceDms,
                     type: 'group',
                   });

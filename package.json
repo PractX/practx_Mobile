@@ -1,6 +1,6 @@
 {
 	"name": "practx_Mobile",
-	"version": "1.0.3",
+	"version": "1.0.5",
 	"private": true,
 	"scripts": {
 		"android": "react-native run-android",
@@ -58,6 +58,7 @@
 		"react-native-set-version": "^1.1.2",
 		"react-native-svg-asset-plugin": "^0.5.0",
 		"react-native-vector-icons": "^8.1.0",
+		"react-native-version-info": "^1.1.0",
 		"react-navigation": "^4.4.3",
 		"react-navigation-stack": "^2.10.2",
 		"react-navigation-tabs": "^2.10.1",

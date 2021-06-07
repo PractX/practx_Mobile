@@ -19,6 +19,7 @@ const ChatBubble = ({
   message,
   patientChatId,
   index,
+  practiceStaff,
 }) => {
   const { colors } = useTheme();
   const pubnub = usePubNub();
@@ -38,8 +39,6 @@ const ChatBubble = ({
     return checkAmPm(time.slice(0, -3));
     // return localeDateTime;
   };
-  // console.log(groupPractice);
-  // console.log(message);
   // console.log(addTime(message).split(', ')[0]);
   return (
     <View key={index} style={{ width: appwidth, alignSelf: 'center' }}>
@@ -153,10 +152,17 @@ const ChatBubble = ({
           <FastImage
             source={{
               uri:
-                message.message.userType === 'staff' && groupPractice
+                message.message.userType === 'practice' && groupPractice
                   ? groupPractice.logo
-                  : (practice && practice.logo) ||
-                    'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
+                  : practice
+                  ? practice.logo ||
+                    'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
+                  : practiceStaff.length
+                  ? practiceStaff.find(
+                      (staff) => staff.id === message.message.staffId,
+                    ).avatar ||
+                    'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
+                  : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
             }}
             style={[
               {
@@ -165,7 +171,7 @@ const ChatBubble = ({
                 borderRadius: 15,
                 backgroundColor: colors.background_1,
                 marginVertical: 5,
-                justifyContent: 'flex-end',
+                // justifyContent: 'flex-end',
                 alignSelf: 'flex-end',
                 marginBottom: 17,
               },
@@ -244,17 +250,57 @@ const ChatBubble = ({
                   borderBottomRightRadius: 20,
                   padding: 15,
                 }}>
-                {message.message.userType === 'staff' && (
+                {message.message.userType === 'practice' && (
                   <Text
                     style={{
                       fontSize: normalize(10),
                       fontFamily: 'SofiaProLight',
-                      color: colors.text_2,
+                      color: colors.primary,
                       textAlign: 'left',
                       paddingBottom: 5,
+                      textTransform: 'capitalize',
                     }}>
-                    Staff
+                    {groupPractice
+                      ? groupPractice.practiceName
+                      : practice
+                      ? practice.practiceName
+                      : 'Practice'}
                   </Text>
+                )}
+                {message.message.userType === 'staff' && (
+                  <View
+                    style={{
+                      textAlign: 'left',
+                      paddingBottom: 5,
+                      flexDirection: 'row',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: normalize(10),
+                        fontFamily: 'SofiaProRegular',
+                        color: colors.primary,
+                        textAlign: 'left',
+                        paddingBottom: 5,
+                        marginRight: 6,
+                      }}>
+                      Staff
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: normalize(10),
+                        fontFamily: 'SofiaProLight',
+                        color: colors.text_2,
+                        textAlign: 'left',
+                        paddingBottom: 5,
+                        textTransform: 'capitalize',
+                      }}>
+                      {practiceStaff.length
+                        ? practiceStaff.find(
+                            (staff) => staff.id === message.message.staffId,
+                          ).firstname
+                        : 'Staff'}
+                    </Text>
+                  </View>
                 )}
                 {message.message.userType === 'patient' && (
                   <Text

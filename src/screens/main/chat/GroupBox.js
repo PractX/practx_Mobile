@@ -6,6 +6,7 @@ import { View, Text } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { normalize } from 'react-native-elements';
 import timeAgo from '../../../utils/timeAgo';
+import firstLetterWord from '../../../utils/firstLetterWord';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -28,6 +29,8 @@ const GroupBox = ({
   const [newMessageTime, setNewMessageTime] = useState('');
   const d = new Date();
   const time = d.getTime();
+
+  console.log('The whole Item', item);
   // const addTime = (message) => {
 
   // };
@@ -72,7 +75,21 @@ const GroupBox = ({
   // }, [item, pubnub]);
   return (
     <TouchableOpacity
-      onPress={() => console.log('clicking')}
+      onPress={() => {
+        navigation.navigate('ChatScreen', {
+          groupPractice: practices && practices.Practice && practices.Practice,
+          group: item ? item : {},
+          channelName:
+            item &&
+            item.subgroupChats &&
+            item.subgroupChats[0].PatientSubgroup.channelName,
+          practiceDms,
+          subgroups: subgroups.find(
+            (items) => items.practiceId === practices.Practice.id,
+          ),
+          type: 'group',
+        });
+      }}
       style={[
         styling,
         {
@@ -85,27 +102,49 @@ const GroupBox = ({
         },
       ]}>
       <View style={{ flexDirection: 'row' }}>
-        <FastImage
-          source={{
-            uri:
-              'https://cdn.raceroster.com/assets/images/team-placeholder.png',
-          }}
+        <View
           style={{
             width: 50,
             height: 50,
             borderRadius: 15,
             backgroundColor: colors.background_1,
-            marginVertical: 5,
-          }}
-          resizeMode={FastImage.resizeMode.cover}
-        />
+            overflow: 'hidden',
+            justifyContent: 'center',
+          }}>
+          {/* <FastImage
+            source={{
+              uri:
+                'https://cdn.raceroster.com/assets/images/team-placeholder.png',
+            }}
+            style={{
+              width: 50,
+              height: 50,
+            }}
+            resizeMode={FastImage.resizeMode.cover}
+          /> */}
+          <Text
+            style={{
+              color: colors.text,
+              fontSize: normalize(18),
+              fontFamily: 'SofiaProSemiBold',
+              textTransform: 'capitalize',
+              textAlign: 'center',
+            }}>
+            {item && item.name.indexOf(' ') >= 0
+              ? firstLetterWord(item.name)
+              : item.name.substring(0, 2)}
+          </Text>
+        </View>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ChatScreen', {
               groupPractice:
                 practices && practices.Practice && practices.Practice,
               group: item ? item : {},
-              channelName: item && item.channelName && item.channelName,
+              channelName:
+                item &&
+                item.subgroupChats &&
+                item.subgroupChats[0].PatientSubgroup.channelName,
               practiceDms,
               subgroups: subgroups.find(
                 (items) => items.practiceId === practices.Practice.id,
@@ -118,7 +157,7 @@ const GroupBox = ({
             flexDirection: 'column',
             marginVertical: 2,
             paddingHorizontal: 4,
-            width: appwidth - 140,
+            // width: appwidth - 140,
             // alignItems: 'center',
             justifyContent: 'space-evenly',
           }}>

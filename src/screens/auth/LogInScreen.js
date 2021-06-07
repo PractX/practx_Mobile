@@ -89,7 +89,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
             <Formik
               initialValues={{
                 email: 'jaskyparrot@gmail.com',
-                password: 'pass123',
+                password: '@Pass1234',
               }}
               onSubmit={(values) => {
                 login(values);

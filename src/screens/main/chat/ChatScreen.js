@@ -44,7 +44,10 @@ import { ActivityIndicator } from 'react-native-paper';
 import ChatBubble from '../../../components/hoc/ChatBubble';
 import { usePubNub } from 'pubnub-react';
 import { RefreshControl } from 'react-native';
-import { selectAllMessages } from '../../../redux/practices/practices.selector';
+import {
+  selectAllMessages,
+  selectPracticeStaffs,
+} from '../../../redux/practices/practices.selector';
 import { setAllMessages } from '../../../redux/practices/practices.actions';
 // import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import EmojiSelector, { Categories } from 'react-native-emoji-selector';
@@ -80,6 +83,7 @@ const ChatScreen = ({
   isLoading,
   allMessages,
   setAllMessages,
+  practiceStaffs,
 }) => {
   const [chatRef, setChatRef] = useState();
   const { colors } = useTheme();
@@ -165,12 +169,12 @@ const ChatScreen = ({
   //   pubnub.subscribe({ channels });
   // };
   const sendMessage = (data) => {
-    console.log(channelName);
-    console.log(data[0].text);
-    console.log('SENDING____');
+    // console.log(channelName);
+    // console.log(data[0].text);
+    // console.log('SENDING____');
     setSending(true);
     // chatRef.scrollToEnd();
-    pubnub.setUUID(currentUser.chatId);
+    pubnub.setUUID(currentUser ? currentUser.chatId : 0);
     if (data) {
       pubnub.publish(
         {
@@ -187,9 +191,9 @@ const ChatScreen = ({
         (status, response) => {
           // setMessage('');
           // handle status, response
-          console.log(status);
-          console.log(response);
-          console.log('SENT____');
+          // console.log(status);
+          // console.log(response);
+          // console.log('SENT____');
           setSending(false);
         },
       );
@@ -199,12 +203,12 @@ const ChatScreen = ({
   };
 
   const sendFile = (fileData) => {
-    console.log(channelName);
-    console.log(fileData);
-    console.log('SENDING____');
+    // console.log(channelName);
+    // console.log(fileData);
+    // console.log('SENDING____');
     setSending(true);
     // chatRef.scrollToEnd();
-    pubnub.setUUID(currentUser.chatId);
+    pubnub.setUUID(currentUser ? currentUser.chatId : 0);
     if (fileData) {
       pubnub.sendFile(
         {
@@ -225,9 +229,9 @@ const ChatScreen = ({
         (status, response) => {
           // setMessage('');
           // handle status, response
-          console.log(status);
-          console.log(response);
-          console.log('SENT____');
+          // console.log(status);
+          // console.log(response);
+          // console.log('SENT____');
           setSending(false);
         },
       );
@@ -392,6 +396,7 @@ const ChatScreen = ({
         },
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useMemo(() => {
@@ -446,12 +451,11 @@ const ChatScreen = ({
       //   ? setGroupSuggest(false)
       //   : setGroupSuggest(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused, type, group]);
 
   useEffect(() => {
     console.log('rerendering_____');
-    // chatRef.scrollToEnd();
-    // console.log('ALLLL PROPSSS _____ ', practice);
     extraData.setOptions({
       drawerLockMode: 'locked-closed',
       swipeEnabled: false,
@@ -721,6 +725,7 @@ const ChatScreen = ({
             practiceDms: practiceDms,
             groupPractice: practice,
           }}
+          textImage={true}
           backArrow={true}
           headerWithImage={{ chatUser: currentUser, status: 'Active Now' }}
           chatRight={
@@ -795,6 +800,7 @@ const ChatScreen = ({
                 // );
                 if (messages.length) {
                   return (
+                    //ANCHOR
                     <>
                       <ChatBubble
                         id={props.currentMessage.timetoken}
@@ -803,7 +809,8 @@ const ChatScreen = ({
                         practice={practice}
                         groupPractice={groupPractice}
                         practiceDms={practiceDms}
-                        patientChatId={currentUser.chatId}
+                        patientChatId={currentUser ? currentUser.chatId : 0}
+                        practiceStaff={practiceStaffs}
                       />
                       {messages.length &&
                         getUniqueListBy(messages, 'day').some(
@@ -822,6 +829,7 @@ const ChatScreen = ({
                               <View
                                 style={{
                                   backgroundColor: colors.background_1,
+                                  marginTop: 5,
                                   paddingVertical: 5,
                                   paddingHorizontal: 12,
                                   borderRadius: 10,
@@ -863,6 +871,7 @@ const ChatScreen = ({
                                   textAlign: 'center',
                                 }}
                                 wrapperStyle={{
+                                  marginTop: 5,
                                   backgroundColor: colors.background_1,
                                   paddingVertical: 5,
                                   paddingHorizontal: 12,
@@ -1094,7 +1103,7 @@ const ChatScreen = ({
               navigation={navigation}
               practice={practice}
               practiceDms={practiceDms}
-              patientChatId={currentUser.chatId}
+              patientChatId={currentUser ?currentUser.chatId : 0}
             />
           )}
           keyExtractor={(item, index) => index}
@@ -1272,6 +1281,7 @@ const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
   isLoading: selectIsLoading,
   allMessages: selectAllMessages,
+  practiceStaffs: selectPracticeStaffs,
 });
 
 const mapDispatchToProps = (dispatch) => ({

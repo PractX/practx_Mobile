@@ -12,6 +12,7 @@ import {
   TextInput,
   ScrollView,
   Pressable,
+  Platform,
 } from 'react-native';
 
 import { LOGO, LOGO2 } from '../../../assets/images';
@@ -55,12 +56,13 @@ function ForgotPassScreen({ navigation, isLoading, forgetPasswordStart }) {
             <Animatable.View animation="pulse">
               <Image style={styles.logo} source={logo} resizeMode="contain" />
 
-              <View style={{ alignItems: 'center', marginTop: 20 }}>
+              <View style={{ alignItems: 'center', marginTop: 10 }}>
                 <Text
                   style={{
-                    fontSize: normalize(25),
+                    fontSize: normalize(18),
                     fontFamily: 'SofiaProSemiBold',
-                    color: 'white',
+                    color: colors.text_1,
+                    marginBottom: 5,
                   }}>
                   Reset Password
                 </Text>
@@ -77,7 +79,7 @@ function ForgotPassScreen({ navigation, isLoading, forgetPasswordStart }) {
             <Animatable.View animation="bounceInLeft" style={{ marginTop: 20 }}>
               <Formik
                 initialValues={{
-                  email: 'jaskyparrot@gmail.com',
+                  email: '',
                 }}
                 onSubmit={(values) => {
                   sumbitReqPassReset(values);
@@ -96,6 +98,12 @@ function ForgotPassScreen({ navigation, isLoading, forgetPasswordStart }) {
                       textContentType="emailAddress"
                       keyboardType="email-address"
                       autoCapitalize="none"
+                      styling={{
+                        input: {
+                          fontSize: normalize(14),
+                          color: colors.text_1,
+                        },
+                      }}
                     />
                     <View style={styles.loginButtonView}>
                       <Button
@@ -108,7 +116,7 @@ function ForgotPassScreen({ navigation, isLoading, forgetPasswordStart }) {
                         ]}
                         titleStyle={{
                           fontFamily: 'SofiaProSemiBold',
-                          fontSize: normalize(16),
+                          fontSize: normalize(14),
                         }}
                         loading={isLoading}
                       />
@@ -122,7 +130,7 @@ function ForgotPassScreen({ navigation, isLoading, forgetPasswordStart }) {
                           <Text
                             style={{
                               color: colors.primary,
-                              fontSize: normalize(14),
+                              fontSize: normalize(12),
                             }}>
                             {' '}
                             Sign up
@@ -139,7 +147,7 @@ function ForgotPassScreen({ navigation, isLoading, forgetPasswordStart }) {
                           <Text
                             style={{
                               color: colors.primary,
-                              fontSize: normalize(14),
+                              fontSize: normalize(12),
                             }}>
                             {' '}
                             Login
@@ -168,10 +176,11 @@ const styles = StyleSheet.create({
     width: windowWidth,
     height: windowHeight,
     alignItems: 'center',
+    marginTop: 30,
   },
   topText: {
     marginTop: 5,
-    fontSize: normalize(16),
+    fontSize: normalize(14),
     fontFamily: 'SofiaProRegular',
   },
 
@@ -180,13 +189,14 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 150,
-    height: 150,
+    width: normalize(130),
+    height: normalize(130),
     alignSelf: 'center',
+    marginTop: Platform.OS === 'ios' ? 30 : 0,
   },
 
   whiteFont: {
-    fontSize: normalize(14),
+    fontSize: normalize(12),
     fontFamily: 'SofiaProRegular',
   },
 

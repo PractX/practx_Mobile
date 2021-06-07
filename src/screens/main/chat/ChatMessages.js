@@ -36,6 +36,7 @@ import {
   getPracticeSubgroupsStart,
   setFilter,
   setAllMessages,
+  getPracticeStaffStart,
 } from '../../../redux/practices/practices.actions';
 import { RefreshControl } from 'react-native';
 import {
@@ -71,6 +72,7 @@ const ChatMessages = ({
   practiceDms,
   chatWithPracticeStart,
   getPracticeSubgroupsStart,
+  getPracticeStaffStart,
   subgroups,
   allMessages,
   setAllMessages,
@@ -121,7 +123,11 @@ const ChatMessages = ({
     // const dmsCha = dms.map((i) => i.channelName); /// When backend guy delete
     const dmsCha = dms.map((i) => i.channelName);
     let newSubGroups = [];
-    subGroups.map((i) => i.map((j) => newSubGroups.push(j.channelName)));
+    subGroups.map((i) =>
+      i.map((j) =>
+        newSubGroups.push(j.subgroupChats[0].PatientSubgroup.channelName),
+      ),
+    );
 
     console.log('subgroupsCha__', newSubGroups);
     const allChannels = [...dmsCha, ...newSubGroups];
@@ -350,6 +356,7 @@ const ChatMessages = ({
     if (currentPracticeId) {
       // pract();
       getPracticeSubgroupsStart(currentPracticeId);
+      getPracticeStaffStart(currentPracticeId);
       // getMessages();
       // removeChannel();
       const me = subgroups.find((item) => item.practiceId === currentPracticeId)
@@ -368,6 +375,7 @@ const ChatMessages = ({
     // );
     if (currentPracticeId) {
       console.log('Getting all channels');
+      console.log('All Subgroups', subgroups);
       if (practiceDms.length) {
         getAllChannelMessages(
           practiceDms,
@@ -404,7 +412,7 @@ const ChatMessages = ({
   useEffect(() => {
     if (pubnub) {
       console.log('Add event  listener');
-      pubnub.setUUID(currentUser.chatId);
+      pubnub.setUUID(currentUser ? currentUser.chatId : 0);
 
       const listener = {
         message: (messageEvent) => {
@@ -754,10 +762,16 @@ const ChatMessages = ({
                           allMessages={
                             practiceDms && allMessages && subgroups
                               ? allMessages.find(
-                                  (it) => it.channel === item.channelName,
+                                  (it) =>
+                                    it.channel ===
+                                    item.subgroupChats[0].PatientSubgroup
+                                      .channelName,
                                 )
                                 ? allMessages.find(
-                                    (it) => it.channel === item.channelName,
+                                    (it) =>
+                                      it.channel ===
+                                      item.subgroupChats[0].PatientSubgroup
+                                        .channelName,
                                   )
                                 : null
                               : null
@@ -878,6 +892,7 @@ const mapDispatchToProps = (dispatch) => ({
   chatWithPracticeStart: (data) => dispatch(chatWithPracticeStart(data)),
   getPracticeSubgroupsStart: (id) => dispatch(getPracticeSubgroupsStart(id)),
   setAllMessages: (msg) => dispatch(setAllMessages(msg)),
+  getPracticeStaffStart: (id) => dispatch(getPracticeStaffStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatMessages);
