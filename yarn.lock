@@ -1236,13 +1236,6 @@
   resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-1.14.0.tgz#9c3ce0be162239a7a05b994f2bdcf5660b5466b9"
   integrity sha512-KN/nOSxO64LxYms/8RpdjdIqemqDlxM8glDi4upg40/3JqalmXoHHBQxA0XYdAoL+padSVHAoAS6Ie5zAn8gTw==
 
-"@react-native-voice/voice@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@react-native-voice/voice/-/voice-3.1.1.tgz#a96e2c12b60a9f36c6f7953583364fa0bbd49a21"
-  integrity sha512-HWJ4kHDlIqDTo/0Fz8Yf3Tu5zDXm8WRN7zIijhb6wArqnV0tjMVhanUaMSXpesc1cp/HTnkdDNqFeUNNK6I1IA==
-  dependencies:
-    invariant "^2.2.4"
-
 "@react-navigation/core@^3.7.9":
   version "3.7.9"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.7.9.tgz#3f7ba0fcb6c8d74a77a057382af198d84c7c4e3b"
