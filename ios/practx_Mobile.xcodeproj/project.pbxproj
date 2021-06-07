@@ -430,6 +430,7 @@
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
 				A0E3BB2A8D3AA64F2C6040C0 /* [CP] Copy Pods Resources */,
+				88E7D3CDE29BDF1C9B839485 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -452,6 +453,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				90B8ADF3B0B010660FC8E525 /* [CP] Copy Pods Resources */,
+				7F3803029D2EA17BA71B4F25 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -663,6 +665,42 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		7F3803029D2EA17BA71B4F25 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile/Pods-practx_Mobile-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile/Pods-practx_Mobile-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		88E7D3CDE29BDF1C9B839485 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile-practx_MobileTests/Pods-practx_Mobile-practx_MobileTests-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile-practx_MobileTests/Pods-practx_Mobile-practx_MobileTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		90B8ADF3B0B010660FC8E525 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
