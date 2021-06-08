@@ -304,11 +304,11 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                         handleChange={handleChange}
                         handleBlur={handleBlur}
                         valuesType={values.YY}
-                        name="YY"
+                        name="YYYY"
                         iconName="calendar"
                         iconType="feather"
                         iconSize={14}
-                        placeholder="YY"
+                        placeholder="YYYY"
                         autoCompleteType="cc-exp-year"
                         textContentType="none"
                         keyboardType="numeric"
@@ -318,6 +318,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                           input: {
                             fontSize: normalize(14),
                             color: colors.text_1,
+                            width: normalize(50),
                           },
                         }}
                       />
