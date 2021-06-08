@@ -73,12 +73,11 @@ const DmsBox = ({
     <TouchableOpacity
       onPress={() => {
         navigation.navigate('ChatScreen', {
-          practice: item && item.Practice && item.Practice,
-          channelName: item && item.channelName && item.channelName,
+          practice: item && item,
+          channelName:
+            item && item.Dm && item.Dm.channelName && item.Dm.channelName,
           practiceDms,
-          subgroups: subgroups.find(
-            (items) => items.practiceId === item.Practice.id,
-          ),
+          subgroups: subgroups.find((items) => items.practiceId === item.id),
           group: null,
           navigation: navigation,
           type: 'dm',
@@ -107,8 +106,8 @@ const DmsBox = ({
           <FastImage
             source={{
               uri:
-                item && item.Practice && item.Practice.logo
-                  ? item.Practice.logo
+                item && item.logo
+                  ? item.logo
                   : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
             }}
             style={{
@@ -122,11 +121,12 @@ const DmsBox = ({
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ChatScreen', {
-              practice: item && item.Practice && item.Practice,
-              channelName: item && item.channelName && item.channelName,
+              practice: item && item,
+              channelName:
+                item && item.Dm && item.Dm.channelName && item.Dm.channelName,
               practiceDms,
               subgroups: subgroups.find(
-                (items) => items.practiceId === item.Practice.id,
+                (items) => items.practiceId === item.id,
               ),
               group: null,
               navigation: navigation,
@@ -149,7 +149,7 @@ const DmsBox = ({
               fontFamily: 'SofiaProSemiBold',
               textTransform: 'capitalize',
             }}>
-            {item && item.Practice && item.Practice.practiceName}
+            {item && item.practiceName}
           </Text>
           <Text
             style={{

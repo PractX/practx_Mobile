@@ -664,9 +664,7 @@ const ChatMessages = ({
               id={currentPracticeId}
               item={
                 practiceDms &&
-                practiceDms.find(
-                  (item) => item.practiceId === currentPracticeId,
-                )
+                practiceDms.find((item) => item.id === currentPracticeId)
               }
               allMessages={
                 practiceDms && allMessages
@@ -674,15 +672,15 @@ const ChatMessages = ({
                       (it) =>
                         it.channel ===
                         practiceDms.find(
-                          (item) => item.practiceId === currentPracticeId,
-                        ).channelName,
+                          (item) => item.id === currentPracticeId,
+                        ).Dm.channelName,
                     )
                     ? allMessages.find(
                         (it) =>
                           it.channel ===
                           practiceDms.find(
-                            (item) => item.practiceId === currentPracticeId,
-                          ).channelName,
+                            (item) => item.id === currentPracticeId,
+                          ).Dm.channelName,
                       )
                     : null
                   : null

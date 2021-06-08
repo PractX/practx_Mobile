@@ -201,7 +201,7 @@ export function* willGetPracticesDms() {
     const result = yield getPracticesDmsApi(token).then(function (response) {
       return response.data;
     });
-    console.log(result);
+    console.log('Practice DMS', result);
     // showMessage({
     //   message: result.message,
     //   type: 'success',
