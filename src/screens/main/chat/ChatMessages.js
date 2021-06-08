@@ -665,7 +665,14 @@ const ChatMessages = ({
               </Text>
               <TouchableOpacity
                 style={{}}
-                onPress={() => leavePracticeStart(currentPracticeId)}>
+                onPress={() =>
+                  leavePracticeStart({
+                    practiceId: currentPracticeId,
+                    practiceName: joinedPractices.find(
+                      (item) => item.id === currentPracticeId,
+                    ).practiceName,
+                  })
+                }>
                 <Text
                   style={{
                     color: colors.primary,

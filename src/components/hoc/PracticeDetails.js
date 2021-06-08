@@ -20,6 +20,7 @@ import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import {
   joinPractices,
+  leavePracticeStart,
   setPracticeId,
 } from '../../redux/practices/practices.actions';
 import { selectIsLoading } from '../../redux/practices/practices.selector';
@@ -49,6 +50,7 @@ const PracticeDetails = ({
   practiceData,
   setPracticeData,
   joinPractices,
+  leavePracticeStart,
 }) => {
   const { colors } = useTheme();
   const { show, data, type } = practiceData;
@@ -147,7 +149,9 @@ const PracticeDetails = ({
               }}>
               {data.email}
             </Text>
-            {type === 'pending' || type === 'none-member' ? (
+            {type === 'pending' ||
+            type === 'member' ||
+            type === 'none-member' ? (
               <View
                 style={{
                   position: 'absolute',
@@ -161,6 +165,49 @@ const PracticeDetails = ({
                     color={colors.text_2}
                     size={normalize(20)}
                   />
+                ) : type === 'member' ? (
+                  <Button
+                    title="Leave"
+                    onPress={() => {
+                      // console.log('Leaving', data);
+                      leavePracticeStart({
+                        practiceId: data.id,
+                        practiceName: data.practiceName,
+                      });
+                      bottomSheetRef.current.snapTo(2);
+                      // await setPracticeId(practice.id);
+                      // await navigation.navigate('Chats');
+                    }}
+                    type="clear"
+                    icon={
+                      <Icon
+                        name="ios-exit-outline"
+                        type="ionicon"
+                        color={colors.primary}
+                        size={normalize(15)}
+                        style={{
+                          color: 'white',
+                          marginRight: 0,
+                          // alignSelf: 'center',
+                        }}
+                      />
+                    }
+                    buttonStyle={{
+                      borderRadius: 10,
+                      // borderColor: colors.tertiary,
+                      paddingVertical: 2,
+                      paddingHorizontal: 10,
+                      alignItems: 'center',
+                    }}
+                    titleStyle={{
+                      fontFamily: 'SofiaProRegular',
+                      color: colors.primary,
+                      fontSize: normalize(14),
+                      marginLeft: 3,
+                    }}
+                    loadingProps={{ color: colors.text }}
+                    loading={loading}
+                  />
                 ) : (
                   <Button
                     title="Join"
@@ -173,7 +220,7 @@ const PracticeDetails = ({
                     type="clear"
                     icon={
                       <Icon
-                        name="medical"
+                        name="medical-outline"
                         type="ionicon"
                         color={colors.text}
                         size={normalize(12)}
@@ -192,7 +239,7 @@ const PracticeDetails = ({
                       alignItems: 'center',
                     }}
                     titleStyle={{
-                      fontFamily: 'SofiaProSemiBold',
+                      fontFamily: 'SofiaProRegular',
                       color: colors.text,
                       fontSize: normalize(14),
                       marginLeft: 3,
@@ -557,6 +604,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => ({
   joinPractices: (practiceId) => dispatch(joinPractices(practiceId)),
   setPracticeId: (id) => dispatch(setPracticeId(id)),
+  leavePracticeStart: (id) => dispatch(leavePracticeStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PracticeDetails);

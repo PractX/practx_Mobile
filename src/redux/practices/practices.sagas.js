@@ -452,12 +452,12 @@ export function* willChatWithPractice({ payload: practiceId }) {
   }
 }
 
-export function* willLeavePractice({ payload: practiceId }) {
+export function* willLeavePractice({ payload: { practiceId, practiceName } }) {
   const token = yield select(userToken);
   // const allSubGroups = yield select(practiceSubgroups);
   const myJoinedPractices = yield select(joinedPractices);
   const newPractice = myJoinedPractices.find((item) => item.id !== practiceId);
-  console.log('PracticeID >>', newPractice);
+  console.log('PracticeID >>', newPractice, '-----', practiceId, practiceName);
   try {
     const result = yield leavePracticeApi(token, practiceId).then(function (
       response,
@@ -473,7 +473,7 @@ export function* willLeavePractice({ payload: practiceId }) {
     yield put(getPracticesAllStart());
     yield put(getPracticesDmsStart());
     showMessage({
-      message: result.message,
+      message: `You have successfully left ${practiceName}`,
       type: 'success',
     });
     console.log('Leaving data >>>>', result);
