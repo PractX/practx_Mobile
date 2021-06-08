@@ -5,7 +5,7 @@ import {
   getAllPracticeStaffApi,
   getAllSubgroupApi,
   getJoinedPracticeApi,
-  getMontApi,
+  leavePracticeApi,
   getPracticesApi,
   getPracticesDmsApi,
   getPracticeSubGroupApi,
@@ -25,6 +25,9 @@ import {
   setSearchResult,
   setSearching,
   getPracticeStaffSuccess,
+  setPracticeId,
+  getJoinedPracticesStart,
+  getPracticesDmsStart,
   // setPracticeId,
 } from './practices.actions';
 import { showMessage } from 'react-native-flash-message';
@@ -33,6 +36,7 @@ import { showMessage } from 'react-native-flash-message';
 const userToken = (state) => state.user.token.key;
 const havePracticeId = (state) => state.practice.currentPracticeId;
 const practiceSubgroups = (state) => state.practice.practiceSubgroups;
+const joinedPractices = (state) => state.practice.joinedPractices;
 
 export function* willGetAllPractices() {
   const token = yield select(userToken);
@@ -448,10 +452,61 @@ export function* willChatWithPractice({ payload: practiceId }) {
   }
 }
 
+export function* willLeavePractice({ payload: practiceId }) {
+  const token = yield select(userToken);
+  // const allSubGroups = yield select(practiceSubgroups);
+  const myJoinedPractices = yield select(joinedPractices);
+  const newPractice = myJoinedPractices.find((item) => item.id !== practiceId);
+  console.log('PracticeID >>', newPractice);
+  try {
+    const result = yield leavePracticeApi(token, practiceId).then(function (
+      response,
+    ) {
+      return response.data;
+    });
+    if (newPractice) {
+      yield put(setPracticeId(newPractice.id));
+    } else {
+      yield put(setPracticeId(0));
+    }
+    yield put(getJoinedPracticesStart());
+    yield put(getPracticesAllStart());
+    yield put(getPracticesDmsStart());
+    showMessage({
+      message: result.message,
+      type: 'success',
+    });
+    console.log('Leaving data >>>>', result);
+
+    // yield put(getPracticeStaffSuccess(result.practiceStaffs.staffs));
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      showMessage({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    yield put(setLoading(false));
+  }
+}
+
 export function* onGetAllPractices() {
   yield takeLatest(
     PracticesActionTypes.GET_ALL_PRACTICES_START,
     willGetAllPractices,
+  );
+}
+
+export function* onLeavePractice() {
+  yield takeLatest(
+    PracticesActionTypes.LEAVE_PRACTICE_START,
+    willLeavePractice,
   );
 }
 
@@ -504,6 +559,7 @@ export function* practicesSagas() {
     call(onGetAllPractices),
     call(onSearchPractices),
     call(onGetJoinedPractices),
+    call(onLeavePractice),
     call(onJoinPractices),
     call(onGetPracticesDms),
     call(onGetPracticeSubgroups),

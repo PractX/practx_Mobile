@@ -37,6 +37,7 @@ import {
   setFilter,
   setAllMessages,
   getPracticeStaffStart,
+  leavePracticeStart,
 } from '../../../redux/practices/practices.actions';
 import { RefreshControl } from 'react-native';
 import {
@@ -73,6 +74,7 @@ const ChatMessages = ({
   chatWithPracticeStart,
   getPracticeSubgroupsStart,
   getPracticeStaffStart,
+  leavePracticeStart,
   subgroups,
   allMessages,
   setAllMessages,
@@ -121,7 +123,7 @@ const ChatMessages = ({
 
   const getAllChannelMessages = useCallback((dms, subGroups) => {
     // const dmsCha = dms.map((i) => i.channelName); /// When backend guy delete
-    const dmsCha = dms.map((i) => i.channelName);
+    const dmsCha = dms.map((i) => i.Dm.channelName);
     let newSubGroups = [];
     subGroups.map((i) =>
       i.map((j) =>
@@ -649,6 +651,8 @@ const ChatMessages = ({
               style={{
                 width: style1 === 'open' ? appwidth - 50 : appwidth,
                 alignSelf: 'center',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
                 marginTop: 30,
               }}>
               <Text
@@ -659,6 +663,18 @@ const ChatMessages = ({
                 }}>
                 Direct message
               </Text>
+              <TouchableOpacity
+                style={{}}
+                onPress={() => leavePracticeStart(currentPracticeId)}>
+                <Text
+                  style={{
+                    color: colors.primary,
+                    fontSize: normalize(13),
+                    fontFamily: 'SofiaProSemiBold',
+                  }}>
+                  Leave
+                </Text>
+              </TouchableOpacity>
             </View>
             <DmsBox
               id={currentPracticeId}
@@ -891,6 +907,7 @@ const mapDispatchToProps = (dispatch) => ({
   getPracticeSubgroupsStart: (id) => dispatch(getPracticeSubgroupsStart(id)),
   setAllMessages: (msg) => dispatch(setAllMessages(msg)),
   getPracticeStaffStart: (id) => dispatch(getPracticeStaffStart(id)),
+  leavePracticeStart: (id) => dispatch(leavePracticeStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatMessages);

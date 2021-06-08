@@ -173,3 +173,13 @@ export const searchPracticesApi = async (token, searchData) => {
   const collectionsMap = await Axios.get(url, { headers: headers });
   return collectionsMap;
 };
+
+export const leavePracticeApi = async (token, practiceId) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const apiUrl = REACT_APP_API + REACT_APP_JOIN_PRACTICES + '/' + practiceId;
+  const data = await Axios.delete(apiUrl, { headers: headers });
+  return data;
+};

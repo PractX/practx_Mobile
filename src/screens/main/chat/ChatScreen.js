@@ -169,7 +169,7 @@ const ChatScreen = ({
   //   pubnub.subscribe({ channels });
   // };
   const sendMessage = (data) => {
-    // console.log(channelName);
+    console.log('Channel name', channelName);
     // console.log(data[0].text);
     // console.log('SENDING____');
     setSending(true);

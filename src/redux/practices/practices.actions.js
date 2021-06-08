@@ -55,6 +55,11 @@ export const getPracticeStaffSuccess = (data) => ({
   payload: data,
 });
 
+export const leavePracticeStart = (id) => ({
+  type: PracticesActionTypes.LEAVE_PRACTICE_START,
+  payload: id,
+});
+
 export const chatWithPracticeStart = (data) => ({
   type: PracticesActionTypes.CHAT_WITH_PRACTICE_START,
   payload: data,

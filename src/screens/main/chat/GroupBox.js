@@ -81,10 +81,8 @@ const GroupBox = ({
           group: item ? item : {},
           channelName:
             item &&
-            item.groups &&
-            item.groups.length > 0 &&
-            item.groups[0].subgroupChats.length > 0 &&
-            item.groups[0].subgroupChats[0].PatientSubgroup.channelName,
+            item.subgroupChats.length > 0 &&
+            item.subgroupChats[0].PatientSubgroup.channelName,
           practiceDms,
           subgroups: subgroups.find(
             (items) => items.practiceId === practices.id,
@@ -144,10 +142,8 @@ const GroupBox = ({
               group: item ? item : {},
               channelName:
                 item &&
-                item.groups &&
-                item.groups.length > 0 &&
-                item.groups[0].subgroupChats.length > 0 &&
-                item.groups[0].subgroupChats[0].PatientSubgroup.channelName,
+                item.subgroupChats.length > 0 &&
+                item.subgroupChats[0].PatientSubgroup.channelName,
               practiceDms,
               subgroups: subgroups.find(
                 (items) => items.practiceId === practices.id,
