@@ -754,7 +754,7 @@ const ChatMessages = ({
                           practices={
                             practiceDms &&
                             practiceDms.find(
-                              (it) => it.practiceId === currentPracticeId,
+                              (it) => it.id === currentPracticeId,
                             )
                           }
                           allMessages={
