@@ -77,15 +77,17 @@ const GroupBox = ({
     <TouchableOpacity
       onPress={() => {
         navigation.navigate('ChatScreen', {
-          groupPractice: practices && practices.Practice && practices.Practice,
+          groupPractice: practices && practices,
           group: item ? item : {},
           channelName:
             item &&
-            item.subgroupChats &&
-            item.subgroupChats[0].PatientSubgroup.channelName,
+            item.groups &&
+            item.groups.length > 0 &&
+            item.groups[0].subgroupChats.length > 0 &&
+            item.groups[0].subgroupChats[0].PatientSubgroup.channelName,
           practiceDms,
           subgroups: subgroups.find(
-            (items) => items.practiceId === practices.Practice.id,
+            (items) => items.practiceId === practices.id,
           ),
           type: 'group',
         });
@@ -138,16 +140,17 @@ const GroupBox = ({
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ChatScreen', {
-              groupPractice:
-                practices && practices.Practice && practices.Practice,
+              groupPractice: practices && practices,
               group: item ? item : {},
               channelName:
                 item &&
-                item.subgroupChats &&
-                item.subgroupChats[0].PatientSubgroup.channelName,
+                item.groups &&
+                item.groups.length > 0 &&
+                item.groups[0].subgroupChats.length > 0 &&
+                item.groups[0].subgroupChats[0].PatientSubgroup.channelName,
               practiceDms,
               subgroups: subgroups.find(
-                (items) => items.practiceId === practices.Practice.id,
+                (items) => items.practiceId === practices.id,
               ),
               type: 'group',
             });
