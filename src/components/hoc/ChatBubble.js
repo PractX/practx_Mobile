@@ -145,6 +145,7 @@ const ChatBubble = ({
               color: colors.text,
               textAlign: 'right',
               paddingRight: 10,
+              paddingTop: 3,
             }}>
             {addTime(message)}
           </Text>
