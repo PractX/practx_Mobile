@@ -20,6 +20,7 @@ import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import {
   joinPractices,
+  leavePracticeStart,
   setPracticeId,
 } from '../../../redux/practices/practices.actions';
 import { selectIsLoading } from '../../../redux/practices/practices.selector';
@@ -51,6 +52,7 @@ const PracticeDetails = ({
   setPracticeId,
   setPracticepractice,
   joinPractices,
+  leavePracticeStart,
 }) => {
   const { colors } = useTheme();
   const { params } = useRoute();
@@ -58,6 +60,12 @@ const PracticeDetails = ({
   console.log(practice);
   const pending = practice.requests;
   const member = practice.patients.filter((val) => val.id === userId);
+  const type =
+    member && member.length
+      ? 'member'
+      : pending && pending.length
+      ? 'pending'
+      : 'none-member';
   // const pending = practice.requests;
   // const member = practice.patients.filter((val) => val.id === userId);
   const [loading, setLoading] = useState(false);
@@ -157,20 +165,64 @@ const PracticeDetails = ({
                 }}>
                 {practice.email}
               </Text>
-              {pending.length > 0 ||
-              (!pending.length > 0 && !member.length > 0) ? (
+              {type === 'pending' ||
+              type === 'member' ||
+              type === 'none-member' ? (
                 <View
                   style={{
                     position: 'absolute',
                     top: 20,
-                    right: pending ? 20 : 20,
+                    right: type === 'pending' ? 20 : 20,
                   }}>
-                  {pending.length > 0 ? (
+                  {type === 'pending' ? (
                     <Icon
                       name="progress-clock"
                       type="material-community"
                       color={colors.text_2}
                       size={normalize(20)}
+                    />
+                  ) : type === 'member' ? (
+                    <Button
+                      title="Leave"
+                      onPress={() => {
+                        // console.log('Leaving', data);
+                        leavePracticeStart({
+                          practiceId: practice.id,
+                          practiceName: practice.practiceName,
+                        });
+                        navigation.goBack();
+                        // await setPracticeId(practice.id);
+                        // await navigation.navigate('Chats');
+                      }}
+                      type="clear"
+                      icon={
+                        <Icon
+                          name="ios-exit-outline"
+                          type="ionicon"
+                          color={colors.primary}
+                          size={normalize(15)}
+                          style={{
+                            color: 'white',
+                            marginRight: 0,
+                            // alignSelf: 'center',
+                          }}
+                        />
+                      }
+                      buttonStyle={{
+                        borderRadius: 10,
+                        // borderColor: colors.tertiary,
+                        paddingVertical: 2,
+                        paddingHorizontal: 10,
+                        alignItems: 'center',
+                      }}
+                      titleStyle={{
+                        fontFamily: 'SofiaProRegular',
+                        color: colors.primary,
+                        fontSize: normalize(14),
+                        marginLeft: 3,
+                      }}
+                      loadingProps={{ color: colors.text }}
+                      loading={loading}
                     />
                   ) : (
                     <Button
@@ -540,6 +592,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => ({
   joinPractices: (practiceId) => dispatch(joinPractices(practiceId)),
   setPracticeId: (id) => dispatch(setPracticeId(id)),
+  leavePracticeStart: (id) => dispatch(leavePracticeStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PracticeDetails);

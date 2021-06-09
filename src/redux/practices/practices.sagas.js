@@ -116,7 +116,7 @@ export function* willSearchPractices({ payload: searchData }) {
     ) {
       return response.data;
     });
-    console.log(result);
+    console.log('Search >>>', result);
     // showMessage({
     //   message: result.message,
     //   type: 'success',
