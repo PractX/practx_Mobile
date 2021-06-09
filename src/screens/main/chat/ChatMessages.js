@@ -677,7 +677,7 @@ const ChatMessages = ({
                   style={{
                     color: colors.primary,
                     fontSize: normalize(13),
-                    fontFamily: 'SofiaProSemiBold',
+                    fontFamily: 'SofiaProRegular',
                   }}>
                   Leave
                 </Text>
