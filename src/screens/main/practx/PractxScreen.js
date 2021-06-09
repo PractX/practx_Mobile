@@ -104,7 +104,7 @@ const Practx = ({
       getPracticesDmsStart();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
     console.log('navigations', extraData);
