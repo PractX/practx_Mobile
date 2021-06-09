@@ -7,6 +7,7 @@ import { normalize } from 'react-native-elements';
 import timeAgo from '../../utils/timeAgo';
 import { usePubNub } from 'pubnub-react';
 import { Day } from 'react-native-gifted-chat';
+import moment from 'moment';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -33,19 +34,21 @@ const ChatBubble = ({
   };
   const addTime = (msg) => {
     const unixTimestamp = msg.timetoken / 10000000;
-    const gmtDate = new Date(unixTimestamp * 1000);
-    const localeDateTime = gmtDate.toLocaleString('en-US', {
-      weekday: 'short',
-      // hour12: false,
-      hour: 'numeric',
-      minute: 'numeric',
-    });
-    const time = localeDateTime;
-    console.log('new time >>>', time, '---Old time >>', localeDateTime);
-    // return time.slice(0, -6) + ' ' + time.slice(-2);
-    // const time = localeDateTime.split(', ')[1].substring(6);
-    // return checkAmPm(time);
-    return time.replace('AM', 'am').replace('PM', 'pm');
+    // const gmtDate = new Date(unixTimestamp * 1000);
+    // const localeDateTime = gmtDate.toLocaleString('en-US', {
+    //   weekday: 'short',
+    //   // hour12: false,
+    //   hour: 'numeric',
+    //   minute: 'numeric',
+    // });
+    // const time = localeDateTime;
+    // console.log('new time >>>', time, '---Old time >>', localeDateTime);
+    // // return time.slice(0, -6) + ' ' + time.slice(-2);
+    // // const time = localeDateTime.split(', ')[1].substring(6);
+    // // return checkAmPm(time);
+    // return time.replace('AM', 'am').replace('PM', 'pm');
+    const newDate = new Date(unixTimestamp * 1000);
+    return moment(newDate).format('ddd hh:mm a');
   };
   // console.log(addTime(message).split(', ')[0]);
   return (
