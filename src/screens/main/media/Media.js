@@ -15,6 +15,7 @@ import loaderGif from '../../../../assets/loading.gif';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { useIsDrawerOpen } from '@react-navigation/drawer';
 import Header from '../../../components/hoc/Header';
 import FastImage from 'react-native-fast-image';
 import { normalize } from 'react-native-elements';
@@ -38,24 +39,18 @@ const Media = ({ navigation }) => {
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
+  const isDrawerOpen = useIsDrawerOpen();
 
-  React.useEffect(() => {
-    console.log(navigation.dangerouslyGetState().index);
-    const unsubscribe = navigation.addListener('drawerOpen', (e) => {
-      // Do something
+  useEffect(() => {
+    if (isDrawerOpen) {
       setStyle1('open');
-    });
-
-    return unsubscribe;
-  }, [navigation]);
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('drawerClose', (e) => {
-      // Do something
+      console.log('Open');
+    } else {
       setStyle1('close');
-    });
+      console.log('Close');
+    }
+  }, [isDrawerOpen]);
 
-    return unsubscribe;
-  }, [navigation]);
   return (
     <SafeAreaView
       style={[

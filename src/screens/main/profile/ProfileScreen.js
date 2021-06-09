@@ -5,6 +5,8 @@ import {
   TextInput,
   StyleSheet,
   SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import { Text, Content } from 'native-base';
 import Header from '../../../components/hoc/Header';
@@ -15,8 +17,7 @@ import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { normalize } from 'react-native-elements';
 import { ListItem, Icon } from 'react-native-elements';
-import { ScrollView } from 'react-native';
-import { TouchableOpacity } from 'react-native';
+import { useIsDrawerOpen } from '@react-navigation/drawer';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -27,27 +28,21 @@ const ProfileScreen = ({ navigation, extraData, route, currentUser }) => {
   // const props = useRoute();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
+  const isDrawerOpen = useIsDrawerOpen();
+
+  useEffect(() => {
+    if (isDrawerOpen) {
+      setStyle1('open');
+      console.log('Open');
+    } else {
+      setStyle1('close');
+      console.log('Close');
+    }
+  }, [isDrawerOpen]);
 
   // useEffect(() => {
   //   isFetching ? setRefreshing(true) : setRefreshing(false);
   // }, [isFetching]);
-  React.useEffect(() => {
-    // console.log(currentUser);
-    const unsubscribe = extraData.addListener('drawerOpen', (e) => {
-      // Do something
-      setStyle1('open');
-    });
-
-    return unsubscribe;
-  }, [extraData]);
-  React.useEffect(() => {
-    const unsubscribe = extraData.addListener('drawerClose', (e) => {
-      // Do something
-      setStyle1('close');
-    });
-
-    return unsubscribe;
-  }, [extraData]);
 
   return (
     <SafeAreaView

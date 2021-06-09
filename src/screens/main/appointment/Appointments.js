@@ -29,6 +29,7 @@ import Header from '../../../components/hoc/Header';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView } from 'react-navigation';
 import { useTheme } from '@react-navigation/native';
+import { useIsDrawerOpen } from '@react-navigation/drawer';
 import { normalize } from 'react-native-elements';
 import { FlatList } from 'react-native';
 
@@ -76,6 +77,7 @@ const Appointments = ({ navigation }) => {
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
+  const isDrawerOpen = useIsDrawerOpen();
   const [selectedDate, setSelectedDate] = useState({
     [new Date().toISOString().split('T')[0]]: {
       selected: true,
@@ -88,27 +90,16 @@ const Appointments = ({ navigation }) => {
     },
   });
 
-  // useEffect(() => {
-  // }, [colors.background]);
-
-  React.useEffect(() => {
-    // console.log(selectedDate);
-    // console.log(new Date().toJSON().slice(0, 10));
-    const unsubscribe = navigation.addListener('drawerOpen', (e) => {
-      // Do something
+  useEffect(() => {
+    if (isDrawerOpen) {
       setStyle1('open');
-    });
-
-    return unsubscribe;
-  }, [navigation]);
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('drawerClose', (e) => {
-      // Do something
+      console.log('Open');
+    } else {
       setStyle1('close');
-    });
+      console.log('Close');
+    }
+  }, [isDrawerOpen]);
 
-    return unsubscribe;
-  }, [navigation]);
   return (
     <SafeAreaView
       style={[

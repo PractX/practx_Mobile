@@ -20,6 +20,7 @@ import {
   useRoute,
   useTheme,
 } from '@react-navigation/native';
+import { useIsDrawerOpen } from '@react-navigation/drawer';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -86,6 +87,7 @@ const ChatMessages = ({
   const [style1, setStyle1] = useState();
   const [practicesRefreshing, setPracticesRefreshing] = useState(false);
   const isFocused = useIsFocused();
+  const isDrawerOpen = useIsDrawerOpen();
   const [showStaffs, setShowStaffs] = useState(false);
   const d = new Date();
   const time = d.getTime();
@@ -566,27 +568,14 @@ const ChatMessages = ({
     // console.log(currentUser);
     // practiceDms.length && getAllChannelMessages(practiceDms, subgroups);
 
-    const unsubscribe = extraData.addListener('drawerOpen', (e) => {
-      // Do something
+    if (isDrawerOpen) {
       setStyle1('open');
       console.log('Open');
-    });
-
-    return unsubscribe;
-  }, [extraData, currentPracticeId, currentUser]);
-  useMemo(() => {
-    // console.log(
-    //   practiceDms.find((item) => item.practiceId === currentPracticeId).Practice
-    //     .channelName,
-    // );
-    const unsubscribe = extraData.addListener('drawerClose', (e) => {
-      // Do something
-      console.log('Close');
+    } else {
       setStyle1('close');
-    });
-
-    return unsubscribe;
-  }, [extraData]);
+      console.log('Close');
+    }
+  }, [isDrawerOpen, currentPracticeId, currentUser]);
 
   return (
     <SafeAreaView

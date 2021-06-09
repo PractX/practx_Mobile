@@ -46,6 +46,7 @@ const Header = ({
   searchText,
   setSearchText,
   textImage,
+  hideCancel,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
@@ -424,7 +425,7 @@ const Header = ({
               }}
             />
           </TouchableOpacity>
-        ) : (
+        ) : hideCancel ? null : (
           <TouchableOpacity
             style={{
               alignItems: 'center',

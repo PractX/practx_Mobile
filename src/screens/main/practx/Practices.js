@@ -93,13 +93,7 @@ const Practices = ({
   useEffect(() => {
     isSearching ? setRefreshing(true) : setRefreshing(false);
   }, [isSearching]);
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('drawerOpen', (e) => {
-      // Do something
-      setStyle1('open');
-    });
-    return unsubscribe;
-  }, [navigation]);
+
   useEffect(() => {
     if (isFocused) {
       getPracticesAllStart();
@@ -108,17 +102,6 @@ const Practices = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused]);
-  React.useEffect(() => {
-    // console.log(practices);
-
-    const unsubscribe = navigation.addListener('drawerClose', (e) => {
-      // Do something
-      setStyle1('close');
-      // console.log('Close');
-    });
-
-    return unsubscribe;
-  }, [getPracticesAllStart, navigation]);
 
   useEffect(() => {
     extraData.setOptions({

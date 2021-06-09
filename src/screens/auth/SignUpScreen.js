@@ -71,7 +71,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
         email: values.email,
         firstname: values.firstname,
         lastname: values.lastname,
-        dob: `${values.MM}/${values.DD}/${values.YY}`,
+        dob: `${values.MM}/${values.DD}/${values.YYYY}`,
         mobileNo: values.mobileNo,
         password: values.password,
         navigation,
@@ -173,7 +173,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                   lastname: '',
                   MM: '',
                   DD: '',
-                  YY: '',
+                  YYYY: '',
                   mobileNo: '',
                   email: '',
                   password: '',
@@ -303,7 +303,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                       <SmallInputBox
                         handleChange={handleChange}
                         handleBlur={handleBlur}
-                        valuesType={values.YY}
+                        valuesType={values.YYYY}
                         name="YYYY"
                         iconName="calendar"
                         iconType="feather"

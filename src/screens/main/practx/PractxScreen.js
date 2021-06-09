@@ -3,6 +3,7 @@ import {
   useIsFocused,
   useTheme,
 } from '@react-navigation/native';
+import { useIsDrawerOpen } from '@react-navigation/drawer';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   FlatList,
@@ -64,6 +65,7 @@ const Practx = ({
   const [checkState, setCheckState] = useState(filter);
   const ref = useRef(null);
   const isFocused = useIsFocused();
+  const isDrawerOpen = useIsDrawerOpen();
   const [practiceData, setPracticeData] = useState({
     show: false,
     data: null,
@@ -107,26 +109,14 @@ const Practx = ({
   }, [isFocused]);
 
   useEffect(() => {
-    console.log('navigations', extraData);
-    const unsubscribe = extraData.addListener('drawerOpen', (e) => {
-      // Do something
+    if (isDrawerOpen) {
       setStyle1('open');
       console.log('Open');
-    });
-
-    return unsubscribe;
-  }, [extraData]);
-  useEffect(() => {
-    // console.log(practices);
-
-    const unsubscribe = extraData.addListener('drawerClose', (e) => {
-      // Do something
+    } else {
       setStyle1('close');
       console.log('Close');
-    });
-
-    return unsubscribe;
-  }, [getPracticesAllStart, extraData]);
+    }
+  }, [getPracticesAllStart, isDrawerOpen]);
 
   function sortRandomly(a, b) {
     return 0.5 - Math.random();

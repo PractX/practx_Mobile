@@ -124,6 +124,7 @@ const EditProfile = ({
             buttonType: 'save',
           }}
           isLoading={isLoading}
+          hideCancel={true}
         />
         <KeyboardAwareScrollView
           // keyboardShouldPersistTaps={'always'}
@@ -184,9 +185,13 @@ const EditProfile = ({
                       />
                       <TouchableOpacity
                         onPress={() =>
-                          launchImageLibrary({ mediaType: 'photo' }, (i) =>
-                            setImageUri(i),
-                          )
+                          launchImageLibrary({ mediaType: 'photo' }, (i) => {
+                            if (i && i.didCancel) {
+                              console.log('No image attached');
+                            } else {
+                              setImageUri(i);
+                            }
+                          })
                         }
                         style={{
                           backgroundColor: colors.secondary,
