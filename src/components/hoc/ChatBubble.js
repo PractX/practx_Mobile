@@ -338,6 +338,7 @@ const ChatBubble = ({
                 fontSize: normalize(10),
                 fontFamily: 'SofiaProLight',
                 color: colors.text,
+                paddingTop: 3,
               }}>
               {addTime(message)}
             </Text>
