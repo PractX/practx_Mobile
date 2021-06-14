@@ -349,10 +349,10 @@ const ChatMessages = ({
 
   useMemo(() => {
     if (isFocused) {
-      chatWithPracticeStart(currentPracticeId);
+      chatWithPracticeStart(currentPracticeId === 0 ? joinedPractices && joinedPractices.length > 0 ? joinedPractices.map(i => i.id)[joinedPractices.length - 1] : 0 : currentPracticeId);
       getJoinedPracticesStart();
       getPracticesDmsStart();
-      getPracticeSubgroupsStart(currentPracticeId);
+      getPracticeSubgroupsStart(currentPracticeId === 0 ? joinedPractices && joinedPractices.length > 0 ? joinedPractices.map(i => i.id)[joinedPractices.length - 1] : 0 : currentPracticeId);
     }
 
     // if (!isFetching) {

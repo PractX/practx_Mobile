@@ -180,7 +180,7 @@ const DmsBox = ({
                     '',
                   )
               : `ℹ️ Chat with ${
-                  item && item.Practice && item.Practice.practiceName
+                  item && item.practiceName
                 }`}
           </Text>
         </TouchableOpacity>

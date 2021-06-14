@@ -197,7 +197,7 @@ const GroupBox = ({
                     /(\r\n|\n|\r)/gm,
                     '',
                   )
-              : 'ℹ️ Begin conversation'}
+              : `ℹ️ Begin conversation in ${item.name}`}
           </Text>
         </TouchableOpacity>
       </View>

@@ -102,16 +102,18 @@ const Practx = ({
   });
 
   useMemo(()=> {
-    if(practiceDms.length > 0){
+    if(practiceDms && practiceDms.length > 0){
       let pract = joinedPractices.find(i => !practiceDms.some(k => i.id === k.id))
       if(pract){
         console.log("Startig new Chat", pract)
         chatWithPracticeStart(pract.id)
+        getPracticesDmsStart();
       }
     }else {
-      if(joinedPractices.length > 0){
+      if(joinedPractices && joinedPractices.length > 0){
         console.log("First new Chat")
         chatWithPracticeStart(joinedPractices.map(i => i.id)[0])
+        getPracticesDmsStart();
       }
     }
   },[joinedPractices])
