@@ -20,6 +20,9 @@ import { connect } from 'react-redux';
 import {
   joinPractices,
   setPracticeId,
+  chatWithPracticeStart,
+  getPracticesDmsStart,
+  getPracticeSubgroupsStart
 } from '../../redux/practices/practices.actions';
 import { selectIsLoading } from '../../redux/practices/practices.selector';
 import { createStructuredSelector } from 'reselect';
@@ -51,6 +54,9 @@ const PracticeBox = ({
   searchData,
   practiceData,
   setPracticeData,
+  chatWithPracticeStart,
+  getPracticesDmsStart,
+  getPracticeSubgroupsStart,
 }) => {
   const { colors } = useTheme();
   const pending = practice.requests;
@@ -65,18 +71,27 @@ const PracticeBox = ({
   };
 
   useEffect(() => {
+    console.log('Heo here');
+    
     !isLoading && setLoading(false);
+    
   }, [isLoading, practice]);
 
   return (
     <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('SinglePractice', {
-          navigation,
-          practice,
-          userId,
-          searchData,
-        })
+      onPress={() =>{
+          navigation.navigate('SinglePractice', {
+            navigation,
+            practice,
+            userId,
+            searchData,
+          });
+          if(practice && member && member.length) {
+            chatWithPracticeStart(practice.id)
+            getPracticesDmsStart();
+            getPracticeSubgroupsStart(practice.id);
+          }
+        }
       }
       style={{
         marginTop: 15,
@@ -204,6 +219,9 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => ({
   joinPractices: (practiceId) => dispatch(joinPractices(practiceId)),
   setPracticeId: (id) => dispatch(setPracticeId(id)),
+  chatWithPracticeStart: (data) => dispatch(chatWithPracticeStart(data)),
+  getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
+  getPracticeSubgroupsStart: (id) => dispatch(getPracticeSubgroupsStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PracticeBox);

@@ -24,11 +24,15 @@ import {
   getPracticesAllStart,
   getPracticesDmsStart,
   setFilter,
+  chatWithPracticeStart,
+  getPracticeSubgroupsStart,
 } from '../../../redux/practices/practices.actions';
 import {
   selectAllPractices,
   selectFilter,
   selectIsFetching,
+  selectPracticeDms,
+  selectJoinedPractices,
 } from '../../../redux/practices/practices.selector';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
@@ -57,6 +61,9 @@ const Practx = ({
   currentUser,
   setFilter,
   filter,
+  joinedPractices,
+  practiceDms,
+  chatWithPracticeStart,
 }) => {
   const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
@@ -88,7 +95,26 @@ const Practx = ({
 
   useEffect(() => {
     practiceData.show && bottomSheetRef.current.snapTo(0);
+    // console.log("Practice DM____", practiceDms)
+    // const dug = [{id: 2, name:'ab'},{id: 8, name:'abf'}, {id: 5, name: 'bc'}, {id: 2, name:'abb'}, {id: 3, name: 'bc'}]
+    //  const dug2 = [{id: 8, name:'abf'},{id: 9, name:'ab'},{id: 2, name:'ab'}, {id: 5, name: 'bc'}, {id: 2, name:'abb'}, {id: 3, name: 'bc'}]
+    // console.log("TestingValue ->>", dug2.find(i => !dug.some(k => i.id === k.id)));
   });
+
+  useMemo(()=> {
+    if(practiceDms.length > 0){
+      let pract = joinedPractices.find(i => !practiceDms.some(k => i.id === k.id))
+      if(pract){
+        console.log("Startig new Chat", pract)
+        chatWithPracticeStart(pract.id)
+      }
+    }else {
+      if(joinedPractices.length > 0){
+        console.log("First new Chat")
+        chatWithPracticeStart(joinedPractices.map(i => i.id)[0])
+      }
+    }
+  },[joinedPractices])
 
   useEffect(() => {
     isFetching ? setRefreshing(true) : setRefreshing(false);
@@ -278,7 +304,10 @@ const Practx = ({
                       refreshing={
                         practices && practices.length > 0 ? false : refreshing
                       }
-                      onRefresh={() => getPracticesAllStart()}
+                      onRefresh={() => {
+                        getPracticesAllStart();
+                        getJoinedPracticesStart();
+                        }}
                     />
                   }
                   // removeClippedSubviews
@@ -356,7 +385,8 @@ const Practx = ({
                       refreshing={
                         practices && practices.length > 0 ? false : refreshing
                       }
-                      onRefresh={() => getPracticesAllStart()}
+                      onRefresh={() =>{ getPracticesAllStart();
+                      getJoinedPracticesStart();}}
                     />
                   }
                   // removeClippedSubviews
@@ -449,7 +479,9 @@ const Practx = ({
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
   isFetching: selectIsFetching,
+  joinedPractices: selectJoinedPractices,
   practices: selectAllPractices,
+  practiceDms: selectPracticeDms,
   filter: selectFilter,
 });
 
@@ -457,7 +489,9 @@ const mapDispatchToProps = (dispatch) => ({
   getPracticesAllStart: () => dispatch(getPracticesAllStart()),
   getJoinedPracticesStart: () => dispatch(getJoinedPracticesStart()),
   getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
+  getPracticeSubgroupsStart: (id) => dispatch(getPracticeSubgroupsStart()),
   setFilter: (data) => dispatch(setFilter(data)),
+  chatWithPracticeStart: (data) => dispatch(chatWithPracticeStart(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Practx);

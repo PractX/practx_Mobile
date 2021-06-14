@@ -35,6 +35,7 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         searchResult: [],
         searchData: null,
         searchHistory: [],
+        practiceStaffs: [],
       };
 
     case PracticesActionTypes.SET_SEARCH_HISTORY:

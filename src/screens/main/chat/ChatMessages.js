@@ -349,8 +349,10 @@ const ChatMessages = ({
 
   useMemo(() => {
     if (isFocused) {
+      chatWithPracticeStart(currentPracticeId);
       getJoinedPracticesStart();
       getPracticesDmsStart();
+      getPracticeSubgroupsStart(currentPracticeId);
     }
 
     // if (!isFetching) {
@@ -358,6 +360,7 @@ const ChatMessages = ({
 
   useMemo(() => {
     if (currentPracticeId) {
+      console.log("CurrenId");
       // pract();
       getPracticeSubgroupsStart(currentPracticeId);
       getPracticeStaffStart(currentPracticeId);
@@ -414,6 +417,7 @@ const ChatMessages = ({
   };
 
   useEffect(() => {
+    console.log("useEffect")
     if (pubnub) {
       console.log('Add event  listener');
       pubnub.setUUID(currentUser ? currentUser.chatId : 0);

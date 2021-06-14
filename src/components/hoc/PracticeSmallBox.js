@@ -22,6 +22,9 @@ import { connect } from 'react-redux';
 import {
   joinPractices,
   setPracticeId,
+  chatWithPracticeStart,
+  getPracticesDmsStart,
+  getPracticeSubgroupsStart
 } from '../../redux/practices/practices.actions';
 import {
   selectIsLoading,
@@ -59,6 +62,9 @@ const PracticeSmallBox = ({
   setPracticeData,
   joinedPractices,
   sortType,
+  chatWithPracticeStart,
+  getPracticesDmsStart,
+  getPracticeSubgroupsStart,
 }) => {
   const { colors } = useTheme();
   const pending = practice.requests;
@@ -74,6 +80,7 @@ const PracticeSmallBox = ({
 
   useEffect(() => {
     !isLoading && setLoading(false);
+    // chatWithPracticeStart(practice.id)
   }, [isLoading, practice]);
   return (
     <TouchableOpacity
@@ -91,6 +98,11 @@ const PracticeSmallBox = ({
                 ? 'pending'
                 : 'none-member',
           });
+         if(practice && member && member.length) {
+           chatWithPracticeStart(practice.id);
+            getPracticesDmsStart();
+            getPracticeSubgroupsStart(practice.id);
+         }
         }
       }}
       style={{
@@ -202,6 +214,9 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => ({
   joinPractices: (practiceId) => dispatch(joinPractices(practiceId)),
   setPracticeId: (id) => dispatch(setPracticeId(id)),
+  chatWithPracticeStart: (data) => dispatch(chatWithPracticeStart(data)),
+  getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
+  getPracticeSubgroupsStart: (id) => dispatch(getPracticeSubgroupsStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PracticeSmallBox);
