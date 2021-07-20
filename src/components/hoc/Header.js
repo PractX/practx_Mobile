@@ -51,7 +51,7 @@ const Header = ({
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
   const [searchRef, setSearchRef] = useState();
-  console.log(practice);
+  // console.log(practice);
 
   // const advanceCheck = (type) => {
   //   if (type === 'opt1') {

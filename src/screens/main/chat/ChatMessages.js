@@ -86,6 +86,7 @@ const ChatMessages = ({
   const pubnub = usePubNub();
   const [style1, setStyle1] = useState();
   const [practicesRefreshing, setPracticesRefreshing] = useState(false);
+  const [dmMessage, setDmMessage] = useState(null);
   const isFocused = useIsFocused();
   const isDrawerOpen = useIsDrawerOpen();
   const [showStaffs, setShowStaffs] = useState(false);
@@ -101,7 +102,7 @@ const ChatMessages = ({
     return localeDateTime.split(', ')[0];
   };
 
-  // const getMessages = (cha, num) => {
+  // const getLastMessages = (cha, num) => {
   //   console.log('Chass', cha);
   //   const channels = [cha];
   //   console.log(channels);
@@ -199,142 +200,182 @@ const ChatMessages = ({
 
     // console.log('___ALLCHANNELS SUBSCRIBING TO___', allChannels);
 
-    pubnub.subscribe({ channels: allChannels });
+    pubnub.subscribe({ channels: allChannels, withPresence: true });
   }, []);
 
-  // useMemo(() => {
-  //   if (isFocused && practiceDms && practiceDms.length) {
-  //     getAllChannelMessages(practiceDms, subgroups);
-  //   }
+  // useEffect(() => {
+  //   practiceDms && allMessages
+  //     ? allMessages.find(
+  //         (it) =>
+  //           it.channel ===
+  //           practiceDms.find((item) => item.id === currentPracticeId).Dm
+  //             .channelName,
+  //       )
+  //       ? setDmMessage(
+  //           allMessages.find(
+  //             (it) =>
+  //               it.channel ===
+  //               practiceDms.find((item) => item.id === currentPracticeId).Dm
+  //                 .channelName,
+  //           ),
+  //         )
+  //       : null
+  //     : null;
   // }, [isFocused]);
 
-  const getMessages = (cha) => {
-    console.log('=== GET MESSAGES FROM CHANNEL =====: ', cha);
-    console.log('ALL____', allMessages);
+  const getMessages = useCallback(
+    (cha, msg) => {
+      console.log('=== GET MESSAGES FROM CHANNEL =====: ', cha);
+      console.log('ALL____', allMessages);
 
+      const channelMsgs = allMessages.find((i) => i.channel === cha);
+      console.log('Finding--', channelMsgs);
+      // console.log('Current Date____', time);
+      if (channelMsgs) {
+        channelMsgs.lst = msg.timetoken;
+        channelMsgs.messages = [...channelMsgs.messages, msg];
+        const newSavedMessages = allMessages.filter(
+          (i) => i.channel !== channelMsgs.channel,
+        );
+
+        // console.log('=== channelMsgs =====: ', channelMsgs);
+        // console.log('=== newSavedMessages =====: ', newSavedMessages);
+        setAllMessages([...newSavedMessages, channelMsgs]);
+
+        // pubnub.time((status, response)=>{
+        // 	if(!status.error){
+
+        // 		pubnub.objects.setMemberships({
+        // 			channels: [{
+        // 				id: channels[0],
+        // 				custom: {
+        // 						lastReadTimetoken: response.timetoken,
+        // 				}
+        // 			}]
+
+        // 		})
+
+        // 		dispatch(Actions.messagesCountUpdate(channels[0]))
+        // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+
+        // 	}
+
+        // })
+      } else {
+        console.log('TESTING mESSAGE eRROR');
+        setAllMessages([
+          ...allMessages,
+          {
+            channel: cha,
+            fst: msg.timetoken,
+            lst: msg.timetoken,
+            messages: [msg],
+          },
+        ]);
+
+        // pubnub.time((status, response)=>{
+        // 	if(!status.error){
+
+        // 		pubnub.objects.setMemberships({
+        // 			channels: [{
+        // 				id: channels[0],
+        // 				custom: {
+        // 						lastReadTimetoken: response.timetoken,
+        // 				}
+        // 			}]
+
+        // 		})
+
+        // 		dispatch(Actions.messagesCountUpdate(channels[0]))
+        // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+
+        // 	}
+
+        // })
+      }
+
+      // pubnub.subscribe({ channels });
+
+      // return () => {
+      //   pubnub.unsubscribeAll();
+      // };
+    },
+    [practiceDms.length, subgroups.length, allMessages],
+  );
+
+  const getLastMessages = (cha, msg) => {
+    console.log('=== newSavedMessages GET MESSAGES FROM CHANNEL =====: ', cha);
+    //   console.log('ALL____', allMessages);
+    // console.log(
+    //   '=== GET ALLL LAST MESSAGE FROM CHANNEL =====: ',
+    //   cha,
+    //   msg,
+    //   allMessages,
+    // );
     const channelMsgs = allMessages.find((i) => i.channel === cha);
-    const channels = [cha];
-    console.log('Current Date____', time);
+    let allMsgs = allMessages;
     if (channelMsgs) {
-      console.log('Goods___');
-      pubnub.fetchMessages(
-        {
-          channels: [channels[0]],
-          start: channelMsgs.lst + 1,
-          count: 1,
-          end: time,
-        },
-
-        async (status, data) => {
-          if (status.statusCode === 200) {
-            console.log('=== FOUND MESSAGES FROM CHANNEL =====: ', cha);
-            // addMessage([...channelMsgs.messages, ...data.channels[channels]])
-            const msgs = data.channels[channels];
-            console.log('=== FOUND NEW MESSAGES FROM CHANNEL =====: ', cha);
-
-            console.log('=== msgs =====: ', msgs);
-            if (msgs.length && msgs[0].timetoken !== channelMsgs.lst) {
-              channelMsgs.lst = msgs[msgs.length - 1].timetoken;
-              await msgs.map((item) =>
-                Object.assign(item, {
-                  _id: item.timetoken,
-                  user: { _id: item.uuid },
-                  day: addTime(item.timetoken),
-                }),
-              );
-              channelMsgs.messages = [...channelMsgs.messages, ...msgs];
-              // channelMsgs.messages = [...msgs]
-              const newSavedMessages = allMessages.filter(
-                (i) => i.channel !== channelMsgs.channel,
-              );
-
-              console.log('=== channelMsgs =====: ', channelMsgs);
-              console.log('=== newSavedMessages =====: ', newSavedMessages);
-              console.log('=== All messages =====: ', allMessages);
-              setAllMessages([...newSavedMessages, channelMsgs]);
-            }
-
-            // pubnub.time((status, response)=>{
-            // 	if(!status.error){
-
-            // 		pubnub.objects.setMemberships({
-            // 			channels: [{
-            // 				id: channels[0],
-            // 				custom: {
-            // 						lastReadTimetoken: response.timetoken,
-            // 				}
-            // 			}]
-
-            // 		})
-
-            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
-            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
-
-            // 	}
-
-            // })
-          }
-        },
+      channelMsgs.lst = msg.timetoken;
+      channelMsgs.messages = [...channelMsgs.messages, msg];
+      // channelMsgs.messages = [...msgs]
+      const newallMessages = allMessages.filter(
+        (i) => i.channel !== channelMsgs.channel,
       );
+      allMsgs = [channelMsgs, ...newallMessages];
+      setAllMessages(allMsgs);
     } else {
-      pubnub.fetchMessages(
+      allMsgs = [
         {
-          channels: [channels[0]],
-          count: 25,
-          end: time,
+          channel: cha,
+          fst: msg.timetoken,
+          lst: msg.timetoken,
+          messages: [msg],
         },
-
-        (status, data) => {
-          if (status.statusCode === 200) {
-            console.log('=== GETTING MESSAGES FROM CHANNEL =====: ', cha);
-            // addMessage([...data.channels[channels]])
-            const msgs = data.channels[channels];
-            if (msgs.length) {
-              console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
-              const lst = msgs[msgs.length - 1].timetoken;
-              const fst = msgs[0].timetoken;
-              let allMsgs = msgs.map((item) =>
-                Object.assign(item, {
-                  _id: item.timetoken,
-                  user: { _id: item.uuid },
-                  day: addTime(item.timetoken),
-                }),
-              );
-              setAllMessages([
-                ...allMessages,
-                { channel: cha, fst, lst, messages: allMsgs },
-              ]);
-            }
-
-            // pubnub.time((status, response)=>{
-            // 	if(!status.error){
-
-            // 		pubnub.objects.setMemberships({
-            // 			channels: [{
-            // 				id: channels[0],
-            // 				custom: {
-            // 						lastReadTimetoken: response.timetoken,
-            // 				}
-            // 			}]
-
-            // 		})
-
-            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
-            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
-
-            // 	}
-
-            // })
-          }
-        },
-      );
+        ...allMsgs,
+      ];
+      setAllMessages(allMsgs);
     }
-
-    // pubnub.subscribe({ channels });
-
-    // return () => {
-    //   pubnub.unsubscribeAll();
-    // };
+    // setLastScrollTop((prev) => {
+    //   if (prev && prev.find((i) => i.channel === cha)) {
+    //     return [
+    //       ...prev.filter((i) => i.channel !== cha),
+    //       { channel: cha, lastScrollTop: 0 },
+    //     ];
+    //   }
+    //   return [...prev, { channel: cha, lastScrollTop: 0 }];
+    // });
+    // let newDMS = [];
+    // let newGMS = [];
+    // let subgroupsCha = [];
+    // subgroups
+    //   .map((l) => l.subgroupChats)
+    //   .map(
+    //     (k) => k.length && k.map((a) => subgroupsCha.push(a.PatientSubgroup)),
+    //   );
+    // const sorted = allMsgs.sort((a, b) => Number(b.lst) - Number(a.lst));
+    // sorted.map((i) => {
+    //   // const d = dms.find(j => j.channelName === i.channel)
+    //   if (i.type === 'dm') {
+    //     newDMS.push(dms.find((j) => j.Dm.channelName === i.channel));
+    //   }
+    //   if (i.type === 'gm') {
+    //     newGMS.push(subgroupsCha.find((j) => j.channelName === i.channel));
+    //   }
+    // });
+    // console.log("=== Sort =====: ", allMsgs, dms, [
+    //   ...newDMS,
+    //   ...dms.filter(
+    //     (i) => !sorted.find((j) => j.channel === i.Dm.channelName)
+    //   ),
+    // ]);
+    // dispatch(
+    //   Actions.requestDMSSuccess([
+    //     ...newDMS,
+    //     ...dms.filter(
+    //       (i) => !sorted.find((j) => j.channel === i.Dm.channelName)
+    //     ),
+    //   ])
+    // );
   };
 
   // const pract = useCallback(async () => {
@@ -349,10 +390,22 @@ const ChatMessages = ({
 
   useMemo(() => {
     if (isFocused) {
-      chatWithPracticeStart(currentPracticeId === 0 ? joinedPractices && joinedPractices.length > 0 ? joinedPractices.map(i => i.id)[joinedPractices.length - 1] : 0 : currentPracticeId);
+      chatWithPracticeStart(
+        currentPracticeId === 0
+          ? joinedPractices && joinedPractices.length > 0
+            ? joinedPractices.map((i) => i.id)[joinedPractices.length - 1]
+            : 0
+          : currentPracticeId,
+      );
       getJoinedPracticesStart();
       getPracticesDmsStart();
-      getPracticeSubgroupsStart(currentPracticeId === 0 ? joinedPractices && joinedPractices.length > 0 ? joinedPractices.map(i => i.id)[joinedPractices.length - 1] : 0 : currentPracticeId);
+      getPracticeSubgroupsStart(
+        currentPracticeId === 0
+          ? joinedPractices && joinedPractices.length > 0
+            ? joinedPractices.map((i) => i.id)[joinedPractices.length - 1]
+            : 0
+          : currentPracticeId,
+      );
     }
 
     // if (!isFetching) {
@@ -360,11 +413,11 @@ const ChatMessages = ({
 
   useMemo(() => {
     if (currentPracticeId) {
-      console.log("CurrenId");
+      console.log('CurrenId');
       // pract();
       getPracticeSubgroupsStart(currentPracticeId);
       getPracticeStaffStart(currentPracticeId);
-      // getMessages();
+      // getLastMessages();
       // removeChannel();
       const me = subgroups.find((item) => item.practiceId === currentPracticeId)
         ? subgroups.find((item) => item.practiceId === currentPracticeId)
@@ -381,8 +434,8 @@ const ChatMessages = ({
     //     .length > 0,
     // );
     if (currentPracticeId) {
-      console.log('Getting all channels');
-      console.log('All Subgroups', subgroups);
+      // console.log('Getting all channels');
+      // console.log('All Subgroups', subgroups);
       if (practiceDms.length) {
         getAllChannelMessages(
           practiceDms,
@@ -417,23 +470,27 @@ const ChatMessages = ({
   };
 
   useEffect(() => {
-    console.log("useEffect")
+    console.log('useEffect');
     if (pubnub) {
-      console.log('Add event  listener');
       pubnub.setUUID(currentUser ? currentUser.chatId : 0);
 
       const listener = {
         message: (messageEvent) => {
-          // addMessages([
-          //   ...messages,
-          //   {
-          //     channel: messageEvent.channel,
-          //     message: messageEvent.message,
-          //     timetoken: messageEvent.timetoken,
-          //     uuid: messageEvent.publisher,
-          //   },
-          // ]);
-          getMessages(messageEvent.channel);
+          console.log('Add event  listener', messageEvent);
+          const msg = {
+            channel: messageEvent.channel,
+            message: messageEvent.message,
+            messageType: null,
+            timetoken: messageEvent.timetoken,
+            uuid: messageEvent.publisher,
+            _id: messageEvent.timetoken,
+            user: { _id: messageEvent.uuid },
+            day: addTime(messageEvent.timetoken),
+          };
+
+          console.log('Events', messageEvent);
+          getMessages(messageEvent.channel, msg);
+          // getLastMessages(messageEvent.channel, msg);
           console.log('Events', messageEvent);
 
           pubnub.objects.setMemberships({
@@ -492,12 +549,25 @@ const ChatMessages = ({
           // addMessages([
           //   ...messages,
           //   {
-          //     channel: picture.channel,
-          //     message: picture.message,
-          //     timetoken: picture.timetoken,
-          //     uuid: picture.publisher,
+          //     channel: messageEvent.channel,
+          //     message: messageEvent.message,
+          //     timetoken: messageEvent.timetoken,
+          //     uuid: messageEvent.publisher,
           //   },
           // ]);
+
+          const msg = {
+            channel: picture.channel,
+            message: { file: picture.file, message: picture.message },
+            messageType: 4,
+            timetoken: picture.timetoken,
+            uuid: picture.publisher,
+            _id: picture.timetoken,
+            user: { _id: picture.uuid },
+            day: addTime(picture.timetoken),
+          };
+          console.log('Picture Events', picture);
+          getMessages(picture.channel, msg);
         },
 
         signal: function (s) {
@@ -536,7 +606,7 @@ const ChatMessages = ({
       // Fetch messaged from pubnub history..............
 
       // if (messages < 1) {
-      //   getMessages(channels);
+      //   getLastMessages(channels);
       // }
 
       // console.log(channels);
@@ -551,27 +621,9 @@ const ChatMessages = ({
 
       // setChannel(channels);
     }
-  }, [subgroups, currentPracticeId]);
-
-  // useEffect(() => {
-  //   console.log(joinedPractices);
-  //   // isFetching ? setRefreshing(true) : setRefreshing(false);
-  //   // pubnub.getMessage('', (msg) => {
-  //   //   console.log(msg);
-  //   // });
-  //   // getMessages(
-  //   //   practiceDms &&
-  //   //     practiceDms.length &&
-  //   //     practiceDms.find((item) => item.practiceId === currentPracticeId)
-  //   //       .channelName,
-  //   //   10,
-  //   // );
-  // }, [pubnub]);
+  }, [subgroups, currentPracticeId, pubnub, allMessages.length < 1]);
 
   useEffect(() => {
-    // console.log(currentUser);
-    // practiceDms.length && getAllChannelMessages(practiceDms, subgroups);
-
     if (isDrawerOpen) {
       setStyle1('open');
       console.log('Open');
@@ -683,7 +735,7 @@ const ChatMessages = ({
                 practiceDms.find((item) => item.id === currentPracticeId)
               }
               allMessages={
-                practiceDms && allMessages
+                practiceDms
                   ? allMessages.find(
                       (it) =>
                         it.channel ===
@@ -700,6 +752,7 @@ const ChatMessages = ({
                       )
                     : null
                   : null
+                // dmMessage
               }
               practiceDms={practiceDms}
               subgroups={subgroups}

@@ -106,6 +106,11 @@ const ChatScreen = ({
   // const [channels] = useState();
   const [imageUri, setImageUri] = useState();
   const [messages, addMessages] = useState([]);
+  const [messagesLength, setMessagesLength] = useState({
+    old: 0,
+    new: 0,
+  });
+  const [errorMessage, setErrorMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState('');
   const [inputText, setInputText] = useState('');
@@ -169,17 +174,21 @@ const ChatScreen = ({
   //   pubnub.subscribe({ channels });
   // };
   const sendMessage = (data) => {
-    console.log('Channel name', channelName);
-    // console.log(data[0].text);
+    // console.log('Channel name', channelName);
     // console.log('SENDING____');
+    setErrorMessage('');
     setSending(true);
+    setInputText('');
+    setMessage(data);
+
     // chatRef.scrollToEnd();
     pubnub.setUUID(currentUser ? currentUser.chatId : 0);
     if (data) {
       pubnub.publish(
         {
           message: {
-            text: data[0].text,
+            // text: data[0].text,
+            text: data,
             userType: 'patient',
             profile: {
               id: currentUser.id,
@@ -191,10 +200,12 @@ const ChatScreen = ({
         (status, response) => {
           // setMessage('');
           // handle status, response
-          // console.log(status);
-          // console.log(response);
-          // console.log('SENT____');
-          setSending(false);
+          status.error
+            ? setErrorMessage("Couldn't send message")
+            : setErrorMessage('');
+          console.log('Status', status);
+          console.log('Response', response);
+          // console.log(oldLength, 'SENT____', messages.length);
         },
       );
     } else {
@@ -229,8 +240,8 @@ const ChatScreen = ({
         (status, response) => {
           // setMessage('');
           // handle status, response
-          // console.log(status);
-          // console.log(response);
+          console.log(status);
+          console.log(response);
           // console.log('SENT____');
           setSending(false);
         },
@@ -240,13 +251,13 @@ const ChatScreen = ({
     }
   };
 
-  const getOldMessages = useCallback((cha) => {
+  const getOldMessages = useCallback((cha, readyMessage) => {
     setRefreshing(true);
     console.log('=== GET OLD MESSAGES FROM CHANNEL =====: ', cha);
     const channelMsgs = allMessages.find((i) => i.channel === cha);
     // console.log(channelMsgs);
     const channels = [cha];
-    if (channelMsgs) {
+    if (channelMsgs && !readyMessage) {
       pubnub.fetchMessages(
         {
           channels: [channels[0]],
@@ -303,6 +314,12 @@ const ChatScreen = ({
                 // }
                 // cRef.scrollToEnd({ animated: true });
               }
+            } else {
+              console.log('Ready Message testing');
+              const newSavedMessages = allMessages.filter(
+                (i) => i.channel !== channelMsgs.channel,
+              );
+              setAllMessages([...newSavedMessages, channelMsgs]);
             }
             setLoader(false);
             setRefreshing(false);
@@ -333,68 +350,79 @@ const ChatScreen = ({
       );
     } else {
       console.log('Getting newer message');
-      pubnub.fetchMessages(
-        {
-          channels: [channels[0]],
-          count: 25,
-          end: time,
-        },
+      if (allMessages.length) {
+        const newChannelMsgs = allMessages.find((i) => i.channel === cha);
+        const newSavedMessages = allMessages.filter(
+          (i) => i.channel !== newChannelMsgs.channel,
+        );
 
-        (status, data) => {
-          if (status.statusCode === 200) {
-            console.log('=== GETTING MESSAGES FROM CHANNEL =====: ', cha);
-            // addMessage([...data.channels[channels]])
-            const addTime = (msg) => {
-              const unixTimestamp = msg.timetoken / 10000000;
-              const gmtDate = new Date(unixTimestamp * 1000);
-              const localeDateTime = gmtDate.toLocaleString();
-              // const time = localeDateTime.split(', ')[1];
-              // return checkAmPm(time.slice(0, -3));
-              return localeDateTime.split(', ')[0];
-            };
-            const msgs = data.channels[channels];
-            if (msgs.length) {
-              console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
-              const lst = msgs[msgs.length - 1].timetoken;
-              const fst = msgs[0].timetoken;
-              let allMsgs = msgs.map((item) =>
-                Object.assign(item, {
-                  _id: item.timetoken,
-                  user: { _id: item.uuid },
-                  day: addTime(item.timetoken),
-                }),
-              );
-              setAllMessages([
-                ...allMessages,
-                { channel: cha, fst, lst, messages: allMsgs },
-              ]);
+        // console.log('=== channelMsgs =====: ', channelMsgs);
+        // console.log('=== newSavedMessages =====: ', newSavedMessages);
+        setAllMessages([...newSavedMessages, newChannelMsgs]);
+      }
 
-              setRefreshing(false);
-            }
+      // pubnub.fetchMessages(
+      //   {
+      //     channels: [channels[0]],
+      //     count: 25,
+      //     end: time,
+      //   },
 
-            // pubnub.time((status, response)=>{
-            // 	if(!status.error){
+      //   (status, data) => {
+      //     if (status.statusCode === 200) {
+      //       console.log('=== GETTING MESSAGES FROM CHANNEL =====: ', cha);
+      //       // addMessage([...data.channels[channels]])
+      //       const addTime = (msg) => {
+      //         const unixTimestamp = msg.timetoken / 10000000;
+      //         const gmtDate = new Date(unixTimestamp * 1000);
+      //         const localeDateTime = gmtDate.toLocaleString();
+      //         // const time = localeDateTime.split(', ')[1];
+      //         // return checkAmPm(time.slice(0, -3));
+      //         return localeDateTime.split(', ')[0];
+      //       };
+      //       const msgs = data.channels[channels];
+      //       if (msgs.length) {
+      //         console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
+      //         const lst = msgs[msgs.length - 1].timetoken;
+      //         const fst = msgs[0].timetoken;
+      //         let allMsgs = msgs.map((item) =>
+      //           Object.assign(item, {
+      //             _id: item.timetoken,
+      //             user: { _id: item.uuid },
+      //             day: addTime(item.timetoken),
+      //           }),
+      //         );
+      //         setAllMessages([
+      //           ...allMessages,
+      //           { channel: cha, fst, lst, messages: allMsgs },
+      //         ]);
 
-            // 		pubnub.objects.setMemberships({
-            // 			channels: [{
-            // 				id: channels[0],
-            // 				custom: {
-            // 						lastReadTimetoken: response.timetoken,
-            // 				}
-            // 			}]
+      //         setRefreshing(false);
+      //       }
 
-            // 		})
+      // pubnub.time((status, response)=>{
+      // 	if(!status.error){
 
-            // 		dispatch(Actions.messagesCountUpdate(channels[0]))
-            // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+      // 		pubnub.objects.setMemberships({
+      // 			channels: [{
+      // 				id: channels[0],
+      // 				custom: {
+      // 						lastReadTimetoken: response.timetoken,
+      // 				}
+      // 			}]
 
-            // 	}
+      // 		})
 
-            // })
-            setRefreshing(false);
-          }
-        },
-      );
+      // 		dispatch(Actions.messagesCountUpdate(channels[0]))
+      // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+
+      // 	}
+
+      // })
+      setRefreshing(false);
+      // }
+      // },
+      // );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -412,6 +440,7 @@ const ChatScreen = ({
       //   console.log('REF__', chatRef);
       //   chatRef && chatRef.scrollToIndex({ animated: true, index: 20 });
       // }
+      setSending(false);
     }
     // console.log('Updated MESSAgE__', messages);
     //
@@ -426,7 +455,7 @@ const ChatScreen = ({
 
   useMemo(() => {
     // console.log('Group_SUGGEST', groupSuggest);
-    if (isFocused || type || group) {
+    if (isFocused || (isFocused && type) || (isFocused && group)) {
       // console.log(
       //   'Chat Ref___',
       //   allMessages.find((item) => item.channel === channelName).messages,
@@ -434,7 +463,7 @@ const ChatScreen = ({
       if (
         allMessages.find((item) => item.channel === channelName) &&
         allMessages.find((item) => item.channel === channelName).messages
-          .length < 10
+          .length <= 10
       ) {
         console.log('message is less than 10');
         setLoader(true);
@@ -444,8 +473,12 @@ const ChatScreen = ({
       //   setLoader(true);
       // }
       else {
-        getOldMessages(channelName);
-        setLoader(false);
+        console.log('message is less not than 10', channelName);
+        // setLoader(false);
+        setLoader(true);
+        // getOldMessages(channelName);
+        const readyMessage = true;
+        getOldMessages(channelName, readyMessage);
       }
       // allMessages.find((item) => item.channel === channelName)
       //   ? setGroupSuggest(false)
@@ -751,294 +784,436 @@ const ChatScreen = ({
           // isLoading={isLoading}
         />
 
-        {!loader ? (
-          <View style={{ flex: 1, marginTop: 50 }}>
-            <GiftedChat
-              // ref={(ref) => setChatRef(ref)}
-              // extraData={generatedItems}
-              // shouldUpdateMessage={(props, nextProps) => {
-              //   generatedItems(props);
-              //   // return props.extraData.someData !== nextProps.extraData.someData;
-              // }}
-              messages={messages.length ? [...messages].reverse() : []}
-              onSend={(text, shouldResetInputToolbar) => {
-                // onSend(messages)
-                setMessage(text);
-                sendMessage(text);
-                //  values.message = '';
-              }}
-              // scrollToBottom={true}
-              scrollToBottom={true}
-              scrollToBottomComponent={() => (
-                <View>
-                  <Icon
-                    name={'chevrons-down'}
-                    type={'feather'}
-                    color={
-                      colors.mode === 'light' ? colors.text_1 : colors.text
-                    }
-                    size={normalize(18)}
-                    style={{
-                      color: colors.text,
-                      // alignSelf: 'center',
-                    }}
-                  />
-                </View>
-              )}
-              scrollToBottomStyle={{
-                backgroundColor: colors.background_1,
-              }}
-              // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
-              renderMessage={(props, index) => {
-                // console.log('MOMENT__', moment().format('DD/MM/YY'));
-                // console.log(
-                //   'TODAY__ ',
-                //   moment().format('DD/MM/YY'),
-                //   moment().add(-1, 'days').format('DD/MM/YY'),
-                //   'Tester___',
-                //   moment(props.currentMessage.timetoken / 1e4).format('DD/MM/YY'),
-                // );
-                if (messages.length) {
-                  return (
-                    //ANCHOR
-                    <>
-                      <ChatBubble
-                        id={props.currentMessage.timetoken}
-                        message={props.currentMessage}
-                        navigation={navigation}
-                        practice={practice}
-                        groupPractice={groupPractice}
-                        practiceDms={practiceDms}
-                        patientChatId={currentUser ? currentUser.chatId : 0}
-                        practiceStaff={practiceStaffs}
-                      />
-                      {messages.length &&
-                        getUniqueListBy(messages, 'day').some(
-                          (item) =>
-                            item.timetoken === props.currentMessage.timetoken,
-                        ) && (
-                          <>
-                            {moment().format('DD/MM/YY') ===
-                              moment(
-                                props.currentMessage.timetoken / 1e4,
-                              ).format('DD/MM/YY') ||
-                            moment().add(-1, 'days').format('DD/MM/YY') ===
+        <View style={{ flex: 1, marginTop: 50 }}>
+          <GiftedChat
+            // ref={(ref) => setChatRef(ref)}
+            // extraData={generatedItems}
+            // shouldUpdateMessage={(props, nextProps) => {
+            //   generatedItems(props);
+            //   // return props.extraData.someData !== nextProps.extraData.someData;
+            // }}
+            messages={messages.length ? [...messages].reverse() : []}
+            // onSend={(text, shouldResetInputToolbar) => {
+            //   // onSend(messages)
+            //   setMessage(text);
+            //   sendMessage(text);
+            //   //  values.message = '';
+            // }}
+            onPressActionButton={() => console.log('actiossss-----')}
+            // scrollToBottom={true}
+            scrollToBottom={true}
+            scrollToBottomComponent={() => (
+              <View>
+                <Icon
+                  name={'chevrons-down'}
+                  type={'feather'}
+                  color={colors.mode === 'light' ? colors.text_1 : colors.text}
+                  size={normalize(18)}
+                  style={{
+                    color: colors.text,
+                    // alignSelf: 'center',
+                  }}
+                />
+              </View>
+            )}
+            scrollToBottomStyle={{
+              backgroundColor: colors.background_1,
+            }}
+            // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
+            renderMessage={(props, index) => {
+              // console.log('MOMENT__', moment().format('DD/MM/YY'));
+              // console.log(
+              //   'TODAY__ ',
+              //   moment().format('DD/MM/YY'),
+              //   moment().add(-1, 'days').format('DD/MM/YY'),
+              //   'Tester___',
+              //   moment(props.currentMessage.timetoken / 1e4).format('DD/MM/YY'),
+              // );
+              if (messages.length) {
+                return (
+                  //ANCHOR
+                  <>
+                    <ChatBubble
+                      id={props.currentMessage.timetoken}
+                      message={props.currentMessage}
+                      navigation={navigation}
+                      practice={practice}
+                      groupPractice={groupPractice}
+                      practiceDms={practiceDms}
+                      patientChatId={currentUser ? currentUser.chatId : 0}
+                      practiceStaff={practiceStaffs}
+                    />
+                    {messages.length &&
+                      getUniqueListBy(messages, 'day').some(
+                        (item) =>
+                          item.timetoken === props.currentMessage.timetoken,
+                      ) && (
+                        <>
+                          {moment().format('DD/MM/YY') ===
+                            moment(props.currentMessage.timetoken / 1e4).format(
+                              'DD/MM/YY',
+                            ) ||
+                          moment().add(-1, 'days').format('DD/MM/YY') ===
+                            moment(props.currentMessage.timetoken / 1e4).format(
+                              'DD/MM/YY',
+                            ) ? (
+                            <View
+                              style={{
+                                backgroundColor: colors.background_1,
+                                marginTop: 5,
+                                paddingVertical: 5,
+                                paddingHorizontal: 12,
+                                borderRadius: 10,
+                                minWidth: 50,
+                                alignSelf: 'center',
+                              }}>
+                              {moment().format('DD/MM/YY') ===
                               moment(
                                 props.currentMessage.timetoken / 1e4,
                               ).format('DD/MM/YY') ? (
-                              <View
-                                style={{
-                                  backgroundColor: colors.background_1,
-                                  marginTop: 5,
-                                  paddingVertical: 5,
-                                  paddingHorizontal: 12,
-                                  borderRadius: 10,
-                                  minWidth: 50,
-                                  alignSelf: 'center',
-                                }}>
-                                {moment().format('DD/MM/YY') ===
-                                moment(
+                                <Text
+                                  style={{
+                                    color: colors.text,
+                                    fontSize: normalize(10.5),
+                                    fontFamily: 'SofiaProRegular',
+                                    textAlign: 'center',
+                                  }}>
+                                  Today
+                                </Text>
+                              ) : (
+                                <Text
+                                  style={{
+                                    color: colors.text,
+                                    fontSize: normalize(10.5),
+                                    fontFamily: 'SofiaProRegular',
+                                    textAlign: 'center',
+                                  }}>
+                                  Yesterday
+                                </Text>
+                              )}
+                            </View>
+                          ) : (
+                            <Day
+                              {...props}
+                              textStyle={{
+                                color: colors.text,
+                                fontSize: normalize(10.5),
+                                fontFamily: 'SofiaProRegular',
+                                textAlign: 'center',
+                              }}
+                              wrapperStyle={{
+                                marginTop: 5,
+                                backgroundColor: colors.background_1,
+                                paddingVertical: 5,
+                                paddingHorizontal: 12,
+                                borderRadius: 10,
+                              }}
+                              currentMessage={{
+                                createdAt: new Date(
                                   props.currentMessage.timetoken / 1e4,
-                                ).format('DD/MM/YY') ? (
-                                  <Text
-                                    style={{
-                                      color: colors.text,
-                                      fontSize: normalize(10.5),
-                                      fontFamily: 'SofiaProRegular',
-                                      textAlign: 'center',
-                                    }}>
-                                    Today
-                                  </Text>
-                                ) : (
-                                  <Text
-                                    style={{
-                                      color: colors.text,
-                                      fontSize: normalize(10.5),
-                                      fontFamily: 'SofiaProRegular',
-                                      textAlign: 'center',
-                                    }}>
-                                    Yesterday
-                                  </Text>
-                                )}
-                              </View>
-                            ) : (
-                              <Day
-                                {...props}
-                                textStyle={{
-                                  color: colors.text,
-                                  fontSize: normalize(10.5),
-                                  fontFamily: 'SofiaProRegular',
-                                  textAlign: 'center',
-                                }}
-                                wrapperStyle={{
-                                  marginTop: 5,
-                                  backgroundColor: colors.background_1,
-                                  paddingVertical: 5,
-                                  paddingHorizontal: 12,
-                                  borderRadius: 10,
-                                }}
-                                currentMessage={{
-                                  createdAt: new Date(
-                                    props.currentMessage.timetoken / 1e4,
-                                  ),
-                                }}
-                              />
-                            )}
-                          </>
-                        )}
-                    </>
-                  );
-                } else {
-                  return <></>;
-                }
-              }}
-              renderChatEmpty={() => (
-                <View
-                  style={{
-                    marginVertical: 20,
-                    marginHorizontal: 30,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    transform: [{ scaleY: -1 }],
-                  }}>
-                  <Text
-                    style={{
-                      color:
-                        colors.mode === 'dark'
-                          ? colors.quinary
-                          : colors.primary,
-                      fontSize: normalize(12),
-                      fontFamily: 'SofiaProLight',
-                      backgroundColor: colors.background_1,
-                      borderRadius: 10,
-                      paddingVertical: 5,
-                      paddingHorizontal: 10,
-                      textAlign: 'center',
-                    }}>
-                    {type === 'dm'
-                      ? `This is the beginning of your first message, chatting with ${practice.practiceName}`
-                      : `This is the beginning and the first message in ${group.name}`}
-                  </Text>
-                </View>
-              )}
-              user={{
-                _id: 1,
-              }}
-              listViewProps={{
-                style: {
-                  marginBottom: showAccessories ? 65 : 10,
-                },
-              }}
-              // isTyping={true}
-              textInputProps={{
-                onFocus: () => setShowEmoji(false),
-              }}
-              text={inputText}
-              onInputTextChanged={(text) => setInputText(text)}
-              // focusTextInput={true}
-              textInputStyle={{
-                backgroundColor: colors.background,
-                color: colors.text,
-                alignSelf: 'center',
-                fontFamily: 'SofiaProRegular',
-                fontSize: normalize(14),
-                alignItems: 'center',
-                marginTop: 10,
-              }}
-              // renderInputToolbar={() => <></>}
-              renderFooter={() =>
-                sending && (
-                  <View
-                    style={{
-                      marginTop: 10,
-                      marginBottom: 30,
-                      justifyContent: 'flex-end',
-                      width: appwidth,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      style={{
-                        color: colors.text,
-                        fontFamily: 'SofiaProRegular-Italic',
-                        fontSize: normalize(14),
-                      }}>
-                      Sending...
-                    </Text>
-                    <ActivityIndicator
-                      animating={true}
-                      size={normalize(15)}
-                      color={colors.text}
-                      style={{ alignSelf: 'center' }}
-                    />
-                  </View>
-                )
+                                ),
+                              }}
+                            />
+                          )}
+                        </>
+                      )}
+                  </>
+                );
+              } else {
+                return <></>;
               }
-              renderInputToolbar={(props) => (
-                <InputToolbar
-                  {...props}
-                  renderAccessory={() =>
-                    showAccessories ? renderAccessory() : null
-                  }
-                  renderActions={renderActions}
-                  renderSend={renderSender}
-                  accessoryStyle={{ height: showAccessories ? null : 0 }}
-                  containerStyle={{
-                    // width: windowWidth - 60,
-                    backgroundColor: colors.background,
-                    // marginHorizontal: 20,
-                    borderTopColor: colors.background_1,
-                    borderBottomColor: colors.background_1,
-                    borderWidth: 0.6,
-                    borderTopWidth: 1,
-                    paddingVertical: 2,
-                    // marginTop: 15,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                />
-              )}
-              keyboardShouldPersistTaps={false}
-              // maxInputLength={20}
-              inverted={true}
-              renderLoadEarlier={(props) => (
-                <LoadEarlier
-                  {...props}
-                  label="Load earlier messages"
-                  wrapperStyle={{ backgroundColor: 'transparent' }}
-                  textStyle={{
-                    fontSize: normalize(11),
-                    textAlign: 'center',
-                    fontFamily: 'SofiaProRegular',
+            }}
+            renderChatEmpty={() => (
+              <View
+                style={{
+                  marginVertical: 20,
+                  marginHorizontal: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  transform: [{ scaleY: -1 }],
+                }}>
+                <Text
+                  style={{
+                    color:
+                      colors.mode === 'dark' ? colors.quinary : colors.primary,
+                    fontSize: normalize(12),
+                    fontFamily: 'SofiaProLight',
                     backgroundColor: colors.background_1,
-                    paddingVertical: 6,
-                    paddingHorizontal: 13,
-                    borderRadius: 15,
-                    color: colors.text,
-                  }}
-                  activityIndicatorStyle={{ padding: 10 }}
-                  activityIndicatorColor={
-                    // colors.primary
-                    colors.text
+                    borderRadius: 10,
+                    paddingVertical: 5,
+                    paddingHorizontal: 10,
+                    textAlign: 'center',
+                  }}>
+                  {type === 'dm'
+                    ? `This is the beginning of your first message, chatting with ${practice.practiceName}`
+                    : `This is the beginning and the first message in ${group.name}`}
+                </Text>
+              </View>
+            )}
+            user={{
+              _id: 1,
+            }}
+            listViewProps={{
+              style: {
+                marginBottom: showAccessories ? 65 : 10,
+              },
+            }}
+            // isTyping={true}
+            textInputProps={{
+              onFocus: () => setShowEmoji(false),
+            }}
+            text={inputText}
+            onInputTextChanged={(text) => setInputText(text)}
+            // focusTextInput={true}
+            textInputStyle={{
+              backgroundColor: colors.background,
+              color: colors.text,
+              alignSelf: 'center',
+              fontFamily: 'SofiaProRegular',
+              fontSize: normalize(14),
+              alignItems: 'center',
+              marginTop: 10,
+            }}
+            // renderInputToolbar={() => <></>}
+            renderFooter={(props) => {
+              return (
+                <View style={{ width: appwidth, alignSelf: 'center' }}>
+                  {sending || errorMessage ? (
+                    <View
+                      style={{
+                        alignSelf: 'flex-end',
+                        flexDirection: 'column',
+                        maxWidth: appwidth - 50,
+                        marginVertical: 20,
+                      }}>
+                      <View
+                        style={{
+                          // minHeight: 50,
+                          backgroundColor: errorMessage
+                            ? 'red'
+                            : colors.primary,
+                          alignItems: 'flex-start',
+                          // width: 80,
+                          // maxWidth: appwidth - 80,
+                          justifyContent: 'center',
+                          borderTopLeftRadius: 20,
+                          borderTopRightRadius: 20,
+                          borderBottomRightRadius: 20,
+                          padding: 15,
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: normalize(12),
+                            fontFamily: 'SofiaProRegular',
+                            color: 'white',
+                            textAlign: 'left',
+                          }}>
+                          {errorMessage ? errorMessage : message}
+                        </Text>
+                      </View>
+                      {/* {message.messageType === 4 ? (
+                    <View
+                      style={{
+                        height: 252,
+                        backgroundColor: colors.primary,
+                        alignItems: 'center',
+                        width: 252,
+                        justifyContent: 'center',
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        borderBottomRightRadius: 20,
+                      }}>
+                      {message.message.file.name.match(
+                        /.(jpg|jpeg|png|gif)$/i,
+                      ) ? (
+                        <FastImage
+                          source={{
+                            uri: pubnub.getFileUrl({
+                              channel: message.channel,
+                              id: message.message.file.id,
+                              name: message.message.file.name,
+                            }),
+                            priority: FastImage.priority.high,
+                          }}
+                          style={[
+                            {
+                              width: 250,
+                              height: 250,
+                              backgroundColor: colors.background_1,
+                              borderTopLeftRadius: 20,
+                              borderTopRightRadius: 20,
+                              borderBottomRightRadius: 20,
+                            },
+                            // currentPracticeId === practice.id && {
+                            //   borderWidth: 1,
+                            //   borderColor: colors.text,
+                            // },
+                          ]}
+                          resizeMode={FastImage.resizeMode.cover}>
+
+                        </FastImage>
+                      ) : (
+                        <Text>Doc</Text>
+                      )}
+                    </View>
+                  ) : (
+                    <View
+                      style={{
+                        // minHeight: 50,
+                        backgroundColor: colors.primary,
+                        alignItems: 'flex-start',
+                        // width: 80,
+                        // maxWidth: appwidth - 80,
+                        justifyContent: 'center',
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        borderBottomRightRadius: 20,
+                        padding: 15,
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: normalize(12),
+                          fontFamily: 'SofiaProRegular',
+                          color: 'white',
+                          textAlign: 'left',
+                        }}>
+                        {message.message.text && message.message.text}
+                      </Text>
+                    </View>
+                  )} */}
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignSelf: 'flex-end',
+                          alignItems: 'center',
+                          paddingRight: 10,
+                          paddingTop: 3,
+                          textAlign: 'right',
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: normalize(10),
+                            fontFamily: 'SofiaProLight',
+                            color: colors.text,
+                          }}>
+                          {errorMessage
+                            ? '⚠️ Sorry, Internet error...'
+                            : 'Sending...'}
+                        </Text>
+                        <ActivityIndicator
+                          animating={errorMessage ? false : true}
+                          size={normalize(10)}
+                          color={colors.text}
+                          style={{
+                            alignSelf: 'center',
+                            paddingLeft: 10,
+                            textAlign: 'right',
+                          }}
+                        />
+                      </View>
+                    </View>
+                  ) : null}
+                </View>
+              );
+            }}
+            renderInputToolbar={(props) => (
+              <InputToolbar
+                {...props}
+                renderAccessory={() =>
+                  showAccessories ? renderAccessory() : null
+                }
+                renderActions={renderActions}
+                renderSend={
+                  (messageProps) => {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => sendMessage(messageProps.text)}
+                        style={{
+                          alignSelf: 'center',
+                          marginRight: 10,
+                        }}>
+                        <View
+                          style={{
+                            backgroundColor: colors.primary,
+                            height: 35,
+                            width: 35,
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            marginLeft: 10,
+                            borderRadius: 10,
+                          }}>
+                          <Icon
+                            name={'ios-send'}
+                            type={'ionicon'}
+                            color={'white'}
+                            size={normalize(18)}
+                            style={{
+                              alignSelf: 'center',
+                            }}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    );
                   }
-                  activityIndicatorSize={normalize(25)}
-                />
-              )}
-              // renderLoading
-              onLoadEarlier={() => {
-                setRefreshing(refreshing);
-                getOldMessages(channelName);
-              }}
-              isLoadingEarlier={refreshing}
-              loadEarlier={messages.length >= 10 ? true : false}
-              infiniteScroll={true}
-              maxComposerHeight={100}
-              alignTop={true}
+                  // renderSender
+                }
+                accessoryStyle={{ height: showAccessories ? null : 0 }}
+                containerStyle={{
+                  // width: windowWidth - 60,
+                  backgroundColor: colors.background,
+                  // marginHorizontal: 20,
+                  borderTopColor: colors.background_1,
+                  borderBottomColor: colors.background_1,
+                  borderWidth: 0.6,
+                  borderTopWidth: 1,
+                  paddingVertical: 2,
+                  // marginTop: 15,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              />
+            )}
+            keyboardShouldPersistTaps={false}
+            // maxInputLength={20}
+            inverted={true}
+            renderLoadEarlier={(props) => (
+              <LoadEarlier
+                {...props}
+                label="Load earlier messages"
+                wrapperStyle={{ backgroundColor: 'transparent' }}
+                textStyle={{
+                  fontSize: normalize(11),
+                  textAlign: 'center',
+                  fontFamily: 'SofiaProRegular',
+                  backgroundColor: colors.background_1,
+                  paddingVertical: 6,
+                  paddingHorizontal: 13,
+                  borderRadius: 15,
+                  color: colors.text,
+                }}
+                activityIndicatorStyle={{ padding: 10 }}
+                activityIndicatorColor={
+                  // colors.primary
+                  colors.text
+                }
+                activityIndicatorSize={normalize(25)}
+              />
+            )}
+            // renderLoading
+            onLoadEarlier={() => {
+              setRefreshing(refreshing);
+              getOldMessages(channelName);
+            }}
+            isLoadingEarlier={refreshing}
+            loadEarlier={messages.length >= 5 ? true : false}
+            infiniteScroll={true}
+            maxComposerHeight={100}
+            alignTop={true}
 
-              // renderChatFooter={}
-            />
+            // renderChatFooter={}
+          />
 
-            {/* <FlatList
+          {/* <FlatList
           ref={(ref) => setChatRef(ref)}
           // keyExtractor={(item) => item.id.toString()}
           keyboardDismissMode="on-drag"
@@ -1111,9 +1286,10 @@ const ChatScreen = ({
           // extraData={selected}
           // ListFooterComponent={}
         /> */}
-            {/* //ANCHOR */}
-          </View>
-        ) : (
+          {/* //ANCHOR */}
+        </View>
+
+        {isLoading && (
           <ActivityIndicator
             animating={true}
             size={normalize(30)}

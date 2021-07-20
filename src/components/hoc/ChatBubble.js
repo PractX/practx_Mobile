@@ -51,6 +51,13 @@ const ChatBubble = ({
     return moment(newDate).format('ddd hh:mm a');
   };
   // console.log(addTime(message).split(', ')[0]);
+  // console.log(
+  //   'Null Staff',
+  //   message.message,
+  //   'UCHE ERRORRRR--',
+  //   // message.message.staffId,
+  //   // practiceStaff.find((staff) => staff.id === message.message.staffId),
+  // );
   return (
     <View key={index} style={{ width: appwidth, alignSelf: 'center' }}>
       {/* <Text>{addTime(message).split(', ')[0]}</Text> */}
@@ -170,10 +177,24 @@ const ChatBubble = ({
                   ? practice.logo ||
                     'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
                   : practiceStaff.length
-                  ? practiceStaff.find(
-                      (staff) => staff.id === message.message.staffId,
-                    ).avatar ||
-                    'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
+                  ? message.message.file
+                    ? practiceStaff.find(
+                        (staff) => staff.id === message.message.message.staffId,
+                      )
+                      ? practiceStaff.find(
+                          (staff) =>
+                            staff.id === message.message.message.staffId,
+                        ).avatar ||
+                        'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
+                      : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
+                    : practiceStaff.find(
+                        (staff) => staff.id === message.message.staffId,
+                      )
+                    ? practiceStaff.find(
+                        (staff) => staff.id === message.message.staffId,
+                      ).avatar ||
+                      'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
+                    : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
                   : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg',
             }}
             style={[

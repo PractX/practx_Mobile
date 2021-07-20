@@ -1,0 +1,128 @@
+const getMessages = (cha) => {
+  console.log('=== GET MESSAGES FROM CHANNEL =====: ', cha);
+  console.log('ALL____', allMessages);
+
+  const channelMsgs = allMessages.find((i) => i.channel === cha);
+  const channels = [cha];
+  console.log('Current Date____', time);
+  if (channelMsgs) {
+    console.log('Goods___');
+    pubnub.fetchMessages(
+      {
+        channels: [channels[0]],
+        start: channelMsgs.lst + 1,
+        count: 1,
+        end: time,
+      },
+
+      async (status, data) => {
+        if (status.statusCode === 200) {
+          console.log('=== FOUND MESSAGES FROM CHANNEL =====: ', cha);
+          // addMessage([...channelMsgs.messages, ...data.channels[channels]])
+          const msgs = data.channels[channels];
+          console.log('=== FOUND NEW MESSAGES FROM CHANNEL =====: ', cha);
+
+          console.log('=== msgs =====: ', msgs);
+          if (msgs.length && msgs[0].timetoken !== channelMsgs.lst) {
+            channelMsgs.lst = msgs[msgs.length - 1].timetoken;
+            await msgs.map((item) =>
+              Object.assign(item, {
+                _id: item.timetoken,
+                user: { _id: item.uuid },
+                day: addTime(item.timetoken),
+              }),
+            );
+            channelMsgs.messages = [...channelMsgs.messages, ...msgs];
+            // channelMsgs.messages = [...msgs]
+            const newSavedMessages = allMessages.filter(
+              (i) => i.channel !== channelMsgs.channel,
+            );
+
+            console.log('=== channelMsgs =====: ', channelMsgs);
+            console.log('=== newSavedMessages =====: ', newSavedMessages);
+            console.log('=== All messages =====: ', allMessages);
+            setAllMessages([...newSavedMessages, channelMsgs]);
+          }
+
+          // pubnub.time((status, response)=>{
+          // 	if(!status.error){
+
+          // 		pubnub.objects.setMemberships({
+          // 			channels: [{
+          // 				id: channels[0],
+          // 				custom: {
+          // 						lastReadTimetoken: response.timetoken,
+          // 				}
+          // 			}]
+
+          // 		})
+
+          // 		dispatch(Actions.messagesCountUpdate(channels[0]))
+          // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+
+          // 	}
+
+          // })
+        }
+      },
+    );
+  } else {
+    pubnub.fetchMessages(
+      {
+        channels: [channels[0]],
+        count: 25,
+        end: time,
+      },
+
+      (status, data) => {
+        if (status.statusCode === 200) {
+          console.log('=== GETTING MESSAGES FROM CHANNEL =====: ', cha);
+          // addMessage([...data.channels[channels]])
+          const msgs = data.channels[channels];
+          if (msgs.length) {
+            console.log('=== GET ALL MESSAGES FROM CHANNEL =====: ', cha);
+            const lst = msgs[msgs.length - 1].timetoken;
+            const fst = msgs[0].timetoken;
+            let allMsgs = msgs.map((item) =>
+              Object.assign(item, {
+                _id: item.timetoken,
+                user: { _id: item.uuid },
+                day: addTime(item.timetoken),
+              }),
+            );
+            setAllMessages([
+              ...allMessages,
+              { channel: cha, fst, lst, messages: allMsgs },
+            ]);
+          }
+
+          // pubnub.time((status, response)=>{
+          // 	if(!status.error){
+
+          // 		pubnub.objects.setMemberships({
+          // 			channels: [{
+          // 				id: channels[0],
+          // 				custom: {
+          // 						lastReadTimetoken: response.timetoken,
+          // 				}
+          // 			}]
+
+          // 		})
+
+          // 		dispatch(Actions.messagesCountUpdate(channels[0]))
+          // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
+
+          // 	}
+
+          // })
+        }
+      },
+    );
+  }
+
+  pubnub.subscribe({ channels });
+
+  return () => {
+    pubnub.unsubscribeAll();
+  };
+};

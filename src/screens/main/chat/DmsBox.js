@@ -26,6 +26,7 @@ const DmsBox = ({
   const [newMessageTime, setNewMessageTime] = useState('');
   const d = new Date();
   const time = d.getTime();
+  const [dmMessage, setDmMessage] = useState(null);
   // const addTime = (message) => {
 
   // };
@@ -179,9 +180,7 @@ const DmsBox = ({
                     /(\r\n|\n|\r)/gm,
                     '',
                   )
-              : `ℹ️ Chat with ${
-                  item && item.practiceName
-                }`}
+              : `ℹ️ Chat with ${item && item.practiceName}`}
           </Text>
         </TouchableOpacity>
       </View>

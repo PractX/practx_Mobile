@@ -30,7 +30,7 @@ const GroupBox = ({
   const d = new Date();
   const time = d.getTime();
 
-  console.log('The whole Item', item);
+  // console.log('The whole Item', item);
   // const addTime = (message) => {
 
   // };

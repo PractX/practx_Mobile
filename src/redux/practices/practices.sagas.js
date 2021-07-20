@@ -286,7 +286,7 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
         const fold = willChatWithSubgroup(practiceId, element.id, token).then(
           (res) => res,
         );
-        console.log('Started ++++ subgroups', fold);
+        // console.log('Started ++++ subgroups', fold);
         // subgroupsArr.push(fold);
       });
 
@@ -333,7 +333,7 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
 
 async function willChatWithSubgroup(practiceId, subgroupId, token) {
   // const currentPracticeId = yield select(havePracticeId);
-  console.log(token);
+  // console.log(token);
   try {
     const result = await chatWithSubgroupApi(
       practiceId,
@@ -366,8 +366,8 @@ async function willChatWithSubgroup(practiceId, subgroupId, token) {
 }
 
 async function getAllSubgroup(token, practiceId, allSubGroups) {
-  console.log("All sub ----", allSubGroups)
-  console.log("practice Id", practiceId)
+  // console.log("All sub ----", allSubGroups)
+  // console.log("practice Id", practiceId)
   // const currentPracticeId = yield select(havePracticeId);
   try {
     const result = await getAllSubgroupApi(token).then(function (response) {
@@ -377,14 +377,14 @@ async function getAllSubgroup(token, practiceId, allSubGroups) {
       const practice = result.subgroupChats.practices.find(
         (practice) => practice.id === practiceId,
       );
-      console.log('All Subgroups chat', result);
-      
-      console.log(
-        'Single practice', practice, "Find Practices",
-        result.subgroupChats.practices.find(
-          (practice) => practice.id === practiceId,
-        ),
-      );
+      // console.log('All Subgroups chat', result);
+
+      // console.log(
+      //   'Single practice', practice, "Find Practices",
+      //   result.subgroupChats.practices.find(
+      //     (practice) => practice.id === practiceId,
+      //   ),
+      // );
       let data = [
         ...allSubGroups,
         {
