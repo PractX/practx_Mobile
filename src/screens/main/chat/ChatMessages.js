@@ -92,6 +92,7 @@ const ChatMessages = ({
   const [showStaffs, setShowStaffs] = useState(false);
   const d = new Date();
   const time = d.getTime();
+  const [newMsgAvailable, setNewMsgAvailable] = useState(false);
 
   const addTime = (timetoken) => {
     const unixTimestamp = timetoken / 10000000;
@@ -241,6 +242,7 @@ const ChatMessages = ({
         console.log('=== channelMsgs =====: ', channelMsgs);
         console.log('=== newSavedMessages =====: ', newSavedMessages);
         setAllMessages([...newSavedMessages, channelMsgs]);
+        setNewMsgAvailable(false);
 
         // pubnub.time((status, response)=>{
         // 	if(!status.error){
@@ -272,6 +274,7 @@ const ChatMessages = ({
             messages: [msg],
           },
         ]);
+        setNewMsgAvailable(true);
 
         // pubnub.time((status, response)=>{
         // 	if(!status.error){
@@ -303,80 +306,80 @@ const ChatMessages = ({
     [practiceDms.length, subgroups.length, allMessages],
   );
 
-  const getLastMessages = (cha, msg) => {
-    console.log('=== newSavedMessages GET MESSAGES FROM CHANNEL =====: ', cha);
-    //   console.log('ALL____', allMessages);
-    // console.log(
-    //   '=== GET ALLL LAST MESSAGE FROM CHANNEL =====: ',
-    //   cha,
-    //   msg,
-    //   allMessages,
-    // );
-    const channelMsgs = allMessages.find((i) => i.channel === cha);
-    let allMsgs = allMessages;
-    if (channelMsgs) {
-      channelMsgs.lst = msg.timetoken;
-      channelMsgs.messages = [...channelMsgs.messages, msg];
-      // channelMsgs.messages = [...msgs]
-      const newallMessages = allMessages.filter(
-        (i) => i.channel !== channelMsgs.channel,
-      );
-      allMsgs = [channelMsgs, ...newallMessages];
-      setAllMessages(allMsgs);
-    } else {
-      allMsgs = [
-        {
-          channel: cha,
-          fst: msg.timetoken,
-          lst: msg.timetoken,
-          messages: [msg],
-        },
-        ...allMsgs,
-      ];
-      setAllMessages(allMsgs);
-    }
-    // setLastScrollTop((prev) => {
-    //   if (prev && prev.find((i) => i.channel === cha)) {
-    //     return [
-    //       ...prev.filter((i) => i.channel !== cha),
-    //       { channel: cha, lastScrollTop: 0 },
-    //     ];
-    //   }
-    //   return [...prev, { channel: cha, lastScrollTop: 0 }];
-    // });
-    // let newDMS = [];
-    // let newGMS = [];
-    // let subgroupsCha = [];
-    // subgroups
-    //   .map((l) => l.subgroupChats)
-    //   .map(
-    //     (k) => k.length && k.map((a) => subgroupsCha.push(a.PatientSubgroup)),
-    //   );
-    // const sorted = allMsgs.sort((a, b) => Number(b.lst) - Number(a.lst));
-    // sorted.map((i) => {
-    //   // const d = dms.find(j => j.channelName === i.channel)
-    //   if (i.type === 'dm') {
-    //     newDMS.push(dms.find((j) => j.Dm.channelName === i.channel));
-    //   }
-    //   if (i.type === 'gm') {
-    //     newGMS.push(subgroupsCha.find((j) => j.channelName === i.channel));
-    //   }
-    // });
-    // console.log("=== Sort =====: ", allMsgs, dms, [
-    //   ...newDMS,
-    //   ...dms.filter(
-    //     (i) => !sorted.find((j) => j.channel === i.Dm.channelName)
-    //   ),
-    // ]);
-    // dispatch(
-    //   Actions.requestDMSSuccess([
-    //     ...newDMS,
-    //     ...dms.filter(
-    //       (i) => !sorted.find((j) => j.channel === i.Dm.channelName)
-    //     ),
-    //   ])
-    // );
-  };
+  // const getLastMessages = (cha, msg) => {
+  //   console.log('=== newSavedMessages GET MESSAGES FROM CHANNEL =====: ', cha);
+  //   //   console.log('ALL____', allMessages);
+  //   // console.log(
+  //   //   '=== GET ALLL LAST MESSAGE FROM CHANNEL =====: ',
+  //   //   cha,
+  //   //   msg,
+  //   //   allMessages,
+  //   // );
+  //   const channelMsgs = allMessages.find((i) => i.channel === cha);
+  //   let allMsgs = allMessages;
+  //   if (channelMsgs) {
+  //     channelMsgs.lst = msg.timetoken;
+  //     channelMsgs.messages = [...channelMsgs.messages, msg];
+  //     // channelMsgs.messages = [...msgs]
+  //     const newallMessages = allMessages.filter(
+  //       (i) => i.channel !== channelMsgs.channel,
+  //     );
+  //     allMsgs = [channelMsgs, ...newallMessages];
+  //     setAllMessages(allMsgs);
+  //   } else {
+  //     allMsgs = [
+  //       {
+  //         channel: cha,
+  //         fst: msg.timetoken,
+  //         lst: msg.timetoken,
+  //         messages: [msg],
+  //       },
+  //       ...allMsgs,
+  //     ];
+  //     setAllMessages(allMsgs);
+  //   }
+  //   // setLastScrollTop((prev) => {
+  //   //   if (prev && prev.find((i) => i.channel === cha)) {
+  //   //     return [
+  //   //       ...prev.filter((i) => i.channel !== cha),
+  //   //       { channel: cha, lastScrollTop: 0 },
+  //   //     ];
+  //   //   }
+  //   //   return [...prev, { channel: cha, lastScrollTop: 0 }];
+  //   // });
+  //   // let newDMS = [];
+  //   // let newGMS = [];
+  //   // let subgroupsCha = [];
+  //   // subgroups
+  //   //   .map((l) => l.subgroupChats)
+  //   //   .map(
+  //   //     (k) => k.length && k.map((a) => subgroupsCha.push(a.PatientSubgroup)),
+  //   //   );
+  //   // const sorted = allMsgs.sort((a, b) => Number(b.lst) - Number(a.lst));
+  //   // sorted.map((i) => {
+  //   //   // const d = dms.find(j => j.channelName === i.channel)
+  //   //   if (i.type === 'dm') {
+  //   //     newDMS.push(dms.find((j) => j.Dm.channelName === i.channel));
+  //   //   }
+  //   //   if (i.type === 'gm') {
+  //   //     newGMS.push(subgroupsCha.find((j) => j.channelName === i.channel));
+  //   //   }
+  //   // });
+  //   // console.log("=== Sort =====: ", allMsgs, dms, [
+  //   //   ...newDMS,
+  //   //   ...dms.filter(
+  //   //     (i) => !sorted.find((j) => j.channel === i.Dm.channelName)
+  //   //   ),
+  //   // ]);
+  //   // dispatch(
+  //   //   Actions.requestDMSSuccess([
+  //   //     ...newDMS,
+  //   //     ...dms.filter(
+  //   //       (i) => !sorted.find((j) => j.channel === i.Dm.channelName)
+  //   //     ),
+  //   //   ])
+  //   // );
+  // };
 
   // const pract = useCallback(async () => {
   //   console.log('fetching');
@@ -609,7 +612,13 @@ const ChatMessages = ({
 
       // setChannel(channels);
     }
-  }, [subgroups, currentPracticeId, pubnub, allMessages.length < 1]);
+  }, [
+    subgroups,
+    currentPracticeId,
+    pubnub,
+    allMessages.length <= 1,
+    newMsgAvailable,
+  ]);
 
   useEffect(() => {
     if (isDrawerOpen) {
