@@ -192,7 +192,11 @@ const GroupBox = ({
                     ].message.text.replace(/(\r\n|\n|\r)/gm, '')
                 : allMessages.messages[allMessages.messages.length - 1].message
                     .file
-                ? ' Photo'
+                ? allMessages.messages[
+                    allMessages.messages.length - 1
+                  ].message.file.name.match(/.(jpg|jpeg|png|gif)$/i)
+                  ? ' Photo'
+                  : 'Video'
                 : allMessages.messages[allMessages.messages.length - 1].replace(
                     /(\r\n|\n|\r)/gm,
                     '',

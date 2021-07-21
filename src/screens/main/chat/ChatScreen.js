@@ -217,6 +217,10 @@ const ChatScreen = ({
     // console.log(channelName);
     // console.log(fileData);
     // console.log('SENDING____');
+    setErrorMessage('');
+    setSending(true);
+    setInputText('');
+    setMessage('media');
     setSending(true);
     // chatRef.scrollToEnd();
     pubnub.setUUID(currentUser ? currentUser.chatId : 0);
@@ -233,17 +237,21 @@ const ChatScreen = ({
             },
           },
           file: fileData,
-          callback: function (m) {
-            console.log(m);
-          },
         },
         (status, response) => {
           // setMessage('');
           // handle status, response
-          console.log(status);
-          console.log(response);
+          if (status) {
+            setMessage('text');
+            setErrorMessage("Couldn't send media or file");
+            console.log('Status Message', status.message);
+          } else {
+            setErrorMessage('');
+          }
+
+          console.log('Status', status);
+          console.log('Response', response);
           // console.log('SENT____');
-          setSending(false);
         },
       );
     } else {
@@ -352,13 +360,15 @@ const ChatScreen = ({
       console.log('Getting newer message');
       if (allMessages.length) {
         const newChannelMsgs = allMessages.find((i) => i.channel === cha);
-        const newSavedMessages = allMessages.filter(
-          (i) => i.channel !== newChannelMsgs.channel,
-        );
+        if (newChannelMsgs) {
+          const newSavedMessages = allMessages.filter(
+            (i) => i.channel !== newChannelMsgs.channel,
+          );
 
-        // console.log('=== channelMsgs =====: ', channelMsgs);
-        // console.log('=== newSavedMessages =====: ', newSavedMessages);
-        setAllMessages([...newSavedMessages, newChannelMsgs]);
+          // console.log('=== channelMsgs =====: ', channelMsgs);
+          // console.log('=== newSavedMessages =====: ', newSavedMessages);
+          setAllMessages([...newSavedMessages, newChannelMsgs]);
+        }
       }
 
       // pubnub.fetchMessages(
@@ -419,6 +429,7 @@ const ChatScreen = ({
       // 	}
 
       // })
+      setLoader(false);
       setRefreshing(false);
       // }
       // },
@@ -463,7 +474,7 @@ const ChatScreen = ({
       if (
         allMessages.find((item) => item.channel === channelName) &&
         allMessages.find((item) => item.channel === channelName).messages
-          .length <= 10
+          .length < 10
       ) {
         console.log('message is less than 10');
         setLoader(true);
@@ -588,15 +599,16 @@ const ChatScreen = ({
             />
           )}
           onPressActionButton={() =>
-            launchCamera({ mediaType: 'photo' }, (i) => {
-              if (!i.didCancel) {
+            launchCamera({ mediaType: 'photo' }, ({ assets, didCancel }) => {
+              if (!didCancel) {
+                console.log('Photo data', assets);
                 setMediaFile({
-                  name: i.fileName,
-                  uri: i.uri,
-                  mimeType: i.type,
-                  size: i.fileSize,
-                  height: i.height,
-                  width: i.width,
+                  name: assets[0].fileName,
+                  uri: assets[0].uri,
+                  mimeType: assets[0].type,
+                  size: assets[0].fileSize,
+                  height: assets[0].height,
+                  width: assets[0].width,
                 });
                 setShowMediaPick(true);
               }
@@ -619,15 +631,15 @@ const ChatScreen = ({
             />
           )}
           onPressActionButton={() =>
-            launchCamera({ mediaType: 'video' }, (i) => {
-              if (!i.didCancel) {
+            launchCamera({ mediaType: 'video' }, ({ assets, didCancel }) => {
+              if (!didCancel) {
+                console.log('Video data', assets);
                 setMediaFile({
-                  name: i.fileName,
-                  uri: i.uri,
-                  mimeType: i.type,
-                  size: i.fileSize,
-                  height: i.height,
-                  width: i.width,
+                  name: assets[0].fileName,
+                  uri: assets[0].uri,
+                  mimeType: 'video/mp4',
+                  size: assets[0].fileSize,
+                  duration: assets[0].duration,
                 });
                 setShowMediaPick(true);
               }
@@ -651,21 +663,33 @@ const ChatScreen = ({
             />
           )}
           onPressActionButton={() =>
-            launchImageLibrary({}, (i) => {
-              if (!i.didCancel) {
-                setMediaFile({
-                  name: i.fileName,
-                  uri: i.uri,
-                  mimeType: i.type,
-                  size: i.fileSize,
-                  height: i.height,
-                  width: i.width,
-                });
-                setShowMediaPick(true);
-              }
-              console.log(mediaFile);
-              console.log('setting Image');
-            })
+            launchImageLibrary(
+              { mediaType: 'mixed' },
+              ({ didCancel, assets }) => {
+                console.log('Media data', assets);
+                if (!didCancel) {
+                  assets[0].duration
+                    ? setMediaFile({
+                        name: assets[0].fileName + '.mp4',
+                        uri: assets[0].uri,
+                        mimeType: 'video/mp4',
+                        size: assets[0].fileSize,
+                        duration: assets[0].duration,
+                      })
+                    : setMediaFile({
+                        name: assets[0].fileName,
+                        uri: assets[0].uri,
+                        mimeType: assets[0].type,
+                        size: assets[0].fileSize,
+                        height: assets[0].height,
+                        width: assets[0].width,
+                      });
+                  setShowMediaPick(true);
+                }
+                console.log(mediaFile);
+                console.log('setting Image');
+              },
+            )
           }
           containerStyle={{ marginLeft: 30 }}
         />
@@ -784,436 +808,408 @@ const ChatScreen = ({
           // isLoading={isLoading}
         />
 
-        <View style={{ flex: 1, marginTop: 50 }}>
-          <GiftedChat
-            // ref={(ref) => setChatRef(ref)}
-            // extraData={generatedItems}
-            // shouldUpdateMessage={(props, nextProps) => {
-            //   generatedItems(props);
-            //   // return props.extraData.someData !== nextProps.extraData.someData;
-            // }}
-            messages={messages.length ? [...messages].reverse() : []}
-            // onSend={(text, shouldResetInputToolbar) => {
-            //   // onSend(messages)
-            //   setMessage(text);
-            //   sendMessage(text);
-            //   //  values.message = '';
-            // }}
-            onPressActionButton={() => console.log('actiossss-----')}
-            // scrollToBottom={true}
-            scrollToBottom={true}
-            scrollToBottomComponent={() => (
-              <View>
-                <Icon
-                  name={'chevrons-down'}
-                  type={'feather'}
-                  color={colors.mode === 'light' ? colors.text_1 : colors.text}
-                  size={normalize(18)}
-                  style={{
-                    color: colors.text,
-                    // alignSelf: 'center',
-                  }}
-                />
-              </View>
-            )}
-            scrollToBottomStyle={{
-              backgroundColor: colors.background_1,
-            }}
-            // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
-            renderMessage={(props, index) => {
-              // console.log('MOMENT__', moment().format('DD/MM/YY'));
-              // console.log(
-              //   'TODAY__ ',
-              //   moment().format('DD/MM/YY'),
-              //   moment().add(-1, 'days').format('DD/MM/YY'),
-              //   'Tester___',
-              //   moment(props.currentMessage.timetoken / 1e4).format('DD/MM/YY'),
-              // );
-              if (messages.length) {
-                return (
-                  //ANCHOR
-                  <>
-                    <ChatBubble
-                      id={props.currentMessage.timetoken}
-                      message={props.currentMessage}
-                      navigation={navigation}
-                      practice={practice}
-                      groupPractice={groupPractice}
-                      practiceDms={practiceDms}
-                      patientChatId={currentUser ? currentUser.chatId : 0}
-                      practiceStaff={practiceStaffs}
-                    />
-                    {messages.length &&
-                      getUniqueListBy(messages, 'day').some(
-                        (item) =>
-                          item.timetoken === props.currentMessage.timetoken,
-                      ) && (
-                        <>
-                          {moment().format('DD/MM/YY') ===
-                            moment(props.currentMessage.timetoken / 1e4).format(
-                              'DD/MM/YY',
-                            ) ||
-                          moment().add(-1, 'days').format('DD/MM/YY') ===
-                            moment(props.currentMessage.timetoken / 1e4).format(
-                              'DD/MM/YY',
-                            ) ? (
-                            <View
-                              style={{
-                                backgroundColor: colors.background_1,
-                                marginTop: 5,
-                                paddingVertical: 5,
-                                paddingHorizontal: 12,
-                                borderRadius: 10,
-                                minWidth: 50,
-                                alignSelf: 'center',
-                              }}>
-                              {moment().format('DD/MM/YY') ===
+        {!loader ? (
+          <View style={{ flex: 1, marginTop: 50 }}>
+            <GiftedChat
+              // ref={(ref) => setChatRef(ref)}
+              // extraData={generatedItems}
+              // shouldUpdateMessage={(props, nextProps) => {
+              //   generatedItems(props);
+              //   // return props.extraData.someData !== nextProps.extraData.someData;
+              // }}
+              messages={messages.length ? [...messages].reverse() : []}
+              // onSend={(text, shouldResetInputToolbar) => {
+              //   // onSend(messages)
+              //   setMessage(text);
+              //   sendMessage(text);
+              //   //  values.message = '';
+              // }}
+              onPressActionButton={() => console.log('actiossss-----')}
+              // scrollToBottom={true}
+              scrollToBottom={true}
+              scrollToBottomComponent={() => (
+                <View>
+                  <Icon
+                    name={'chevrons-down'}
+                    type={'feather'}
+                    color={
+                      colors.mode === 'light' ? colors.text_1 : colors.text
+                    }
+                    size={normalize(18)}
+                    style={{
+                      color: colors.text,
+                      // alignSelf: 'center',
+                    }}
+                  />
+                </View>
+              )}
+              scrollToBottomStyle={{
+                backgroundColor: colors.background_1,
+              }}
+              // listViewProps={{ style: { flexDirection: 'column-reverse' } }}
+              renderMessage={(props, index) => {
+                // console.log('MOMENT__', moment().format('DD/MM/YY'));
+                // console.log(
+                //   'TODAY__ ',
+                //   moment().format('DD/MM/YY'),
+                //   moment().add(-1, 'days').format('DD/MM/YY'),
+                //   'Tester___',
+                //   moment(props.currentMessage.timetoken / 1e4).format('DD/MM/YY'),
+                // );
+                if (messages.length) {
+                  return (
+                    //ANCHOR
+                    <>
+                      <ChatBubble
+                        id={props.currentMessage.timetoken}
+                        message={props.currentMessage}
+                        navigation={navigation}
+                        practice={practice}
+                        groupPractice={groupPractice}
+                        practiceDms={practiceDms}
+                        patientChatId={currentUser ? currentUser.chatId : 0}
+                        practiceStaff={practiceStaffs}
+                      />
+                      {messages.length &&
+                        getUniqueListBy(messages, 'day').some(
+                          (item) =>
+                            item.timetoken === props.currentMessage.timetoken,
+                        ) && (
+                          <>
+                            {moment().format('DD/MM/YY') ===
+                              moment(
+                                props.currentMessage.timetoken / 1e4,
+                              ).format('DD/MM/YY') ||
+                            moment().add(-1, 'days').format('DD/MM/YY') ===
                               moment(
                                 props.currentMessage.timetoken / 1e4,
                               ).format('DD/MM/YY') ? (
-                                <Text
-                                  style={{
-                                    color: colors.text,
-                                    fontSize: normalize(10.5),
-                                    fontFamily: 'SofiaProRegular',
-                                    textAlign: 'center',
-                                  }}>
-                                  Today
-                                </Text>
-                              ) : (
-                                <Text
-                                  style={{
-                                    color: colors.text,
-                                    fontSize: normalize(10.5),
-                                    fontFamily: 'SofiaProRegular',
-                                    textAlign: 'center',
-                                  }}>
-                                  Yesterday
-                                </Text>
-                              )}
-                            </View>
-                          ) : (
-                            <Day
-                              {...props}
-                              textStyle={{
-                                color: colors.text,
-                                fontSize: normalize(10.5),
-                                fontFamily: 'SofiaProRegular',
-                                textAlign: 'center',
-                              }}
-                              wrapperStyle={{
-                                marginTop: 5,
-                                backgroundColor: colors.background_1,
-                                paddingVertical: 5,
-                                paddingHorizontal: 12,
-                                borderRadius: 10,
-                              }}
-                              currentMessage={{
-                                createdAt: new Date(
+                              <View
+                                style={{
+                                  backgroundColor: colors.background_1,
+                                  marginTop: 5,
+                                  paddingVertical: 5,
+                                  paddingHorizontal: 12,
+                                  borderRadius: 10,
+                                  minWidth: 50,
+                                  alignSelf: 'center',
+                                }}>
+                                {moment().format('DD/MM/YY') ===
+                                moment(
                                   props.currentMessage.timetoken / 1e4,
-                                ),
-                              }}
-                            />
-                          )}
-                        </>
-                      )}
-                  </>
-                );
-              } else {
-                return <></>;
-              }
-            }}
-            renderChatEmpty={() => (
-              <View
-                style={{
-                  marginVertical: 20,
-                  marginHorizontal: 30,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  transform: [{ scaleY: -1 }],
-                }}>
-                <Text
+                                ).format('DD/MM/YY') ? (
+                                  <Text
+                                    style={{
+                                      color: colors.text,
+                                      fontSize: normalize(10.5),
+                                      fontFamily: 'SofiaProRegular',
+                                      textAlign: 'center',
+                                    }}>
+                                    Today
+                                  </Text>
+                                ) : (
+                                  <Text
+                                    style={{
+                                      color: colors.text,
+                                      fontSize: normalize(10.5),
+                                      fontFamily: 'SofiaProRegular',
+                                      textAlign: 'center',
+                                    }}>
+                                    Yesterday
+                                  </Text>
+                                )}
+                              </View>
+                            ) : (
+                              <Day
+                                {...props}
+                                textStyle={{
+                                  color: colors.text,
+                                  fontSize: normalize(10.5),
+                                  fontFamily: 'SofiaProRegular',
+                                  textAlign: 'center',
+                                }}
+                                wrapperStyle={{
+                                  marginTop: 5,
+                                  backgroundColor: colors.background_1,
+                                  paddingVertical: 5,
+                                  paddingHorizontal: 12,
+                                  borderRadius: 10,
+                                }}
+                                currentMessage={{
+                                  createdAt: new Date(
+                                    props.currentMessage.timetoken / 1e4,
+                                  ),
+                                }}
+                              />
+                            )}
+                          </>
+                        )}
+                    </>
+                  );
+                } else {
+                  return <></>;
+                }
+              }}
+              renderChatEmpty={() => (
+                <View
                   style={{
-                    color:
-                      colors.mode === 'dark' ? colors.quinary : colors.primary,
-                    fontSize: normalize(12),
-                    fontFamily: 'SofiaProLight',
-                    backgroundColor: colors.background_1,
-                    borderRadius: 10,
-                    paddingVertical: 5,
-                    paddingHorizontal: 10,
-                    textAlign: 'center',
+                    marginVertical: 20,
+                    marginHorizontal: 30,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    transform: [{ scaleY: -1 }],
                   }}>
-                  {type === 'dm'
-                    ? `This is the beginning of your first message, chatting with ${practice.practiceName}`
-                    : `This is the beginning and the first message in ${group.name}`}
-                </Text>
-              </View>
-            )}
-            user={{
-              _id: 1,
-            }}
-            listViewProps={{
-              style: {
-                marginBottom: showAccessories ? 65 : 10,
-              },
-            }}
-            // isTyping={true}
-            textInputProps={{
-              onFocus: () => setShowEmoji(false),
-            }}
-            text={inputText}
-            onInputTextChanged={(text) => setInputText(text)}
-            // focusTextInput={true}
-            textInputStyle={{
-              backgroundColor: colors.background,
-              color: colors.text,
-              alignSelf: 'center',
-              fontFamily: 'SofiaProRegular',
-              fontSize: normalize(14),
-              alignItems: 'center',
-              marginTop: 10,
-            }}
-            // renderInputToolbar={() => <></>}
-            renderFooter={(props) => {
-              return (
-                <View style={{ width: appwidth, alignSelf: 'center' }}>
-                  {sending || errorMessage ? (
-                    <View
-                      style={{
-                        alignSelf: 'flex-end',
-                        flexDirection: 'column',
-                        maxWidth: appwidth - 50,
-                        marginVertical: 20,
-                      }}>
+                  <Text
+                    style={{
+                      color:
+                        colors.mode === 'dark'
+                          ? colors.quinary
+                          : colors.primary,
+                      fontSize: normalize(12),
+                      fontFamily: 'SofiaProLight',
+                      backgroundColor: colors.background_1,
+                      borderRadius: 10,
+                      paddingVertical: 5,
+                      paddingHorizontal: 10,
+                      textAlign: 'center',
+                    }}>
+                    {type === 'dm'
+                      ? `This is the beginning of your first message, chatting with ${practice.practiceName}`
+                      : `This is the beginning and the first message in ${group.name}`}
+                  </Text>
+                </View>
+              )}
+              user={{
+                _id: 1,
+              }}
+              listViewProps={{
+                style: {
+                  marginBottom: showAccessories ? 65 : 10,
+                },
+              }}
+              // isTyping={true}
+              textInputProps={{
+                onFocus: () => setShowEmoji(false),
+              }}
+              text={inputText}
+              onInputTextChanged={(text) => setInputText(text)}
+              // focusTextInput={true}
+              textInputStyle={{
+                backgroundColor: colors.background,
+                color: colors.text,
+                alignSelf: 'center',
+                fontFamily: 'SofiaProRegular',
+                fontSize: normalize(14),
+                alignItems: 'center',
+                marginTop: 10,
+              }}
+              // renderInputToolbar={() => <></>}
+              renderFooter={(props) => {
+                return (
+                  <View style={{ width: appwidth, alignSelf: 'center' }}>
+                    {sending || errorMessage ? (
                       <View
                         style={{
-                          // minHeight: 50,
-                          backgroundColor: errorMessage
-                            ? 'red'
-                            : colors.primary,
-                          alignItems: 'flex-start',
-                          // width: 80,
-                          // maxWidth: appwidth - 80,
-                          justifyContent: 'center',
-                          borderTopLeftRadius: 20,
-                          borderTopRightRadius: 20,
-                          borderBottomRightRadius: 20,
-                          padding: 15,
+                          alignSelf: 'flex-end',
+                          flexDirection: 'column',
+                          maxWidth: appwidth - 50,
+                          marginVertical: 20,
                         }}>
-                        <Text
-                          style={{
-                            fontSize: normalize(12),
-                            fontFamily: 'SofiaProRegular',
-                            color: 'white',
-                            textAlign: 'left',
-                          }}>
-                          {errorMessage ? errorMessage : message}
-                        </Text>
-                      </View>
-                      {/* {message.messageType === 4 ? (
-                    <View
-                      style={{
-                        height: 252,
-                        backgroundColor: colors.primary,
-                        alignItems: 'center',
-                        width: 252,
-                        justifyContent: 'center',
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                        borderBottomRightRadius: 20,
-                      }}>
-                      {message.message.file.name.match(
-                        /.(jpg|jpeg|png|gif)$/i,
-                      ) ? (
-                        <FastImage
-                          source={{
-                            uri: pubnub.getFileUrl({
-                              channel: message.channel,
-                              id: message.message.file.id,
-                              name: message.message.file.name,
-                            }),
-                            priority: FastImage.priority.high,
-                          }}
-                          style={[
-                            {
-                              width: 250,
-                              height: 250,
-                              backgroundColor: colors.background_1,
+                        {message === 'media' || message === 'doc' ? (
+                          <View
+                            style={{
+                              height: 252,
+                              backgroundColor: colors.primary,
+                              alignItems: 'center',
+                              width: 252,
+                              justifyContent: 'center',
                               borderTopLeftRadius: 20,
                               borderTopRightRadius: 20,
                               borderBottomRightRadius: 20,
-                            },
-                            // currentPracticeId === practice.id && {
-                            //   borderWidth: 1,
-                            //   borderColor: colors.text,
-                            // },
-                          ]}
-                          resizeMode={FastImage.resizeMode.cover}>
+                            }}>
+                            {message === 'media' ? (
+                              <FastImage
+                                source={{
+                                  uri: mediaFile.uri,
+                                  priority: FastImage.priority.high,
+                                }}
+                                style={[
+                                  {
+                                    width: 250,
+                                    height: 250,
+                                    backgroundColor: colors.background_1,
+                                    borderTopLeftRadius: 20,
+                                    borderTopRightRadius: 20,
+                                    borderBottomRightRadius: 20,
+                                  },
+                                ]}
+                                resizeMode={FastImage.resizeMode.cover}
+                              />
+                            ) : (
+                              <Text>Doc</Text>
+                            )}
+                          </View>
+                        ) : (
+                          <View
+                            style={{
+                              // minHeight: 50,
+                              backgroundColor: errorMessage
+                                ? 'red'
+                                : colors.primary,
+                              alignItems: 'flex-start',
+                              // width: 80,
+                              // maxWidth: appwidth - 80,
+                              justifyContent: 'center',
+                              borderTopLeftRadius: 20,
+                              borderTopRightRadius: 20,
+                              borderBottomRightRadius: 20,
+                              padding: 15,
+                            }}>
+                            <Text
+                              style={{
+                                fontSize: normalize(12),
+                                fontFamily: 'SofiaProRegular',
+                                color: 'white',
+                                textAlign: 'left',
+                              }}>
+                              {errorMessage ? errorMessage : message}
+                            </Text>
+                          </View>
+                        )}
 
-                        </FastImage>
-                      ) : (
-                        <Text>Doc</Text>
-                      )}
-                    </View>
-                  ) : (
-                    <View
-                      style={{
-                        // minHeight: 50,
-                        backgroundColor: colors.primary,
-                        alignItems: 'flex-start',
-                        // width: 80,
-                        // maxWidth: appwidth - 80,
-                        justifyContent: 'center',
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                        borderBottomRightRadius: 20,
-                        padding: 15,
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: normalize(12),
-                          fontFamily: 'SofiaProRegular',
-                          color: 'white',
-                          textAlign: 'left',
-                        }}>
-                        {message.message.text && message.message.text}
-                      </Text>
-                    </View>
-                  )} */}
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignSelf: 'flex-end',
-                          alignItems: 'center',
-                          paddingRight: 10,
-                          paddingTop: 3,
-                          textAlign: 'right',
-                        }}>
-                        <Text
-                          style={{
-                            fontSize: normalize(10),
-                            fontFamily: 'SofiaProLight',
-                            color: colors.text,
-                          }}>
-                          {errorMessage
-                            ? '⚠️ Sorry, Internet error...'
-                            : 'Sending...'}
-                        </Text>
-                        <ActivityIndicator
-                          animating={errorMessage ? false : true}
-                          size={normalize(10)}
-                          color={colors.text}
-                          style={{
-                            alignSelf: 'center',
-                            paddingLeft: 10,
-                            textAlign: 'right',
-                          }}
-                        />
-                      </View>
-                    </View>
-                  ) : null}
-                </View>
-              );
-            }}
-            renderInputToolbar={(props) => (
-              <InputToolbar
-                {...props}
-                renderAccessory={() =>
-                  showAccessories ? renderAccessory() : null
-                }
-                renderActions={renderActions}
-                renderSend={
-                  (messageProps) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => sendMessage(messageProps.text)}
-                        style={{
-                          alignSelf: 'center',
-                          marginRight: 10,
-                        }}>
                         <View
                           style={{
-                            backgroundColor: colors.primary,
-                            height: 35,
-                            width: 35,
-                            alignSelf: 'center',
-                            justifyContent: 'center',
-                            marginLeft: 10,
-                            borderRadius: 10,
+                            flexDirection: 'row',
+                            alignSelf: 'flex-end',
+                            alignItems: 'center',
+                            paddingRight: 10,
+                            paddingTop: 3,
+                            textAlign: 'right',
                           }}>
-                          <Icon
-                            name={'ios-send'}
-                            type={'ionicon'}
-                            color={'white'}
-                            size={normalize(18)}
+                          <Text
+                            style={{
+                              fontSize: normalize(10),
+                              fontFamily: 'SofiaProLight',
+                              color: colors.text,
+                            }}>
+                            {errorMessage
+                              ? '⚠️ Sorry, Internet error...'
+                              : 'Sending...'}
+                          </Text>
+                          <ActivityIndicator
+                            animating={errorMessage ? false : true}
+                            size={normalize(10)}
+                            color={colors.text}
                             style={{
                               alignSelf: 'center',
+                              paddingLeft: 10,
+                              textAlign: 'right',
                             }}
                           />
                         </View>
-                      </TouchableOpacity>
-                    );
+                      </View>
+                    ) : null}
+                  </View>
+                );
+              }}
+              renderInputToolbar={(props) => (
+                <InputToolbar
+                  {...props}
+                  renderAccessory={() =>
+                    showAccessories ? renderAccessory() : null
                   }
-                  // renderSender
-                }
-                accessoryStyle={{ height: showAccessories ? null : 0 }}
-                containerStyle={{
-                  // width: windowWidth - 60,
-                  backgroundColor: colors.background,
-                  // marginHorizontal: 20,
-                  borderTopColor: colors.background_1,
-                  borderBottomColor: colors.background_1,
-                  borderWidth: 0.6,
-                  borderTopWidth: 1,
-                  paddingVertical: 2,
-                  // marginTop: 15,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              />
-            )}
-            keyboardShouldPersistTaps={false}
-            // maxInputLength={20}
-            inverted={true}
-            renderLoadEarlier={(props) => (
-              <LoadEarlier
-                {...props}
-                label="Load earlier messages"
-                wrapperStyle={{ backgroundColor: 'transparent' }}
-                textStyle={{
-                  fontSize: normalize(11),
-                  textAlign: 'center',
-                  fontFamily: 'SofiaProRegular',
-                  backgroundColor: colors.background_1,
-                  paddingVertical: 6,
-                  paddingHorizontal: 13,
-                  borderRadius: 15,
-                  color: colors.text,
-                }}
-                activityIndicatorStyle={{ padding: 10 }}
-                activityIndicatorColor={
-                  // colors.primary
-                  colors.text
-                }
-                activityIndicatorSize={normalize(25)}
-              />
-            )}
-            // renderLoading
-            onLoadEarlier={() => {
-              setRefreshing(refreshing);
-              getOldMessages(channelName);
-            }}
-            isLoadingEarlier={refreshing}
-            loadEarlier={messages.length >= 5 ? true : false}
-            infiniteScroll={true}
-            maxComposerHeight={100}
-            alignTop={true}
+                  renderActions={renderActions}
+                  renderSend={
+                    (messageProps) => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() => sendMessage(messageProps.text)}
+                          style={{
+                            alignSelf: 'center',
+                            marginRight: 10,
+                          }}>
+                          <View
+                            style={{
+                              backgroundColor: colors.primary,
+                              height: 35,
+                              width: 35,
+                              alignSelf: 'center',
+                              justifyContent: 'center',
+                              marginLeft: 10,
+                              borderRadius: 10,
+                            }}>
+                            <Icon
+                              name={'ios-send'}
+                              type={'ionicon'}
+                              color={'white'}
+                              size={normalize(18)}
+                              style={{
+                                alignSelf: 'center',
+                              }}
+                            />
+                          </View>
+                        </TouchableOpacity>
+                      );
+                    }
+                    // renderSender
+                  }
+                  accessoryStyle={{ height: showAccessories ? null : 0 }}
+                  containerStyle={{
+                    // width: windowWidth - 60,
+                    backgroundColor: colors.background,
+                    // marginHorizontal: 20,
+                    borderTopColor: colors.background_1,
+                    borderBottomColor: colors.background_1,
+                    borderWidth: 0.6,
+                    borderTopWidth: 1,
+                    paddingVertical: 2,
+                    // marginTop: 15,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                />
+              )}
+              keyboardShouldPersistTaps={false}
+              // maxInputLength={20}
+              inverted={true}
+              renderLoadEarlier={(props) => (
+                <LoadEarlier
+                  {...props}
+                  label="Load earlier messages"
+                  wrapperStyle={{ backgroundColor: 'transparent' }}
+                  textStyle={{
+                    fontSize: normalize(11),
+                    textAlign: 'center',
+                    fontFamily: 'SofiaProRegular',
+                    backgroundColor: colors.background_1,
+                    paddingVertical: 6,
+                    paddingHorizontal: 13,
+                    borderRadius: 15,
+                    color: colors.text,
+                  }}
+                  activityIndicatorStyle={{ padding: 10 }}
+                  activityIndicatorColor={
+                    // colors.primary
+                    colors.text
+                  }
+                  activityIndicatorSize={normalize(25)}
+                />
+              )}
+              // renderLoading
+              onLoadEarlier={() => {
+                setRefreshing(refreshing);
+                getOldMessages(channelName);
+              }}
+              isLoadingEarlier={refreshing}
+              loadEarlier={messages.length >= 5 ? true : false}
+              infiniteScroll={true}
+              maxComposerHeight={100}
+              alignTop={true}
 
-            // renderChatFooter={}
-          />
+              // renderChatFooter={}
+            />
 
-          {/* <FlatList
+            {/* <FlatList
           ref={(ref) => setChatRef(ref)}
           // keyExtractor={(item) => item.id.toString()}
           keyboardDismissMode="on-drag"
@@ -1286,10 +1282,9 @@ const ChatScreen = ({
           // extraData={selected}
           // ListFooterComponent={}
         /> */}
-          {/* //ANCHOR */}
-        </View>
-
-        {isLoading && (
+            {/* //ANCHOR */}
+          </View>
+        ) : (
           <ActivityIndicator
             animating={true}
             size={normalize(30)}

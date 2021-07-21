@@ -238,8 +238,8 @@ const ChatMessages = ({
           (i) => i.channel !== channelMsgs.channel,
         );
 
-        // console.log('=== channelMsgs =====: ', channelMsgs);
-        // console.log('=== newSavedMessages =====: ', newSavedMessages);
+        console.log('=== channelMsgs =====: ', channelMsgs);
+        console.log('=== newSavedMessages =====: ', newSavedMessages);
         setAllMessages([...newSavedMessages, channelMsgs]);
 
         // pubnub.time((status, response)=>{
@@ -544,18 +544,6 @@ const ChatMessages = ({
         },
 
         file: (picture) => {
-          console.log('PICTURES____', picture);
-          getMessages(picture.channel);
-          // addMessages([
-          //   ...messages,
-          //   {
-          //     channel: messageEvent.channel,
-          //     message: messageEvent.message,
-          //     timetoken: messageEvent.timetoken,
-          //     uuid: messageEvent.publisher,
-          //   },
-          // ]);
-
           const msg = {
             channel: picture.channel,
             message: { file: picture.file, message: picture.message },

@@ -8,6 +8,9 @@ import timeAgo from '../../utils/timeAgo';
 import { usePubNub } from 'pubnub-react';
 import { Day } from 'react-native-gifted-chat';
 import moment from 'moment';
+import { Icon } from 'react-native-elements';
+import Video from 'react-native-video';
+import { useRef } from 'react';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -22,6 +25,7 @@ const ChatBubble = ({
   index,
   practiceStaff,
 }) => {
+  const videoRef = useRef(null);
   const { colors } = useTheme();
   const pubnub = usePubNub();
   // console.log('Bubble ID', id);
@@ -119,6 +123,61 @@ const ChatBubble = ({
             ]}
           />} */}
                 </FastImage>
+              ) : message.message.file.name.match(/.(mp4|webm)$/i) ? (
+                <>
+                  {/* <Video
+                    source={{
+                      uri: pubnub.getFileUrl({
+                        channel: message.channel,
+                        id: message.message.file.id,
+                        name: message.message.file.name,
+                      }),
+                    }} // Can be a URL or a local file.
+                    ref={videoRef} // Store reference
+                    //  onBuffer={this.onBuffer}                // Callback when remote video is buffering
+                    //  onError={this.videoError}               // Callback when video cannot be loaded
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      bottom: 0,
+                      right: 0,
+                      alignSelf: 'center',
+                    }}
+                  /> */}
+                  <FastImage
+                    source={{
+                      uri: pubnub.getFileUrl({
+                        channel: message.channel,
+                        id: message.message.file.id,
+                        name: message.message.file.name,
+                      }),
+                      priority: FastImage.priority.high,
+                    }}
+                    style={[
+                      {
+                        width: 250,
+                        height: 250,
+                        backgroundColor: colors.background_1,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        borderBottomRightRadius: 20,
+                      },
+                      // currentPracticeId === practice.id && {
+                      //   borderWidth: 1,
+                      //   borderColor: colors.text,
+                      // },
+                    ]}
+                    resizeMode={FastImage.resizeMode.cover}>
+                    <Icon
+                      name={'play-circle'}
+                      type={'font-awesome'}
+                      color={colors.text}
+                      size={normalize(55)}
+                      style={[{ alignSelf: 'center', marginTop: '40%' }]}
+                    />
+                  </FastImage>
+                </>
               ) : (
                 <Text>Doc</Text>
               )}
@@ -253,19 +312,40 @@ const ChatBubble = ({
                       //   borderColor: colors.text,
                       // },
                     ]}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                ) : message.message.file.name.match(/.(mp4|webm)$/i) ? (
+                  <FastImage
+                    source={{
+                      uri: pubnub.getFileUrl({
+                        channel: message.channel,
+                        id: message.message.file.id,
+                        name: message.message.file.name,
+                      }),
+                      priority: FastImage.priority.high,
+                    }}
+                    style={[
+                      {
+                        width: 250,
+                        height: 250,
+                        backgroundColor: colors.background_1,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        borderBottomRightRadius: 20,
+                      },
+                      // currentPracticeId === practice.id && {
+                      //   borderWidth: 1,
+                      //   borderColor: colors.text,
+                      // },
+                    ]}
                     resizeMode={FastImage.resizeMode.cover}>
-                    {/* {currentPracticeId === practice.id && <Icon
-            name={'primitive-dot'}
-            type={'octicon'}
-            color={colors.text}
-            size={normalize(13)}
-            style={[
-              {
-                right: 5,
-                alignSelf: 'flex-end',
-              },
-            ]}
-          />} */}
+                    <Icon
+                      name={'play-circle'}
+                      type={'font-awesome'}
+                      color={colors.text}
+                      size={normalize(55)}
+                      style={[{ alignSelf: 'center', marginTop: '40%' }]}
+                    />
                   </FastImage>
                 ) : (
                   <Text>Doc</Text>
