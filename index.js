@@ -21,10 +21,13 @@ import { LogBox, YellowBox } from 'react-native';
 import { NetworkProvider } from 'react-native-offline';
 
 const pubnub = new PubNub({
-  publishKey: 'pub-c-448db23e-9ad4-4039-aff5-789495e7a5bd',
-  subscribeKey: 'sub-c-36862c7a-ec50-11ea-92d8-06a89e77181a',
+  publishKey: 'pub-c-56fcc9f4-b494-494f-8ec3-5ade985b98b5',
+  subscribeKey: 'sub-c-1657f96e-df4e-11eb-b709-22f598fbfd18',
   autoNetworkDetection: true, // enable for non-browser environment automatic reconnection
   restore: true, // enable catchup on missed messages
+  // logVerbosity: true,
+  ssl: true,
+  presenceTimeout: 130,
   // uuid: 'myUniqueUUID',
 });
 YellowBox.ignoreWarnings(['']);

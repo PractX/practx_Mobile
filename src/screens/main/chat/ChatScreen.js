@@ -67,6 +67,7 @@ import {
 import EmojiBoard from 'react-native-emoji-board';
 import { SafeAreaView } from 'react-navigation';
 import moment from 'moment';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 
 const { flags, sports, food } = Categories;
 // console.log(Categories);
@@ -122,6 +123,8 @@ const ChatScreen = ({
   const d = new Date();
   const time = d.getTime();
   const pubnub = usePubNub();
+
+  const audioRecorderPlayer = new AudioRecorderPlayer();
 
   const addTime = (timetoken) => {
     const unixTimestamp = timetoken / 10000000;
@@ -511,6 +514,54 @@ const ChatScreen = ({
         swipeEnabled: true,
       });
   }, [extraData]);
+  const [recordTime, setRecordTime] = useState();
+  const onStartRecord = async () => {
+    console.log('Ok startting');
+    const result = await audioRecorderPlayer.startRecorder();
+    console.log(result);
+    audioRecorderPlayer.addRecordBackListener((e) => {
+      setRecordTime({
+        recordSecs: e.currentPosition,
+        recordTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
+      });
+      return;
+    });
+    console.log(result);
+  };
+
+  const onStopRecord = async () => {
+    const result = await audioRecorderPlayer.stopRecorder();
+    audioRecorderPlayer.removeRecordBackListener();
+    setRecordTime({
+      recordSecs: 0,
+    });
+    console.log(result);
+  };
+
+  const onStartPlay = async () => {
+    console.log('onStartPlay');
+    const msg = await audioRecorderPlayer.startPlayer();
+    console.log(msg);
+    audioRecorderPlayer.addPlayBackListener((e) => {
+      setRecordTime({
+        currentPositionSec: e.currentPosition,
+        currentDurationSec: e.duration,
+        playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
+        duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+      });
+      return;
+    });
+  };
+
+  const onPausePlay = async () => {
+    await audioRecorderPlayer.pausePlayer();
+  };
+
+  const onStopPlay = async () => {
+    console.log('onStopPlay');
+    audioRecorderPlayer.stopPlayer();
+    audioRecorderPlayer.removePlayBackListener();
+  };
 
   // let dataMsg = [] allMessages.find((item) => item.channel === channelName);
 
@@ -1112,6 +1163,7 @@ const ChatScreen = ({
                   </View>
                 );
               }}
+              // ANCHOR
               renderInputToolbar={(props) => (
                 <InputToolbar
                   {...props}
@@ -1123,7 +1175,13 @@ const ChatScreen = ({
                     (messageProps) => {
                       return (
                         <TouchableOpacity
-                          onPress={() => sendMessage(messageProps.text)}
+                          onPress={() =>
+                            inputText
+                              ? sendMessage(messageProps.text)
+                              : console.log('Record')
+                          }
+                          onPressIn={() => onStartRecord()}
+                          onPressOut={() => onStopRecord()}
                           style={{
                             alignSelf: 'center',
                             marginRight: 10,
@@ -1139,7 +1197,7 @@ const ChatScreen = ({
                               borderRadius: 10,
                             }}>
                             <Icon
-                              name={'ios-send'}
+                              name={inputText ? 'ios-send' : 'mic'}
                               type={'ionicon'}
                               color={'white'}
                               size={normalize(18)}
