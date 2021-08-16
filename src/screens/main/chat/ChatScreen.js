@@ -86,6 +86,7 @@ const ChatScreen = ({
   setAllMessages,
   practiceStaffs,
 }) => {
+  const audioRecorderPlayer = new AudioRecorderPlayer();
   const [chatRef, setChatRef] = useState();
   const { colors } = useTheme();
   const inputRef = useRef();
@@ -123,8 +124,7 @@ const ChatScreen = ({
   const d = new Date();
   const time = d.getTime();
   const pubnub = usePubNub();
-
-  const audioRecorderPlayer = new AudioRecorderPlayer();
+  const [recordTime, setRecordTime] = useState();
 
   const addTime = (timetoken) => {
     const unixTimestamp = timetoken / 10000000;
@@ -503,6 +503,7 @@ const ChatScreen = ({
 
   useEffect(() => {
     console.log('rerendering_____');
+
     extraData.setOptions({
       drawerLockMode: 'locked-closed',
       swipeEnabled: false,
@@ -514,11 +515,34 @@ const ChatScreen = ({
         swipeEnabled: true,
       });
   }, [extraData]);
-  const [recordTime, setRecordTime] = useState();
-  const onStartRecord = async () => {
+
+  console.log('Recording', recordTime);
+
+  //   const onStartRecord = React.useCallback(async () => {
+  //     if (Platform.OS === 'android') {
+  //       try {
+  //         const grants = await PermissionsAndroid.requestMultiple([ PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE, PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, ]); console.log('write external stroage', grants);
+  //         if ( grants['android.permission.WRITE_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED && grants['android.permission.READ_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED && grants['android.permission.RECORD_AUDIO'] === PermissionsAndroid.RESULTS.GRANTED ) {
+  //           console.log('permissions granted');
+  //          } else { console.log('All required permissions not granted'); return;
+  //         }
+  //       } catch (err) {
+  //         console.warn(err); return;
+  //       }
+  //     }
+  //     const audioSet: AudioSet = { AudioEncoderAndroid: AudioEncoderAndroidType.AAC, AudioSourceAndroid: AudioSourceAndroidType.MIC, AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high, AVNumberOfChannelsKeyIOS: 2, AVFormatIDKeyIOS: AVEncodingOption.aac, }; console.log('audioSet', audioSet);
+  //     const uri = await audioRecorderPlayer.startRecorder(undefined, audioSet);
+  //     audioRecorderPlayer.addRecordBackListener((e: RecordBackType) => {
+  //        console.log('record-back', e);
+  //         setrecordSecs(e.currentPosition);
+  //         setrecordTime(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
+  //        });
+  //        console.log(uri: ${uri}`);
+  // }, []);
+
+  const onStartRecord = React.useCallback(async () => {
     console.log('Ok startting');
     const result = await audioRecorderPlayer.startRecorder();
-    console.log(result);
     audioRecorderPlayer.addRecordBackListener((e) => {
       setRecordTime({
         recordSecs: e.currentPosition,
@@ -526,17 +550,17 @@ const ChatScreen = ({
       });
       return;
     });
-    console.log(result);
-  };
+    // console.log(result);
+  }, []);
 
-  const onStopRecord = async () => {
+  const onStopRecord = React.useCallback(async () => {
     const result = await audioRecorderPlayer.stopRecorder();
     audioRecorderPlayer.removeRecordBackListener();
     setRecordTime({
       recordSecs: 0,
     });
-    console.log(result);
-  };
+    console.log('Stopped', result);
+  }, []);
 
   const onStartPlay = async () => {
     console.log('onStartPlay');
@@ -1055,6 +1079,7 @@ const ChatScreen = ({
                 marginTop: 10,
               }}
               // renderInputToolbar={() => <></>}
+              // renderInputToolbar={null}
               renderFooter={(props) => {
                 return (
                   <View style={{ width: appwidth, alignSelf: 'center' }}>
@@ -1167,6 +1192,19 @@ const ChatScreen = ({
               renderInputToolbar={(props) => (
                 <InputToolbar
                   {...props}
+                  renderComposer={() => (
+                    <View>
+                      <Icon
+                        name={inputText ? 'ios-send' : 'mic'}
+                        type={'ionicon'}
+                        color={'white'}
+                        size={normalize(18)}
+                        style={{
+                          alignSelf: 'center',
+                        }}
+                      />
+                    </View>
+                  )}
                   renderAccessory={() =>
                     showAccessories ? renderAccessory() : null
                   }
@@ -1180,8 +1218,12 @@ const ChatScreen = ({
                               ? sendMessage(messageProps.text)
                               : console.log('Record')
                           }
-                          onPressIn={() => onStartRecord()}
-                          onPressOut={() => onStopRecord()}
+                          onPressIn={() =>
+                            !inputText ? onStartRecord() : null
+                          }
+                          onPressOut={() =>
+                            !inputText ? onStopRecord() : null
+                          }
                           style={{
                             alignSelf: 'center',
                             marginRight: 10,
