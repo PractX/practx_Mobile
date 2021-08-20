@@ -11,6 +11,7 @@ import moment from 'moment';
 import { Icon } from 'react-native-elements';
 import Video from 'react-native-video';
 import { useRef } from 'react';
+import AudioPlayer from '../../utils/audioPlayer';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -54,6 +55,16 @@ const ChatBubble = ({
     const newDate = new Date(unixTimestamp * 1000);
     return moment(newDate).format('ddd hh:mm a');
   };
+  // console.log(
+  //   'TEsting FIle URI',
+  //   message.messageType === 4 &&
+  //     message.message.file.name.match(/.(jpg|jpeg|png|gif)$/i) &&
+  //     pubnub.getFileUrl({
+  //       channel: message.channel,
+  //       id: message.message.file.id,
+  //       name: message.message.file.name,
+  //     }),
+  // );
   // console.log(addTime(message).split(', ')[0]);
   // console.log(
   //   'Null Staff',
@@ -178,6 +189,17 @@ const ChatBubble = ({
                     />
                   </FastImage>
                 </>
+              ) : message.message.file.name.match(/.(m4a|mp3)$/i) ? (
+                <View>
+                  <AudioPlayer
+                    fileName={pubnub.getFileUrl({
+                      channel: message.channel,
+                      id: message.message.file.id,
+                      name: message.message.file.name,
+                    })}
+                  />
+                  {/* <Text>Audio</Text> */}
+                </View>
               ) : (
                 <Text>Doc</Text>
               )}
@@ -347,6 +369,15 @@ const ChatBubble = ({
                       style={[{ alignSelf: 'center', marginTop: '40%' }]}
                     />
                   </FastImage>
+                ) : message.message.file.name.match(/.(m4a|mp3)$/i) ? (
+                  <View>
+                    <AudioPlayer
+                      fileName={
+                        'https://files-us-west-1.pndsn.com/sub-c-1657f96e-df4e-11eb-b709-22f598fbfd18/owJlsOdCjdE_cNaLcwE9DuzDVYldXogpUb9jQDAX0o4/d83febc4-35d5-4333-8fd1-904974273c63/practx_record_9wUUKtyNko.m4a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAY7AU6GQD5KWBS3FG%2F20210820%2Fus-west-1%2Fs3%2Faws4_request&X-Amz-Date=20210820T220000Z&X-Amz-Expires=3900&X-Amz-SignedHeaders=host&X-Amz-Signature=9e6736e0e72eced8eda375af912eed1ec14c41509282b83671089d027357777f.mp3'
+                      }
+                    />
+                    {/* <Text>Audio</Text> */}
+                  </View>
                 ) : (
                   <Text>Doc</Text>
                 )}
