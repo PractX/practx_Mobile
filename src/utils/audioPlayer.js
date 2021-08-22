@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, Component } from 'react';
 import {
   Button,
   PermissionsAndroid,
@@ -15,10 +15,9 @@ import {
   Recorder,
   MediaStates,
 } from '@react-native-community/audio-toolkit';
+import { useEffect } from 'react';
 
-const filename = 'test.mp4';
-
-type Props = {};
+// type Props = {};
 
 // type State = {
 //   playPauseButton: string,
@@ -34,159 +33,155 @@ type Props = {};
 //   error: string | null,
 // };
 
-export default class AudioPlayer extends Component {
+const AudioPlayer = ({ fileUrl }) => {
+  const fileName = 'test.mp4';
+  const player = new Player(fileUrl);
+  const recorder = new Recorder(fileName, {
+    bitrate: 256000,
+    channels: 2,
+    sampleRate: 44100,
+    quality: 'max',
+  });
+  const [lastSeek, setLastSeek] = useState(0);
   // player: Player | null;
   // recorder: Recorder | null;
   // lastSeek: number;
   // _progressInterval: IntervalID;
 
-  constructor(props) {
-    super(props);
+  const [state, setState] = useState({
+    playPauseButton: 'Preparing...',
+    recordButton: 'Preparing...',
 
-    console.log(this.props);
+    stopButtonDisabled: true,
+    playButtonDisabled: true,
+    recordButtonDisabled: true,
 
-    this.state = {
-      playPauseButton: 'Preparing...',
-      recordButton: 'Preparing...',
+    loopButtonStatus: false,
+    progress: 0,
 
-      stopButtonDisabled: true,
-      playButtonDisabled: true,
-      recordButtonDisabled: true,
+    error: null,
+    // my data
+    duration: 0,
+  });
 
-      loopButtonStatus: false,
-      progress: 0,
+  useEffect(() => {
+    _reloadPlayer(fileUrl);
+    // _reloadRecorder();
+    console.log('Last seek');
+  }, []);
 
-      error: null,
-    };
-  }
+  useEffect(() => {
+    let _progressInterval;
+    // if (player && Date.now() - lastSeek > 200) {
+    // _progressInterval = setInterval(() => {
+    console.log('Last seeks', player.isPlaying);
+    // let currentProgress = Math.max(0, player.currentTime) / player.duration;
+    // if (isNaN(currentProgress)) {
+    //   currentProgress = 0;
+    // }
+    player &&
+      player.isPlaying &&
+      setState({ ...state, duration: player.duration });
+    // }, 100);
+    // }
 
-  componentWillMount() {
-    // this.fileName = ;
-    this.player = null;
-    this.recorder = null;
-    this.lastSeek = 0;
+    // return () => {
+    //   clearInterval(_progressInterval);
+    // };
+  }, [player.isPlaying]);
 
-    this._reloadPlayer();
-    this._reloadRecorder();
+  // function _shouldUpdateProgressBar() {
+  //   // Debounce progress bar update by 200 ms
+  //   return ;
+  // }
 
-    this._progressInterval = setInterval(() => {
-      if (this.player && this._shouldUpdateProgressBar()) {
-        let currentProgress =
-          Math.max(0, this.player.currentTime) / this.player.duration;
-        if (isNaN(currentProgress)) {
-          currentProgress = 0;
-        }
-        this.setState({ progress: currentProgress });
-      }
-    }, 100);
-  }
+  function _updateState(err) {
+    setState({
+      playPauseButton: player && player.isPlaying ? 'Pause' : 'Play',
+      recordButton: recorder && recorder.isRecording ? 'Stop' : 'Record',
 
-  componentWillUnmount() {
-    clearInterval(this._progressInterval);
-  }
-
-  _shouldUpdateProgressBar() {
-    // Debounce progress bar update by 200 ms
-    return Date.now() - this.lastSeek > 200;
-  }
-
-  _updateState(err) {
-    this.setState({
-      playPauseButton: this.player && this.player.isPlaying ? 'Pause' : 'Play',
-      recordButton:
-        this.recorder && this.recorder.isRecording ? 'Stop' : 'Record',
-
-      stopButtonDisabled: !this.player || !this.player.canStop,
-      playButtonDisabled:
-        !this.player || !this.player.canPlay || this.recorder.isRecording,
-      recordButtonDisabled:
-        !this.recorder || (this.player && !this.player.isStopped),
+      stopButtonDisabled: !player || !player.canStop,
+      playButtonDisabled: !player || !player.canPlay || recorder.isRecording,
+      recordButtonDisabled: !recorder || (player && !player.isStopped),
     });
   }
 
-  _playPause() {
-    this.player.playPause((err, paused) => {
+  function _playPause() {
+    player.playPause((err, paused) => {
       if (err) {
-        this.setState({
+        setState({
           error: err.message,
         });
       }
-      this._updateState();
+      _updateState();
     });
   }
 
-  _stop() {
-    this.player.stop(() => {
-      this._updateState();
+  function _stop() {
+    player.stop(() => {
+      _updateState();
     });
   }
 
-  _seek(percentage) {
-    if (!this.player) {
+  function _seek(percentage) {
+    if (!player) {
       return;
     }
 
-    this.lastSeek = Date.now();
+    setLastSeek(Date.now());
 
-    let position = percentage * this.player.duration;
+    let position = percentage * player.duration;
 
-    this.player.seek(position, () => {
-      this._updateState();
+    player.seek(position, () => {
+      _updateState();
     });
   }
 
-  _reloadPlayer() {
-    if (this.player) {
-      this.player.destroy();
+  function _reloadPlayer(fileUrl) {
+    if (player) {
+      player.destroy();
     }
-
-    this.player = new Player(this.props.fileName, {
-      autoDestroy: false,
-    }).prepare((err) => {
-      console.log(this.player);
+    console.log('FileLink', fileUrl);
+    player.prepare((err) => {
+      console.log('Player Test0', player);
       if (err) {
         console.log('error at _reloadPlayer():');
         console.log(err);
       } else {
-        this.player.looping = this.state.loopButtonStatus;
+        // player.looping = state.loopButtonStatus;
       }
 
-      this._updateState();
+      _updateState();
     });
 
-    this._updateState();
+    _updateState();
 
-    this.player.on('ended', () => {
-      this._updateState();
+    setState({ ...state, duration: player.duration });
+
+    player.on('ended', () => {
+      _updateState();
     });
-    this.player.on('pause', () => {
-      this._updateState();
+    player.on('pause', () => {
+      _updateState();
     });
   }
 
-  _reloadRecorder() {
-    if (this.recorder) {
-      this.recorder.destroy();
+  function _reloadRecorder() {
+    if (recorder) {
+      recorder.destroy();
     }
 
-    this.recorder = new Recorder(this.props.fileName, {
-      bitrate: 256000,
-      channels: 2,
-      sampleRate: 44100,
-      quality: 'max',
-    });
-
-    this._updateState();
+    _updateState();
   }
 
-  _toggleRecord() {
-    if (this.player) {
-      this.player.destroy();
+  function _toggleRecord() {
+    if (player) {
+      player.destroy();
     }
 
     let recordAudioRequest;
     if (Platform.OS == 'android') {
-      recordAudioRequest = this._requestRecordAudioPermission();
+      recordAudioRequest = _requestRecordAudioPermission();
     } else {
       recordAudioRequest = new Promise(function (resolve, reject) {
         resolve(true);
@@ -195,29 +190,29 @@ export default class AudioPlayer extends Component {
 
     recordAudioRequest.then((hasPermission) => {
       if (!hasPermission) {
-        this.setState({
+        setState({
           error: 'Record Audio Permission was denied',
         });
         return;
       }
 
-      this.recorder.toggleRecord((err, stopped) => {
+      recorder.toggleRecord((err, stopped) => {
         if (err) {
-          this.setState({
+          setState({
             error: err.message,
           });
         }
         if (stopped) {
-          this._reloadPlayer();
-          this._reloadRecorder();
+          _reloadPlayer();
+          _reloadRecorder();
         }
 
-        this._updateState();
+        _updateState();
       });
     });
   }
 
-  async _requestRecordAudioPermission() {
+  async function _requestRecordAudioPermission() {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
@@ -241,65 +236,66 @@ export default class AudioPlayer extends Component {
     }
   }
 
-  _toggleLooping(value) {
-    this.setState({
+  function _toggleLooping(value) {
+    setState({
       loopButtonStatus: value,
     });
-    if (this.player) {
-      this.player.looping = value;
+    if (player) {
+      player.looping = value;
     }
   }
 
-  render() {
-    return (
-      <SafeAreaView>
-        <View>
-          <Text style={styles.title}>Playback</Text>
-        </View>
-        <View>
-          <Button
-            title={this.state.playPauseButton}
-            disabled={this.state.playButtonDisabled}
-            onPress={() => this._playPause()}
-          />
-          <Button
-            title={'Stop'}
-            disabled={this.state.stopButtonDisabled}
-            onPress={() => this._stop()}
-          />
-        </View>
-        <View style={styles.settingsContainer}>
-          <Switch
-            onValueChange={(value) => this._toggleLooping(value)}
-            value={this.state.loopButtonStatus}
-          />
-          <Text>Toggle Looping</Text>
-        </View>
-        <View style={styles.slider}>
-          <Slider
-            step={0.0001}
-            disabled={this.state.playButtonDisabled}
-            onValueChange={(percentage) => this._seek(percentage)}
-            value={this.state.progress}
-          />
-        </View>
-        <View>
+  console.log(state.playPauseButton);
+  console.log('Duration---', player && player.duration, '---', player);
+
+  return (
+    <SafeAreaView>
+      <View>
+        <Text style={styles.title}>Playback</Text>
+      </View>
+      <View>
+        <Button
+          title={'Play'}
+          disabled={state.playButtonDisabled}
+          onPress={() => _playPause()}
+        />
+        <Button
+          title={'Stop'}
+          disabled={state.stopButtonDisabled}
+          onPress={() => _stop()}
+        />
+      </View>
+      <View style={styles.settingsContainer}>
+        <Switch
+          onValueChange={(value) => _toggleLooping(value)}
+          value={state.loopButtonStatus}
+        />
+        <Text>Toggle Looping</Text>
+      </View>
+      <View style={styles.slider}>
+        <Slider
+          step={0.0001}
+          disabled={state.playButtonDisabled}
+          onValueChange={(percentage) => _seek(percentage)}
+          value={state.progress}
+        />
+      </View>
+      {/* <View>
           <Text style={styles.title}>Recording</Text>
         </View>
         <View>
           <Button
-            title={this.state.recordButton}
-            disabled={this.state.recordButtonDisabled}
-            onPress={() => this._toggleRecord()}
+            title={state.recordButton}
+            disabled={state.recordButtonDisabled}
+            onPress={() => _toggleRecord()}
           />
-        </View>
-        <View>
-          <Text style={styles.errorMessage}>{this.state.error}</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
-}
+        </View> */}
+      <View>
+        <Text style={styles.errorMessage}>{state.error}</Text>
+      </View>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   slider: {
@@ -328,3 +324,5 @@ const styles = StyleSheet.create({
     color: 'red',
   },
 });
+
+export default AudioPlayer;

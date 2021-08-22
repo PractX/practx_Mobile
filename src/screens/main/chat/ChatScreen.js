@@ -542,7 +542,9 @@ const ChatScreen = ({
       });
   }, [extraData]);
   const [recordTime, setRecordTime] = useState();
-  console.log(recordTime);
+  const [audioTime, setAudioTime] = useState();
+  console.log('RecordTIme----', recordTime);
+  console.log('AudioTIme----', audioTime);
   const onStartRecord = useCallback(async () => {
     console.log('Ok startting');
     const dirs = RNFetchBlob.fs.dirs;
@@ -598,19 +600,23 @@ const ChatScreen = ({
     // console.log('Generating Test', generateName(6, 'record'));
   }, []);
 
-  const onStartPlay = useCallback(async () => {
-    console.log('onStartPlay');
-    const msg = await audioRecorderPlayer.startPlayer();
-    console.log(msg);
-    audioRecorderPlayer.addPlayBackListener((e) => {
-      setRecordTime({
-        currentPositionSec: e.currentPosition,
-        currentDurationSec: e.duration,
-        playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
-        duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+  const onStartPlay = useCallback(async (uri) => {
+    console.log('onStartPlay', uri);
+    try {
+      const msg = await audioRecorderPlayer.startPlayer(uri);
+      console.log('Play', msg);
+      audioRecorderPlayer.addPlayBackListener((e) => {
+        setAudioTime({
+          currentPositionSec: e.currentPosition,
+          currentDurationSec: e.duration,
+          playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
+          duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+        });
+        return;
       });
-      return;
-    });
+    } catch (e) {
+      console.log(e);
+    }
   }, []);
 
   const onPausePlay = useCallback(async () => {
@@ -986,6 +992,10 @@ const ChatScreen = ({
                         practiceDms={practiceDms}
                         patientChatId={currentUser ? currentUser.chatId : 0}
                         practiceStaff={practiceStaffs}
+                        onStartPlay={onStartPlay}
+                        onPausePlay={onPausePlay}
+                        onStopPlay={onStopPlay}
+                        audioTime={audioTime}
                       />
                       {messages.length &&
                         getUniqueListBy(messages, 'day').some(
