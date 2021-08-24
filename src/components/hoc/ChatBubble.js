@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
@@ -11,6 +11,21 @@ import moment from 'moment';
 import { Icon } from 'react-native-elements';
 import Video from 'react-native-video';
 import { useRef } from 'react';
+import AudioPlayer from '../../utils/audioPlayer';
+import { TouchableOpacity } from 'react-native';
+// import WaveForm from 'react-native-audiowaveform';
+import Audio from 'react-native-video';
+import ProgressBar from '../../utils/progressBar';
+import { useState } from 'react';
+import AudioRecorderPlayer, {
+  AVEncoderAudioQualityIOSType,
+  AVEncodingOption,
+  AudioEncoderAndroidType,
+  AudioSet,
+  AudioSourceAndroidType,
+} from 'react-native-audio-recorder-player';
+import SoundPlayer from 'react-native-sound-player';
+import { Player } from '@react-native-community/audio-toolkit';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -24,10 +39,28 @@ const ChatBubble = ({
   patientChatId,
   index,
   practiceStaff,
+  // onStartPlay,
+  // onPausePlay,
+  // onStopPlay,
+  // audioTime,
 }) => {
   const videoRef = useRef(null);
   const { colors } = useTheme();
   const pubnub = usePubNub();
+  const audioRef = useRef();
+  // const audioRecorderPlayer = new AudioRecorderPlayer();
+
+  // console.log(Player.isStopped);
+  // console.log(audioPlayers);
+  const [audioTime, setAudioTime] = useState();
+  const [play, setPlay] = useState(false);
+
+  const [audioState, setAudioState] = useState({
+    duration: 0,
+    currentTime: 0,
+    playableDuration: 0,
+    seekableDuration: 0,
+  });
   // console.log('Bubble ID', id);
   const checkAmPm = (time) => {
     if (time.split(':')[0] > 12) {
@@ -36,6 +69,7 @@ const ChatBubble = ({
       return time + ' am';
     }
   };
+
   const addTime = (msg) => {
     const unixTimestamp = msg.timetoken / 10000000;
     // const gmtDate = new Date(unixTimestamp * 1000);
@@ -54,6 +88,77 @@ const ChatBubble = ({
     const newDate = new Date(unixTimestamp * 1000);
     return moment(newDate).format('ddd hh:mm a');
   };
+
+  // const audioSet = {
+  //   AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+  //   AudioSourceAndroid: AudioSourceAndroidType.MIC,
+  //   // AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+  //   AVNumberOfChannelsKeyIOS: 2,
+  //   AVFormatIDKeyIOS: AVEncodingOption.aac,
+  // };
+
+  // const onStartPlay = useCallback(async (uri) => {
+  //   console.log('onStartPlay', uri);
+  //   try {
+  //     const msg = await audioRecorderPlayer.startPlayer(uri);
+  //     console.log('Play', msg);
+  //     audioRecorderPlayer.addPlayBackListener((e) => {
+  //       setAudioTime({
+  //         currentPositionSec: e.currentPosition,
+  //         currentDurationSec: e.duration,
+  //         playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
+  //         duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+  //       });
+  //       return;
+  //     });
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }, []);
+
+  // const onPausePlay = useCallback(async () => {
+  //   await audioRecorderPlayer.pausePlayer();
+  // }, []);
+
+  const fileUrl =
+    message.messageType === 4 &&
+    message.message.file.name.match(/.(m4a|mp3|aac)$/i)
+      ? pubnub.getFileUrl({
+          channel: message.channel,
+          id: message.message.file.id,
+          name: message.message.file.name,
+        })
+      : null;
+
+  // const getInfo = useCallback(async () => {
+  //   if (message.messageType === 4) {
+  //     const data = await SoundPlayer.loadUrl(
+  //       pubnub.getFileUrl({
+  //         channel: message.channel,
+  //         id: message.message.file.id,
+  //         name: message.message.file.name,
+  //       }),
+  //     );
+  //     console.log('Bayiiii', data);
+  //     // const info = SoundPlayer.getInfo(); // Also, you need to await this because it is async
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   getInfo();
+  // }, []);
+
+  // const fileUrl =
+  //   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+  // console.log(
+  //   'TEsting FIle URI',
+  //   message.messageType === 4 &&
+  //     message.message.file.name.match(/.(jpg|jpeg|png|gif)$/i) &&
+  //     pubnub.getFileUrl({
+  //       channel: message.channel,
+  //       id: message.message.file.id,
+  //       name: message.message.file.name,
+  //     }),
+  // );
   // console.log(addTime(message).split(', ')[0]);
   // console.log(
   //   'Null Staff',
@@ -62,6 +167,8 @@ const ChatBubble = ({
   //   // message.message.staffId,
   //   // practiceStaff.find((staff) => staff.id === message.message.staffId),
   // );
+  console.log('Duration', fileUrl, audioState);
+
   return (
     <View key={index} style={{ width: appwidth, alignSelf: 'center' }}>
       {/* <Text>{addTime(message).split(', ')[0]}</Text> */}
@@ -178,6 +285,86 @@ const ChatBubble = ({
                     />
                   </FastImage>
                 </>
+              ) : message.message.file.name.match(/.(m4a|mp3|aac)$/i) ? (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    backgroundColor: 'green',
+                    width: '100%',
+                    height: '100%',
+                  }}>
+                  {/* ANCHOR */}
+                  {audioTime && (
+                    <ProgressBar
+                      currentTime={audioTime.currentPositionSec}
+                      duration={audioTime.currentDurationSec}
+                    />
+                  )}
+                  <Audio
+                    ref={audioRef}
+                    source={{
+                      uri: fileUrl,
+                    }}
+                    controls={false}
+                    audioOnly={true}
+                    // resizeMode="contain"
+                    // onLoad={onLoadEnd}
+                    onLoad={({ duration }) => {
+                      setAudioState({
+                        ...audioState,
+                        duration: duration,
+                      });
+                    }}
+                    // onProgress={onProgress}
+                    onProgress={({
+                      currentTime,
+                      playableDuration,
+                      seekableDuration,
+                    }) => {
+                      setAudioState({
+                        ...audioState,
+                        currentTime,
+                        playableDuration,
+                        seekableDuration,
+                      });
+                    }}
+                    // onEnd={onEnd}
+                    paused={!play}
+                    // muted={!sound}
+                  />
+                  {/* <AudioPlayer
+                    fileUrl={pubnub.getFileUrl({
+                      channel: message.channel,
+                      id: message.message.file.id,
+                      name: message.message.file.name,
+                    })}
+                  /> */}
+                  <View>
+                    <TouchableOpacity
+                      style={{
+                        marginTop: 60,
+                        // padding: 16,
+                        backgroundColor: 'gray',
+                      }}
+                      onPress={() => {
+                        //  onStartPlay(fileUrl)
+                        // SoundPlayer.play();
+                        setPlay(true);
+                      }}>
+                      <Text>Play</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{ padding: 16, backgroundColor: 'yellow' }}
+                      onPress={() => setPlay(false)}>
+                      <Text>Pause</Text>
+                    </TouchableOpacity>
+                    {/* <TouchableOpacity
+                      style={{ padding: 16, backgroundColor: 'yellow' }}
+                      onPress={() => onStopPlay()}>
+                      <Text>Stop</Text>
+                    </TouchableOpacity> */}
+                  </View>
+                </View>
               ) : (
                 <Text>Doc</Text>
               )}
@@ -347,6 +534,86 @@ const ChatBubble = ({
                       style={[{ alignSelf: 'center', marginTop: '40%' }]}
                     />
                   </FastImage>
+                ) : message.message.file.name.match(/.(m4a|mp3|aac)$/i) ? (
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      backgroundColor: 'green',
+                      width: '100%',
+                      height: '100%',
+                    }}>
+                    {/* ANCHOR */}
+                    {audioTime && (
+                      <ProgressBar
+                        currentTime={audioTime.currentPositionSec}
+                        duration={audioTime.currentDurationSec}
+                      />
+                    )}
+                    <Audio
+                      ref={audioRef}
+                      source={{
+                        uri: fileUrl,
+                      }}
+                      controls={false}
+                      audioOnly={true}
+                      // resizeMode="contain"
+                      // onLoad={onLoadEnd}
+                      onLoad={({ duration }) => {
+                        setAudioState({
+                          ...audioState,
+                          duration: duration,
+                        });
+                      }}
+                      // onProgress={onProgress}
+                      onProgress={({
+                        currentTime,
+                        playableDuration,
+                        seekableDuration,
+                      }) => {
+                        setAudioState({
+                          ...audioState,
+                          currentTime,
+                          playableDuration,
+                          seekableDuration,
+                        });
+                      }}
+                      // onEnd={onEnd}
+                      paused={!play}
+                      // muted={!sound}
+                    />
+                    {/* <AudioPlayer
+                    fileUrl={pubnub.getFileUrl({
+                      channel: message.channel,
+                      id: message.message.file.id,
+                      name: message.message.file.name,
+                    })}
+                  /> */}
+                    <View>
+                      <TouchableOpacity
+                        style={{
+                          marginTop: 60,
+                          // padding: 16,
+                          backgroundColor: 'gray',
+                        }}
+                        onPress={() => {
+                          //  onStartPlay(fileUrl)
+                          // SoundPlayer.play();
+                          setPlay(true);
+                        }}>
+                        <Text>Play</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{ padding: 16, backgroundColor: 'yellow' }}
+                        onPress={() => setPlay(false)}>
+                        <Text>Pause</Text>
+                      </TouchableOpacity>
+                      {/* <TouchableOpacity
+                      style={{ padding: 16, backgroundColor: 'yellow' }}
+                      onPress={() => onStopPlay()}>
+                      <Text>Stop</Text>
+                    </TouchableOpacity> */}
+                    </View>
+                  </View>
                 ) : (
                   <Text>Doc</Text>
                 )}

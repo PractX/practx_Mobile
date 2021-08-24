@@ -126,3 +126,53 @@ const getMessages = (cha) => {
     pubnub.unsubscribeAll();
   };
 };
+
+
+
+
+
+// SWIPER
+<SwipeButton
+  enableReverseSwipe
+  onSwipeSuccess={() =>
+    // updateSwipeStatusMessage('Slide success!')
+    console.log('Successs swip')
+  }
+  railBackgroundColor="#a493d6"
+  thumbIconComponent={() => (
+    <TouchableOpacity
+      ref={buttonRef}
+      onPress={() => console.log('Record')}
+      onPressIn={() => onStartRecord()}
+      onPressOut={() => onStopRecord()}
+      style={{
+        alignSelf: 'center',
+        marginRight: 10,
+        // position: 'absolute',
+      }}>
+      <View
+        style={{
+          backgroundColor: colors.primary,
+          height: 35,
+          width: 35,
+          alignSelf: 'center',
+          justifyContent: 'center',
+          marginLeft: 10,
+          borderRadius: 10,
+        }}>
+        <Icon
+          name={inputText ? 'ios-send' : 'mic'}
+          type={'ionicon'}
+          color={'white'}
+          size={normalize(18)}
+          style={{
+            alignSelf: 'center',
+          }}
+        />
+      </View>
+    </TouchableOpacity>
+  )}
+  thumbIconBackgroundColor={colors.background}
+  title="Slide to unlock"
+  // width={200}
+/>

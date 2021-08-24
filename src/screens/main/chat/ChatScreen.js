@@ -62,12 +62,26 @@ import {
   InputToolbar,
   LoadEarlier,
   Message,
+  Composer,
   Send,
 } from 'react-native-gifted-chat';
 import EmojiBoard from 'react-native-emoji-board';
 import { SafeAreaView } from 'react-navigation';
 import moment from 'moment';
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import AudioRecorderPlayer, {
+  AVEncoderAudioQualityIOSType,
+  AVEncodingOption,
+  AudioEncoderAndroidType,
+  AudioSet,
+  AudioSourceAndroidType,
+} from 'react-native-audio-recorder-player';
+import SwipeButton from 'rn-swipe-button';
+import GestureRecognizer, {
+  swipeDirections,
+} from 'react-native-swipe-gestures';
+import generateName from '../../../utils/generateName';
+import RNFetchBlob from 'rn-fetch-blob';
+// import SoundPlayer from 'react-native-sound-player'
 
 const { flags, sports, food } = Categories;
 // console.log(Categories);
@@ -124,7 +138,16 @@ const ChatScreen = ({
   const d = new Date();
   const time = d.getTime();
   const pubnub = usePubNub();
-  const [recordTime, setRecordTime] = useState();
+  const [onRecording, setOnRecording] = useState(false);
+
+  // const buttonRef = useRef();
+
+  const audioRecorderPlayer = new AudioRecorderPlayer();
+
+  const config = {
+    velocityThreshold: 0.8,
+    directionalOffsetThreshold: 150,
+  };
 
   const addTime = (timetoken) => {
     const unixTimestamp = timetoken / 10000000;
@@ -216,18 +239,19 @@ const ChatScreen = ({
     }
   };
 
-  const sendFile = (fileData) => {
+  const sendFile = (fileData, type) => {
     // console.log(channelName);
     // console.log(fileData);
     // console.log('SENDING____');
     setErrorMessage('');
     setSending(true);
     setInputText('');
-    setMessage('media');
+    setMessage(type ? type : 'media');
     setSending(true);
     // chatRef.scrollToEnd();
     pubnub.setUUID(currentUser ? currentUser.chatId : 0);
     if (fileData) {
+      console.log('File Data', fileData);
       pubnub.sendFile(
         {
           channel: channelName,
@@ -245,9 +269,13 @@ const ChatScreen = ({
           // setMessage('');
           // handle status, response
           if (status) {
-            setMessage('text');
-            setErrorMessage("Couldn't send media or file");
-            console.log('Status Message', status.message);
+            if (fileData.fileSize >= 5000000 || fileData.size >= 5000000) {
+              setErrorMessage('Opps Media or file exceeds 5mb');
+            } else {
+              setMessage('text');
+              setErrorMessage("Couldn't send media or file");
+              console.log('Status Message', status.message);
+            }
           } else {
             setErrorMessage('');
           }
@@ -515,34 +543,26 @@ const ChatScreen = ({
         swipeEnabled: true,
       });
   }, [extraData]);
-
-  console.log('Recording', recordTime);
-
-  //   const onStartRecord = React.useCallback(async () => {
-  //     if (Platform.OS === 'android') {
-  //       try {
-  //         const grants = await PermissionsAndroid.requestMultiple([ PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE, PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, ]); console.log('write external stroage', grants);
-  //         if ( grants['android.permission.WRITE_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED && grants['android.permission.READ_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED && grants['android.permission.RECORD_AUDIO'] === PermissionsAndroid.RESULTS.GRANTED ) {
-  //           console.log('permissions granted');
-  //          } else { console.log('All required permissions not granted'); return;
-  //         }
-  //       } catch (err) {
-  //         console.warn(err); return;
-  //       }
-  //     }
-  //     const audioSet: AudioSet = { AudioEncoderAndroid: AudioEncoderAndroidType.AAC, AudioSourceAndroid: AudioSourceAndroidType.MIC, AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high, AVNumberOfChannelsKeyIOS: 2, AVFormatIDKeyIOS: AVEncodingOption.aac, }; console.log('audioSet', audioSet);
-  //     const uri = await audioRecorderPlayer.startRecorder(undefined, audioSet);
-  //     audioRecorderPlayer.addRecordBackListener((e: RecordBackType) => {
-  //        console.log('record-back', e);
-  //         setrecordSecs(e.currentPosition);
-  //         setrecordTime(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
-  //        });
-  //        console.log(uri: ${uri}`);
-  // }, []);
-
-  const onStartRecord = React.useCallback(async () => {
+  const [recordTime, setRecordTime] = useState();
+  const [audioTime, setAudioTime] = useState();
+  console.log('RecordTIme----', recordTime);
+  console.log('AudioTIme----', audioTime);
+  const onStartRecord = useCallback(async () => {
     console.log('Ok startting');
-    const result = await audioRecorderPlayer.startRecorder();
+    const dirs = RNFetchBlob.fs.dirs;
+    const path = Platform.select({
+      ios: `${generateName(10, 'record')}.m4a`,
+      android: `${dirs.CacheDir}/${generateName(10, 'record')}.m4a`,
+    });
+
+    // const audioSet = {
+    //   AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+    //   AudioSourceAndroid: AudioSourceAndroidType.MIC,
+    //   AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+    //   AVNumberOfChannelsKeyIOS: 2,
+    //   AVFormatIDKeyIOS: AVEncodingOption.aac,
+    // };
+    const result = await audioRecorderPlayer.startRecorder(path);
     audioRecorderPlayer.addRecordBackListener((e) => {
       setRecordTime({
         recordSecs: e.currentPosition,
@@ -550,102 +570,132 @@ const ChatScreen = ({
       });
       return;
     });
-    // console.log(result);
+    console.log(result);
   }, []);
 
-  const onStopRecord = React.useCallback(async () => {
+  const onStopRecord = useCallback(async () => {
     const result = await audioRecorderPlayer.stopRecorder();
     audioRecorderPlayer.removeRecordBackListener();
     setRecordTime({
       recordSecs: 0,
     });
-    console.log('Stopped', result);
   }, []);
 
-  const onStartPlay = async () => {
-    console.log('onStartPlay');
-    const msg = await audioRecorderPlayer.startPlayer();
-    console.log(msg);
-    audioRecorderPlayer.addPlayBackListener((e) => {
-      setRecordTime({
-        currentPositionSec: e.currentPosition,
-        currentDurationSec: e.duration,
-        playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
-        duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
-      });
-      return;
+  const onSendRecordedFile = useCallback(async () => {
+    const result = await audioRecorderPlayer.stopRecorder();
+    audioRecorderPlayer.removeRecordBackListener();
+    setRecordTime({
+      recordSecs: 0,
     });
-  };
+    console.log('Uri', result);
+    let fileName = result.split(/[\s/]+/);
+    console.log(fileName[fileName.length - 1]);
+    setOnRecording(false);
+    sendFile(
+      {
+        mimeType: 'audio/mp4',
+        name: fileName[fileName.length - 1],
+        uri: result,
+      },
+      'voiceNote',
+    );
+    // console.log('Generating Test', generateName(6, 'record'));
+  }, []);
 
-  const onPausePlay = async () => {
+  const onStartPlay = useCallback(async (uri) => {
+    console.log('onStartPlay', uri);
+    try {
+      const msg = await audioRecorderPlayer.startPlayer(uri);
+      console.log('Play', msg);
+      audioRecorderPlayer.addPlayBackListener((e) => {
+        setAudioTime({
+          currentPositionSec: e.currentPosition,
+          currentDurationSec: e.duration,
+          playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
+          duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+        });
+        return;
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
+  const onPausePlay = useCallback(async () => {
     await audioRecorderPlayer.pausePlayer();
-  };
+  }, []);
 
-  const onStopPlay = async () => {
+  const onStopPlay = useCallback(async () => {
     console.log('onStopPlay');
     audioRecorderPlayer.stopPlayer();
     audioRecorderPlayer.removePlayBackListener();
-  };
+  }, []);
 
   // let dataMsg = [] allMessages.find((item) => item.channel === channelName);
 
   const renderActions = (props) => {
     return (
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Actions
-          {...props}
-          icon={() => (
-            <Icon
-              name={showAccessories ? 'x' : 'plus'}
-              type={'feather'}
-              // action={setShowEmoji}
-              // value={showEmoji}
-              size={22}
-              color={'white'}
+      <>
+        {onRecording ? (
+          <></>
+        ) : (
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Actions
+              {...props}
+              icon={() => (
+                <Icon
+                  name={showAccessories ? 'x' : 'plus'}
+                  type={'feather'}
+                  // action={setShowEmoji}
+                  // value={showEmoji}
+                  size={22}
+                  color={'white'}
+                />
+              )}
+              onPressActionButton={() =>
+                showAccessories
+                  ? setShowAccessories(false)
+                  : setShowAccessories(true)
+              }
+              containerStyle={{
+                backgroundColor: colors.primary,
+                borderRadius: 100,
+                height: 28,
+                width: 28,
+                marginTop: 8,
+                alignSelf: 'center',
+                justifyContent: 'center',
+              }}
             />
-          )}
-          onPressActionButton={() =>
-            showAccessories
-              ? setShowAccessories(false)
-              : setShowAccessories(true)
-          }
-          containerStyle={{
-            backgroundColor: colors.primary,
-            borderRadius: 100,
-            height: 28,
-            width: 28,
-            marginTop: 8,
-            alignSelf: 'center',
-            justifyContent: 'center',
-          }}
-        />
-        <Actions
-          {...props}
-          icon={() => (
-            <Icon
-              name={showEmoji ? 'keyboard' : 'smile'}
-              type={'font-awesome-5'}
-              // action={setShowEmoji}
-              // value={showEmoji}
-              size={normalize(Platform.OS === 'ios' ? 20 : 22)}
-              color={colors.text}
+            <Actions
+              {...props}
+              icon={() => (
+                <Icon
+                  name={showEmoji ? 'keyboard' : 'smile'}
+                  type={'font-awesome-5'}
+                  // action={setShowEmoji}
+                  // value={showEmoji}
+                  size={normalize(Platform.OS === 'ios' ? 20 : 22)}
+                  color={colors.text}
+                />
+              )}
+              onPressActionButton={() => {
+                Keyboard.dismiss();
+                showEmoji ? setShowEmoji(false) : setShowEmoji(true);
+              }}
+              containerStyle={{
+                // backgroundColor: colors.primary,
+                height: 28,
+                width: 28,
+                marginRight: 10,
+                marginTop: 10,
+                // marginBottom: 30,
+                alignSelf: 'center',
+              }}
             />
-          )}
-          onPressActionButton={() => {
-            Keyboard.dismiss();
-            showEmoji ? setShowEmoji(false) : setShowEmoji(true);
-          }}
-          containerStyle={{
-            // backgroundColor: colors.primary,
-            height: 28,
-            width: 28,
-            marginRight: 10,
-            marginTop: 10,
-            // marginBottom: 30,
-            alignSelf: 'center',
-          }}
-        />
-      </View>
+          </View>
+        )}
+      </>
     );
   };
 
@@ -944,6 +994,10 @@ const ChatScreen = ({
                         practiceDms={practiceDms}
                         patientChatId={currentUser ? currentUser.chatId : 0}
                         practiceStaff={practiceStaffs}
+                        onStartPlay={onStartPlay}
+                        onPausePlay={onPausePlay}
+                        onStopPlay={onStopPlay}
+                        audioTime={audioTime}
                       />
                       {messages.length &&
                         getUniqueListBy(messages, 'day').some(
@@ -1077,6 +1131,16 @@ const ChatScreen = ({
                 fontSize: normalize(14),
                 alignItems: 'center',
                 marginTop: 10,
+
+                //fff
+                // color: '#222B45',
+                //       backgroundColor: '#EDF1F7',
+                // borderWidth: 1,
+                // borderRadius: 5,
+                // borderColor: '#E4E9F2',
+                paddingTop: 8.5,
+                paddingHorizontal: 12,
+                marginLeft: 0,
               }}
               // renderInputToolbar={() => <></>}
               // renderInputToolbar={null}
@@ -1169,7 +1233,10 @@ const ChatScreen = ({
                               color: colors.text,
                             }}>
                             {errorMessage
-                              ? '⚠️ Sorry, Internet error...'
+                              ? errorMessage ===
+                                'Opps Media or file exceeds 5mb'
+                                ? '💾 Sorry, File size error...'
+                                : '⚠️ Sorry, Internet error...'
                               : 'Sending...'}
                           </Text>
                           <ActivityIndicator
@@ -1206,49 +1273,203 @@ const ChatScreen = ({
                     </View>
                   )}
                   renderAccessory={() =>
-                    showAccessories ? renderAccessory() : null
+                    onRecording
+                      ? null
+                      : showAccessories
+                      ? renderAccessory()
+                      : null
                   }
-                  renderActions={renderActions}
-                  renderSend={
-                    (messageProps) => {
-                      return (
-                        <TouchableOpacity
-                          onPress={() =>
-                            inputText
-                              ? sendMessage(messageProps.text)
-                              : console.log('Record')
-                          }
-                          onPressIn={() =>
-                            !inputText ? onStartRecord() : null
-                          }
-                          onPressOut={() =>
-                            !inputText ? onStopRecord() : null
-                          }
+                  renderComposer={(cProps) => (
+                    <>
+                      {/* <GestureRecognizer
+                        onSwipe={(direction, state) =>
+                          console.log(direction, state)
+                        }
+                        onSwipeUp={(state) => console.log(state)}
+                        onSwipeDown={(state) => console.log(state)}
+                        onSwipeLeft={(state) => console.log(state)}
+                        onSwipeRight={(state) => console.log(state)}
+                        config={config}
+                        style={{
+                          flex: 1,
+                          backgroundColor: 'pink',
+                        }}>
+                        <Text>Swipper</Text>
+                        <Text>onSwipe callback received gesture:</Text>
+                      </GestureRecognizer> */}
+                      {onRecording ? (
+                        <View
                           style={{
+                            flexDirection: 'row',
+                            width: appwidth - normalize(40),
+                            // width: appwidth + 50,
+                            backgroundColor: colors.background_1,
+                            height: 55,
+                            marginHorizontal: 10,
+                            paddingHorizontal: 10,
                             alignSelf: 'center',
-                            marginRight: 10,
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            borderRadius: 20,
                           }}>
                           <View
                             style={{
-                              backgroundColor: colors.primary,
-                              height: 35,
-                              width: 35,
-                              alignSelf: 'center',
-                              justifyContent: 'center',
-                              marginLeft: 10,
-                              borderRadius: 10,
+                              flexDirection: 'row',
                             }}>
                             <Icon
-                              name={inputText ? 'ios-send' : 'mic'}
+                              name={'mic'}
                               type={'ionicon'}
-                              color={'white'}
-                              size={normalize(18)}
+                              color={colors.primary}
+                              size={normalize(25)}
                               style={{
                                 alignSelf: 'center',
                               }}
                             />
+                            <Text
+                              style={{
+                                color: colors.text,
+                                alignSelf: 'center',
+                                fontFamily: 'SofiaProRegular',
+                                fontSize: normalize(14),
+                                alignItems: 'center',
+                                paddingLeft: 15,
+                              }}>
+                              {recordTime &&
+                                recordTime.recordTime &&
+                                recordTime.recordTime.substring(
+                                  0,
+                                  recordTime.recordTime.length - 3,
+                                )}
+                            </Text>
                           </View>
-                        </TouchableOpacity>
+
+                          <TouchableOpacity
+                            // onPress={() =>
+                            //   inputText
+                            //     ? sendMessage(messageProps.text)
+                            //     : console.log('Record')
+                            // }
+                            // onPressIn={() => {
+                            //   setOnRecording(true);
+                            //   onStartRecord();
+                            // }}
+                            onPress={() => {
+                              setOnRecording(false);
+                              onStopRecord();
+                            }}
+                            style={{
+                              alignSelf: 'center',
+                              marginRight: 10,
+                            }}>
+                            <Text
+                              style={{
+                                color: colors.primary,
+                                alignSelf: 'center',
+                                fontFamily: 'SofiaProRegular',
+                                fontSize: normalize(14),
+                                alignItems: 'center',
+                                paddingLeft: 15,
+                              }}>
+                              Cancel
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      ) : (
+                        <Composer {...cProps} />
+                      )}
+                    </>
+                  )}
+                  renderActions={renderActions}
+                  renderSend={
+                    (messageProps) => {
+                      return (
+                        <>
+                          {inputText ? (
+                            <TouchableOpacity
+                              onPress={() =>
+                                inputText
+                                  ? sendMessage(messageProps.text)
+                                  : console.log('Record')
+                              }
+                              // onPressIn={() => {
+                              //   setOnRecording(true);
+                              //   onStartRecord();
+                              // }}
+                              // onPressOut={() => {
+                              //   setOnRecording(false);
+                              //   onStopRecord();
+                              // }}
+                              style={{
+                                alignSelf: 'center',
+                                marginRight: 10,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: colors.primary,
+                                  height: 35,
+                                  width: 35,
+                                  alignSelf: 'center',
+                                  justifyContent: 'center',
+                                  marginLeft: 10,
+                                  borderRadius: 10,
+                                }}>
+                                <Icon
+                                  name={inputText ? 'ios-send' : 'mic'}
+                                  type={'ionicon'}
+                                  color={'white'}
+                                  size={normalize(18)}
+                                  style={{
+                                    alignSelf: 'center',
+                                  }}
+                                />
+                              </View>
+                            </TouchableOpacity>
+                          ) : (
+                            <TouchableOpacity
+                              onPress={() => {
+                                if (inputText) {
+                                  sendMessage(messageProps.text);
+                                } else {
+                                  if (onRecording) {
+                                    onSendRecordedFile();
+                                  } else {
+                                    console.log('Pressed');
+                                    setOnRecording(true);
+                                    onStartRecord();
+                                  }
+                                }
+                              }}
+                              style={{
+                                alignSelf: 'center',
+                                marginRight: 10,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: colors.primary,
+                                  height: 35,
+                                  width: 35,
+                                  alignSelf: 'center',
+                                  justifyContent: 'center',
+                                  marginLeft: 10,
+                                  borderRadius: 10,
+                                }}>
+                                <Icon
+                                  name={
+                                    inputText || onRecording
+                                      ? 'ios-send'
+                                      : 'mic'
+                                  }
+                                  type={'ionicon'}
+                                  color={'white'}
+                                  size={normalize(18)}
+                                  style={{
+                                    alignSelf: 'center',
+                                  }}
+                                />
+                              </View>
+                            </TouchableOpacity>
+                          )}
+                        </>
                       );
                     }
                     // renderSender
@@ -1305,8 +1526,17 @@ const ChatScreen = ({
               infiniteScroll={true}
               maxComposerHeight={100}
               alignTop={true}
-
-              // renderChatFooter={}
+              // renderCustomView={() => (
+              //   <View
+              //     style={{
+              //       position: 'absolute',
+              //       backgroundColor: 'blue',
+              //       zIndex: 100000000000000000000000,
+              //       bottom: 5,
+              //     }}>
+              //     <Text>Hello</Text>
+              //   </View>
+              // )}
             />
 
             {/* <FlatList
