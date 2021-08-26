@@ -19,6 +19,7 @@ const DmsBox = ({
   styling,
   allMessages,
   subgroups,
+  signals,
 }) => {
   const { colors } = useTheme();
   // const [{ messages }, setNewMessage] = useState(allMessages);
@@ -28,7 +29,6 @@ const DmsBox = ({
   const time = d.getTime();
   const [dmMessage, setDmMessage] = useState(null);
   // const addTime = (message) => {
-
   // };
   // console.log(
   //   'Last____',
@@ -74,6 +74,7 @@ const DmsBox = ({
     <TouchableOpacity
       onPress={() => {
         navigation.navigate('ChatScreen', {
+          signals: signals,
           practice: item && item,
           channelName:
             item && item.Dm && item.Dm.channelName && item.Dm.channelName,

@@ -120,6 +120,11 @@ export const setSearchResult = (data) => ({
   payload: data,
 });
 
+export const setSignals = (data) => ({
+  type: PracticesActionTypes.SET_SIGNALS,
+  payload: data,
+});
+
 export const clearPracticeData = () => ({
   type: PracticesActionTypes.CLEAR_PRACTICE_DATA,
 });

@@ -16,6 +16,7 @@ const INITIAL_STATE = {
   searchResult: [],
   searchData: null,
   searchHistory: [],
+  signals: [],
 };
 
 const practicesReducer = (state = INITIAL_STATE, action) => {
@@ -36,12 +37,19 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         searchData: null,
         searchHistory: [],
         practiceStaffs: [],
+        signals: [],
       };
 
     case PracticesActionTypes.SET_SEARCH_HISTORY:
       return {
         ...state,
         searchHistory: action.payload,
+      };
+
+    case PracticesActionTypes.SET_SIGNALS:
+      return {
+        ...state,
+        signals: action.payload,
       };
 
     case PracticesActionTypes.SET_SEARCH_DATA:

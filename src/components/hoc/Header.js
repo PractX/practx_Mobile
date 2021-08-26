@@ -47,6 +47,7 @@ const Header = ({
   setSearchText,
   textImage,
   hideCancel,
+  typingMsg,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
@@ -222,7 +223,7 @@ const Header = ({
                       ? group.name.substring(0, 11 - 3) + '...'
                       : group.name}
                   </Text>
-                  {practice && practice.specialty && (
+                  {/* {practice && practice.specialty && (
                     <Text
                       style={{
                         color: colors.text,
@@ -232,6 +233,16 @@ const Header = ({
                       {practice.specialty.length > 18
                         ? practice.specialty.substring(0, 18 - 3) + '...'
                         : practice.specialty}
+                    </Text>
+                  )} */}
+                  {practice && (
+                    <Text
+                      style={{
+                        color: colors.text,
+                        fontSize: normalize(12),
+                        fontFamily: 'SofiaProRegular',
+                      }}>
+                      {typingMsg ? typingMsg : ''}
                     </Text>
                   )}
                 </View>

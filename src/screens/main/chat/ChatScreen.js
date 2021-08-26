@@ -116,6 +116,7 @@ const ChatScreen = ({
     group,
     type,
     groupPractice,
+    signals,
   } = params;
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [style1, setStyle1] = useState();
@@ -143,6 +144,7 @@ const ChatScreen = ({
   const [vnFile, setVnFile] = useState();
 
   // const buttonRef = useRef();
+  console.log('Signars', signals);
 
   const config = {
     velocityThreshold: 0.8,
@@ -199,6 +201,25 @@ const ChatScreen = ({
   //   );
   //   pubnub.subscribe({ channels });
   // };
+  const addSignal = (eventType) => {
+    pubnub.signal(
+      {
+        message: {
+          eventType,
+          sentBy: currentUser.firstname + ' ' + currentUser.lastname,
+        },
+        channel: channelName,
+      },
+      (status, response) => {
+        // handle status, response
+        console.log('addSignal: ', status, response);
+      },
+    );
+  };
+
+  const getSignal = () =>
+    signals ? signals.find((i) => i.channel === currentUser.channelName) : null;
+
   const sendMessage = (data) => {
     // console.log('Channel name', channelName);
     // console.log('SENDING____');
@@ -468,6 +489,21 @@ const ChatScreen = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Add Signal....... ANCHOR
+  useEffect(() => {
+    let timer;
+    if (inputText && currentUser) {
+      addSignal('typing_on');
+      timer = setTimeout(() => addSignal('typing_off'), 10000);
+    } else if (!inputText && currentUser) {
+      addSignal('typing_off');
+    }
+
+    return () => {
+      timer && clearTimeout(timer);
+    };
+  }, [inputText, currentUser]);
 
   useMemo(() => {
     if (isFocused || allMessages) {
@@ -897,6 +933,13 @@ const ChatScreen = ({
         <Header
           navigation={navigation}
           // title="Edit Profile"
+          typingMsg={
+            getSignal() &&
+            getSignal().message.eventType === 'typing_on' &&
+            getSignal().publisher !== currentUser.chatId
+              ? getSignal().message.sentBy + 'is typing...'
+              : ''
+          }
           subgroups={{
             show: groupSuggest,
             onShow: setGroupSuggest,
@@ -1113,7 +1156,7 @@ const ChatScreen = ({
                   marginBottom: showAccessories ? 65 : 10,
                 },
               }}
-              // isTyping={true}
+              isTyping={true}
               textInputProps={{
                 onFocus: () => setShowEmoji(false),
               }}

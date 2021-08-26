@@ -139,5 +139,10 @@ export const selectSearchHistory = createSelector(
   [selectPractices],
   (practices) => practices.searchHistory,
 );
+
+export const selectSignals = createSelector(
+  [selectPractices],
+  (practices) => practices.signals,
+);
 // joinedPractice;
 // export const selectToken = createSelector([selectUser], (user) => user.token);

@@ -90,6 +90,7 @@ const ChatMessages = ({
   const isFocused = useIsFocused();
   const isDrawerOpen = useIsDrawerOpen();
   const [showStaffs, setShowStaffs] = useState(false);
+  const [signals, setSignals] = useState([]);
   const d = new Date();
   const time = d.getTime();
   const [newMsgAvailable, setNewMsgAvailable] = useState(false);
@@ -391,6 +392,8 @@ const ChatMessages = ({
   //   // }
   // }, []);
 
+  // ANCHOR Add Signals
+
   useMemo(() => {
     if (isFocused) {
       chatWithPracticeStart(
@@ -563,6 +566,9 @@ const ChatMessages = ({
 
         signal: function (s) {
           // handle signal
+          console.log('pubnub signal: ', s);
+          const _signals = signals.filter((i) => i.channel !== s.channel);
+          setSignals([..._signals, s]);
           var channelName = s.channel; // The channel to which the signal was published
           var channelGroup = s.subscription; // The channel group or wildcard subscription match (if exists)
           var pubTT = s.timetoken; // Publish timetoken
@@ -727,6 +733,7 @@ const ChatMessages = ({
             </View>
             <DmsBox
               id={currentPracticeId}
+              signals={signals}
               item={
                 practiceDms &&
                 practiceDms.find((item) => item.id === currentPracticeId)
@@ -816,6 +823,7 @@ const ChatMessages = ({
                       renderItem={({ item, index }) => (
                         <GroupBox
                           id={currentPracticeId}
+                          signals={signals}
                           item={item}
                           practices={
                             practiceDms &&

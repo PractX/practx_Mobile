@@ -21,6 +21,7 @@ const GroupBox = ({
   allMessages,
   practices,
   subgroups,
+  signals,
 }) => {
   const { colors } = useTheme();
   const pubnub = usePubNub();
@@ -77,6 +78,7 @@ const GroupBox = ({
     <TouchableOpacity
       onPress={() => {
         navigation.navigate('ChatScreen', {
+          signals: signals,
           groupPractice: practices && practices,
           group: item ? item : {},
           channelName:

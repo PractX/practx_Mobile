@@ -35,6 +35,7 @@ const SettingsActionTypes = {
   SET_SEARCH_DATA: 'SET_SEARCH_DATA',
   SET_SEARCH_RESULT: 'SET_SEARCH_RESULT',
   SET_SEARCH_HISTORY: 'SET_SEARCH_HISTORY',
+  SET_SIGNALS: 'SET_SIGNALS',
 };
 
 export default SettingsActionTypes;
