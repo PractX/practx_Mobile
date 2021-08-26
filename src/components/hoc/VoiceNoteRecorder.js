@@ -26,7 +26,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
 
-const VoiceNoteRecorder = ({ position, voiceNoteUrl }) => {
+const VoiceNoteRecorder = ({ position, voiceNoteUrl, isSending }) => {
   const videoRef = useRef(null);
   const audioRef = useRef(null);
   const { colors } = useTheme();
@@ -136,7 +136,7 @@ const VoiceNoteRecorder = ({ position, voiceNoteUrl }) => {
       />
       {/* ANCHOR */}
       <View>
-        {audioState.duration ? (
+        {audioState.duration && !isSending ? (
           <TouchableOpacity
             style={
               {
