@@ -176,3 +176,21 @@ const getMessages = (cha) => {
   title="Slide to unlock"
   // width={200}
 />
+
+// Voice Note Gesture Swip
+{/* <GestureRecognizer
+  onSwipe={(direction, state) =>
+    console.log(direction, state)
+  }
+  onSwipeUp={(state) => console.log(state)}
+  onSwipeDown={(state) => console.log(state)}
+  onSwipeLeft={(state) => console.log(state)}
+  onSwipeRight={(state) => console.log(state)}
+  config={config}
+  style={{
+    flex: 1,
+    backgroundColor: 'pink',
+  }}>
+  <Text>Swipper</Text>
+  <Text>onSwipe callback received gesture:</Text>
+</GestureRecognizer> */}

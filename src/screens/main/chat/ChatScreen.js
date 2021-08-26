@@ -528,8 +528,6 @@ const ChatScreen = ({
   }, [isFocused, type, group]);
 
   useEffect(() => {
-    console.log('rerendering_____');
-
     extraData.setOptions({
       drawerLockMode: 'locked-closed',
       swipeEnabled: false,
@@ -543,10 +541,7 @@ const ChatScreen = ({
   }, [extraData]);
   const [recordTime, setRecordTime] = useState();
   const [audioTime, setAudioTime] = useState();
-  console.log('RecordTIme----', recordTime);
-  console.log('AudioTIme----', audioTime);
   const onStartRecord = useCallback(async () => {
-    console.log('Ok startting');
     let date = Date.now().toString();
 
     const dirs = RNFetchBlob.fs.dirs;
@@ -570,7 +565,6 @@ const ChatScreen = ({
       });
       return;
     });
-    console.log(result);
   }, []);
 
   const onStopRecord = useCallback(async () => {
@@ -1259,19 +1253,6 @@ const ChatScreen = ({
               renderInputToolbar={(props) => (
                 <InputToolbar
                   {...props}
-                  renderComposer={() => (
-                    <View>
-                      <Icon
-                        name={inputText ? 'ios-send' : 'mic'}
-                        type={'ionicon'}
-                        color={'white'}
-                        size={normalize(18)}
-                        style={{
-                          alignSelf: 'center',
-                        }}
-                      />
-                    </View>
-                  )}
                   renderAccessory={() =>
                     onRecording
                       ? null
@@ -1281,22 +1262,6 @@ const ChatScreen = ({
                   }
                   renderComposer={(cProps) => (
                     <>
-                      {/* <GestureRecognizer
-                        onSwipe={(direction, state) =>
-                          console.log(direction, state)
-                        }
-                        onSwipeUp={(state) => console.log(state)}
-                        onSwipeDown={(state) => console.log(state)}
-                        onSwipeLeft={(state) => console.log(state)}
-                        onSwipeRight={(state) => console.log(state)}
-                        config={config}
-                        style={{
-                          flex: 1,
-                          backgroundColor: 'pink',
-                        }}>
-                        <Text>Swipper</Text>
-                        <Text>onSwipe callback received gesture:</Text>
-                      </GestureRecognizer> */}
                       {onRecording ? (
                         <View
                           style={{
@@ -1344,15 +1309,6 @@ const ChatScreen = ({
                           </View>
 
                           <TouchableOpacity
-                            // onPress={() =>
-                            //   inputText
-                            //     ? sendMessage(messageProps.text)
-                            //     : console.log('Record')
-                            // }
-                            // onPressIn={() => {
-                            //   setOnRecording(true);
-                            //   onStartRecord();
-                            // }}
                             onPress={() => {
                               setOnRecording(false);
                               onStopRecord();
@@ -1386,19 +1342,7 @@ const ChatScreen = ({
                         <>
                           {inputText ? (
                             <TouchableOpacity
-                              onPress={() =>
-                                inputText
-                                  ? sendMessage(messageProps.text)
-                                  : console.log('Record')
-                              }
-                              // onPressIn={() => {
-                              //   setOnRecording(true);
-                              //   onStartRecord();
-                              // }}
-                              // onPressOut={() => {
-                              //   setOnRecording(false);
-                              //   onStopRecord();
-                              // }}
+                              onPress={() => sendMessage(messageProps.text)}
                               style={{
                                 alignSelf: 'center',
                                 marginRight: 10,

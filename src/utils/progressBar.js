@@ -19,8 +19,6 @@ const ProgressBar = ({
   const position = getMinutesFromSeconds(currentTime);
   const fullDuration = getMinutesFromSeconds(duration, true);
 
-  console.log('Postion', position);
-
   return (
     <View style={{ ...styles.wrapper, ...stylings }}>
       {/* <Slider
