@@ -17,15 +17,7 @@ import { TouchableOpacity } from 'react-native';
 import Audio from 'react-native-video';
 import ProgressBar from '../../utils/progressBar';
 import { useState } from 'react';
-import AudioRecorderPlayer, {
-  AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AudioEncoderAndroidType,
-  AudioSet,
-  AudioSourceAndroidType,
-} from 'react-native-audio-recorder-player';
-import SoundPlayer from 'react-native-sound-player';
-import { Player } from '@react-native-community/audio-toolkit';
+import VoiceNoteRecorder from './VoiceNoteRecorder';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -45,23 +37,15 @@ const ChatBubble = ({
   // audioTime,
 }) => {
   const videoRef = useRef(null);
+  const audioRef = useRef(null);
   const { colors } = useTheme();
   const pubnub = usePubNub();
-  const audioRef = useRef();
-  // const audioRecorderPlayer = new AudioRecorderPlayer();
+
+  let rate = 10000;
 
   // console.log(Player.isStopped);
   // console.log(audioPlayers);
-  const [audioTime, setAudioTime] = useState();
-  const [play, setPlay] = useState(false);
-
-  const [audioState, setAudioState] = useState({
-    duration: 0,
-    currentTime: 0,
-    playableDuration: 0,
-    seekableDuration: 0,
-  });
-  // console.log('Bubble ID', id);
+  // console.log('Bubble ID', audioRef);
   const checkAmPm = (time) => {
     if (time.split(':')[0] > 12) {
       return time + ' pm';
@@ -88,86 +72,6 @@ const ChatBubble = ({
     const newDate = new Date(unixTimestamp * 1000);
     return moment(newDate).format('ddd hh:mm a');
   };
-
-  // const audioSet = {
-  //   AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
-  //   AudioSourceAndroid: AudioSourceAndroidType.MIC,
-  //   // AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
-  //   AVNumberOfChannelsKeyIOS: 2,
-  //   AVFormatIDKeyIOS: AVEncodingOption.aac,
-  // };
-
-  // const onStartPlay = useCallback(async (uri) => {
-  //   console.log('onStartPlay', uri);
-  //   try {
-  //     const msg = await audioRecorderPlayer.startPlayer(uri);
-  //     console.log('Play', msg);
-  //     audioRecorderPlayer.addPlayBackListener((e) => {
-  //       setAudioTime({
-  //         currentPositionSec: e.currentPosition,
-  //         currentDurationSec: e.duration,
-  //         playTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
-  //         duration: audioRecorderPlayer.mmssss(Math.floor(e.duration)),
-  //       });
-  //       return;
-  //     });
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }, []);
-
-  // const onPausePlay = useCallback(async () => {
-  //   await audioRecorderPlayer.pausePlayer();
-  // }, []);
-
-  const fileUrl =
-    message.messageType === 4 &&
-    message.message.file.name.match(/.(m4a|mp3|aac)$/i)
-      ? pubnub.getFileUrl({
-          channel: message.channel,
-          id: message.message.file.id,
-          name: message.message.file.name,
-        })
-      : null;
-
-  // const getInfo = useCallback(async () => {
-  //   if (message.messageType === 4) {
-  //     const data = await SoundPlayer.loadUrl(
-  //       pubnub.getFileUrl({
-  //         channel: message.channel,
-  //         id: message.message.file.id,
-  //         name: message.message.file.name,
-  //       }),
-  //     );
-  //     console.log('Bayiiii', data);
-  //     // const info = SoundPlayer.getInfo(); // Also, you need to await this because it is async
-  //   }
-  // }, []);
-  // useEffect(() => {
-  //   getInfo();
-  // }, []);
-
-  // const fileUrl =
-  //   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-  // console.log(
-  //   'TEsting FIle URI',
-  //   message.messageType === 4 &&
-  //     message.message.file.name.match(/.(jpg|jpeg|png|gif)$/i) &&
-  //     pubnub.getFileUrl({
-  //       channel: message.channel,
-  //       id: message.message.file.id,
-  //       name: message.message.file.name,
-  //     }),
-  // );
-  // console.log(addTime(message).split(', ')[0]);
-  // console.log(
-  //   'Null Staff',
-  //   message.message,
-  //   'UCHE ERRORRRR--',
-  //   // message.message.staffId,
-  //   // practiceStaff.find((staff) => staff.id === message.message.staffId),
-  // );
-  console.log('Duration', fileUrl, audioState);
 
   return (
     <View key={index} style={{ width: appwidth, alignSelf: 'center' }}>
@@ -230,7 +134,7 @@ const ChatBubble = ({
             ]}
           />} */}
                 </FastImage>
-              ) : message.message.file.name.match(/.(mp4|webm)$/i) ? (
+              ) : message.message.file.name.match(/.(mp4)$/i) ? (
                 <>
                   {/* <Video
                     source={{
@@ -286,85 +190,18 @@ const ChatBubble = ({
                   </FastImage>
                 </>
               ) : message.message.file.name.match(/.(m4a|mp3|aac)$/i) ? (
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    backgroundColor: 'green',
-                    width: '100%',
-                    height: '100%',
-                  }}>
-                  {/* ANCHOR */}
-                  {audioTime && (
-                    <ProgressBar
-                      currentTime={audioTime.currentPositionSec}
-                      duration={audioTime.currentDurationSec}
-                    />
-                  )}
-                  <Audio
-                    ref={audioRef}
-                    source={{
-                      uri: fileUrl,
-                    }}
-                    controls={false}
-                    audioOnly={true}
-                    // resizeMode="contain"
-                    // onLoad={onLoadEnd}
-                    onLoad={({ duration }) => {
-                      setAudioState({
-                        ...audioState,
-                        duration: duration,
-                      });
-                    }}
-                    // onProgress={onProgress}
-                    onProgress={({
-                      currentTime,
-                      playableDuration,
-                      seekableDuration,
-                    }) => {
-                      setAudioState({
-                        ...audioState,
-                        currentTime,
-                        playableDuration,
-                        seekableDuration,
-                      });
-                    }}
-                    // onEnd={onEnd}
-                    paused={!play}
-                    // muted={!sound}
-                  />
-                  {/* <AudioPlayer
-                    fileUrl={pubnub.getFileUrl({
-                      channel: message.channel,
-                      id: message.message.file.id,
-                      name: message.message.file.name,
-                    })}
-                  /> */}
-                  <View>
-                    <TouchableOpacity
-                      style={{
-                        marginTop: 60,
-                        // padding: 16,
-                        backgroundColor: 'gray',
-                      }}
-                      onPress={() => {
-                        //  onStartPlay(fileUrl)
-                        // SoundPlayer.play();
-                        setPlay(true);
-                      }}>
-                      <Text>Play</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{ padding: 16, backgroundColor: 'yellow' }}
-                      onPress={() => setPlay(false)}>
-                      <Text>Pause</Text>
-                    </TouchableOpacity>
-                    {/* <TouchableOpacity
-                      style={{ padding: 16, backgroundColor: 'yellow' }}
-                      onPress={() => onStopPlay()}>
-                      <Text>Stop</Text>
-                    </TouchableOpacity> */}
-                  </View>
-                </View>
+                <VoiceNoteRecorder
+                  voiceNoteUrl={
+                    message.messageType === 4 &&
+                    message.message.file.name.match(/.(m4a|mp3|aac)$/i)
+                      ? pubnub.getFileUrl({
+                          channel: message.channel,
+                          id: message.message.file.id,
+                          name: message.message.file.name,
+                        })
+                      : null
+                  }
+                />
               ) : (
                 <Text>Doc</Text>
               )}
@@ -501,7 +338,7 @@ const ChatBubble = ({
                     ]}
                     resizeMode={FastImage.resizeMode.cover}
                   />
-                ) : message.message.file.name.match(/.(mp4|webm)$/i) ? (
+                ) : message.message.file.name.match(/.(mp4)$/i) ? (
                   <FastImage
                     source={{
                       uri: pubnub.getFileUrl({
@@ -535,85 +372,18 @@ const ChatBubble = ({
                     />
                   </FastImage>
                 ) : message.message.file.name.match(/.(m4a|mp3|aac)$/i) ? (
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      backgroundColor: 'green',
-                      width: '100%',
-                      height: '100%',
-                    }}>
-                    {/* ANCHOR */}
-                    {audioTime && (
-                      <ProgressBar
-                        currentTime={audioTime.currentPositionSec}
-                        duration={audioTime.currentDurationSec}
-                      />
-                    )}
-                    <Audio
-                      ref={audioRef}
-                      source={{
-                        uri: fileUrl,
-                      }}
-                      controls={false}
-                      audioOnly={true}
-                      // resizeMode="contain"
-                      // onLoad={onLoadEnd}
-                      onLoad={({ duration }) => {
-                        setAudioState({
-                          ...audioState,
-                          duration: duration,
-                        });
-                      }}
-                      // onProgress={onProgress}
-                      onProgress={({
-                        currentTime,
-                        playableDuration,
-                        seekableDuration,
-                      }) => {
-                        setAudioState({
-                          ...audioState,
-                          currentTime,
-                          playableDuration,
-                          seekableDuration,
-                        });
-                      }}
-                      // onEnd={onEnd}
-                      paused={!play}
-                      // muted={!sound}
-                    />
-                    {/* <AudioPlayer
-                    fileUrl={pubnub.getFileUrl({
-                      channel: message.channel,
-                      id: message.message.file.id,
-                      name: message.message.file.name,
-                    })}
-                  /> */}
-                    <View>
-                      <TouchableOpacity
-                        style={{
-                          marginTop: 60,
-                          // padding: 16,
-                          backgroundColor: 'gray',
-                        }}
-                        onPress={() => {
-                          //  onStartPlay(fileUrl)
-                          // SoundPlayer.play();
-                          setPlay(true);
-                        }}>
-                        <Text>Play</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={{ padding: 16, backgroundColor: 'yellow' }}
-                        onPress={() => setPlay(false)}>
-                        <Text>Pause</Text>
-                      </TouchableOpacity>
-                      {/* <TouchableOpacity
-                      style={{ padding: 16, backgroundColor: 'yellow' }}
-                      onPress={() => onStopPlay()}>
-                      <Text>Stop</Text>
-                    </TouchableOpacity> */}
-                    </View>
-                  </View>
+                  <VoiceNoteRecorder
+                    voiceNoteUrl={
+                      message.messageType === 4 &&
+                      message.message.file.name.match(/.(m4a|mp3|aac)$/i)
+                        ? pubnub.getFileUrl({
+                            channel: message.channel,
+                            id: message.message.file.id,
+                            name: message.message.file.name,
+                          })
+                        : null
+                    }
+                  />
                 ) : (
                   <Text>Doc</Text>
                 )}

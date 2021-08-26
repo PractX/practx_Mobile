@@ -7,5 +7,7 @@
     "firstname",
     "forgotpass",
     "lastname"
-  ]
+  ],
+  "workbench.editor.enablePreviewFromQuickOpen": true,
+  "workbench.editor.enablePreviewFromCodeNavigation": true
 }

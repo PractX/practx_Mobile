@@ -1,8 +1,10 @@
 import React from 'react';
-import Slider from '@react-native-community/slider';
+// import Slider from '@react-native-community/slider';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { colors } from 'react-native-elements';
+import { colors, Icon } from 'react-native-elements';
+import getMinutesFromSeconds from './getMinutesFromSeconds';
+import { Slider } from 'react-native-elements';
 
 const ProgressBar = ({
   currentTime,
@@ -12,8 +14,8 @@ const ProgressBar = ({
   onSlideComplete,
 }) => {
   // const { colors } = useTheme();
-  const position = msToTime(currentTime);
-  const fullDuration = msToTime(duration);
+  const position = getMinutesFromSeconds(currentTime);
+  const fullDuration = getMinutesFromSeconds(duration, true);
 
   return (
     <View style={styles.wrapper}>
@@ -25,7 +27,7 @@ const ProgressBar = ({
           {fullDuration}
         </Text>
       </View>
-      <Slider
+      {/* <Slider
         value={currentTime}
         minimumValue={0}
         maximumValue={duration}
@@ -36,42 +38,55 @@ const ProgressBar = ({
         minimumTrackTintColor={colors.white}
         maximumTrackTintColor={colors.tertiary}
         thumbTintColor={colors.tertiary}
+      /> */}
+      <Slider
+        value={currentTime}
+        minimumValue={0}
+        maximumValue={duration}
+        step={1}
+        onValueChange={handleOnSlide}
+        onSlidingStart={onSlideStart}
+        onSlidingComplete={onSlideComplete}
+        allowTouchTrack={true}
+        trackStyle={{ height: 5, backgroundColor: 'transparent' }}
+        thumbStyle={{ height: 20, width: 20, backgroundColor: 'transparent' }}
+        thumbProps={{
+          children: (
+            <Icon
+              name="heartbeat"
+              type="font-awesome"
+              size={12}
+              reverse
+              containerStyle={{ bottom: 12, right: 12 }}
+              color={colors.primary}
+            />
+          ),
+        }}
       />
     </View>
   );
 
-  function getMinutesFromSeconds(time) {
-    const minutes = time >= 60 ? Math.floor(time / 60) : 0;
-    const seconds = Math.floor(time - minutes * 60);
+  // function msToTime(time) {
+  //   // Pad to 2 or 3 digits, default is 2
+  //   function pad(n, z) {
+  //     z = z || 2;
+  //     return ('00' + n).slice(-z);
+  //   }
 
-    console.log('mint', minutes, seconds);
+  //   var ms = time % 1000;
+  //   time = (time - ms) / 1000;
+  //   var secs = time % 60;
+  //   time = (time - secs) / 60;
+  //   var mins = time % 60;
+  //   var hrs = (time - mins) / 60;
 
-    return `${minutes >= 10 ? minutes : '0' + minutes}:${
-      seconds >= 10 ? seconds : '0' + seconds
-    }`;
-  }
-
-  function msToTime(time) {
-    // Pad to 2 or 3 digits, default is 2
-    function pad(n, z) {
-      z = z || 2;
-      return ('00' + n).slice(-z);
-    }
-
-    var ms = time % 1000;
-    time = (time - ms) / 1000;
-    var secs = time % 60;
-    time = (time - secs) / 60;
-    var mins = time % 60;
-    var hrs = (time - mins) / 60;
-
-    if (hrs >= 1) {
-      return pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
-    } else {
-      return pad(mins) + ':' + pad(secs);
-    }
-    // + '.' + pad(ms, 3);
-  }
+  //   if (hrs >= 1) {
+  //     return pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
+  //   } else {
+  //     return pad(mins) + ':' + pad(secs);
+  //   }
+  //   // + '.' + pad(ms, 3);
+  // }
 
   function handleOnSlide(time) {
     onSlideCapture({ seekTime: time });

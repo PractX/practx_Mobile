@@ -142,8 +142,6 @@ const ChatScreen = ({
 
   // const buttonRef = useRef();
 
-  const audioRecorderPlayer = new AudioRecorderPlayer();
-
   const config = {
     velocityThreshold: 0.8,
     directionalOffsetThreshold: 150,
@@ -549,20 +547,22 @@ const ChatScreen = ({
   console.log('AudioTIme----', audioTime);
   const onStartRecord = useCallback(async () => {
     console.log('Ok startting');
+    let date = Date.now().toString();
+
     const dirs = RNFetchBlob.fs.dirs;
     const path = Platform.select({
-      ios: `${generateName(10, 'record')}.m4a`,
-      android: `${dirs.CacheDir}/${generateName(10, 'record')}.m4a`,
+      ios: `${generateName(4, 'vn')}_${date}.aac`,
+      android: `${dirs.CacheDir}/${generateName(4, 'vn')}_${date}.aac`,
     });
 
-    // const audioSet = {
-    //   AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
-    //   AudioSourceAndroid: AudioSourceAndroidType.MIC,
-    //   AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
-    //   AVNumberOfChannelsKeyIOS: 2,
-    //   AVFormatIDKeyIOS: AVEncodingOption.aac,
-    // };
-    const result = await audioRecorderPlayer.startRecorder(path);
+    const audioSet = {
+      AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+      AudioSourceAndroid: AudioSourceAndroidType.MIC,
+      AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+      AVNumberOfChannelsKeyIOS: 2,
+      AVFormatIDKeyIOS: AVEncodingOption.aac,
+    };
+    const result = await audioRecorderPlayer.startRecorder(path, audioSet);
     audioRecorderPlayer.addRecordBackListener((e) => {
       setRecordTime({
         recordSecs: e.currentPosition,
