@@ -20,12 +20,13 @@ import { useState } from 'react';
 import SoundPlayer from 'react-native-sound-player';
 import { Player } from '@react-native-community/audio-toolkit';
 import getMinutesFromSeconds from '../../utils/getMinutesFromSeconds';
+import { ActivityIndicator } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
 
-const VoiceNoteRecorder = ({ voiceNoteUrl }) => {
+const VoiceNoteRecorder = ({ position, voiceNoteUrl }) => {
   const videoRef = useRef(null);
   const audioRef = useRef(null);
   const { colors } = useTheme();
@@ -111,10 +112,11 @@ const VoiceNoteRecorder = ({ voiceNoteUrl }) => {
     <View
       style={{
         flexDirection: 'row',
-        justifyContent: 'center',
-        backgroundColor: 'blue',
+        alignItems: 'center',
+        // backgroundColor: 'blue',
         width: '100%',
-        // height: '100%',
+        height: 55,
+        paddingHorizontal: 10,
       }}>
       <Audio
         ref={audioRef}
@@ -129,35 +131,58 @@ const VoiceNoteRecorder = ({ voiceNoteUrl }) => {
         onProgress={onProgress}
         onEnd={onEnd}
         paused={!audioState.play}
+        onError={(error) => console.log('Audio Error---', error)}
         // muted={!sound}
       />
       {/* ANCHOR */}
+      <View>
+        {audioState.duration ? (
+          <TouchableOpacity
+            style={
+              {
+                // marginTop: 60,
+                // // padding: 16,
+                // backgroundColor: 'gray',
+              }
+            }
+            onPress={() => {
+              // setPlay(true);
+              audioState.play
+                ? setAudioState({ ...audioState, play: false })
+                : setAudioState({ ...audioState, play: true });
+              // setAudioState({ ...audioState, play: false });
+            }}>
+            <Icon
+              name={audioState.play ? 'ios-pause' : 'ios-play'}
+              type="ionicon"
+              color={position === 'right' ? colors.white : colors.text}
+              size={normalize(30)}
+            />
+          </TouchableOpacity>
+        ) : (
+          <ActivityIndicator
+            animating={true}
+            size={normalize(30)}
+            color={position === 'right' ? colors.white : colors.text}
+          />
+        )}
+      </View>
       <ProgressBar
         currentTime={audioState.currentTime}
-        duration={audioState.duration > 0 ? audioState.duration : 0}
+        duration={audioState.duration}
         onSlideStart={handlePlayPause}
         onSlideComplete={handlePlayPause}
         onSlideCapture={onSeek}
+        direction={position}
+        // stylings={{ flex: 1 }}
       />
-
       <View>
-        <TouchableOpacity
-          style={{
-            marginTop: 60,
-            // padding: 16,
-            backgroundColor: 'gray',
-          }}
-          onPress={() => {
-            // setPlay(true);
-            setAudioState({ ...audioState, play: true });
-          }}>
-          <Text>Play</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ padding: 16, backgroundColor: 'yellow' }}
-          onPress={() => setAudioState({ ...audioState, play: false })}>
-          <Text>Pause</Text>
-        </TouchableOpacity>
+        <Icon
+          name="mic"
+          type="ionicon"
+          color={position === 'right' ? colors.white : colors.primary}
+          size={normalize(15)}
+        />
       </View>
     </View>
   );

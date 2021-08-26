@@ -87,7 +87,9 @@ const ChatBubble = ({
           {message.messageType === 4 ? (
             <View
               style={{
-                height: 252,
+                height: message.message.file.name.match(/.(aac)$/i)
+                  ? null
+                  : 252,
                 backgroundColor: colors.primary,
                 alignItems: 'center',
                 width: 252,
@@ -189,11 +191,12 @@ const ChatBubble = ({
                     />
                   </FastImage>
                 </>
-              ) : message.message.file.name.match(/.(m4a|mp3|aac)$/i) ? (
+              ) : message.message.file.name.match(/.(aac)$/i) ? (
                 <VoiceNoteRecorder
+                  position="right"
                   voiceNoteUrl={
                     message.messageType === 4 &&
-                    message.message.file.name.match(/.(m4a|mp3|aac)$/i)
+                    message.message.file.name.match(/.(aac)$/i)
                       ? pubnub.getFileUrl({
                           channel: message.channel,
                           id: message.message.file.id,
@@ -303,10 +306,13 @@ const ChatBubble = ({
             {message.messageType === 4 ? (
               <View
                 style={{
-                  height: 252,
+                  height: message.message.file.name.match(/.(aac)$/i)
+                    ? null
+                    : 252,
                   backgroundColor: colors.background_1,
                   alignItems: 'center',
                   width: 252,
+                  // width: appwidth - 50,
                   justifyContent: 'center',
                   borderTopLeftRadius: 20,
                   borderTopRightRadius: 20,
@@ -371,11 +377,12 @@ const ChatBubble = ({
                       style={[{ alignSelf: 'center', marginTop: '40%' }]}
                     />
                   </FastImage>
-                ) : message.message.file.name.match(/.(m4a|mp3|aac)$/i) ? (
+                ) : message.message.file.name.match(/.(aac)$/i) ? (
                   <VoiceNoteRecorder
+                    position="left"
                     voiceNoteUrl={
                       message.messageType === 4 &&
-                      message.message.file.name.match(/.(m4a|mp3|aac)$/i)
+                      message.message.file.name.match(/.(aac)$/i)
                         ? pubnub.getFileUrl({
                             channel: message.channel,
                             id: message.message.file.id,

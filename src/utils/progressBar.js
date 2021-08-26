@@ -2,7 +2,7 @@ import React from 'react';
 // import Slider from '@react-native-community/slider';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { colors, Icon } from 'react-native-elements';
+import { Icon, normalize } from 'react-native-elements';
 import getMinutesFromSeconds from './getMinutesFromSeconds';
 import { Slider } from 'react-native-elements';
 
@@ -12,21 +12,17 @@ const ProgressBar = ({
   onSlideCapture,
   onSlideStart,
   onSlideComplete,
+  stylings,
+  direction,
 }) => {
-  // const { colors } = useTheme();
+  const { colors } = useTheme();
   const position = getMinutesFromSeconds(currentTime);
   const fullDuration = getMinutesFromSeconds(duration, true);
 
+  console.log('Postion', position);
+
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.timeWrapper}>
-        <Text style={[styles.timeLeft, { color: colors.white }]}>
-          {position}
-        </Text>
-        <Text style={[styles.timeRight, { color: colors.white }]}>
-          {fullDuration}
-        </Text>
-      </View>
+    <View style={{ ...styles.wrapper, ...stylings }}>
       {/* <Slider
         value={currentTime}
         minimumValue={0}
@@ -48,21 +44,45 @@ const ProgressBar = ({
         onSlidingStart={onSlideStart}
         onSlidingComplete={onSlideComplete}
         allowTouchTrack={true}
-        trackStyle={{ height: 5, backgroundColor: 'transparent' }}
-        thumbStyle={{ height: 20, width: 20, backgroundColor: 'transparent' }}
+        trackStyle={{
+          height: 3,
+          backgroundColor: 'transparent',
+        }}
+        style={{ width: '100%', flex: 1 }}
+        thumbStyle={{ height: 17, width: 14, backgroundColor: 'transparent' }}
         thumbProps={{
           children: (
             <Icon
               name="heartbeat"
               type="font-awesome"
-              size={12}
-              reverse
-              containerStyle={{ bottom: 12, right: 12 }}
+              size={6}
+              reverse={direction === 'left'}
+              raised={direction === 'right'}
+              containerStyle={{ bottom: 6.5, right: 8 }}
               color={colors.primary}
+              backgroundColor
             />
           ),
         }}
+        minimumTrackTintColor={
+          direction === 'right' ? colors.text : colors.primary
+        }
+        maximumTrackTintColor={
+          direction === 'right' ? colors.track : colors.track2
+        }
       />
+      <View style={styles.timeWrapper}>
+        <Text
+          style={[
+            styles.timeText,
+            { color: direction === 'right' ? colors.white : colors.text },
+          ]}>
+          {position !== '0:00' ? position : duration ? fullDuration : '0:00'}
+        </Text>
+        {/* <Text style={[styles.timeRight, { color: colors.white }]}>
+          {fullDuration}
+        </Text> */}
+      </View>
     </View>
   );
 
@@ -95,24 +115,26 @@ const ProgressBar = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    // flex: 2,
-    paddingHorizontal: 15,
-    backgroundColor: 'purple',
+    flex: 2,
+    flexDirection: 'row',
+    paddingHorizontal: 6,
   },
   timeWrapper: {
-    flexDirection: 'row',
+    flex: 0.25,
+    // flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 5,
+    alignSelf: 'center',
+    paddingLeft: 5,
   },
-  timeLeft: {
-    flex: 1,
-    fontSize: 16,
+  timeText: {
+    // flex: 1,
+    fontSize: normalize(10),
     color: '#FFFFFF',
-    paddingLeft: 10,
+    textAlign: 'center',
   },
   timeRight: {
-    flex: 1,
+    // flex: 1,
     fontSize: 16,
     color: '#FFFFFF',
     textAlign: 'right',

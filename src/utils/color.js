@@ -24,6 +24,9 @@ export const ColorList = [
     play_1: '#05af32',
     danger_1: '#bf2b43',
     danger_2: '#c44860',
+    track: '#464647',
+    track2: '#8d8d8d',
+    white: '#ffffff',
   },
   {
     mode: 'dark',
@@ -50,6 +53,9 @@ export const ColorList = [
     danger_1: '#bf2b43',
     danger_2: '#c44860',
     success: '#24bb73',
+    track: '#353535',
+    track2: '#8d8d8d',
+    white: '#ffffff',
   },
 ];
 
