@@ -81,6 +81,7 @@ import GestureRecognizer, {
 } from 'react-native-swipe-gestures';
 import generateName from '../../../utils/generateName';
 import RNFetchBlob from 'rn-fetch-blob';
+import VoiceNoteRecorder from '../../../components/hoc/VoiceNoteRecorder';
 // import SoundPlayer from 'react-native-sound-player'
 
 const { flags, sports, food } = Categories;
@@ -139,6 +140,7 @@ const ChatScreen = ({
   const time = d.getTime();
   const pubnub = usePubNub();
   const [onRecording, setOnRecording] = useState(false);
+  const [vnFile, setVnFile] = useState();
 
   // const buttonRef = useRef();
 
@@ -589,6 +591,7 @@ const ChatScreen = ({
     });
     console.log('Uri', result);
     let fileName = result.split(/[\s/]+/);
+    setVnFile(result);
     console.log(fileName[fileName.length - 1]);
     setOnRecording(false);
     sendFile(
@@ -1197,23 +1200,31 @@ const ChatScreen = ({
                                 ? 'red'
                                 : colors.primary,
                               alignItems: 'flex-start',
-                              // width: 80,
-                              // maxWidth: appwidth - 80,
+                              width: message === 'voiceNote' ? 252 : null,
+                              // maxWidth:
+                              //   message === 'voiceNote' ? appwidth - 80 : null,
                               justifyContent: 'center',
                               borderTopLeftRadius: 20,
                               borderTopRightRadius: 20,
                               borderBottomRightRadius: 20,
-                              padding: 15,
                             }}>
-                            <Text
-                              style={{
-                                fontSize: normalize(12),
-                                fontFamily: 'SofiaProRegular',
-                                color: 'white',
-                                textAlign: 'left',
-                              }}>
-                              {errorMessage ? errorMessage : message}
-                            </Text>
+                            {message === 'voiceNote' ? (
+                              <VoiceNoteRecorder
+                                position="right"
+                                voiceNoteUrl={vnFile}
+                                isSending={true}
+                              />
+                            ) : (
+                              <Text
+                                style={{
+                                  fontSize: normalize(12),
+                                  fontFamily: 'SofiaProRegular',
+                                  color: 'white',
+                                  textAlign: 'left',
+                                }}>
+                                {errorMessage ? errorMessage : message}
+                              </Text>
+                            )}
                           </View>
                         )}
 
