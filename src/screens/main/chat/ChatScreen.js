@@ -47,6 +47,7 @@ import { RefreshControl } from 'react-native';
 import {
   selectAllMessages,
   selectPracticeStaffs,
+  selectSignals,
 } from '../../../redux/practices/practices.selector';
 import { setAllMessages } from '../../../redux/practices/practices.actions';
 // import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -100,6 +101,7 @@ const ChatScreen = ({
   allMessages,
   setAllMessages,
   practiceStaffs,
+  signals,
 }) => {
   const audioRecorderPlayer = new AudioRecorderPlayer();
   const [chatRef, setChatRef] = useState();
@@ -116,7 +118,6 @@ const ChatScreen = ({
     group,
     type,
     groupPractice,
-    signals,
   } = params;
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [style1, setStyle1] = useState();
@@ -218,7 +219,7 @@ const ChatScreen = ({
   };
 
   const getSignal = () =>
-    signals ? signals.find((i) => i.channel === currentUser.channelName) : null;
+    signals ? signals.find((i) => i.channel === channelName) : null;
 
   const sendMessage = (data) => {
     // console.log('Channel name', channelName);
@@ -937,7 +938,7 @@ const ChatScreen = ({
             getSignal() &&
             getSignal().message.eventType === 'typing_on' &&
             getSignal().publisher !== currentUser.chatId
-              ? getSignal().message.sentBy + 'is typing...'
+              ? 'typing...'
               : ''
           }
           subgroups={{
@@ -1258,6 +1259,7 @@ const ChatScreen = ({
                                   fontFamily: 'SofiaProRegular',
                                   color: 'white',
                                   textAlign: 'left',
+                                  padding: 15,
                                 }}>
                                 {errorMessage ? errorMessage : message}
                               </Text>
@@ -1781,6 +1783,7 @@ const mapStateToProps = createStructuredSelector({
   isLoading: selectIsLoading,
   allMessages: selectAllMessages,
   practiceStaffs: selectPracticeStaffs,
+  signals: selectSignals,
 });
 
 const mapDispatchToProps = (dispatch) => ({

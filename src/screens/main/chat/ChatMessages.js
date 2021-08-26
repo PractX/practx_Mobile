@@ -39,6 +39,7 @@ import {
   setAllMessages,
   getPracticeStaffStart,
   leavePracticeStart,
+  setSignals,
 } from '../../../redux/practices/practices.actions';
 import { RefreshControl } from 'react-native';
 import {
@@ -48,6 +49,7 @@ import {
   selectJoinedPractices,
   selectPracticeDms,
   selectPracticeSubgroups,
+  selectSignals,
 } from '../../../redux/practices/practices.selector';
 import PracticesBox from './PracticeBox';
 import { usePubNub } from 'pubnub-react';
@@ -79,6 +81,8 @@ const ChatMessages = ({
   subgroups,
   allMessages,
   setAllMessages,
+  signals,
+  setSignals,
 }) => {
   const { colors } = useTheme();
   const ref = useRef();
@@ -90,7 +94,6 @@ const ChatMessages = ({
   const isFocused = useIsFocused();
   const isDrawerOpen = useIsDrawerOpen();
   const [showStaffs, setShowStaffs] = useState(false);
-  const [signals, setSignals] = useState([]);
   const d = new Date();
   const time = d.getTime();
   const [newMsgAvailable, setNewMsgAvailable] = useState(false);
@@ -624,6 +627,7 @@ const ChatMessages = ({
     pubnub,
     allMessages.length <= 1,
     newMsgAvailable,
+    signals.length,
   ]);
 
   useEffect(() => {
@@ -954,6 +958,7 @@ const mapStateToProps = createStructuredSelector({
   practiceDms: selectPracticeDms,
   subgroups: selectPracticeSubgroups,
   allMessages: selectAllMessages,
+  signals: selectSignals,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -966,6 +971,7 @@ const mapDispatchToProps = (dispatch) => ({
   setAllMessages: (msg) => dispatch(setAllMessages(msg)),
   getPracticeStaffStart: (id) => dispatch(getPracticeStaffStart(id)),
   leavePracticeStart: (id) => dispatch(leavePracticeStart(id)),
+  setSignals: (data) => dispatch(setSignals(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatMessages);
