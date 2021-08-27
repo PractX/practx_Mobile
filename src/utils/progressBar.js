@@ -36,7 +36,7 @@ const ProgressBar = ({
       <Slider
         value={currentTime}
         minimumValue={0}
-        maximumValue={duration}
+        maximumValue={duration >= 0 ? duration : 0}
         step={1}
         onValueChange={handleOnSlide}
         onSlidingStart={onSlideStart}
