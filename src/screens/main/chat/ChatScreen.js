@@ -941,7 +941,7 @@ const ChatScreen = ({
             getSignal() &&
             getSignal().message.eventType === 'typing_on' &&
             getSignal().publisher !== currentUser.chatId
-              ? getSignal().message.sentBy + ' is typing...'
+              ? getSignal().message.sentBy
               : ''
           }
           subgroups={{

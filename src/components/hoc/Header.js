@@ -242,11 +242,22 @@ const Header = ({
                         fontSize: normalize(12),
                         fontFamily: 'SofiaProRegular',
                       }}>
-                      {typingMsg && practice
-                        ? 'typing...'
-                        : typingMsg && group
-                        ? typingMsg
-                        : ''}
+                      <Text
+                        style={{
+                          textTransform: 'capitalize',
+                        }}>
+                        {typingMsg && group ? typingMsg : ''}
+                      </Text>
+                      <Text
+                        style={{
+                          textTransform: 'capitalize',
+                        }}>
+                        {typingMsg && practice
+                          ? 'typing...'
+                          : typingMsg && group
+                          ? ' is typing...'
+                          : ''}
+                      </Text>
                     </Text>
                   ) : (
                     <View />
