@@ -146,14 +146,15 @@ const ChatScreen = ({
   const pubnub = usePubNub();
   const [onRecording, setOnRecording] = useState(false);
   const [vnFile, setVnFile] = useState();
+  const [recordTime, setRecordTime] = useState({
+    recordSecs: 0,
+    recordTime: 0,
+  });
 
-  // const buttonRef = useRef();
-  console.log('Signars', signals);
-
-  const config = {
-    velocityThreshold: 0.8,
-    directionalOffsetThreshold: 150,
-  };
+  // const config = {
+  //   velocityThreshold: 0.8,
+  //   directionalOffsetThreshold: 150,
+  // };
 
   const addTime = (timetoken) => {
     const unixTimestamp = timetoken / 10000000;
@@ -509,6 +510,20 @@ const ChatScreen = ({
     };
   }, [inputText, currentUser]);
 
+  useEffect(() => {
+    let timer;
+    if (onRecording && currentUser) {
+      addSignal('recording_on');
+      timer = setTimeout(() => addSignal('recording_off'), 2000);
+    } else if (!onRecording && currentUser) {
+      addSignal('recording_off');
+    }
+
+    return () => {
+      timer && clearTimeout(timer);
+    };
+  }, [onRecording, currentUser, recordTime.recordTime]);
+
   useMemo(() => {
     if (isFocused || allMessages) {
       console.log('New MESSAgE Available__');
@@ -581,7 +596,6 @@ const ChatScreen = ({
         swipeEnabled: true,
       });
   }, [extraData]);
-  const [recordTime, setRecordTime] = useState();
   const [audioTime, setAudioTime] = useState();
   const onStartRecord = useCallback(async () => {
     let date = Date.now().toString();
@@ -937,11 +951,14 @@ const ChatScreen = ({
         <Header
           navigation={navigation}
           // title="Edit Profile"
-          typingMsg={
-            getSignal() &&
-            getSignal().message.eventType === 'typing_on' &&
-            getSignal().publisher !== currentUser.chatId
-              ? getSignal().message.sentBy
+          signalType={
+            (getSignal() &&
+              getSignal().message.eventType === 'typing_on' &&
+              getSignal().publisher !== currentUser.chatId) ||
+            (getSignal() &&
+              getSignal().message.eventType === 'recording_on' &&
+              getSignal().publisher !== currentUser.chatId)
+              ? getSignal()
               : ''
           }
           subgroups={{
@@ -1304,20 +1321,18 @@ const ChatScreen = ({
                           />
                         </View>
                       </View>
-                    ) : getSignal() &&
-                      getSignal().message.eventType === 'typing_on' &&
-                      getSignal().publisher !== currentUser.chatId ? (
+                    ) : (getSignal() &&
+                        getSignal().message.eventType === 'typing_on' &&
+                        getSignal().publisher !== currentUser.chatId) ||
+                      (getSignal() &&
+                        getSignal().message.eventType === 'recording_on' &&
+                        getSignal().publisher !== currentUser.chatId) ? (
                       <>
                         <ChatBubble
                           id={344556455}
                           message={{
                             messageType: 10,
-                            message:
-                              getSignal().message.sentBy.split(' ')[0] +
-                              ' ' +
-                              getSignal()
-                                .message.sentBy.split(' ')[1]
-                                .substring(0, 1),
+                            message: getSignal(),
                           }}
                           navigation={navigation}
                           practice={practice}

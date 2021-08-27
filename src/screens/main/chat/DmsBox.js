@@ -157,7 +157,11 @@ const DmsBox = ({
               fontFamily: 'SofiaProSemiBold',
               textTransform: 'capitalize',
             }}>
-            {item && item.practiceName}
+            {item && item.practiceName && item.practiceName.length > 30
+              ? item.practiceName.substring(0, 30 - 3) + '...'
+              : item && item.practiceName
+              ? item.practiceName
+              : ''}
           </Text>
           <Text
             style={{
@@ -165,10 +169,13 @@ const DmsBox = ({
               fontSize: normalize(11),
               fontFamily: 'SofiaProRegular',
             }}>
-            {getSignal() &&
-            getSignal().message.eventType === 'typing_on' &&
-            getSignal().publisher !== currentUser.chatId
-              ? 'typing...'
+            {(getSignal() &&
+              getSignal().message.eventType === 'typing_on' &&
+              getSignal().publisher !== currentUser.chatId) ||
+            (getSignal() &&
+              getSignal().message.eventType === 'recording_on' &&
+              getSignal().publisher !== currentUser.chatId)
+              ? `${getSignal().message.eventType.split('_')[0]}...`
               : allMessages && allMessages.messages.length
               ? allMessages.messages[allMessages.messages.length - 1].message &&
                 allMessages.messages[allMessages.messages.length - 1].message
@@ -189,13 +196,23 @@ const DmsBox = ({
                 ? allMessages.messages[
                     allMessages.messages.length - 1
                   ].message.file.name.match(/.(jpg|jpeg|png|gif)$/i)
-                  ? ' Photo'
-                  : 'Video'
+                  ? '🖼️ Photo'
+                  : allMessages.messages[
+                      allMessages.messages.length - 1
+                    ].message.file.name.match(/.(aac)$/i)
+                  ? '🎤 Voice note '
+                  : '🎥 Video'
                 : allMessages.messages[allMessages.messages.length - 1].replace(
                     /(\r\n|\n|\r)/gm,
                     '',
                   )
-              : `ℹ️ Chat with ${item && item.practiceName}`}
+              : `ℹ️ Chat with ${
+                  item && item.practiceName && item.practiceName.length > 20
+                    ? item.practiceName.substring(0, 20 - 3) + '...'
+                    : item && item.practiceName
+                    ? item.practiceName
+                    : ''
+                }`}
           </Text>
         </TouchableOpacity>
       </View>

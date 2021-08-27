@@ -47,7 +47,7 @@ const Header = ({
   setSearchText,
   textImage,
   hideCancel,
-  typingMsg,
+  signalType,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
@@ -140,6 +140,7 @@ const Header = ({
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
+                  justifyContent: 'center',
                 }}>
                 {practice ? (
                   <FastImage
@@ -246,16 +247,18 @@ const Header = ({
                         style={{
                           textTransform: 'capitalize',
                         }}>
-                        {typingMsg && group ? typingMsg : ''}
+                        {signalType && group ? signalType.message.sentBy : ''}
                       </Text>
                       <Text
                         style={{
-                          textTransform: 'capitalize',
+                          textTransform: 'lowercase',
                         }}>
-                        {typingMsg && practice
-                          ? 'typing...'
-                          : typingMsg && group
-                          ? ' is typing...'
+                        {signalType && practice
+                          ? `${signalType.message.eventType.split('_')[0]}...`
+                          : signalType && group
+                          ? ` is ${
+                              signalType.message.eventType.split('_')[0]
+                            }...`
                           : ''}
                       </Text>
                     </Text>

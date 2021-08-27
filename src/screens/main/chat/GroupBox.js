@@ -178,11 +178,18 @@ const GroupBox = ({
               fontFamily: 'SofiaProSemiBold',
               textTransform: 'capitalize',
             }}>
-            {item && item.name}
+            {item && item.name && item.name.length > 30
+              ? item.name.substring(0, 30 - 3) + '...'
+              : item && item.name
+              ? item.name
+              : ''}
           </Text>
-          {getSignal() &&
-          getSignal().message.eventType === 'typing_on' &&
-          getSignal().publisher !== currentUser.chatId ? (
+          {(getSignal() &&
+            getSignal().message.eventType === 'typing_on' &&
+            getSignal().publisher !== currentUser.chatId) ||
+          (getSignal() &&
+            getSignal().message.eventType === 'recording_on' &&
+            getSignal().publisher !== currentUser.chatId) ? (
             <Text
               style={{
                 color: colors.text,
@@ -198,7 +205,7 @@ const GroupBox = ({
                   getSignal().message.sentBy.split(' ')[1].substring(0, 1)}
               </Text>
               <Text style={{ textTransform: 'lowercase' }}>
-                {' is typing...'}
+                {` is ${getSignal().message.eventType.split('_')[0]}...`}
               </Text>
             </Text>
           ) : (
@@ -229,12 +236,22 @@ const GroupBox = ({
                   ? allMessages.messages[
                       allMessages.messages.length - 1
                     ].message.file.name.match(/.(jpg|jpeg|png|gif)$/i)
-                    ? ' Photo'
-                    : 'Video'
+                    ? '🖼️ Photo'
+                    : allMessages.messages[
+                        allMessages.messages.length - 1
+                      ].message.file.name.match(/.(aac)$/i)
+                    ? '🎤 Voice note '
+                    : '🎥 Video'
                   : allMessages.messages[
                       allMessages.messages.length - 1
                     ].replace(/(\r\n|\n|\r)/gm, '')
-                : `ℹ️ Begin conversation in ${item.name}`}
+                : `ℹ️ Begin conversation in ${
+                    item && item.name && item.name.length > 20
+                      ? item.name.substring(0, 20 - 3) + '...'
+                      : item && item.name
+                      ? item.name
+                      : ''
+                  }`}
             </Text>
           )}
         </TouchableOpacity>

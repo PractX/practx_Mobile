@@ -514,10 +514,17 @@ const ChatBubble = ({
                   style={{
                     textTransform: 'capitalize',
                   }}>
-                  {message.message}
+                  {message.message &&
+                    message.message.message.sentBy.split(' ')[0] +
+                      ' ' +
+                      message.message.message.sentBy
+                        .split(' ')[1]
+                        .substring(0, 1)}
                 </Text>
                 <Text style={{ textTransform: 'lowercase' }}>
-                  {' is typing...'}
+                  {` is ${
+                    message && message.message.message.eventType.split('_')[0]
+                  }...`}
                 </Text>
               </Text>
             ) : (
