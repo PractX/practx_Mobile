@@ -744,12 +744,13 @@ const ChatMessages = ({
               }
               allMessages={
                 practiceDms
-                  ? allMessages.find(
-                      (it) =>
-                        it.channel ===
-                        practiceDms.find(
-                          (item) => item.id === currentPracticeId,
-                        ).Dm.channelName,
+                  ? allMessages.find((it) =>
+                      practiceDms.find((item) => item.id === currentPracticeId)
+                        ? it.channel ===
+                          practiceDms.find(
+                            (item) => item.id === currentPracticeId,
+                          ).Dm.channelName
+                        : '',
                     )
                     ? allMessages.find(
                         (it) =>
