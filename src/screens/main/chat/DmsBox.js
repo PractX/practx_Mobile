@@ -20,6 +20,7 @@ const DmsBox = ({
   allMessages,
   subgroups,
   signals,
+  currentUser,
 }) => {
   const { colors } = useTheme();
   // const [{ messages }, setNewMessage] = useState(allMessages);
@@ -34,7 +35,6 @@ const DmsBox = ({
   //   'Last____',
   //   allMessages.messages[allMessages.messages.length - 1].timetoken / 10000000,
   // );
-  // console.log(newMessages);
 
   useEffect(() => {
     if (allMessages) {
@@ -47,6 +47,12 @@ const DmsBox = ({
       setNewMessageTime(timeAgo(gmtDate));
     }
   }, [allMessages, time]);
+
+  let dmChannel = item && item.Dm && item.Dm.channelName && item.Dm.channelName;
+
+  // console.log('Available Signals', signals, '----', dmChannel);
+  const getSignal = () =>
+    signals ? signals.find((i) => i.channel === dmChannel) : null;
   // const handleMessage = (event) => {
   //   const message = event.message;
   //   if (typeof message === 'string' || message.hasOwnProperty('text')) {
@@ -159,7 +165,11 @@ const DmsBox = ({
               fontSize: normalize(11),
               fontFamily: 'SofiaProRegular',
             }}>
-            {allMessages && allMessages.messages.length
+            {getSignal() &&
+            getSignal().message.eventType === 'typing_on' &&
+            getSignal().publisher !== currentUser.chatId
+              ? 'typing...'
+              : allMessages && allMessages.messages.length
               ? allMessages.messages[allMessages.messages.length - 1].message &&
                 allMessages.messages[allMessages.messages.length - 1].message
                   .text

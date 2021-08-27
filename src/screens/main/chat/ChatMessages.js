@@ -763,6 +763,7 @@ const ChatMessages = ({
                   : null
                 // dmMessage
               }
+              currentUser={currentUser}
               practiceDms={practiceDms}
               subgroups={subgroups}
               navigation={navigation}
@@ -853,6 +854,7 @@ const ChatMessages = ({
                                 : null
                               : null
                           }
+                          currentUser={currentUser}
                           practiceDms={practiceDms}
                           navigation={navigation}
                           subgroups={subgroups}

@@ -53,10 +53,10 @@ const ProgressBar = ({
             <Icon
               name="heartbeat"
               type="font-awesome"
-              size={6}
+              size={5}
               reverse={direction === 'left'}
               raised={direction === 'right'}
-              containerStyle={{ bottom: 6.5, right: 8 }}
+              containerStyle={{ bottom: 6, right: 8 }}
               color={colors.primary}
               backgroundColor
             />

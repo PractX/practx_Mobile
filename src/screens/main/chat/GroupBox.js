@@ -22,6 +22,7 @@ const GroupBox = ({
   practices,
   subgroups,
   signals,
+  currentUser,
 }) => {
   const { colors } = useTheme();
   const pubnub = usePubNub();
@@ -51,6 +52,14 @@ const GroupBox = ({
       setNewMessageTime(timeAgo(gmtDate));
     }
   }, [allMessages, time]);
+
+  let groupChannel =
+    item &&
+    item.subgroupChats.length > 0 &&
+    item.subgroupChats[0].PatientSubgroup.channelName;
+
+  const getSignal = () =>
+    signals ? signals.find((i) => i.channel === groupChannel) : null;
   // const handleMessage = (event) => {
   //   const message = event.message;
   //   if (typeof message === 'string' || message.hasOwnProperty('text')) {
@@ -171,40 +180,63 @@ const GroupBox = ({
             }}>
             {item && item.name}
           </Text>
-          <Text
-            style={{
-              color: colors.text,
-              fontSize: normalize(11),
-              fontFamily: 'SofiaProRegular',
-            }}>
-            {allMessages && allMessages.messages.length
-              ? allMessages.messages[allMessages.messages.length - 1].message &&
-                allMessages.messages[allMessages.messages.length - 1].message
-                  .text
-                ? allMessages.messages[
-                    allMessages.messages.length - 1
-                  ].message.text.replace(/(\r\n|\n|\r)/gm, '').length > 60
+          {getSignal() &&
+          getSignal().message.eventType === 'typing_on' &&
+          getSignal().publisher !== currentUser.chatId ? (
+            <Text
+              style={{
+                color: colors.text,
+                fontSize: normalize(11),
+                fontFamily: 'SofiaProRegular',
+              }}>
+              <Text
+                style={{
+                  textTransform: 'capitalize',
+                }}>
+                {getSignal().message.sentBy.split(' ')[0] +
+                  ' ' +
+                  getSignal().message.sentBy.split(' ')[1].substring(0, 1)}
+              </Text>
+              <Text style={{ textTransform: 'lowercase' }}>
+                {' is typing...'}
+              </Text>
+            </Text>
+          ) : (
+            <Text
+              style={{
+                color: colors.text,
+                fontSize: normalize(11),
+                fontFamily: 'SofiaProRegular',
+              }}>
+              {allMessages && allMessages.messages.length
+                ? allMessages.messages[allMessages.messages.length - 1]
+                    .message &&
+                  allMessages.messages[allMessages.messages.length - 1].message
+                    .text
                   ? allMessages.messages[
                       allMessages.messages.length - 1
-                    ].message.text
-                      .replace(/(\r\n|\n|\r)/gm, '')
-                      .substring(0, 60 - 3) + '...'
+                    ].message.text.replace(/(\r\n|\n|\r)/gm, '').length > 60
+                    ? allMessages.messages[
+                        allMessages.messages.length - 1
+                      ].message.text
+                        .replace(/(\r\n|\n|\r)/gm, '')
+                        .substring(0, 28 - 3) + '...'
+                    : allMessages.messages[
+                        allMessages.messages.length - 1
+                      ].message.text.replace(/(\r\n|\n|\r)/gm, '')
+                  : allMessages.messages[allMessages.messages.length - 1]
+                      .message.file
+                  ? allMessages.messages[
+                      allMessages.messages.length - 1
+                    ].message.file.name.match(/.(jpg|jpeg|png|gif)$/i)
+                    ? ' Photo'
+                    : 'Video'
                   : allMessages.messages[
                       allMessages.messages.length - 1
-                    ].message.text.replace(/(\r\n|\n|\r)/gm, '')
-                : allMessages.messages[allMessages.messages.length - 1].message
-                    .file
-                ? allMessages.messages[
-                    allMessages.messages.length - 1
-                  ].message.file.name.match(/.(jpg|jpeg|png|gif)$/i)
-                  ? ' Photo'
-                  : 'Video'
-                : allMessages.messages[allMessages.messages.length - 1].replace(
-                    /(\r\n|\n|\r)/gm,
-                    '',
-                  )
-              : `ℹ️ Begin conversation in ${item.name}`}
-          </Text>
+                    ].replace(/(\r\n|\n|\r)/gm, '')
+                : `ℹ️ Begin conversation in ${item.name}`}
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
 
