@@ -261,8 +261,7 @@ const ChatBubble = ({
                 message.message.userType === 'practice' && groupPractice
                   ? groupPractice.logo
                   : practice
-                  ? practice.logo ||
-                    'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
+                  ? practice.logo
                   : practiceStaff.length
                   ? message.message.file
                     ? practiceStaff.find(
@@ -273,7 +272,8 @@ const ChatBubble = ({
                             staff.id === message.message.message.staffId,
                         ).avatar ||
                         'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
-                      : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
+                      : groupPractice.logo ||
+                        'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
                     : practiceStaff.find(
                         (staff) => staff.id === message.message.staffId,
                       )
@@ -319,6 +319,65 @@ const ChatBubble = ({
                   borderTopRightRadius: 20,
                   borderBottomRightRadius: 20,
                 }}>
+                {message.message.message.userType === 'practice' && (
+                  <Text
+                    style={{
+                      fontSize: normalize(10),
+                      fontFamily: 'SofiaProLight',
+                      color: colors.primary,
+                      alignSelf: 'flex-start',
+                      paddingLeft: 15,
+                      top: 8,
+                      textAlign: 'left',
+                      paddingBottom: 5,
+                      textTransform: 'capitalize',
+                    }}>
+                    {groupPractice
+                      ? groupPractice.practiceName
+                      : practice
+                      ? practice.practiceName
+                      : 'Practice'}
+                  </Text>
+                )}
+                {message.message.message.userType === 'staff' && (
+                  <View
+                    style={{
+                      textAlign: 'left',
+                      paddingBottom: 5,
+                      flexDirection: 'row',
+                      paddingLeft: 15,
+                      alignSelf: 'flex-start',
+                      top: 8,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: normalize(10),
+                        fontFamily: 'SofiaProRegular',
+                        color: colors.primary,
+                        textAlign: 'left',
+                        paddingBottom: 5,
+                        marginRight: 6,
+                      }}>
+                      Staff
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: normalize(10),
+                        fontFamily: 'SofiaProLight',
+                        color: colors.text_2,
+                        textAlign: 'left',
+                        paddingBottom: 5,
+                        textTransform: 'capitalize',
+                      }}>
+                      {practiceStaff.length
+                        ? practiceStaff.find(
+                            (staff) =>
+                              staff.id === message.message.message.staffId,
+                          ).firstname
+                        : ''}
+                    </Text>
+                  </View>
+                )}
                 {message.message.file.name.match(/.(jpg|jpeg|png|gif)$/i) ? (
                   <FastImage
                     source={{
@@ -456,7 +515,7 @@ const ChatBubble = ({
                         ? practiceStaff.find(
                             (staff) => staff.id === message.message.staffId,
                           ).firstname
-                        : 'Staff'}
+                        : ''}
                     </Text>
                   </View>
                 )}
