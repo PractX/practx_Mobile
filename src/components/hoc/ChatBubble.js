@@ -18,6 +18,7 @@ import Audio from 'react-native-video';
 import ProgressBar from '../../utils/progressBar';
 import { useState } from 'react';
 import VoiceNoteRecorder from './VoiceNoteRecorder';
+import typingIcon from '../../../assets/gif/typingIndicator.gif';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -471,26 +472,65 @@ const ChatBubble = ({
                     {message.message.profile.name}
                   </Text>
                 )}
-                <Text
-                  style={{
-                    fontSize: normalize(12),
-                    fontFamily: 'SofiaProRegular',
-                    color: colors.text,
-                    textAlign: 'left',
-                  }}>
-                  {message.message.text && message.message.text}
-                </Text>
+                {message.messageType === 10 ? (
+                  <FastImage
+                    source={typingIcon}
+                    style={[
+                      {
+                        width: 40,
+                        height: 20,
+                        backgroundColor: colors.background_1,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        borderBottomRightRadius: 20,
+                        alignSelf: 'center',
+                      },
+                    ]}
+                    resizeMode={FastImage.resizeMode.contain}
+                  />
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: normalize(12),
+                      fontFamily: 'SofiaProRegular',
+                      color: colors.text,
+                      textAlign: 'left',
+                    }}>
+                    {message.message.text && message.message.text}
+                  </Text>
+                )}
               </View>
             )}
-            <Text
-              style={{
-                fontSize: normalize(10),
-                fontFamily: 'SofiaProLight',
-                color: colors.text,
-                paddingTop: 3,
-              }}>
-              {addTime(message)}
-            </Text>
+            {message.messageType === 10 ? (
+              <Text
+                style={{
+                  fontSize: normalize(10),
+                  fontFamily: 'SofiaProLight',
+                  color: colors.text,
+                  paddingTop: 3,
+                  // textTransform: 'capitalize',
+                }}>
+                <Text
+                  style={{
+                    textTransform: 'capitalize',
+                  }}>
+                  {message.message}
+                </Text>
+                <Text style={{ textTransform: 'lowercase' }}>
+                  {' is typing...'}
+                </Text>
+              </Text>
+            ) : (
+              <Text
+                style={{
+                  fontSize: normalize(10),
+                  fontFamily: 'SofiaProLight',
+                  color: colors.text,
+                  paddingTop: 3,
+                }}>
+                {addTime(message)}
+              </Text>
+            )}
           </View>
         </View>
       )}

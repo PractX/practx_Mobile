@@ -235,15 +235,21 @@ const Header = ({
                         : practice.specialty}
                     </Text>
                   )} */}
-                  {practice && (
+                  {practice || group ? (
                     <Text
                       style={{
                         color: colors.text,
                         fontSize: normalize(12),
                         fontFamily: 'SofiaProRegular',
                       }}>
-                      {typingMsg ? typingMsg : ''}
+                      {typingMsg && practice
+                        ? 'typing...'
+                        : typingMsg && group
+                        ? typingMsg
+                        : ''}
                     </Text>
+                  ) : (
+                    <View />
                   )}
                 </View>
               </View>

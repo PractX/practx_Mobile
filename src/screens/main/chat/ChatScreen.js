@@ -83,6 +83,9 @@ import GestureRecognizer, {
 import generateName from '../../../utils/generateName';
 import RNFetchBlob from 'rn-fetch-blob';
 import VoiceNoteRecorder from '../../../components/hoc/VoiceNoteRecorder';
+import { SvgXml } from 'react-native-svg';
+import typingIcon from '../../../../assets/gif/typingIndicator.gif';
+import { Image } from 'react-native';
 // import SoundPlayer from 'react-native-sound-player'
 
 const { flags, sports, food } = Categories;
@@ -938,7 +941,7 @@ const ChatScreen = ({
             getSignal() &&
             getSignal().message.eventType === 'typing_on' &&
             getSignal().publisher !== currentUser.chatId
-              ? 'typing...'
+              ? getSignal().message.sentBy + ' is typing...'
               : ''
           }
           subgroups={{
@@ -1301,6 +1304,33 @@ const ChatScreen = ({
                           />
                         </View>
                       </View>
+                    ) : getSignal() &&
+                      getSignal().message.eventType === 'typing_on' &&
+                      getSignal().publisher !== currentUser.chatId ? (
+                      <>
+                        <ChatBubble
+                          id={344556455}
+                          message={{
+                            messageType: 10,
+                            message:
+                              getSignal().message.sentBy.split(' ')[0] +
+                              ' ' +
+                              getSignal()
+                                .message.sentBy.split(' ')[1]
+                                .substring(0, 1),
+                          }}
+                          navigation={navigation}
+                          practice={practice}
+                          groupPractice={groupPractice}
+                          practiceDms={practiceDms}
+                          patientChatId={currentUser ? currentUser.chatId : 0}
+                          practiceStaff={practiceStaffs}
+                          onStartPlay={onStartPlay}
+                          onPausePlay={onPausePlay}
+                          onStopPlay={onStopPlay}
+                          audioTime={audioTime}
+                        />
+                      </>
                     ) : null}
                   </View>
                 );
