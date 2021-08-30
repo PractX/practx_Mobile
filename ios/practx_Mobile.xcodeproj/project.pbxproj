@@ -24,7 +24,10 @@
 		4179A37B2621B4EE0031F3AD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		4179A3802621B5090031F3AD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		48231CD893644FB18C15A16B /* SofiaProBold-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F391D8315A4F4C8D8BDD51E0 /* SofiaProBold-Italic.ttf */; };
-		4AC6951626C840F700E2BCB4 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC6951526C840F700E2BCB4 /* File.swift */; };
+		4A7555CB26D91D2F0000BE95 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7555CA26D91D2F0000BE95 /* File.swift */; };
+		4A7555CC26D91D2F0000BE95 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7555CA26D91D2F0000BE95 /* File.swift */; };
+		4A7555CD26D91D2F0000BE95 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7555CA26D91D2F0000BE95 /* File.swift */; };
+		4A7555CE26D91D2F0000BE95 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7555CA26D91D2F0000BE95 /* File.swift */; };
 		5A22E7BFB29245BEACF20F8B /* SofiaProLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E48C4F2CC074715867A754C /* SofiaProLight.ttf */; };
 		5C15B57CECEB42B292C086AC /* FuturaStd-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2D8FEDDCBD0C4855A79E81E1 /* FuturaStd-Bold.otf */; };
 		65F6DB75B2CB4DFE8A03BBD8 /* Comfortaa-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9BE80229261E4482972E5BFA /* Comfortaa-Bold.ttf */; };
@@ -132,8 +135,11 @@
 		41A8E5BC261C5DD800DAA8F5 /* Comfortaa-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Comfortaa-Bold.ttf"; path = "../android/app/src/main/assets/fonts/Comfortaa-Bold.ttf"; sourceTree = "<group>"; };
 		424D1E9CC37C4A198044398E /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		429BFE7756B5D75CCA343252 /* Pods-practx_Mobile-practx_MobileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-practx_Mobile-practx_MobileTests.debug.xcconfig"; path = "Target Support Files/Pods-practx_Mobile-practx_MobileTests/Pods-practx_Mobile-practx_MobileTests.debug.xcconfig"; sourceTree = "<group>"; };
+		4A7555C726D91D2B0000BE95 /* practx_MobileTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "practx_MobileTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		4A7555C826D91D2C0000BE95 /* practx_Mobile-tvOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "practx_Mobile-tvOS-Bridging-Header.h"; sourceTree = "<group>"; };
+		4A7555C926D91D2E0000BE95 /* practx_Mobile-tvOSTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "practx_Mobile-tvOSTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		4A7555CA26D91D2F0000BE95 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		4AC6951426C840F700E2BCB4 /* practx_Mobile-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "practx_Mobile-Bridging-Header.h"; sourceTree = "<group>"; };
-		4AC6951526C840F700E2BCB4 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		4BEF4639F84E2EF3B1BE72A8 /* Pods-practx_Mobile-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-practx_Mobile-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-practx_Mobile-tvOSTests/Pods-practx_Mobile-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		52B259FC33604EBFADB1069E /* Helvetica-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Helvetica-Light.ttf"; path = "../assets/fonts/Helvetica-Light.ttf"; sourceTree = "<group>"; };
 		569F452C14104B65AAD4D58B /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -311,8 +317,11 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				4AC6951526C840F700E2BCB4 /* File.swift */,
 				4AC6951426C840F700E2BCB4 /* practx_Mobile-Bridging-Header.h */,
+				4A7555CA26D91D2F0000BE95 /* File.swift */,
+				4A7555C726D91D2B0000BE95 /* practx_MobileTests-Bridging-Header.h */,
+				4A7555C826D91D2C0000BE95 /* practx_Mobile-tvOS-Bridging-Header.h */,
+				4A7555C926D91D2E0000BE95 /* practx_Mobile-tvOSTests-Bridging-Header.h */,
 			);
 			name = practx_Mobile;
 			sourceTree = "<group>";
@@ -518,6 +527,7 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						LastSwiftMigration = 1250;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
@@ -527,10 +537,12 @@
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						LastSwiftMigration = 1250;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E48F1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						LastSwiftMigration = 1250;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
@@ -919,6 +931,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* practx_MobileTests.m in Sources */,
+				4A7555CC26D91D2F0000BE95 /* File.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -927,7 +940,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				4AC6951626C840F700E2BCB4 /* File.swift in Sources */,
+				4A7555CB26D91D2F0000BE95 /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -937,6 +950,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
+				4A7555CD26D91D2F0000BE95 /* File.swift in Sources */,
 				2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -946,6 +960,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DCD954D1E0B4F2C00145EB5 /* practx_MobileTests.m in Sources */,
+				4A7555CE26D91D2F0000BE95 /* File.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -971,6 +986,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -985,6 +1001,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "practx_MobileTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/practx_Mobile.app/practx_Mobile";
 			};
 			name = Debug;
@@ -995,6 +1014,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = practx_MobileTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -1006,6 +1026,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "practx_MobileTests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/practx_Mobile.app/practx_Mobile";
 			};
 			name = Release;
@@ -1075,6 +1097,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1091,6 +1114,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.practx_Mobile-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "practx_Mobile-tvOS-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
@@ -1103,6 +1129,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1119,6 +1146,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.practx_Mobile-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "practx_Mobile-tvOS-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
@@ -1128,8 +1157,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4BEF4639F84E2EF3B1BE72A8 /* Pods-practx_Mobile-tvOSTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1146,6 +1177,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.practx_Mobile-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "practx_Mobile-tvOSTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/practx_Mobile-tvOS.app/practx_Mobile-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
@@ -1155,8 +1189,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E3BE9EA807E540564C5D27B9 /* Pods-practx_Mobile-tvOSTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1173,6 +1209,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.practx_Mobile-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "practx_Mobile-tvOSTests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/practx_Mobile-tvOS.app/practx_Mobile-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
