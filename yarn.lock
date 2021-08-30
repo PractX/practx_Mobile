@@ -1230,6 +1230,13 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-5.9.10.tgz#97d3a9fa62a3a4838ec7a6ec91cfec5a26e365b6"
   integrity sha512-1NPlBA2Hu/KWc3EnQcDRPRX0x8Dg9tuQlQQVWVQjlg+u+PjCq7ANEtbikOFKp5yQqfF8tqzU5+84/IfDO8zpiA==
 
+"@react-native-community/push-notification-ios@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/push-notification-ios/-/push-notification-ios-1.10.0.tgz#27cbf9a3e5e54e04794d146b03ae2fee110139ae"
+  integrity sha512-NPtJ9QtSI5ODLWfeT0UA9CiEJPsjw47WlZ4E5uViLjOb0P9iRtkb0Stavg9zwt3NpQA2KPxtZGd0GmLM7Rui3w==
+  dependencies:
+    invariant "^2.2.4"
+
 "@react-native-community/slider@^4.1.1":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-4.1.1.tgz#e14f8a51b3c97283881ff23d6cc8e313b0359101"
@@ -7233,6 +7240,11 @@ react-native-popup-menu@^0.15.10:
   version "0.15.10"
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.15.10.tgz#49f2a67c8d1ea329f44e56288eca4a5c04835828"
   integrity sha512-w7MaicsfpclK7g/omjMchNaXwhMi0apt/DC734AbHuJTWCfv5mF3JgL1UzRW19ncFMBRfQeYapPy/zUyJCGgEQ==
+
+react-native-push-notification@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-8.0.1.tgz#76aeca0736363ad821c4497cdb6994bf14a5d21c"
+  integrity sha512-kUQMOQS7VdYDC/thEscr5Dvjuyhftexk3cgXdyP8CGxnxKxVqWuR3907+ll694bDO8YMEjNRJW968TydHkk1wA==
 
 react-native-ratings@^7.3.0:
   version "7.6.1"
