@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "732342770141",
+    "project_id": "practx-a5f77",
+    "storage_bucket": "practx-a5f77.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732342770141:android:c8ac59d61444b18e027e34",
+        "android_client_info": {
+          "package_name": "com.practx_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "732342770141-1ma8mkjpgatjocnh7pj9rh4jpjq887hv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBTkFIUYNO9H2ajC75M3ivexYPrs62oxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "732342770141-1ma8mkjpgatjocnh7pj9rh4jpjq887hv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -18,6 +18,8 @@ import { ColorList } from './src/utils/color';
 import { selectThemeMode } from './src/redux/settings/settings.selector';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import Orientation from 'react-native-orientation-locker';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import PushNotification, { Importance } from 'react-native-push-notification';
 
 import {
   Header,
@@ -33,6 +35,7 @@ import { connect } from 'react-redux';
 import { selectCurrentUser, selectToken } from './src/redux/user/user.selector';
 import FlashMessage from 'react-native-flash-message';
 import { Keyboard } from 'react-native';
+import { usePubNub } from 'pubnub-react';
 
 function SplashScreen() {
   return (
@@ -43,6 +46,7 @@ function SplashScreen() {
 }
 const Stack = createStackNavigator();
 const App = ({ themeMode, user, token }) => {
+  const pubnub = usePubNub();
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +55,76 @@ const App = ({ themeMode, user, token }) => {
     scheme: null,
     theme: null,
   });
+
+  // PushNotification.popInitialNotification((notification) => {
+  //   console.log('Initial Notification', notification);
+  // });
+  PushNotification.configure({
+    // Called when Token is generated.
+    onRegister: function (token) {
+      console.log('TOKEN:', token);
+      if (token.os === 'ios' && pubnub) {
+        pubnub.push.addChannels({
+          channels: ['channel-1'],
+          device: token.token,
+          pushGateway: 'apns',
+        });
+        // Send iOS Notification from debug console: {"pn_apns":{"aps":{"alert":"Hello World."}}}
+      } else if (token.os === 'android' && pubnub) {
+        // console.log(pubnub);
+        pubnub.push.addChannels({
+          channels: ['32_13_ciqrmNksp'],
+          device: token.token,
+          pushGateway: 'gcm', // apns, gcm, mpns
+        });
+        // Send Android Notification from debug console: {"pn_gcm":{"data":{"message":"Hello World."}}}
+      }
+    },
+    // Something not working?
+    // See: https://support.pubnub.com/hc/en-us/articles/360051495432-How-can-I-troubleshoot-my-push-notification-issues-
+    // Called when a remote or local notification is opened or received.
+    onNotification: function (notification) {
+      console.log('NOTIFICATION:', notification);
+      // Do something with the notification.
+      // Required on iOS only (see fetchCompletionHandler docs: https://reactnative.dev/docs/pushnotificationios)
+      // notification.finish(PushNotificationIOS.FetchResult.NoData);
+    },
+    // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
+    onAction: function (notification) {
+      console.log('ACTION:', notification.action);
+      console.log('NOTIFICATIONS:', notification);
+
+      // process the action
+    },
+
+    // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
+    onRegistrationError: function (err) {
+      console.error(err.message, err);
+    },
+
+    // IOS ONLY (optional): default: all - Permissions to register.
+    permissions: {
+      alert: true,
+      badge: true,
+      sound: true,
+    },
+
+    // Should the initial notification be popped automatically
+    // default: true
+    popInitialNotification: true,
+
+    /**
+     * (optional) default: true
+     * - Specified if permissions (ios) and token (android and ios) will requested or not,
+     * - if not, you must call PushNotificationsHandler.requestPermissions() later
+     * - if you are not using remote notification or do not have Firebase installed, use this:
+     *     requestPermissions: Platform.OS === 'ios'
+     */
+    requestPermissions: true,
+    // ANDROID: GCM or FCM Sender ID
+    senderID: '732342770141',
+  });
+
   useMemo(() => {
     Keyboard.dismiss();
     console.log(state.color);

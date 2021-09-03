@@ -29,6 +29,7 @@ import {
   selectIsLoading,
 } from '../../redux/user/user.selector';
 import { normalize } from 'react-native-elements';
+import PushNotification from 'react-native-push-notification';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -47,6 +48,21 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
     // dispatch(Actions.loginPatient(values.email, values.password));
     signInStart(values.email, values.password);
   };
+  // const notify = () => {
+  //   console.log('Local notify');
+  //   PushNotification.localNotificationSchedule({
+  //     //... You can use all the options from localNotifications
+  //     message: 'My Notification Message', // (required)
+  //     date: new Date(Date.now() + 60 * 1000), // in 60 secs
+  //     allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
+
+  //     /* Android Only Properties */
+  //     repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
+  //   });
+  // };
+  // useEffect(() => {
+  //   notify();
+  // }, []);
 
   useEffect(() => {
     console.log(colors.mode);

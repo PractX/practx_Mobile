@@ -19,10 +19,12 @@ import { PubNubProvider, usePubNub } from 'pubnub-react';
 // import {firebase} from '@react-native-firebase/analytics';
 import { LogBox, YellowBox } from 'react-native';
 import { NetworkProvider } from 'react-native-offline';
+import PushNotification from 'react-native-push-notification';
 
 const pubnub = new PubNub({
   publishKey: 'pub-c-56fcc9f4-b494-494f-8ec3-5ade985b98b5',
   subscribeKey: 'sub-c-1657f96e-df4e-11eb-b709-22f598fbfd18',
+  authKey: 'jasky',
   autoNetworkDetection: true, // enable for non-browser environment automatic reconnection
   restore: true, // enable catchup on missed messages
   // logVerbosity: true,
@@ -30,6 +32,7 @@ const pubnub = new PubNub({
   presenceTimeout: 130,
   // uuid: 'myUniqueUUID',
 });
+
 YellowBox.ignoreWarnings(['']);
 // SHOW NETWORK DEBUG
 // global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;

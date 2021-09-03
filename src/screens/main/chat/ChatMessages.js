@@ -419,6 +419,29 @@ const ChatMessages = ({
 
     // if (!isFetching) {
   }, [isFocused]);
+  const removeChannel = () => {
+    console.log('Deleting');
+    // pubnub.removeMessageAction(
+    //   {
+    //     channel: ['23_15_V3wNztfhu'],
+    //     messageTimetoken: '16130166805908223',
+    //     actionTimetoken: Date.now(),
+    //   },
+    //   function (status, response) {
+    //     console.log(response);
+    //   },
+    // );
+    pubnub.deleteMessages(
+      {
+        channel: '32_13_ciqrmNksp',
+        start: Date.now(),
+        end: '16306181371452321',
+      },
+      (result) => {
+        console.log(result);
+      },
+    );
+  };
 
   useMemo(() => {
     if (currentPracticeId) {
@@ -427,7 +450,7 @@ const ChatMessages = ({
       getPracticeSubgroupsStart(currentPracticeId);
       getPracticeStaffStart(currentPracticeId);
       // getLastMessages();
-      // removeChannel();
+      removeChannel();
       const me = subgroups.find((item) => item.practiceId === currentPracticeId)
         ? subgroups.find((item) => item.practiceId === currentPracticeId)
         : [];
@@ -453,30 +476,6 @@ const ChatMessages = ({
       }
     }
   }, [currentPracticeId, subgroups]);
-
-  const removeChannel = () => {
-    console.log('Deleting');
-    // pubnub.removeMessageAction(
-    //   {
-    //     channel: ['23_15_V3wNztfhu'],
-    //     messageTimetoken: '16130166805908223',
-    //     actionTimetoken: Date.now(),
-    //   },
-    //   function (status, response) {
-    //     console.log(response);
-    //   },
-    // );
-    pubnub.deleteMessages(
-      {
-        channel: '23_15_V3wNztfhu',
-        start: Date.now(),
-        end: '16148006508208300',
-      },
-      (result) => {
-        console.log(result);
-      },
-    );
-  };
 
   useEffect(() => {
     console.log('useEffect');
