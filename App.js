@@ -7,11 +7,13 @@ import {
   Text,
   StatusBar,
   Platform,
+  Linking,
 } from 'react-native';
 import {
   NavigationContainer,
   DarkTheme,
   DefaultTheme,
+  useLinking,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ColorList } from './src/utils/color';
@@ -55,6 +57,25 @@ const App = ({ themeMode, user, token }) => {
     scheme: null,
     theme: null,
   });
+  const [isReady, setIsReady] = React.useState(false);
+  const [initialState, setInitialState] = useState();
+
+  const config = {
+    screens: {
+      MainScreen: {
+        screens: {
+          Chats: {
+            path: 'chats',
+          },
+        },
+      },
+    },
+  };
+
+  const { getInitialState } = useLinking(navigationRef, {
+    prefixes: ['https://practx.com/', 'practx://'],
+    config,
+  });
 
   // PushNotification.popInitialNotification((notification) => {
   //   console.log('Initial Notification', notification);
@@ -85,6 +106,10 @@ const App = ({ themeMode, user, token }) => {
     // Called when a remote or local notification is opened or received.
     onNotification: function (notification) {
       console.log('NOTIFICATION:', notification);
+      setInitialState('chats');
+      // Linking.openURL('practx://chats')
+      //   .then((url) => console.log('Hello uRl', url))
+      //   .catch((err) => console.log(err));
       // Do something with the notification.
       // Required on iOS only (see fetchCompletionHandler docs: https://reactnative.dev/docs/pushnotificationios)
       // notification.finish(PushNotificationIOS.FetchResult.NoData);
@@ -162,15 +187,37 @@ const App = ({ themeMode, user, token }) => {
   useEffect(() => {
     // console.log(token);
     Orientation.lockToPortrait();
+    //     if(themeMode === 'Dark'){
+    //       const me = ;
+    // console.log()
+    //     };
     themeMode === 'Dark'
       ? changeNavigationBarColor(ColorList[1].background)
       : changeNavigationBarColor(ColorList[0].background);
   }, [themeMode]);
+
+  useEffect(() => {
+    getInitialState()
+      .catch(() => {})
+      .then((initState) => {
+        console.log('InitState', initState);
+        if (initState !== undefined) {
+          setInitialState(initState);
+        }
+
+        setIsReady(true);
+      });
+  }, [getInitialState, themeMode]);
+
+  if (!isReady) {
+    return <></>;
+  }
   return (
     <>
       {/* <SafeAreaView style={{ flex: 2, backgroundColor: state.color }}> */}
       <StatusBar backgroundColor={state.color} barStyle={state.scheme} />
       <NavigationContainer
+        initialState={initialState}
         theme={state.theme}
         ref={navigationRef}
         onReady={() =>

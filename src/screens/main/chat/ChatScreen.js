@@ -227,7 +227,9 @@ const ChatScreen = ({
 
   const sendMessage = (data) => {
     // console.log('Channel name', channelName);
-    // console.log('SENDING____');
+    // console.log('SENDING____')
+
+    //UNCOMMENT LATER
     setErrorMessage('');
     setSending(true);
     setInputText('');

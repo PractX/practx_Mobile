@@ -53,7 +53,7 @@ const RNRedux = () => (
         <MenuProvider
           customStyles={{
             menuProviderWrapper: {
-              backgroundColor: 'green',
+              // backgroundColor: 'green',
               padding: 0,
             },
           }}>

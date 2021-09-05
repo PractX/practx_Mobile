@@ -30,7 +30,7 @@
 		"formik": "^2.2.6",
 		"moment": "^2.29.1",
 		"native-base": "^2.15.2",
-		"pubnub": "^4.29.11",
+		"pubnub": "^4.33.0",
 		"pubnub-react": "^2.1.0",
 		"react": "16.13.1",
 		"react-native": "0.63.4",

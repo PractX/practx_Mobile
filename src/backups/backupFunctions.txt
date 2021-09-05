@@ -194,3 +194,38 @@ const getMessages = (cha) => {
   <Text>Swipper</Text>
   <Text>onSwipe callback received gesture:</Text>
 </GestureRecognizer> */}
+
+
+
+// PubNub remote payload
+
+{
+   "text":"You have been invited to 'yup' chat",
+   "userType":"patient",
+   "profile":{
+      "id":"324",
+      "name":"Test notify"
+   },
+   "pn_apns":{
+      "aps":{
+         "alert":{
+            "body":"You have been invited to 'yup' chat",
+            "title":"Chat invitation"
+         },
+         "sound":"practx_notify.mp3"
+      }
+   },
+   "pn_gcm":{
+      "notification":{
+         "body":"You have been invited to 'yup' chat",
+         "sound":"practx_notify.mp3",
+         "title":"Chat invitation",
+         "link":"https://facebook.com"
+      },
+      "data":{
+         "Nick":"Mario",
+         "body":"great match!",
+         "Room":"PortugalVSDenmark"
+      }
+   }
+}
