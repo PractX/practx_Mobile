@@ -49,7 +49,10 @@ import {
   selectPracticeStaffs,
   selectSignals,
 } from '../../../redux/practices/practices.selector';
-import { setAllMessages } from '../../../redux/practices/practices.actions';
+import {
+  setAllMessages,
+  setCurrentChatChannel,
+} from '../../../redux/practices/practices.actions';
 // import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import EmojiSelector, { Categories } from 'react-native-emoji-selector';
 import { Keyboard } from 'react-native';
@@ -105,6 +108,7 @@ const ChatScreen = ({
   setAllMessages,
   practiceStaffs,
   signals,
+  setCurrentChatChannel,
 }) => {
   const audioRecorderPlayer = new AudioRecorderPlayer();
   const [chatRef, setChatRef] = useState();
@@ -528,7 +532,7 @@ const ChatScreen = ({
 
   useMemo(() => {
     if (isFocused || allMessages) {
-      console.log('New MESSAgE Available__');
+      // console.log('New MESSAgE Available__');
 
       addMessages(
         allMessages.find((item) => item.channel === channelName)
@@ -555,6 +559,7 @@ const ChatScreen = ({
   useMemo(() => {
     // console.log('Group_SUGGEST', groupSuggest);
     if (isFocused || (isFocused && type) || (isFocused && group)) {
+      setCurrentChatChannel(channelName);
       // console.log(
       //   'Chat Ref___',
       //   allMessages.find((item) => item.channel === channelName).messages,
@@ -582,6 +587,8 @@ const ChatScreen = ({
       // allMessages.find((item) => item.channel === channelName)
       //   ? setGroupSuggest(false)
       //   : setGroupSuggest(true);
+    } else {
+      setCurrentChatChannel('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused, type, group]);
@@ -1837,6 +1844,7 @@ const mapDispatchToProps = (dispatch) => ({
   // getPracticesAllStart: () => dispatch(getPracticesAllStart()),
   editProfile: (data) => dispatch(editProfile(data)),
   setAllMessages: (data) => dispatch(setAllMessages(data)),
+  setCurrentChatChannel: (data) => dispatch(setCurrentChatChannel(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

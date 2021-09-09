@@ -40,10 +40,12 @@ import {
   getPracticeStaffStart,
   leavePracticeStart,
   setSignals,
+  setChatChannels,
 } from '../../../redux/practices/practices.actions';
 import { RefreshControl } from 'react-native';
 import {
   selectAllMessages,
+  selectChatChannels,
   selectCurrentPracticeId,
   selectIsFetching,
   selectJoinedPractices,
@@ -83,10 +85,12 @@ const ChatMessages = ({
   setAllMessages,
   signals,
   setSignals,
+  chatChannels,
+  setChatChannels,
 }) => {
   const { colors } = useTheme();
   const ref = useRef();
-  // const props = useRoute();
+  const { params } = useRoute();
   const pubnub = usePubNub();
   const [style1, setStyle1] = useState();
   const [practicesRefreshing, setPracticesRefreshing] = useState(false);
@@ -129,6 +133,54 @@ const ChatMessages = ({
   //   );
   // };
 
+  useEffect(() => {
+    if (params && params.ids) {
+      console.log('PARAMSSSSS------', params);
+      if (params.ids.split('-')[2] === 'dm') {
+        navigation.navigate('ChatScreen', {
+          // signals: signals,
+          practice:
+            practiceDms &&
+            practiceDms.find(
+              (item) => item.id === parseInt(params.ids.split('-')[0]),
+            ),
+          channelName: params.ids.split('-')[1],
+          practiceDms,
+          subgroups: subgroups.find(
+            (items) => items.practiceId === parseInt(params.ids.split('-')[0]),
+          ),
+          group: null,
+          navigation: navigation,
+          type: 'dm',
+        });
+      } else if (params.ids.split('-')[2] === 'group') {
+        navigation.navigate('ChatScreen', {
+          // signals: signals,
+          groupPractice:
+            practiceDms &&
+            practiceDms.find(
+              (item) => item.id === parseInt(params.ids.split('-')[0]),
+            ),
+          channelName: params.ids.split('-')[1],
+          practiceDms,
+          subgroups: subgroups.find(
+            (items) => items.practiceId === parseInt(params.ids.split('-')[0]),
+          ),
+          group: subgroups.find((item) => item.practiceId === currentPracticeId)
+            ? subgroups.find((item) => item.practiceId === currentPracticeId)
+                .groups
+              ? subgroups
+                  .find((item) => item.practiceId === currentPracticeId)
+                  .groups.find((item) => item.id === 17)
+              : {}
+            : {},
+          navigation: navigation,
+          type: 'group',
+        });
+      }
+    }
+  }, [params]);
+
   const getAllChannelMessages = useCallback((dms, subGroups) => {
     // const dmsCha = dms.map((i) => i.channelName); /// When backend guy delete
     const dmsCha = dms.map((i) => i.Dm.channelName);
@@ -143,6 +195,11 @@ const ChatMessages = ({
     const allChannels = [...dmsCha, ...newSubGroups];
 
     console.log('=== GET MESSAGES FROM ALL CHANNEL =====: ', allChannels);
+    if (chatChannels.length) {
+      setChatChannels([...new Set([...chatChannels, ...allChannels])]);
+    } else {
+      setChatChannels([...new Set([...allChannels])]);
+    }
 
     pubnub.fetchMessages(
       {
@@ -734,6 +791,7 @@ const ChatMessages = ({
                 </Text>
               </TouchableOpacity>
             </View>
+            {/* SECTION */}
             <DmsBox
               id={currentPracticeId}
               signals={signals}
@@ -961,6 +1019,7 @@ const mapStateToProps = createStructuredSelector({
   subgroups: selectPracticeSubgroups,
   allMessages: selectAllMessages,
   signals: selectSignals,
+  chatChannels: selectChatChannels,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -974,6 +1033,7 @@ const mapDispatchToProps = (dispatch) => ({
   getPracticeStaffStart: (id) => dispatch(getPracticeStaffStart(id)),
   leavePracticeStart: (id) => dispatch(leavePracticeStart(id)),
   setSignals: (data) => dispatch(setSignals(data)),
+  setChatChannels: (channels) => dispatch(setChatChannels(channels)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatMessages);

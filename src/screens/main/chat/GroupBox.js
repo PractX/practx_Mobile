@@ -167,7 +167,8 @@ const GroupBox = ({
             flexDirection: 'column',
             marginVertical: 2,
             paddingHorizontal: 4,
-            // width: appwidth - 140,
+            width: appwidth - 140,
+            // width: '62%',
             // alignItems: 'center',
             justifyContent: 'space-evenly',
           }}>
@@ -245,13 +246,7 @@ const GroupBox = ({
                   : allMessages.messages[
                       allMessages.messages.length - 1
                     ].replace(/(\r\n|\n|\r)/gm, '')
-                : `ℹ️ Begin conversation in ${
-                    item && item.name && item.name.length > 20
-                      ? item.name.substring(0, 20 - 3) + '...'
-                      : item && item.name
-                      ? item.name
-                      : ''
-                  }`}
+                : '💬 Begin conversation'}
             </Text>
           )}
         </TouchableOpacity>

@@ -229,3 +229,16 @@ const getMessages = (cha) => {
       }
    }
 }
+
+
+// GROUP EMPTY CHAT
+{
+ `💬 Begin conversation
+in ${
+    item && item.name && item.name.length > 20
+      ? item.name.substring(0, 20 - 3) + '...'
+      : item && item.name
+      ? item.name
+      : ''
+  }`
+  }

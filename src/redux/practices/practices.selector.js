@@ -144,5 +144,15 @@ export const selectSignals = createSelector(
   [selectPractices],
   (practices) => practices.signals,
 );
+
+export const selectChatChannels = createSelector(
+  [selectPractices],
+  (practices) => practices.chatChannels,
+);
+
+export const selectCurrentChatChannel = createSelector(
+  [selectPractices],
+  (practices) => practices.currentChatChannel,
+);
 // joinedPractice;
 // export const selectToken = createSelector([selectUser], (user) => user.token);

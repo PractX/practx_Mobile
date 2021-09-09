@@ -125,6 +125,16 @@ export const setSignals = (data) => ({
   payload: data,
 });
 
+export const setChatChannels = (data) => ({
+  type: PracticesActionTypes.SET_CHAT_CHANNELS,
+  payload: data,
+});
+
+export const setCurrentChatChannel = (data) => ({
+  type: PracticesActionTypes.SET_CURRENT_CHAT_CHANNEL,
+  payload: data,
+});
+
 export const clearPracticeData = () => ({
   type: PracticesActionTypes.CLEAR_PRACTICE_DATA,
 });

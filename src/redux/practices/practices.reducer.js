@@ -17,6 +17,8 @@ const INITIAL_STATE = {
   searchData: null,
   searchHistory: [],
   signals: [],
+  chatChannels: [],
+  currentChatChannel: '',
 };
 
 const practicesReducer = (state = INITIAL_STATE, action) => {
@@ -44,6 +46,18 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         searchHistory: action.payload,
+      };
+
+    case PracticesActionTypes.SET_CURRENT_CHAT_CHANNEL:
+      return {
+        ...state,
+        currentChatChannel: action.payload,
+      };
+
+    case PracticesActionTypes.SET_CHAT_CHANNELS:
+      return {
+        ...state,
+        chatChannels: action.payload,
       };
 
     case PracticesActionTypes.SET_SIGNALS:
