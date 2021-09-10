@@ -318,7 +318,10 @@ const App = ({
       // }
       if (!notification.userInteraction) {
         // notification.data.channel;
-        if (currentChatChannel !== notification.data.channel) {
+        if (
+          !notification.foreground ||
+          currentChatChannel !== notification.data.channel
+        ) {
           pushLocalNotification({
             id: notification.id,
             data: notification.data,
