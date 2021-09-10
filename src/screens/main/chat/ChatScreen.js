@@ -89,6 +89,7 @@ import VoiceNoteRecorder from '../../../components/hoc/VoiceNoteRecorder';
 import { SvgXml } from 'react-native-svg';
 import typingIcon from '../../../../assets/gif/typingIndicator.gif';
 import { Image } from 'react-native';
+import { PermissionsAndroid } from 'react-native';
 // import SoundPlayer from 'react-native-sound-player'
 
 const { flags, sports, food } = Categories;
@@ -517,18 +518,12 @@ const ChatScreen = ({
   }, [inputText, currentUser]);
 
   useEffect(() => {
-    let timer;
     if (onRecording && currentUser) {
       addSignal('recording_on');
-      timer = setTimeout(() => addSignal('recording_off'), 2000);
     } else if (!onRecording && currentUser) {
       addSignal('recording_off');
     }
-
-    return () => {
-      timer && clearTimeout(timer);
-    };
-  }, [onRecording, currentUser, recordTime.recordTime]);
+  }, [onRecording, currentUser]);
 
   useMemo(() => {
     if (isFocused || allMessages) {
@@ -607,6 +602,35 @@ const ChatScreen = ({
   }, [extraData]);
   const [audioTime, setAudioTime] = useState();
   const onStartRecord = useCallback(async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const grants = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        ]);
+
+        console.log('write external stroage', grants);
+
+        if (
+          grants['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          grants['android.permission.READ_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          grants['android.permission.RECORD_AUDIO'] ===
+            PermissionsAndroid.RESULTS.GRANTED
+        ) {
+          console.log('Permissions granted');
+        } else {
+          console.log('All required permissions not granted');
+          return;
+        }
+      } catch (err) {
+        console.warn(err);
+        return;
+      }
+    }
+
     let date = Date.now().toString();
 
     const dirs = RNFetchBlob.fs.dirs;

@@ -237,12 +237,16 @@ const GroupBox = ({
                   ? allMessages.messages[
                       allMessages.messages.length - 1
                     ].message.file.name.match(/.(jpg|jpeg|png|gif)$/i)
-                    ? '🖼️ Photo'
+                    ? '📷 Photo'
                     : allMessages.messages[
                         allMessages.messages.length - 1
                       ].message.file.name.match(/.(aac)$/i)
                     ? '🎤 Voice note '
-                    : '🎥 Video'
+                    : allMessages.messages[
+                        allMessages.messages.length - 1
+                      ].message.file.name.match(/.(mp4)$/i)
+                    ? '🎥 Video'
+                    : '📁 File'
                   : allMessages.messages[
                       allMessages.messages.length - 1
                     ].replace(/(\r\n|\n|\r)/gm, '')
