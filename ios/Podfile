@@ -3,7 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '12.0'
 
-target 'practx_Mobile' do
+target 'PractX' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
@@ -11,7 +11,7 @@ target 'practx_Mobile' do
 
   pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
 
-  target 'practx_MobileTests' do
+  target 'PractXTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -29,10 +29,10 @@ target 'practx_Mobile' do
   end
 end
 
-target 'practx_Mobile-tvOS' do
-  # Pods for practx_Mobile-tvOS
+target 'PractX-tvOS' do
+  # Pods for PractX-tvOS
 
-  target 'practx_Mobile-tvOSTests' do
+  target 'PractX-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

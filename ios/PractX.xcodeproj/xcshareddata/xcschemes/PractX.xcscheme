@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "practx_Mobile.app"
-               BlueprintName = "practx_Mobile"
-               ReferencedContainer = "container:practx_Mobile.xcodeproj">
+               BuildableName = "PractX.app"
+               BlueprintName = "PractX"
+               ReferencedContainer = "container:PractX.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "practx_MobileTests.xctest"
-               BlueprintName = "practx_MobileTests"
-               ReferencedContainer = "container:practx_Mobile.xcodeproj">
+               BuildableName = "PractXTests.xctest"
+               BlueprintName = "PractXTests"
+               ReferencedContainer = "container:PractX.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,9 +47,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "practx_MobileTests.xctest"
-               BlueprintName = "practx_MobileTests"
-               ReferencedContainer = "container:practx_Mobile.xcodeproj">
+               BuildableName = "PractXTests.xctest"
+               BlueprintName = "PractXTests"
+               ReferencedContainer = "container:PractX.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -69,9 +69,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "practx_Mobile.app"
-            BlueprintName = "practx_Mobile"
-            ReferencedContainer = "container:practx_Mobile.xcodeproj">
+            BuildableName = "PractX.app"
+            BlueprintName = "PractX"
+            ReferencedContainer = "container:PractX.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -86,9 +86,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "practx_Mobile.app"
-            BlueprintName = "practx_Mobile"
-            ReferencedContainer = "container:practx_Mobile.xcodeproj">
+            BuildableName = "PractX.app"
+            BlueprintName = "PractX"
+            ReferencedContainer = "container:PractX.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -1,4 +1,4 @@
-package com.practx_mobile;
+package com.practx_health.medical;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "practx_Mobile";
+    return "PractX";
   }
 }

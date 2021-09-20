@@ -130,7 +130,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.practx_mobile"
+        applicationId "com.practx_health.medical"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true

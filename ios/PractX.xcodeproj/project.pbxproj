@@ -7,18 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* practx_MobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* practx_MobileTests.m */; };
+		00E356F31AD99517003FC87E /* PractXTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* PractXTests.m */; };
 		0658828D2BC74A129F1BA560 /* SofiaProRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9754529F534F463CAA53620D /* SofiaProRegular.ttf */; };
 		0E4181DB93744F25A8C65E6B /* SofiaProBlack-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F7B94932A4A4AC78F4EC06A /* SofiaProBlack-Italic.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1A1034FBA5804737AAF409BA /* SofiaProUltraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1451B3D11C9A499B97BB5BBE /* SofiaProUltraLight.ttf */; };
-		2B5AB25E0EB9984A5F92D75B /* libPods-practx_Mobile-practx_MobileTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F801C340A60170AF0F9B683D /* libPods-practx_Mobile-practx_MobileTests.a */; };
+		2B5AB25E0EB9984A5F92D75B /* libPods-PractX-PractXTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F801C340A60170AF0F9B683D /* libPods-PractX-PractXTests.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		2DCD954D1E0B4F2C00145EB5 /* practx_MobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* practx_MobileTests.m */; };
+		2DCD954D1E0B4F2C00145EB5 /* PractXTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* PractXTests.m */; };
 		2E5209725049490D9C1AB0AB /* SofiaProExtraLight-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1259EEEC26D84EC087B345C4 /* SofiaProExtraLight-Italic.ttf */; };
 		34844D4C3CA4438FA5CF4A59 /* SofiaProUltraLight-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BE1DE18B07BA4E2D8B93EA0C /* SofiaProUltraLight-Italic.ttf */; };
 		4179A37B2621B4EE0031F3AD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -41,10 +41,10 @@
 		A5B2DAEEA0734460A3771D59 /* SFProDisplay-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3B0BCD1C9AD47BB87AE27E0 /* SFProDisplay-Light.ttf */; };
 		AF80DDBC0F32490889C1D2BE /* SofiaProSemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C7CF0B42A9A4626BAFB3D6E /* SofiaProSemiBold.ttf */; };
 		AFA00EDE9F7E4C42AF0EA25C /* SofiaProRegular-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2416849E1DDB4216ACB96825 /* SofiaProRegular-Italic.ttf */; };
-		B5E00A39290F729303DFDF38 /* libPods-practx_Mobile-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F85F04D8E0E65B020C36938 /* libPods-practx_Mobile-tvOSTests.a */; };
+		B5E00A39290F729303DFDF38 /* libPods-PractX-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F85F04D8E0E65B020C36938 /* libPods-PractX-tvOSTests.a */; };
 		B65C92631C6A404A9435891E /* Comfortaa-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E8CB5BED430345B5A85ECA8F /* Comfortaa-Regular.ttf */; };
 		BCE084F8CF6140B1A9A1B1BD /* SofiaProExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6CC3F1027C8440CDBEB9B28F /* SofiaProExtraLight.ttf */; };
-		CC869088C2EED1F18EF34467 /* libPods-practx_Mobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E6957240C4D81D16C0A294 /* libPods-practx_Mobile.a */; };
+		CC869088C2EED1F18EF34467 /* libPods-PractX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D3E6957240C4D81D16C0A294 /* libPods-PractX.a */; };
 		D135C50AD9A2495A92660BDD /* Helvetica.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8A86105F16CA4256921179E3 /* Helvetica.ttf */; };
 		D31DC97EEBB04185A12291F4 /* SofiaProBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A9D57B1B5D424AE790A475BE /* SofiaProBlack.ttf */; };
 		D3523EC54BCA4CF7B8694070 /* SofiaProSemiBold-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8736B8A5C9A8479597606FF5 /* SofiaProSemiBold-Italic.ttf */; };
@@ -52,7 +52,7 @@
 		DE9989610DD24A3E8D3A42C6 /* Helvetica-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52B259FC33604EBFADB1069E /* Helvetica-Light.ttf */; };
 		E0E3DFC439D6488CB99D83BD /* SofiaProMedium-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA618F3EFE76490B948CF93A /* SofiaProMedium-Italic.ttf */; };
 		E2C56AE4295949DE8A63B0A2 /* Comfortaa-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B96C84FD072A42EA8197EDD2 /* Comfortaa-Light.ttf */; };
-		FF7AC3AE7ADD056C74E1B1E4 /* libPods-practx_Mobile-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1BE18A3F1547AA2821895E1 /* libPods-practx_Mobile-tvOS.a */; };
+		FF7AC3AE7ADD056C74E1B1E4 /* libPods-PractX-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1BE18A3F1547AA2821895E1 /* libPods-PractX-tvOS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,41 +61,41 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = practx_Mobile;
+			remoteInfo = PractX;
 		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
-			remoteInfo = "practx_Mobile-tvOS";
+			remoteInfo = "PractX-tvOS";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* practx_MobileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = practx_MobileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* PractXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PractXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* practx_MobileTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = practx_MobileTests.m; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* PractXTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PractXTests.m; sourceTree = "<group>"; };
 		11A6F6BFD6D84D959BB905B7 /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
 		1259EEEC26D84EC087B345C4 /* SofiaProExtraLight-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SofiaProExtraLight-Italic.ttf"; path = "../assets/fonts/SofiaProExtraLight-Italic.ttf"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* practx_Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = practx_Mobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = practx_Mobile/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = practx_Mobile/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = practx_Mobile/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = practx_Mobile/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = practx_Mobile/main.m; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* PractX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PractX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = PractX/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = PractX/AppDelegate.m; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = PractX/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PractX/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = PractX/main.m; sourceTree = "<group>"; };
 		1451B3D11C9A499B97BB5BBE /* SofiaProUltraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SofiaProUltraLight.ttf; path = ../assets/fonts/SofiaProUltraLight.ttf; sourceTree = "<group>"; };
-		1F85F04D8E0E65B020C36938 /* libPods-practx_Mobile-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-practx_Mobile-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F85F04D8E0E65B020C36938 /* libPods-PractX-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PractX-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		207A7E1F755A40C29D432748 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		2416849E1DDB4216ACB96825 /* SofiaProRegular-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SofiaProRegular-Italic.ttf"; path = "../assets/fonts/SofiaProRegular-Italic.ttf"; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* practx_Mobile-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "practx_Mobile-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* practx_Mobile-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "practx_Mobile-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E47B1E0B4A5D006451C7 /* PractX-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PractX-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E4901E0B4A5D006451C7 /* PractX-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "PractX-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D8FEDDCBD0C4855A79E81E1 /* FuturaStd-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FuturaStd-Bold.otf"; path = "../assets/fonts/FuturaStd-Bold.otf"; sourceTree = "<group>"; };
 		3621853C8BDD4C139ED17D28 /* Roboto_medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_medium.ttf; path = "../node_modules/native-base/Fonts/Roboto_medium.ttf"; sourceTree = "<group>"; };
 		37CC7A2F737D47EB9FDDB05A /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		3E48C4F2CC074715867A754C /* SofiaProLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SofiaProLight.ttf; path = ../assets/fonts/SofiaProLight.ttf; sourceTree = "<group>"; };
-		4179A3332620DD890031F3AD /* practx_Mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = practx_Mobile.entitlements; path = practx_Mobile/practx_Mobile.entitlements; sourceTree = "<group>"; };
+		4179A3332620DD890031F3AD /* PractX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = PractX.entitlements; path = PractX/PractX.entitlements; sourceTree = "<group>"; };
 		41A8E591261C5DD400DAA8F5 /* Roboto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Roboto.ttf; path = ../android/app/src/main/assets/fonts/Roboto.ttf; sourceTree = "<group>"; };
 		41A8E592261C5DD400DAA8F5 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Solid.ttf; path = ../android/app/src/main/assets/fonts/FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
 		41A8E593261C5DD400DAA8F5 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SimpleLineIcons.ttf; path = ../android/app/src/main/assets/fonts/SimpleLineIcons.ttf; sourceTree = "<group>"; };
@@ -134,16 +134,16 @@
 		41A8E5BB261C5DD800DAA8F5 /* SofiaProExtraLight-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SofiaProExtraLight-Italic.ttf"; path = "../android/app/src/main/assets/fonts/SofiaProExtraLight-Italic.ttf"; sourceTree = "<group>"; };
 		41A8E5BC261C5DD800DAA8F5 /* Comfortaa-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Comfortaa-Bold.ttf"; path = "../android/app/src/main/assets/fonts/Comfortaa-Bold.ttf"; sourceTree = "<group>"; };
 		424D1E9CC37C4A198044398E /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
-		429BFE7756B5D75CCA343252 /* Pods-practx_Mobile-practx_MobileTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-practx_Mobile-practx_MobileTests.debug.xcconfig"; path = "Target Support Files/Pods-practx_Mobile-practx_MobileTests/Pods-practx_Mobile-practx_MobileTests.debug.xcconfig"; sourceTree = "<group>"; };
-		4A7555C726D91D2B0000BE95 /* practx_MobileTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "practx_MobileTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		4A7555C826D91D2C0000BE95 /* practx_Mobile-tvOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "practx_Mobile-tvOS-Bridging-Header.h"; sourceTree = "<group>"; };
-		4A7555C926D91D2E0000BE95 /* practx_Mobile-tvOSTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "practx_Mobile-tvOSTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		429BFE7756B5D75CCA343252 /* Pods-PractX-PractXTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PractX-PractXTests.debug.xcconfig"; path = "Target Support Files/Pods-PractX-PractXTests/Pods-PractX-PractXTests.debug.xcconfig"; sourceTree = "<group>"; };
+		4A7555C726D91D2B0000BE95 /* PractXTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PractXTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		4A7555C826D91D2C0000BE95 /* PractX-tvOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PractX-tvOS-Bridging-Header.h"; sourceTree = "<group>"; };
+		4A7555C926D91D2E0000BE95 /* PractX-tvOSTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PractX-tvOSTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		4A7555CA26D91D2F0000BE95 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
-		4AC6951426C840F700E2BCB4 /* practx_Mobile-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "practx_Mobile-Bridging-Header.h"; sourceTree = "<group>"; };
-		4BEF4639F84E2EF3B1BE72A8 /* Pods-practx_Mobile-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-practx_Mobile-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-practx_Mobile-tvOSTests/Pods-practx_Mobile-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		4AC6951426C840F700E2BCB4 /* PractX-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PractX-Bridging-Header.h"; sourceTree = "<group>"; };
+		4BEF4639F84E2EF3B1BE72A8 /* Pods-PractX-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PractX-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-PractX-tvOSTests/Pods-PractX-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		52B259FC33604EBFADB1069E /* Helvetica-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Helvetica-Light.ttf"; path = "../assets/fonts/Helvetica-Light.ttf"; sourceTree = "<group>"; };
 		569F452C14104B65AAD4D58B /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		57048330CC65E5D7818B7C77 /* Pods-practx_Mobile-practx_MobileTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-practx_Mobile-practx_MobileTests.release.xcconfig"; path = "Target Support Files/Pods-practx_Mobile-practx_MobileTests/Pods-practx_Mobile-practx_MobileTests.release.xcconfig"; sourceTree = "<group>"; };
+		57048330CC65E5D7818B7C77 /* Pods-PractX-PractXTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PractX-PractXTests.release.xcconfig"; path = "Target Support Files/Pods-PractX-PractXTests/Pods-PractX-PractXTests.release.xcconfig"; sourceTree = "<group>"; };
 		5CC9C28291CD451D9BE7C712 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		61DA1682545C42A18BDDA066 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		6CC3F1027C8440CDBEB9B28F /* SofiaProExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SofiaProExtraLight.ttf; path = ../assets/fonts/SofiaProExtraLight.ttf; sourceTree = "<group>"; };
@@ -152,9 +152,9 @@
 		7303BE893682484C887FC165 /* SofiaProMedium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SofiaProMedium.ttf; path = ../assets/fonts/SofiaProMedium.ttf; sourceTree = "<group>"; };
 		798D959AC8F745FD9C3C24D2 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		7C7CF0B42A9A4626BAFB3D6E /* SofiaProSemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SofiaProSemiBold.ttf; path = ../assets/fonts/SofiaProSemiBold.ttf; sourceTree = "<group>"; };
-		7C8BA89EE21E077D0B3433AF /* Pods-practx_Mobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-practx_Mobile.release.xcconfig"; path = "Target Support Files/Pods-practx_Mobile/Pods-practx_Mobile.release.xcconfig"; sourceTree = "<group>"; };
+		7C8BA89EE21E077D0B3433AF /* Pods-PractX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PractX.release.xcconfig"; path = "Target Support Files/Pods-PractX/Pods-PractX.release.xcconfig"; sourceTree = "<group>"; };
 		7F7B94932A4A4AC78F4EC06A /* SofiaProBlack-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SofiaProBlack-Italic.ttf"; path = "../assets/fonts/SofiaProBlack-Italic.ttf"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = practx_Mobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PractX/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		821235FBB66F48439AFAB5AE /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		8736B8A5C9A8479597606FF5 /* SofiaProSemiBold-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SofiaProSemiBold-Italic.ttf"; path = "../assets/fonts/SofiaProSemiBold-Italic.ttf"; sourceTree = "<group>"; };
 		8A86105F16CA4256921179E3 /* Helvetica.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Helvetica.ttf; path = ../assets/fonts/Helvetica.ttf; sourceTree = "<group>"; };
@@ -173,17 +173,17 @@
 		B96C84FD072A42EA8197EDD2 /* Comfortaa-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Comfortaa-Light.ttf"; path = "../assets/fonts/Comfortaa-Light.ttf"; sourceTree = "<group>"; };
 		BBC4E1DB00B4420D936F2FEE /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		BE1DE18B07BA4E2D8B93EA0C /* SofiaProUltraLight-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SofiaProUltraLight-Italic.ttf"; path = "../assets/fonts/SofiaProUltraLight-Italic.ttf"; sourceTree = "<group>"; };
-		C1BE18A3F1547AA2821895E1 /* libPods-practx_Mobile-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-practx_Mobile-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1BE18A3F1547AA2821895E1 /* libPods-PractX-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PractX-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C23B5CBF64784DD981DEBC6C /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/native-base/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		C533AED90AE44FE893EAEA07 /* SofiaProBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SofiaProBold.ttf; path = ../assets/fonts/SofiaProBold.ttf; sourceTree = "<group>"; };
 		C5D8E02DDE924859A6BEB68C /* SofiaProLight-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SofiaProLight-Italic.ttf"; path = "../assets/fonts/SofiaProLight-Italic.ttf"; sourceTree = "<group>"; };
-		C8DF2B64144EE09C0C042B8C /* Pods-practx_Mobile-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-practx_Mobile-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-practx_Mobile-tvOS/Pods-practx_Mobile-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		CB0E4DC264EB8413773F6FCD /* Pods-practx_Mobile-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-practx_Mobile-tvOS.release.xcconfig"; path = "Target Support Files/Pods-practx_Mobile-tvOS/Pods-practx_Mobile-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		C8DF2B64144EE09C0C042B8C /* Pods-PractX-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PractX-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-PractX-tvOS/Pods-PractX-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		CB0E4DC264EB8413773F6FCD /* Pods-PractX-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PractX-tvOS.release.xcconfig"; path = "Target Support Files/Pods-PractX-tvOS/Pods-PractX-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		D3D5F1F573CE45EFAD59E744 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
-		D3E6957240C4D81D16C0A294 /* libPods-practx_Mobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-practx_Mobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3E6957240C4D81D16C0A294 /* libPods-PractX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PractX.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D693D15A7B004FB4B075A22A /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		E3B0BCD1C9AD47BB87AE27E0 /* SFProDisplay-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProDisplay-Light.ttf"; path = "../assets/fonts/SFProDisplay-Light.ttf"; sourceTree = "<group>"; };
-		E3BE9EA807E540564C5D27B9 /* Pods-practx_Mobile-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-practx_Mobile-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-practx_Mobile-tvOSTests/Pods-practx_Mobile-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		E3BE9EA807E540564C5D27B9 /* Pods-PractX-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PractX-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-PractX-tvOSTests/Pods-PractX-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		E8CB5BED430345B5A85ECA8F /* Comfortaa-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Comfortaa-Regular.ttf"; path = "../assets/fonts/Comfortaa-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -191,8 +191,8 @@
 		F18F64A2920D4CA487661970 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		F2F1DDB0B9FD40EB9E323BAE /* Helvetica-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Helvetica-Bold.ttf"; path = "../assets/fonts/Helvetica-Bold.ttf"; sourceTree = "<group>"; };
 		F391D8315A4F4C8D8BDD51E0 /* SofiaProBold-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SofiaProBold-Italic.ttf"; path = "../assets/fonts/SofiaProBold-Italic.ttf"; sourceTree = "<group>"; };
-		F7D7D7DFD3633CBC5B6FA7D9 /* Pods-practx_Mobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-practx_Mobile.debug.xcconfig"; path = "Target Support Files/Pods-practx_Mobile/Pods-practx_Mobile.debug.xcconfig"; sourceTree = "<group>"; };
-		F801C340A60170AF0F9B683D /* libPods-practx_Mobile-practx_MobileTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-practx_Mobile-practx_MobileTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7D7D7DFD3633CBC5B6FA7D9 /* Pods-PractX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PractX.debug.xcconfig"; path = "Target Support Files/Pods-PractX/Pods-PractX.debug.xcconfig"; sourceTree = "<group>"; };
+		F801C340A60170AF0F9B683D /* libPods-PractX-PractXTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PractX-PractXTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,7 +200,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B5AB25E0EB9984A5F92D75B /* libPods-practx_Mobile-practx_MobileTests.a in Frameworks */,
+				2B5AB25E0EB9984A5F92D75B /* libPods-PractX-PractXTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,7 +208,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC869088C2EED1F18EF34467 /* libPods-practx_Mobile.a in Frameworks */,
+				CC869088C2EED1F18EF34467 /* libPods-PractX.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,7 +216,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF7AC3AE7ADD056C74E1B1E4 /* libPods-practx_Mobile-tvOS.a in Frameworks */,
+				FF7AC3AE7ADD056C74E1B1E4 /* libPods-PractX-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,20 +224,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5E00A39290F729303DFDF38 /* libPods-practx_Mobile-tvOSTests.a in Frameworks */,
+				B5E00A39290F729303DFDF38 /* libPods-PractX-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* practx_MobileTests */ = {
+		00E356EF1AD99517003FC87E /* PractXTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* practx_MobileTests.m */,
+				00E356F21AD99517003FC87E /* PractXTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = practx_MobileTests;
+			path = PractXTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -305,10 +305,10 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* practx_Mobile */ = {
+		13B07FAE1A68108700A75B9A /* PractX */ = {
 			isa = PBXGroup;
 			children = (
-				4179A3332620DD890031F3AD /* practx_Mobile.entitlements */,
+				4179A3332620DD890031F3AD /* PractX.entitlements */,
 				417F7E18261C5062000DBEFF /* Fonts */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -317,13 +317,13 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				4AC6951426C840F700E2BCB4 /* practx_Mobile-Bridging-Header.h */,
+				4AC6951426C840F700E2BCB4 /* PractX-Bridging-Header.h */,
 				4A7555CA26D91D2F0000BE95 /* File.swift */,
-				4A7555C726D91D2B0000BE95 /* practx_MobileTests-Bridging-Header.h */,
-				4A7555C826D91D2C0000BE95 /* practx_Mobile-tvOS-Bridging-Header.h */,
-				4A7555C926D91D2E0000BE95 /* practx_Mobile-tvOSTests-Bridging-Header.h */,
+				4A7555C726D91D2B0000BE95 /* PractXTests-Bridging-Header.h */,
+				4A7555C826D91D2C0000BE95 /* PractX-tvOS-Bridging-Header.h */,
+				4A7555C926D91D2E0000BE95 /* PractX-tvOSTests-Bridging-Header.h */,
 			);
-			name = practx_Mobile;
+			name = PractX;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -331,10 +331,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				D3E6957240C4D81D16C0A294 /* libPods-practx_Mobile.a */,
-				F801C340A60170AF0F9B683D /* libPods-practx_Mobile-practx_MobileTests.a */,
-				C1BE18A3F1547AA2821895E1 /* libPods-practx_Mobile-tvOS.a */,
-				1F85F04D8E0E65B020C36938 /* libPods-practx_Mobile-tvOSTests.a */,
+				D3E6957240C4D81D16C0A294 /* libPods-PractX.a */,
+				F801C340A60170AF0F9B683D /* libPods-PractX-PractXTests.a */,
+				C1BE18A3F1547AA2821895E1 /* libPods-PractX-tvOS.a */,
+				1F85F04D8E0E65B020C36938 /* libPods-PractX-tvOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -393,9 +393,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* practx_Mobile */,
+				13B07FAE1A68108700A75B9A /* PractX */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* practx_MobileTests */,
+				00E356EF1AD99517003FC87E /* PractXTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				02930FC4EF4C429081CF4501 /* Resources */,
@@ -409,10 +409,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* practx_Mobile.app */,
-				00E356EE1AD99517003FC87E /* practx_MobileTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* practx_Mobile-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* practx_Mobile-tvOSTests.xctest */,
+				13B07F961A680F5B00A75B9A /* PractX.app */,
+				00E356EE1AD99517003FC87E /* PractXTests.xctest */,
+				2D02E47B1E0B4A5D006451C7 /* PractX-tvOS.app */,
+				2D02E4901E0B4A5D006451C7 /* PractX-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -420,14 +420,14 @@
 		9A6DB49F60A7F4CE0AB68702 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F7D7D7DFD3633CBC5B6FA7D9 /* Pods-practx_Mobile.debug.xcconfig */,
-				7C8BA89EE21E077D0B3433AF /* Pods-practx_Mobile.release.xcconfig */,
-				429BFE7756B5D75CCA343252 /* Pods-practx_Mobile-practx_MobileTests.debug.xcconfig */,
-				57048330CC65E5D7818B7C77 /* Pods-practx_Mobile-practx_MobileTests.release.xcconfig */,
-				C8DF2B64144EE09C0C042B8C /* Pods-practx_Mobile-tvOS.debug.xcconfig */,
-				CB0E4DC264EB8413773F6FCD /* Pods-practx_Mobile-tvOS.release.xcconfig */,
-				4BEF4639F84E2EF3B1BE72A8 /* Pods-practx_Mobile-tvOSTests.debug.xcconfig */,
-				E3BE9EA807E540564C5D27B9 /* Pods-practx_Mobile-tvOSTests.release.xcconfig */,
+				F7D7D7DFD3633CBC5B6FA7D9 /* Pods-PractX.debug.xcconfig */,
+				7C8BA89EE21E077D0B3433AF /* Pods-PractX.release.xcconfig */,
+				429BFE7756B5D75CCA343252 /* Pods-PractX-PractXTests.debug.xcconfig */,
+				57048330CC65E5D7818B7C77 /* Pods-PractX-PractXTests.release.xcconfig */,
+				C8DF2B64144EE09C0C042B8C /* Pods-PractX-tvOS.debug.xcconfig */,
+				CB0E4DC264EB8413773F6FCD /* Pods-PractX-tvOS.release.xcconfig */,
+				4BEF4639F84E2EF3B1BE72A8 /* Pods-PractX-tvOSTests.debug.xcconfig */,
+				E3BE9EA807E540564C5D27B9 /* Pods-PractX-tvOSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -435,9 +435,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* practx_MobileTests */ = {
+		00E356ED1AD99517003FC87E /* PractXTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "practx_MobileTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "PractXTests" */;
 			buildPhases = (
 				C4B9BE2485877F592021827D /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -451,14 +451,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = practx_MobileTests;
-			productName = practx_MobileTests;
-			productReference = 00E356EE1AD99517003FC87E /* practx_MobileTests.xctest */;
+			name = PractXTests;
+			productName = PractXTests;
+			productReference = 00E356EE1AD99517003FC87E /* PractXTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* practx_Mobile */ = {
+		13B07F861A680F5B00A75B9A /* PractX */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "practx_Mobile" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "PractX" */;
 			buildPhases = (
 				E94FA18DECAD6C39577D3C38 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -473,14 +473,14 @@
 			);
 			dependencies = (
 			);
-			name = practx_Mobile;
-			productName = practx_Mobile;
-			productReference = 13B07F961A680F5B00A75B9A /* practx_Mobile.app */;
+			name = PractX;
+			productName = PractX;
+			productReference = 13B07F961A680F5B00A75B9A /* PractX.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* practx_Mobile-tvOS */ = {
+		2D02E47A1E0B4A5D006451C7 /* PractX-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "practx_Mobile-tvOS" */;
+			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "PractX-tvOS" */;
 			buildPhases = (
 				1DCF4158ACC41F3677A37F39 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
@@ -493,14 +493,14 @@
 			);
 			dependencies = (
 			);
-			name = "practx_Mobile-tvOS";
-			productName = "practx_Mobile-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* practx_Mobile-tvOS.app */;
+			name = "PractX-tvOS";
+			productName = "PractX-tvOS";
+			productReference = 2D02E47B1E0B4A5D006451C7 /* PractX-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* practx_Mobile-tvOSTests */ = {
+		2D02E48F1E0B4A5D006451C7 /* PractX-tvOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "practx_Mobile-tvOSTests" */;
+			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "PractX-tvOSTests" */;
 			buildPhases = (
 				BC7C8DE2D84408F6351FA33B /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
@@ -512,9 +512,9 @@
 			dependencies = (
 				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
 			);
-			name = "practx_Mobile-tvOSTests";
-			productName = "practx_Mobile-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* practx_Mobile-tvOSTests.xctest */;
+			name = "PractX-tvOSTests";
+			productName = "PractX-tvOSTests";
+			productReference = 2D02E4901E0B4A5D006451C7 /* PractX-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -548,7 +548,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "practx_Mobile" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "PractX" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -561,10 +561,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* practx_Mobile */,
-				00E356ED1AD99517003FC87E /* practx_MobileTests */,
-				2D02E47A1E0B4A5D006451C7 /* practx_Mobile-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* practx_Mobile-tvOSTests */,
+				13B07F861A680F5B00A75B9A /* PractX */,
+				00E356ED1AD99517003FC87E /* PractXTests */,
+				2D02E47A1E0B4A5D006451C7 /* PractX-tvOS */,
+				2D02E48F1E0B4A5D006451C7 /* PractX-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -662,7 +662,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-practx_Mobile-tvOS-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-PractX-tvOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -689,7 +689,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile/Pods-practx_Mobile-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-PractX/Pods-PractX-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -698,7 +698,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile/Pods-practx_Mobile-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PractX/Pods-PractX-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		88E7D3CDE29BDF1C9B839485 /* [CP] Embed Pods Frameworks */ = {
@@ -707,7 +707,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile-practx_MobileTests/Pods-practx_Mobile-practx_MobileTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-PractX-PractXTests/Pods-PractX-PractXTests-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -716,7 +716,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile-practx_MobileTests/Pods-practx_Mobile-practx_MobileTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PractX-PractXTests/Pods-PractX-PractXTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		90B8ADF3B0B010660FC8E525 /* [CP] Copy Pods Resources */ = {
@@ -725,7 +725,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile/Pods-practx_Mobile-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-PractX/Pods-PractX-resources.sh",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -766,7 +766,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile/Pods-practx_Mobile-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PractX/Pods-PractX-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A0E3BB2A8D3AA64F2C6040C0 /* [CP] Copy Pods Resources */ = {
@@ -775,7 +775,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile-practx_MobileTests/Pods-practx_Mobile-practx_MobileTests-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-PractX-PractXTests/Pods-PractX-PractXTests-resources.sh",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -816,7 +816,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-practx_Mobile-practx_MobileTests/Pods-practx_Mobile-practx_MobileTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PractX-PractXTests/Pods-PractX-PractXTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BC7C8DE2D84408F6351FA33B /* [CP] Check Pods Manifest.lock */ = {
@@ -834,7 +834,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-practx_Mobile-tvOSTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-PractX-tvOSTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -856,7 +856,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-practx_Mobile-practx_MobileTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-PractX-PractXTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -878,7 +878,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-practx_Mobile-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-PractX-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -930,7 +930,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* practx_MobileTests.m in Sources */,
+				00E356F31AD99517003FC87E /* PractXTests.m in Sources */,
 				4A7555CC26D91D2F0000BE95 /* File.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -959,7 +959,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DCD954D1E0B4F2C00145EB5 /* practx_MobileTests.m in Sources */,
+				2DCD954D1E0B4F2C00145EB5 /* PractXTests.m in Sources */,
 				4A7555CE26D91D2F0000BE95 /* File.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -969,12 +969,12 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* practx_Mobile */;
+			target = 13B07F861A680F5B00A75B9A /* PractX */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* practx_Mobile-tvOS */;
+			target = 2D02E47A1E0B4A5D006451C7 /* PractX-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -982,7 +982,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 429BFE7756B5D75CCA343252 /* Pods-practx_Mobile-practx_MobileTests.debug.xcconfig */;
+			baseConfigurationReference = 429BFE7756B5D75CCA343252 /* Pods-PractX-PractXTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -991,7 +991,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = practx_MobileTests/Info.plist;
+				INFOPLIST_FILE = PractXTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1001,22 +1001,22 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "practx_MobileTests-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "PractXTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/practx_Mobile.app/practx_Mobile";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PractX.app/PractX";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 57048330CC65E5D7818B7C77 /* Pods-practx_Mobile-practx_MobileTests.release.xcconfig */;
+			baseConfigurationReference = 57048330CC65E5D7818B7C77 /* Pods-PractX-PractXTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = practx_MobileTests/Info.plist;
+				INFOPLIST_FILE = PractXTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1026,25 +1026,25 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "practx_MobileTests-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "PractXTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/practx_Mobile.app/practx_Mobile";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PractX.app/PractX";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F7D7D7DFD3633CBC5B6FA7D9 /* Pods-practx_Mobile.debug.xcconfig */;
+			baseConfigurationReference = F7D7D7DFD3633CBC5B6FA7D9 /* Pods-PractX.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = practx_Mobile/practx_Mobile.entitlements;
+				CODE_SIGN_ENTITLEMENTS = PractX/PractX.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZL992SVF67;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = practx_Mobile/Info.plist;
+				INFOPLIST_FILE = PractX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1052,9 +1052,9 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bcapturetech.practx;
-				PRODUCT_NAME = practx_Mobile;
+				PRODUCT_NAME = PractX;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "practx_Mobile-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "PractX-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1064,16 +1064,16 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7C8BA89EE21E077D0B3433AF /* Pods-practx_Mobile.release.xcconfig */;
+			baseConfigurationReference = 7C8BA89EE21E077D0B3433AF /* Pods-PractX.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = practx_Mobile/practx_Mobile.entitlements;
+				CODE_SIGN_ENTITLEMENTS = PractX/PractX.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZL992SVF67;
-				INFOPLIST_FILE = practx_Mobile/Info.plist;
+				INFOPLIST_FILE = PractX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1081,9 +1081,9 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bcapturetech.practx;
-				PRODUCT_NAME = practx_Mobile;
+				PRODUCT_NAME = PractX;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "practx_Mobile-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "PractX-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1092,7 +1092,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C8DF2B64144EE09C0C042B8C /* Pods-practx_Mobile-tvOS.debug.xcconfig */;
+			baseConfigurationReference = C8DF2B64144EE09C0C042B8C /* Pods-PractX-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1104,17 +1104,17 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "practx_Mobile-tvOS/Info.plist";
+				INFOPLIST_FILE = "PractX-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.practx_Mobile-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.PractX-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				SWIFT_OBJC_BRIDGING_HEADER = "practx_Mobile-tvOS-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "PractX-tvOS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -1124,7 +1124,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CB0E4DC264EB8413773F6FCD /* Pods-practx_Mobile-tvOS.release.xcconfig */;
+			baseConfigurationReference = CB0E4DC264EB8413773F6FCD /* Pods-PractX-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1136,17 +1136,17 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "practx_Mobile-tvOS/Info.plist";
+				INFOPLIST_FILE = "PractX-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.practx_Mobile-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.PractX-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				SWIFT_OBJC_BRIDGING_HEADER = "practx_Mobile-tvOS-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "PractX-tvOS-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 12.0;
@@ -1155,7 +1155,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4BEF4639F84E2EF3B1BE72A8 /* Pods-practx_Mobile-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = 4BEF4639F84E2EF3B1BE72A8 /* Pods-PractX-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1167,27 +1167,27 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "practx_Mobile-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "PractX-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.practx_Mobile-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.PractX-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				SWIFT_OBJC_BRIDGING_HEADER = "practx_Mobile-tvOSTests-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "PractX-tvOSTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/practx_Mobile-tvOS.app/practx_Mobile-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PractX-tvOS.app/PractX-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Debug;
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E3BE9EA807E540564C5D27B9 /* Pods-practx_Mobile-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = E3BE9EA807E540564C5D27B9 /* Pods-PractX-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1199,19 +1199,19 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "practx_Mobile-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "PractX-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.practx_Mobile-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.PractX-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				SWIFT_OBJC_BRIDGING_HEADER = "practx_Mobile-tvOSTests-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "PractX-tvOSTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/practx_Mobile-tvOS.app/practx_Mobile-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PractX-tvOS.app/PractX-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Release;
@@ -1334,7 +1334,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "practx_MobileTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "PractXTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -1343,7 +1343,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "practx_Mobile" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "PractX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -1352,7 +1352,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "practx_Mobile-tvOS" */ = {
+		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "PractX-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
@@ -1361,7 +1361,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "practx_Mobile-tvOSTests" */ = {
+		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "PractX-tvOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
@@ -1370,7 +1370,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "practx_Mobile" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "PractX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

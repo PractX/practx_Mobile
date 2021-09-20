@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "practx_Mobile-tvOS.app"
-               BlueprintName = "practx_Mobile-tvOS"
-               ReferencedContainer = "container:practx_Mobile.xcodeproj">
+               BuildableName = "PractX-tvOS.app"
+               BlueprintName = "PractX-tvOS"
+               ReferencedContainer = "container:PractX.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "practx_Mobile-tvOSTests.xctest"
-               BlueprintName = "practx_Mobile-tvOSTests"
-               ReferencedContainer = "container:practx_Mobile.xcodeproj">
+               BuildableName = "PractX-tvOSTests.xctest"
+               BlueprintName = "PractX-tvOSTests"
+               ReferencedContainer = "container:PractX.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "practx_Mobile-tvOS.app"
-            BlueprintName = "practx_Mobile-tvOS"
-            ReferencedContainer = "container:practx_Mobile.xcodeproj">
+            BuildableName = "PractX-tvOS.app"
+            BlueprintName = "PractX-tvOS"
+            ReferencedContainer = "container:PractX.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "practx_Mobile-tvOS.app"
-            BlueprintName = "practx_Mobile-tvOS"
-            ReferencedContainer = "container:practx_Mobile.xcodeproj">
+            BuildableName = "PractX-tvOS.app"
+            BlueprintName = "PractX-tvOS"
+            ReferencedContainer = "container:PractX.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
