@@ -153,7 +153,7 @@ const ChatMessages = ({
           navigation: navigation,
           type: 'dm',
         });
-      } else if (params.ids.split('-')[2] === 'group') {
+      } else if (params.ids.split('-')[2] === 'gm') {
         navigation.navigate('ChatScreen', {
           // signals: signals,
           groupPractice:

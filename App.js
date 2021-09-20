@@ -116,7 +116,7 @@ const App = ({
       smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher". Use "" for default small icon.
       // data: data,
       // bigText: data.body, // (optional) default: "message" prop
-      subText: data.type === 'group' ? data.subtitle : '', // (optional) default: none
+      subText: data.type === 'gm' ? data.subtitle : '', // (optional) default: none
       // bigPictureUrl: 'https://media.wired.com/photos/5b899992404e112d2df1e94e/master/pass/trash2-01.jpg', // (optional) default: undefined
       // bigLargeIcon: 'ic_launcher', // (optional) default: undefined
       bigLargeIconUrl:
