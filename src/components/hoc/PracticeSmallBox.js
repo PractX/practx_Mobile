@@ -24,7 +24,7 @@ import {
   setPracticeId,
   chatWithPracticeStart,
   getPracticesDmsStart,
-  getPracticeSubgroupsStart
+  getPracticeSubgroupsStart,
 } from '../../redux/practices/practices.actions';
 import {
   selectIsLoading,
@@ -65,6 +65,7 @@ const PracticeSmallBox = ({
   chatWithPracticeStart,
   getPracticesDmsStart,
   getPracticeSubgroupsStart,
+  bottomSheetRef,
 }) => {
   const { colors } = useTheme();
   const pending = practice.requests;
@@ -86,8 +87,9 @@ const PracticeSmallBox = ({
     <TouchableOpacity
       onPress={async () => {
         if (practiceData.show) {
-          setPracticeData({ show: true, data: null });
+          setPracticeData({ show: false });
         } else {
+          bottomSheetRef.current.snapTo(0);
           setPracticeData({
             show: true,
             data: practice,
@@ -98,11 +100,11 @@ const PracticeSmallBox = ({
                 ? 'pending'
                 : 'none-member',
           });
-         if(practice && member && member.length) {
-           chatWithPracticeStart(practice.id);
+          if (practice && member && member.length) {
+            chatWithPracticeStart(practice.id);
             getPracticesDmsStart();
             getPracticeSubgroupsStart(practice.id);
-         }
+          }
         }
       }}
       style={{

@@ -519,6 +519,7 @@ const ChatScreen = ({
 
   useEffect(() => {
     if (onRecording && currentUser) {
+      console.log('Recordings');
       addSignal('recording_on');
     } else if (!onRecording && currentUser) {
       addSignal('recording_off');
@@ -621,6 +622,7 @@ const ChatScreen = ({
             PermissionsAndroid.RESULTS.GRANTED
         ) {
           console.log('Permissions granted');
+          setOnRecording(true);
         } else {
           console.log('All required permissions not granted');
           return;
@@ -1512,7 +1514,7 @@ const ChatScreen = ({
                                     onSendRecordedFile();
                                   } else {
                                     console.log('Pressed');
-                                    setOnRecording(true);
+
                                     onStartRecord();
                                   }
                                 }

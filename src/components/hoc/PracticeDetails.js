@@ -266,11 +266,11 @@ const PracticeDetails = ({
                   },
                 ]}
                 onPress={async () => {
-                  bottomSheetRef.current.snapTo(2);
+                  await bottomSheetRef.current.snapTo(1);
                   setTimeout(() => {
                     setPracticeId(data.id);
                     navigation.navigate('Chats');
-                  }, 1000);
+                  }, 200);
                 }}>
                 <Icon
                   name="ios-chatbubble"

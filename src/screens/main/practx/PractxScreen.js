@@ -94,29 +94,31 @@ const Practx = ({
   };
 
   useEffect(() => {
-    practiceData.show && bottomSheetRef.current.snapTo(0);
+    // practiceData.show && bottomSheetRef.current.snapTo(0);
     // console.log("Practice DM____", practiceDms)
     // const dug = [{id: 2, name:'ab'},{id: 8, name:'abf'}, {id: 5, name: 'bc'}, {id: 2, name:'abb'}, {id: 3, name: 'bc'}]
     //  const dug2 = [{id: 8, name:'abf'},{id: 9, name:'ab'},{id: 2, name:'ab'}, {id: 5, name: 'bc'}, {id: 2, name:'abb'}, {id: 3, name: 'bc'}]
     // console.log("TestingValue ->>", dug2.find(i => !dug.some(k => i.id === k.id)));
   });
 
-  useMemo(()=> {
-    if(practiceDms && practiceDms.length > 0){
-      let pract = joinedPractices.find(i => !practiceDms.some(k => i.id === k.id))
-      if(pract){
-        console.log("Startig new Chat", pract)
-        chatWithPracticeStart(pract.id)
+  useMemo(() => {
+    if (practiceDms && practiceDms.length > 0) {
+      let pract = joinedPractices.find(
+        (i) => !practiceDms.some((k) => i.id === k.id),
+      );
+      if (pract) {
+        console.log('Startig new Chat', pract);
+        chatWithPracticeStart(pract.id);
         getPracticesDmsStart();
       }
-    }else {
-      if(joinedPractices && joinedPractices.length > 0){
-        console.log("First new Chat")
-        chatWithPracticeStart(joinedPractices.map(i => i.id)[0])
+    } else {
+      if (joinedPractices && joinedPractices.length > 0) {
+        console.log('First new Chat');
+        chatWithPracticeStart(joinedPractices.map((i) => i.id)[0]);
         getPracticesDmsStart();
       }
     }
-  },[joinedPractices])
+  }, [joinedPractices]);
 
   useEffect(() => {
     isFetching ? setRefreshing(true) : setRefreshing(false);
@@ -309,7 +311,7 @@ const Practx = ({
                       onRefresh={() => {
                         getPracticesAllStart();
                         getJoinedPracticesStart();
-                        }}
+                      }}
                     />
                   }
                   // removeClippedSubviews
@@ -342,6 +344,7 @@ const Practx = ({
                           navigation={navigation}
                           practiceData={practiceData}
                           setPracticeData={setPracticeData}
+                          bottomSheetRef={bottomSheetRef}
                         />
                       );
                     }
@@ -387,8 +390,10 @@ const Practx = ({
                       refreshing={
                         practices && practices.length > 0 ? false : refreshing
                       }
-                      onRefresh={() =>{ getPracticesAllStart();
-                      getJoinedPracticesStart();}}
+                      onRefresh={() => {
+                        getPracticesAllStart();
+                        getJoinedPracticesStart();
+                      }}
                     />
                   }
                   // removeClippedSubviews
@@ -416,6 +421,7 @@ const Practx = ({
                       practiceData={practiceData}
                       sortType={'all'}
                       setPracticeData={setPracticeData}
+                      bottomSheetRef={bottomSheetRef}
                     />
                   )}
                   keyExtractor={(item, index) => item.display_url}
@@ -462,17 +468,31 @@ const Practx = ({
       )}
       <BottomSheet
         ref={bottomSheetRef}
-        snapPoints={[660, 500, 0]}
+        snapPoints={[660, 0]}
         borderRadius={40}
         renderContent={() => (
-          <PracticeDetails
-            bottomSheetRef={bottomSheetRef}
-            navigation={navigation}
-            practiceData={practiceData}
-          />
+          <>
+            <View
+              style={{
+                flex: 1,
+                position: 'absolute',
+                backgroundColor: '#000000b9',
+                height: '100%',
+                width: '100%',
+              }}
+            />
+            <PracticeDetails
+              bottomSheetRef={bottomSheetRef}
+              navigation={navigation}
+              practiceData={practiceData}
+            />
+          </>
         )}
-        initialSnap={2}
-        onCloseEnd={() => setPracticeData({ show: false, data: null })}
+        initialSnap={1}
+        onOpenStart={() => setPracticeData({ ...practiceData, show: true })}
+        onOpenEnd={() => setPracticeData({ ...practiceData, show: true })}
+        onCloseStart={() => setPracticeData({ ...practiceData, show: false })}
+        onCloseEnd={() => setPracticeData({ show: false })}
       />
     </SafeAreaView>
   );
