@@ -3,6 +3,7 @@ import { persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import settingsReducer from './settings/settings.reducer';
 import practicesReducer from './practices/practices.reducer';
+import appointmentReducer from './appointment/appointment.reducer';
 
 import userReducer from './user/user.reducer';
 
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   settings: settingsReducer,
   user: userReducer,
   practice: practicesReducer,
+  appointment: appointmentReducer,
 });
 
 export default persistReducer(persistConfig, rootReducer);
