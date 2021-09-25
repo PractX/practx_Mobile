@@ -1,4 +1,4 @@
-import UserActionTypes from './user.types';
+import UserActionTypes from './appointment.types';
 
 export const setCurrentUser = (userDetails) => ({
   type: UserActionTypes.SET_CURRENT_USER,

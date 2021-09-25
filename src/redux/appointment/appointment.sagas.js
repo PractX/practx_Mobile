@@ -23,11 +23,7 @@ import {
   signOutSuccess,
   signOutFailure,
   signUpFailure,
-  signUpSuccess,
-  forgetPasswordSuccess,
-  userPaymentFailure,
-  setLoading,
-} from './user.actions';
+} from './appointment.actions';
 import {
   editProfileApi,
   getDownloadsApi,
@@ -215,42 +211,10 @@ export function* signOut() {
   }
 }
 
-export function* makePayment({ payload: txref }) {
-  const token = yield select(userToken);
-
-  try {
-    const result = yield paymentVerifyApi(token, txref).then(function (
-      response,
-    ) {
-      return response.data.data;
-    });
-    yield put(setSubscription(result.subscription));
-    yield put(signInSuccess(result.user));
-    yield put(setMessage({ type: 'success', message: result.message }));
-    yield delay(6000);
-    yield put(setMessage(null));
-  } catch (error) {
-    // yield put(())
-    yield put(
-      userPaymentFailure({
-        type: 'error',
-        message: error.response
-          ? error.response.data.message || error.response.data.error
-          : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
-      }),
-    );
-    // yield delay(6000);
-    // yield put(setMessage(null));
-  }
-}
-
 // export function* signInAfterSignUp({ payload: { user, additionalData } }) {
 //   yield getSnapshotFromUserAuth(user, additionalData);
 // }
 
-export function* onSignInStart() {
-  yield takeLatest(UserActionTypes.SIGN_IN_START, signIn);
-}
 // verifyAcct;
 // export function* onSignInByTokenStart() {
 //   yield takeLatest(UserActionTypes.SIGN_IN_BY_TOKEN_START, signByToken);
@@ -284,7 +248,6 @@ export function* onSignUpStart() {
 
 export function* appointmentSagas() {
   yield all([
-    call(onSignInStart),
     call(onResendConfirmEmail),
     call(onResetPassword),
     call(onCheckUserSession),

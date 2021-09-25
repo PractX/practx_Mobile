@@ -141,6 +141,14 @@ const Appointments = ({ navigation }) => {
         <Header
           navigation={navigation}
           title="Appointments"
+          hideCancel={true}
+          iconRight1={{
+            name: 'calendar-plus',
+            type: 'material-community',
+            size: normalize(20),
+            onPress: () => console.log('ffff'),
+            buttonType: 'save',
+          }}
           notifyIcon={true}
         />
         {/* <ScrollView

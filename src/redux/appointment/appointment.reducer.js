@@ -1,4 +1,4 @@
-import AppointmentActionTypes from './user.types';
+import AppointmentActionTypes from './appointment.types';
 
 const INITIAL_STATE = {
   appointments: null,

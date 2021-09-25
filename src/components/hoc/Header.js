@@ -582,7 +582,9 @@ const Header = ({
                         name={iconRight1.name}
                         type={iconRight1.type}
                         color={colors.text}
-                        size={normalize(18)}
+                        size={
+                          iconRight1?.size ? iconRight1.size : normalize(18)
+                        }
                         style={{
                           color: colors.text,
                           // alignSelf: 'center',
