@@ -4,6 +4,7 @@ export const ColorList = [
   {
     mode: 'light',
     primary: '#e01b43',
+    primary_light1: '#ff224e',
     primary_light: '#de5674',
     primary_dark: '#038125',
     secondary: '#00c7e5',
@@ -32,6 +33,7 @@ export const ColorList = [
     mode: 'dark',
     primary: '#df2441',
     primary_light: '#de5674',
+    primary_light1: '#ff224e',
     primary_dark: '#038125',
     secondary: '#00c7e5',
     tertiary: '#44b94e',

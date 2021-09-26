@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 // import Constants from 'expo-constants';
 import * as Animatable from 'react-native-animatable';
 // import { ThemeContext } from '../context/ThemeContext';
+import BottomSheet from 'reanimated-bottom-sheet';
 
 import {
   Button,
@@ -32,6 +33,7 @@ import { useTheme } from '@react-navigation/native';
 import { useIsDrawerOpen } from '@react-navigation/drawer';
 import { normalize } from 'react-native-elements';
 import { FlatList } from 'react-native';
+import AppointmentBooking from './AppointmentBooking';
 
 // const Stack = createStackNavigator();
 
@@ -73,7 +75,7 @@ const appointmentData = [
 ];
 
 const Appointments = ({ navigation }) => {
-  const ref = useRef();
+  const bottomSheetRef = useRef();
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
@@ -146,7 +148,7 @@ const Appointments = ({ navigation }) => {
             name: 'calendar-plus',
             type: 'material-community',
             size: normalize(20),
-            onPress: () => console.log('ffff'),
+            onPress: () => bottomSheetRef.current.snapTo(0),
             buttonType: 'save',
           }}
           notifyIcon={true}
@@ -278,7 +280,6 @@ const Appointments = ({ navigation }) => {
                 height: windowHeight - 370,
               }}>
               <FlatList
-                ref={ref}
                 // refreshControl={
                 //   <RefreshControl
                 //     refreshing={refreshing}
@@ -342,6 +343,35 @@ const Appointments = ({ navigation }) => {
           )}
         </View>
       </View>
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={[600, 0]}
+        borderRadius={40}
+        enabledGestureInteraction={false}
+        renderContent={() => (
+          <View style={{ height: 600 }}>
+            <View
+              style={{
+                flex: 1,
+                position: 'absolute',
+                backgroundColor: '#000000b9',
+                height: '100%',
+                width: '100%',
+              }}
+            />
+            <AppointmentBooking
+              bottomSheetRef={bottomSheetRef}
+              navigation={navigation}
+              // practiceData={practiceData}
+            />
+          </View>
+        )}
+        initialSnap={1}
+        // onOpenStart={() => setPracticeData({ ...practiceData, show: true })}
+        // onOpenEnd={() => setPracticeData({ ...practiceData, show: true })}
+        // onCloseStart={() => setPracticeData({ ...practiceData, show: false })}
+        // onCloseEnd={() => setPracticeData({ show: false })}
+      />
     </SafeAreaView>
   );
 };

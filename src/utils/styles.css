@@ -1,11 +1,12 @@
 #mo {
-  color: #8d8d8d;
+  color: #ff224e;
   background: #141414
 }
 
 .light {
   primary: '#e01b43',
   primary_light: '#de5674',
+  primary_light1: "#ff224e",
   primary_dark: '#038125',
   secondary: '#00c7e5',
   tertiary: '#44b94e',
