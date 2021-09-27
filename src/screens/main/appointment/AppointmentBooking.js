@@ -9,9 +9,11 @@ import {
   Image,
   TextInput,
   ScrollView,
-  Alert,
+  SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
+import Header from '../../../components/hoc/Header';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, Icon, ListItem } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
@@ -22,13 +24,15 @@ import { createStructuredSelector } from 'reselect';
 import BottomSheet from 'reanimated-bottom-sheet';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native';
-import DatePicker from 'react-native-modern-datepicker';
+import DatePicker, { getFormatedDate } from 'react-native-modern-datepicker';
+import InputBox from '../../../components/hoc/InputBox';
+import { Formik } from 'formik';
 
 const Stack = createStackNavigator();
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const appwidth = windowWidth * 0.8;
+const appwidth = windowWidth * 0.9;
 
 const theme = {
   /* ---- THeme to be gotten from redux or context------*/
@@ -48,9 +52,13 @@ const AppointmentBooking = ({
   setPracticeData,
   joinPractices,
   leavePracticeStart,
+  showAppointmentBooking,
+  setShowAppointmentBooking,
+  extraData,
 }) => {
   const { colors } = useTheme();
   // const { show, data, type } = practiceData;
+  const [style1, setStyle1] = useState();
   console.log(practiceData);
   // const pending = practice.requests;
   // const member = practice.patients.filter((val) => val.id === userId);
@@ -64,7 +72,25 @@ const AppointmentBooking = ({
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
-  console.log('Selected date', selectedDate);
+  console.log(
+    'Selected date',
+    // getFormatedDate(new Date('2021-09-27 11:34'), 'YYYY/MM/DD h:m'),
+    selectedDate && selectedDate?.replaceAll('/', '-'),
+    // new Date(selectedDate.replace('/', '-')),
+  );
+  useEffect(() => {
+    extraData.setOptions({
+      drawerLockMode: 'locked-closed',
+      swipeEnabled: false,
+    });
+
+    return () =>
+      extraData.setOptions({
+        drawerLockMode: 'locked-closed',
+        swipeEnabled: true,
+      });
+  }, [extraData]);
+  // selectedDate;
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
@@ -95,56 +121,148 @@ const AppointmentBooking = ({
   }, [isLoading]);
 
   return (
-    <View
-      style={{
-        backgroundColor: colors.background,
-        minHeight: 660,
-        marginBottom: 70,
-      }}>
-      {/* <Icon
-        onPress={() => console.log('hello')}
-        name={'ios-remove-outline'}
-        type={'ionicon'}
-        color={colors.text_1}
-        size={normalize(18)}
-        style={[{ alignSelf: 'center' }]}
-      /> */}
-      <TouchableOpacity
-        style={{
-          justifyContent: 'center',
-        }}
-        onPress={() => {
-          console.log(bottomSheetRef.current);
-          bottomSheetRef.current.snapTo(1);
-        }}>
-        <Icon
-          name="linear-scale"
-          type="marterialIcon"
-          color={colors.text}
-          size={normalize(20)}
-          style={{
-            marginRight: 0,
-            // alignSelf: 'center',
-          }}
+    <SafeAreaView
+      style={[
+        style1 === 'open' && {
+          borderWidth: 18,
+          // borderColor: colors.background_1,
+          borderTopColor: 'transparent',
+          borderBottomColor: 'transparent',
+          borderLeftColor: colors.background_1,
+          borderRightColor: 'transparent',
+          flex: 1,
+          // borderRadius: 240,
+          borderTopLeftRadius: 110,
+          borderBottomLeftRadius: 110,
+        },
+      ]}>
+      <View
+        style={[
+          style1 === 'open' && {
+            // borderWidth: 20,
+            backgroundColor: colors.background,
+            height: '100%',
+            // zIndex: 100,
+            // IOS
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 2,
+            // Android
+            elevation: 3,
+            borderRadius: 30,
+            overflow: 'hidden',
+          },
+        ]}>
+        <Header
+          navigation={navigation}
+          title="Appointment Booking"
+          backArrow={true}
+          // iconRight1={{
+          //   name: 'ios-save-outline',
+          //   type: 'ionicon',
+          //   onPress: saveChanges,
+          //   buttonType: 'save',
+          // }}
+          isLoading={isLoading}
+          hideCancel={true}
         />
-      </TouchableOpacity>
+        <KeyboardAwareScrollView
+          // keyboardShouldPersistTaps={'always'}
+          // style={{ flex: 1 }}
+          showsVerticalScrollIndicator={false}
+          style={{
+            width: windowWidth,
+            alignSelf: 'center',
+            marginTop: 50,
+          }}>
+          <Animatable.View animation="bounceInLeft" style={{ marginTop: 0 }}>
+            <Formik
+              initialValues={{
+                // email: 'jaskyparrot@gmail.com',
+                // password: '@Pass1234',
+                email: '',
+                password: '',
+              }}
+              onSubmit={(values) => {
+                console.log(values);
+              }}>
+              {({ handleChange, handleBlur, handleSubmit, values }) => (
+                <View>
+                  <InputBox
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    valuesType={values.title}
+                    name="title"
+                    iconName="calendar-edit"
+                    iconType="material-community"
+                    iconSize={16}
+                    placeholder="Appointment Title"
+                    autoCompleteType="email"
+                    textContentType="emailAddress"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    boxStyle={{
+                      width: appwidth,
+                      alignSelf: 'center',
+                      backgroundColor: colors.white,
+                      borderColor: colors.background_1,
+                      borderWidth: 1,
+                    }}
+                    styling={{
+                      input: {
+                        fontSize: normalize(14),
+                        color: colors.text_1,
+                        backgroundColor: colors.white,
+                      },
+                    }}
+                  />
 
-      <DatePicker
-        options={{
-          backgroundColor: colors.background,
-          textHeaderColor: colors.primary_light1,
-          // textDefaultColor: colors.white,
-          selectedTextColor: '#fff',
-          mainColor: colors.primary,
-          textSecondaryColor: colors.text,
-          borderColor: 'rgba(122, 146, 165, 0.1)',
-          textFontSize: normalize(11),
-          defaultFont: 'SofiaProRegular',
-          textHeaderFontSize: normalize(13),
-        }}
-        onSelectedChange={(date) => setSelectedDate(date)}
-      />
-    </View>
+                  <DatePicker
+                    options={{
+                      backgroundColor: colors.background,
+                      textHeaderColor: colors.primary_light1,
+                      textDefaultColor: colors.text,
+                      selectedTextColor: '#fff',
+                      mainColor: colors.primary,
+                      textSecondaryColor: colors.text,
+                      borderColor: 'rgba(122, 146, 165, 0.1)',
+                      textFontSize: normalize(11),
+                      defaultFont: 'SofiaProRegular',
+                      textHeaderFontSize: normalize(13),
+                    }}
+                    isGregorian={true}
+                    onSelectedChange={(date) => setSelectedDate(date)}
+                  />
+                  <View style={styles.loginButtonView}>
+                    <Button
+                      title="Log In"
+                      onPress={handleSubmit}
+                      rounded
+                      buttonStyle={[
+                        styles.loginButton,
+                        {
+                          backgroundColor: colors.primary,
+                          width: appwidth,
+                          alignSelf: 'center',
+                        },
+                      ]}
+                      titleStyle={{
+                        fontFamily: 'SofiaProSemiBold',
+                        fontSize: normalize(14),
+                      }}
+                      loading={isLoading}
+                    />
+                  </View>
+                </View>
+              )}
+            </Formik>
+          </Animatable.View>
+        </KeyboardAwareScrollView>
+      </View>
+    </SafeAreaView>
   );
 };
 

@@ -24,7 +24,7 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import Appointment from './Appointment';
+import AppointmentList from './AppointmentList';
 import Header from '../../../components/hoc/Header';
 
 import { createStackNavigator } from '@react-navigation/stack';
@@ -79,6 +79,7 @@ const Appointments = ({ navigation }) => {
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
+  const [showAppointmentBooking, setShowAppointmentBooking] = useState(true);
   const isDrawerOpen = useIsDrawerOpen();
   const [selectedDate, setSelectedDate] = useState({
     [new Date().toISOString().split('T')[0]]: {
@@ -148,7 +149,8 @@ const Appointments = ({ navigation }) => {
             name: 'calendar-plus',
             type: 'material-community',
             size: normalize(20),
-            onPress: () => bottomSheetRef.current.snapTo(0),
+            // onPress: () => bottomSheetRef.current.snapTo(0),
+            onPress: () => navigation.navigate('AppointmentBooking'),
             buttonType: 'save',
           }}
           notifyIcon={true}
@@ -295,7 +297,7 @@ const Appointments = ({ navigation }) => {
                 data={appointmentData}
                 numColumns={1}
                 renderItem={({ item, index }) => (
-                  <Appointment
+                  <AppointmentList
                     id={index}
                     type={item.type}
                     styling={[
@@ -343,35 +345,6 @@ const Appointments = ({ navigation }) => {
           )}
         </View>
       </View>
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={[600, 0]}
-        borderRadius={40}
-        enabledGestureInteraction={false}
-        renderContent={() => (
-          <View style={{ height: 600 }}>
-            <View
-              style={{
-                flex: 1,
-                position: 'absolute',
-                backgroundColor: '#000000b9',
-                height: '100%',
-                width: '100%',
-              }}
-            />
-            <AppointmentBooking
-              bottomSheetRef={bottomSheetRef}
-              navigation={navigation}
-              // practiceData={practiceData}
-            />
-          </View>
-        )}
-        initialSnap={1}
-        // onOpenStart={() => setPracticeData({ ...practiceData, show: true })}
-        // onOpenEnd={() => setPracticeData({ ...practiceData, show: true })}
-        // onCloseStart={() => setPracticeData({ ...practiceData, show: false })}
-        // onCloseEnd={() => setPracticeData({ show: false })}
-      />
     </SafeAreaView>
   );
 };

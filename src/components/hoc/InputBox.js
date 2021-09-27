@@ -46,10 +46,10 @@ const InputBox = ({
     <View
       style={[
         styles.formField,
-        boxStyle,
         {
           backgroundColor: colors.background_1,
         },
+        boxStyle,
       ]}>
       <>
         {iconLeft ? (

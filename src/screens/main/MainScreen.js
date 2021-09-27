@@ -21,6 +21,7 @@ import {
 } from '../../redux/practices/practices.selector';
 import { setCurrentChatChannel } from '../../redux/practices/practices.actions';
 import { usePubNub } from 'pubnub-react';
+import Appointment from './appointment/Appointment';
 
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -364,7 +365,7 @@ const MainScreen = ({
       <Drawer.Screen name="Profile" component={Profile} />
       <Drawer.Screen name="Practx" component={Practx} />
       <Drawer.Screen name="Chats" component={Chats} />
-      <Drawer.Screen name="Appointments" component={Appointments} />
+      <Drawer.Screen name="Appointment" component={Appointment} />
       <Drawer.Screen name="Media" component={Media} />
       {/* <Drawer.Screen
         name="EditProfile"

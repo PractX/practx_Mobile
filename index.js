@@ -38,6 +38,17 @@ YellowBox.ignoreWarnings(['']);
 // global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
 // global.FormData = global.originalFormData || global.FormData;
 
+// eslint-disable-next-line no-extend-native
+String.prototype.replaceAll = function (str1, str2, ignore) {
+  return this.replace(
+    new RegExp(
+      str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, '\\$&'),
+      ignore ? 'gi' : 'g',
+    ),
+    typeof str2 === 'string' ? str2.replace(/\$/g, '$$$$') : str2,
+  );
+};
+
 const RNRedux = () => (
   // <NetworkProvider
   //   pingTimeout={5000}

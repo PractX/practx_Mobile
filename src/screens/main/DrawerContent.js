@@ -366,11 +366,11 @@ const DrawerContent = ({
                   navigation.dangerouslyGetState().index === 3 ? true : false
                 }
                 activeBackgroundColor={null}
-                label="Appointments"
+                label="Appointment"
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'Appointments',
+                      'Appointment',
                       // , {
                       //   screen: 'Home',
                       // }
