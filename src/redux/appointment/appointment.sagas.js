@@ -23,9 +23,14 @@ import {
   signOutSuccess,
   signOutFailure,
   signUpFailure,
+  bookAppointmentSusses,
+  setIsLoading,
+  getAppointmentSuccess,
 } from './appointment.actions';
 import {
+  bookAppointmentApi,
   editProfileApi,
+  getAllAppointmentsApi,
   getDownloadsApi,
   getSubscriptionApi,
 } from '../../apis/api';
@@ -36,19 +41,17 @@ import { clearPracticeData } from '../practices/practices.actions';
 const userToken = (state) => state.user.token.key;
 const userExpire = (state) => state.user.token.expire;
 
-export function* signUp({
-  payload: { email, firstname, lastname, dob, mobileNo, password, navigation },
+export function* isBookAppointment({
+  payload: { title, description, date, practiceId },
 }) {
+  const token = yield select(userToken);
   try {
-    console.log(email);
+    console.log('Data', token);
     // const { user } = yield auth.createUserWithEmailAndPassword(email, password);
-    const result = yield signUpApi(
-      email,
-      firstname,
-      lastname,
-      dob,
-      mobileNo,
-      password,
+    const result = yield bookAppointmentApi(
+      practiceId,
+      { title, description, date },
+      token,
     ).then(function (response) {
       return response.data;
     });
@@ -57,12 +60,14 @@ export function* signUp({
       message: result.message,
       type: 'success',
     });
+    yield put(setIsLoading(false));
     yield delay(5000);
-    // yield put(signUpSuccess(result.patient));
-    yield put(navigation.navigate('verifyAccount'));
+
+    // yield put(navigation.navigate('verifyAccount'));
   } catch (error) {
     console.log(error);
     console.log(error.response);
+    yield put(setIsLoading(false));
     let eMsg = '';
     if (error.response) {
       error.response.data.errors.map(function (i, err) {
@@ -84,25 +89,53 @@ export function* signUp({
         type: 'danger',
       });
     }
-
-    yield put(
-      signUpFailure(
-        error.response
-          ? error.response.data.errors || error.response.data.errors
-          : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
-      ),
-    );
   }
 }
 
-const tokenExpiration = () => {
-  const loginExp = new Date();
-  const timeExp = loginExp.setHours(loginExp.getHours() + 12);
-  // const timeExp = loginExp.setSeconds(loginExp.getSeconds() + 10);
-  const result = new Date(timeExp);
-  return result;
-};
-
+export function* willGetAppointments({}) {
+  const token = yield select(userToken);
+  try {
+    console.log('Data', token);
+    // const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+    const result = yield getAllAppointmentsApi(token).then(function (response) {
+      return response.data;
+    });
+    console.log(result);
+    // showMessage({
+    //   message: result.message,
+    //   type: 'success',
+    // });
+    // yield put(navigation.navigate('verifyAccount'));
+    yield put(getAppointmentSuccess(result.appointments));
+    yield put(setIsLoading(false));
+    // yield delay(5000);
+  } catch (error) {
+    console.log(error);
+    console.log(error.response);
+    yield put(setIsLoading(false));
+    let eMsg = '';
+    if (error.response) {
+      error.response.data.errors.map(function (i, err) {
+        if (error.response.data.errors.length > 1) {
+          eMsg += err + 1 + '. ' + i + '\n';
+          console.log(eMsg);
+        } else {
+          eMsg += i;
+          console.log(eMsg);
+        }
+      });
+      showMessage({
+        message: eMsg,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+  }
+}
 // export function* isResendConfirmEmail() {
 //   const token = yield select(userToken);
 //   try {
@@ -221,19 +254,16 @@ export function* signOut() {
 // }
 
 export function* onBookAppointment() {
+  yield takeLatest(AppointmentTypes.BOOK_APPOINTMENT, isBookAppointment);
+}
+
+export function* onGetAppointments() {
   yield takeLatest(
-    AppointmentTypes.BOOK_APPOINTMENT_START,
-    isUserAuthenticated,
+    AppointmentTypes.GET_APPOINTMENTS_START,
+    willGetAppointments,
   );
 }
 
-// export function* onSignUpSuccess() {
-//   yield takeLatest(UserActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp);
-// }
-
 export function* appointmentSagas() {
-  yield all([
-    call(onBookAppointment),
-    // call(onSignUpSuccess),
-  ]);
+  yield all([call(onBookAppointment), call(onGetAppointments)]);
 }

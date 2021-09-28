@@ -16,7 +16,7 @@ import Header from '../../../components/hoc/Header';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, Icon, ListItem } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useTheme } from '@react-navigation/native';
+import { useIsFocused, useTheme } from '@react-navigation/native';
 import { normalize } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
@@ -30,6 +30,8 @@ import { Formik } from 'formik';
 import { Modal, Portal } from 'react-native-paper';
 import { Avatar } from 'react-native-elements/dist/avatar/Avatar';
 import { selectJoinedPractices } from '../../../redux/practices/practices.selector';
+import { bookAppointment } from '../../../redux/appointment/appointment.actions';
+import { selectIsLoading } from '../../../redux/appointment/appointment.selector';
 // import Modal from 'react-native-modal';
 
 const Stack = createStackNavigator();
@@ -60,9 +62,10 @@ const AppointmentBooking = ({
   showAppointmentBooking,
   setShowAppointmentBooking,
   extraData,
+  bookAppointment,
 }) => {
   const { colors } = useTheme();
-  // const { show, data, type } = practiceData;
+  const isFocused = useIsFocused();
   const [style1, setStyle1] = useState();
   console.log(practiceData);
   const [visible, setVisible] = React.useState(false);
@@ -71,8 +74,7 @@ const AppointmentBooking = ({
   const hideModal = () => setVisible(false);
   // const pending = practice.requests;
   // const member = practice.patients.filter((val) => val.id === userId);
-  const [loading, setLoading] = useState(false);
-  const [selectedPractice, setSelectedPractice] = useState(false);
+  const [selectedPractice, setSelectedPractice] = useState(null);
   const today = new Date();
   const date18 = new Date(today.setFullYear(today.getFullYear() - 16));
   const [date, setDate] = useState(date18);
@@ -123,7 +125,7 @@ const AppointmentBooking = ({
   console.log(
     'Selected date',
     // getFormatedDate(new Date('2021-09-27 11:34'), 'YYYY/MM/DD h:m'),
-    selectedDate && selectedDate?.replaceAll('/', '-'),
+    selectedDate && new Date(selectedDate?.replaceAll('/', '-')).toISOString(),
     // new Date(selectedDate.replace('/', '-')),
   );
   useEffect(() => {
@@ -150,23 +152,14 @@ const AppointmentBooking = ({
     setDateValue(currentDate.toISOString().slice(0, 10).replace(/-/g, '-'));
   };
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode('datetime');
-  };
-
-  const joinPractice = (practiceId) => {
-    setLoading(true);
-    joinPractices(practiceId);
-  };
-
   useEffect(() => {
-    !isLoading && setLoading(false);
-  }, [isLoading]);
+    if (isFocused && selectedPractice === null) {
+      setTimeout(() => {
+        console.log('Good', selectedPractice);
+        showModal();
+      }, 1000);
+    }
+  }, [isFocused, selectedPractice]);
 
   return (
     <SafeAreaView
@@ -218,7 +211,7 @@ const AppointmentBooking = ({
           //   onPress: saveChanges,
           //   buttonType: 'save',
           // }}
-          isLoading={isLoading}
+          // isLoading={isLoading}
           hideCancel={true}
         />
         <Portal>
@@ -277,7 +270,7 @@ const AppointmentBooking = ({
                   <Icon
                     name={'check-circle'}
                     color={
-                      selectedPractice.id === l.id
+                      selectedPractice?.id === l.id
                         ? colors.tertiary
                         : colors.background
                     }
@@ -318,13 +311,24 @@ const AppointmentBooking = ({
           <Animatable.View animation="bounceInLeft" style={{ marginTop: 0 }}>
             <Formik
               initialValues={{
-                // email: 'jaskyparrot@gmail.com',
-                // password: '@Pass1234',
-                email: '',
-                password: '',
+                title: '',
+                description: '',
               }}
-              onSubmit={(values) => {
-                console.log(values);
+              onSubmit={async (values) => {
+                console.log({
+                  ...values,
+                  practiceId: selectedPractice?.id,
+                  data:
+                    selectedDate &&
+                    new Date(selectedDate?.replaceAll('/', '-')).toISOString(),
+                });
+                bookAppointment({
+                  ...values,
+                  practiceId: selectedPractice?.id,
+                  date:
+                    selectedDate &&
+                    new Date(selectedDate?.replaceAll('/', '-')).toISOString(),
+                });
               }}>
               {({ handleChange, handleBlur, handleSubmit, values }) => (
                 <View>
@@ -338,8 +342,6 @@ const AppointmentBooking = ({
                     iconSize={16}
                     placeholder="Appointment Title"
                     autoCompleteType="email"
-                    textContentType="emailAddress"
-                    keyboardType="email-address"
                     autoCapitalize="none"
                     boxStyle={{
                       width: appwidth,
@@ -404,6 +406,20 @@ const AppointmentBooking = ({
                     <Button
                       title="Book Appointment"
                       onPress={handleSubmit}
+                      disabled={
+                        selectedDate &&
+                        values.title &&
+                        values.description &&
+                        selectedPractice
+                          ? false
+                          : true
+                      }
+                      disabledStyle={{
+                        backgroundColor: colors.background_1,
+                        width: appwidth,
+                        alignSelf: 'center',
+                        opacity: 0.2,
+                      }}
                       rounded
                       buttonStyle={[
                         styles.loginButton,
@@ -443,12 +459,11 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = createStructuredSelector({
   joinedPractices: selectJoinedPractices,
+  isLoading: selectIsLoading,
 });
 
-// const mapDispatchToProps = (dispatch) => ({
-//   joinPractices: (practiceId) => dispatch(joinPractices(practiceId)),
-//   setPracticeId: (id) => dispatch(setPracticeId(id)),
-//   leavePracticeStart: (id) => dispatch(leavePracticeStart(id)),
-// });
+const mapDispatchToProps = (dispatch) => ({
+  bookAppointment: (data) => dispatch(bookAppointment(data)),
+});
 
-export default connect(mapStateToProps)(AppointmentBooking);
+export default connect(mapStateToProps, mapDispatchToProps)(AppointmentBooking);

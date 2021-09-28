@@ -34,6 +34,8 @@ import { useIsDrawerOpen } from '@react-navigation/drawer';
 import { normalize } from 'react-native-elements';
 import { FlatList } from 'react-native';
 import AppointmentBooking from './AppointmentBooking';
+import { getAppointmentStart } from '../../../redux/appointment/appointment.actions';
+import { connect } from 'react-redux';
 
 // const Stack = createStackNavigator();
 
@@ -74,7 +76,7 @@ const appointmentData = [
   },
 ];
 
-const Appointments = ({ navigation }) => {
+const Appointments = ({ navigation, getAppointmentStart }) => {
   const bottomSheetRef = useRef();
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
@@ -94,6 +96,7 @@ const Appointments = ({ navigation }) => {
   });
 
   useEffect(() => {
+    getAppointmentStart();
     if (isDrawerOpen) {
       setStyle1('open');
       console.log('Open');
@@ -349,4 +352,8 @@ const Appointments = ({ navigation }) => {
   );
 };
 
-export default Appointments;
+const mapDispatchToProps = (dispatch) => ({
+  getAppointmentStart: (data) => dispatch(getAppointmentStart(data)),
+});
+
+export default connect(null, mapDispatchToProps)(Appointments);

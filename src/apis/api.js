@@ -183,3 +183,31 @@ export const leavePracticeApi = async (token, practiceId) => {
   const data = await Axios.delete(apiUrl, { headers: headers });
   return data;
 };
+
+// APPOINTMENT ENDPOINTS
+
+export const bookAppointmentApi = async (practiceId, data, token) => {
+  // console.log(token);
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const url =
+    REACT_APP_API +
+    REACT_APP_JOIN_PRACTICES +
+    '/' +
+    practiceId +
+    '/appointments';
+  const collectionsMap = await Axios.post(url, data, { headers: headers });
+  return collectionsMap;
+};
+
+export const getAllAppointmentsApi = async (token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const apiUrl = REACT_APP_API + REACT_APP_EDIT_PROFILE + '/appointments';
+  const data = await Axios.get(apiUrl, { headers: headers });
+  return data;
+};
