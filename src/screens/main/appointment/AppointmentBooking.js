@@ -27,6 +27,10 @@ import { Platform } from 'react-native';
 import DatePicker, { getFormatedDate } from 'react-native-modern-datepicker';
 import InputBox from '../../../components/hoc/InputBox';
 import { Formik } from 'formik';
+import { Modal, Portal } from 'react-native-paper';
+import { Avatar } from 'react-native-elements/dist/avatar/Avatar';
+import { selectJoinedPractices } from '../../../redux/practices/practices.selector';
+// import Modal from 'react-native-modal';
 
 const Stack = createStackNavigator();
 
@@ -51,6 +55,7 @@ const AppointmentBooking = ({
   practiceData,
   setPracticeData,
   joinPractices,
+  joinedPractices,
   leavePracticeStart,
   showAppointmentBooking,
   setShowAppointmentBooking,
@@ -60,17 +65,60 @@ const AppointmentBooking = ({
   // const { show, data, type } = practiceData;
   const [style1, setStyle1] = useState();
   console.log(practiceData);
+  const [visible, setVisible] = React.useState(false);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
   // const pending = practice.requests;
   // const member = practice.patients.filter((val) => val.id === userId);
   const [loading, setLoading] = useState(false);
+  const [selectedPractice, setSelectedPractice] = useState(false);
   const today = new Date();
   const date18 = new Date(today.setFullYear(today.getFullYear() - 16));
   const [date, setDate] = useState(date18);
   const [dateValue, setDateValue] = useState();
   const [selectedDate, setSelectedDate] = useState('');
-
+  const minimumDate = getFormatedDate(new Date(), 'YYYY/MM/DD h:m');
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  const list = [
+    {
+      name: 'Amy Farha',
+      avatar_url:
+        'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+      subtitle: 'Vice President',
+    },
+    {
+      name: 'Chris Jackson ChrisJacksonChrisJacksonChrisJacksonChrisJackson',
+      avatar_url:
+        'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      subtitle: 'Vice Chairman',
+    },
+    {
+      name: 'Chris Jackson',
+      avatar_url:
+        'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      subtitle: 'Vice Chairman',
+    },
+    {
+      name: 'Chris Jackson',
+      avatar_url:
+        'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      subtitle: 'Vice Chairman',
+    },
+    {
+      name: 'Chris Jackson',
+      avatar_url:
+        'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      subtitle: 'Vice Chairman',
+    },
+  ];
 
   console.log(
     'Selected date',
@@ -160,6 +208,10 @@ const AppointmentBooking = ({
           navigation={navigation}
           title="Appointment Booking"
           backArrow={true}
+          avatar={{
+            url: selectedPractice?.logo,
+            press: () => showModal(),
+          }}
           // iconRight1={{
           //   name: 'ios-save-outline',
           //   type: 'ionicon',
@@ -169,6 +221,91 @@ const AppointmentBooking = ({
           isLoading={isLoading}
           hideCancel={true}
         />
+        <Portal>
+          <Modal
+            visible={visible}
+            onDismiss={hideModal}
+            contentContainerStyle={{
+              backgroundColor: colors.background,
+              width: appwidth - 50,
+              height: 400,
+              paddingVertical: 20,
+              alignSelf: 'center',
+              borderColor: colors.background_1,
+              borderWidth: 0.8,
+              borderRadius: 10,
+            }}>
+            <Text
+              style={{
+                fontSize: normalize(14),
+                fontFamily: 'SofiaProSemiBold',
+                color: colors.text,
+                textAlign: 'center',
+                paddingBottom: 10,
+              }}>
+              Choose a practice
+            </Text>
+            <ScrollView style={{ backgroundColor: colors.background }}>
+              {joinedPractices.map((l, i) => (
+                <ListItem
+                  key={i}
+                  containerStyle={{ backgroundColor: colors.background }}
+                  onPress={() => setSelectedPractice(l)}>
+                  <Avatar rounded source={{ uri: l.logo }} />
+                  <ListItem.Content>
+                    <ListItem.Title
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      style={{
+                        fontSize: normalize(12),
+                        fontFamily: 'SofiaProRegular',
+                        color: colors.text,
+                      }}>
+                      {l.practiceName}
+                    </ListItem.Title>
+                    <ListItem.Subtitle
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      style={{
+                        fontSize: normalize(10),
+                        fontFamily: 'SofiaProLight',
+                        color: colors.text_1,
+                      }}>
+                      {l.specialty}
+                    </ListItem.Subtitle>
+                  </ListItem.Content>
+                  <Icon
+                    name={'check-circle'}
+                    color={
+                      selectedPractice.id === l.id
+                        ? colors.tertiary
+                        : colors.background
+                    }
+                    size={normalize(18)}
+                  />
+                </ListItem>
+              ))}
+            </ScrollView>
+            <Button
+              title="Done"
+              onPress={() => hideModal()}
+              rounded
+              buttonStyle={[
+                styles.loginButton,
+                {
+                  backgroundColor: colors.primary,
+                  width: '50%',
+                  alignSelf: 'center',
+                },
+              ]}
+              titleStyle={{
+                fontFamily: 'SofiaProSemiBold',
+                fontSize: normalize(13),
+              }}
+              loading={isLoading}
+            />
+          </Modal>
+        </Portal>
         <KeyboardAwareScrollView
           // keyboardShouldPersistTaps={'always'}
           // style={{ flex: 1 }}
@@ -207,7 +344,7 @@ const AppointmentBooking = ({
                     boxStyle={{
                       width: appwidth,
                       alignSelf: 'center',
-                      backgroundColor: colors.white,
+                      backgroundColor: colors.background,
                       borderColor: colors.background_1,
                       borderWidth: 1,
                     }}
@@ -215,7 +352,32 @@ const AppointmentBooking = ({
                       input: {
                         fontSize: normalize(14),
                         color: colors.text_1,
-                        backgroundColor: colors.white,
+                        backgroundColor: colors.background,
+                      },
+                    }}
+                  />
+                  <InputBox
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    valuesType={values.description}
+                    name="description"
+                    iconName="calendar-edit"
+                    iconType="material-community"
+                    iconSize={16}
+                    placeholder="Description"
+                    autoCapitalize="none"
+                    boxStyle={{
+                      width: appwidth,
+                      alignSelf: 'center',
+                      backgroundColor: colors.background,
+                      borderColor: colors.background_1,
+                      borderWidth: 1,
+                    }}
+                    styling={{
+                      input: {
+                        fontSize: normalize(14),
+                        color: colors.text_1,
+                        backgroundColor: colors.background,
                       },
                     }}
                   />
@@ -227,18 +389,20 @@ const AppointmentBooking = ({
                       textDefaultColor: colors.text,
                       selectedTextColor: '#fff',
                       mainColor: colors.primary,
-                      textSecondaryColor: colors.text,
+                      textSecondaryColor: colors.text_1,
                       borderColor: 'rgba(122, 146, 165, 0.1)',
                       textFontSize: normalize(11),
                       defaultFont: 'SofiaProRegular',
                       textHeaderFontSize: normalize(13),
                     }}
+                    minimumDate={minimumDate}
                     isGregorian={true}
                     onSelectedChange={(date) => setSelectedDate(date)}
                   />
+
                   <View style={styles.loginButtonView}>
                     <Button
-                      title="Log In"
+                      title="Book Appointment"
                       onPress={handleSubmit}
                       rounded
                       buttonStyle={[
@@ -277,9 +441,9 @@ const styles = StyleSheet.create({
   },
 });
 
-// const mapStateToProps = createStructuredSelector({
-//   isLoading: selectIsLoading,
-// });
+const mapStateToProps = createStructuredSelector({
+  joinedPractices: selectJoinedPractices,
+});
 
 // const mapDispatchToProps = (dispatch) => ({
 //   joinPractices: (practiceId) => dispatch(joinPractices(practiceId)),
@@ -287,5 +451,4 @@ const styles = StyleSheet.create({
 //   leavePracticeStart: (id) => dispatch(leavePracticeStart(id)),
 // });
 
-// export default connect(mapStateToProps)(AppointmentBooking);
-export default AppointmentBooking;
+export default connect(mapStateToProps)(AppointmentBooking);

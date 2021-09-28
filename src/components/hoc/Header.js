@@ -21,6 +21,7 @@ import MenuCheckOption from './MenuCheckOption';
 import { ActivityIndicator } from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
 import firstLetterWord from '../../utils/firstLetterWord';
+import { Avatar } from 'react-native-elements/dist/avatar/Avatar';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -48,6 +49,7 @@ const Header = ({
   textImage,
   hideCancel,
   signalType,
+  avatar,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
@@ -477,6 +479,35 @@ const Header = ({
             />
           </TouchableOpacity>
         )}
+        {avatar && (
+          <>
+            {avatar.url ? (
+              <Avatar
+                size={normalize(28)}
+                rounded
+                source={{
+                  uri: avatar.url,
+                }}
+                onPress={avatar.press}
+                containerStyle={{ alignSelf: 'center' }}
+                // activeOpacity={0.7}
+              />
+            ) : (
+              <Icon
+                name="heart-plus-outline"
+                // name="stethoscope"
+                type="material-community"
+                color={colors.text}
+                onPress={avatar.press}
+                size={normalize(18)}
+                style={{
+                  color: colors.text,
+                  // alignSelf: 'center',
+                }}
+              />
+            )}
+          </>
+        )}
         {iconRight1 && (
           <View style={{ flexDirection: 'row' }}>
             {/* {iconRight1.buttonType === 'filter' && (
@@ -566,6 +597,7 @@ const Header = ({
                 </MenuOptions>
               </Menu>
             )} */}
+
             {iconRight1 && iconRight1.buttonType === 'save' && (
               <Button
                 // onPress={handleSubmit}

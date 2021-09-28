@@ -1,6 +1,6 @@
 import { takeLatest, put, all, call, delay } from 'redux-saga/effects';
 import { select } from 'redux-saga/effects';
-import UserActionTypes from './appointment.types';
+import AppointmentTypes from './appointment.types';
 import {
   signUpApi,
   signInApi,
@@ -103,31 +103,31 @@ const tokenExpiration = () => {
   return result;
 };
 
-export function* isResendConfirmEmail() {
-  const token = yield select(userToken);
-  try {
-    const result = yield resendConfirmEmailApi(token).then(function (response) {
-      return response.data.data;
-    });
-    if (result) {
-      // yield put(resendConfirmEmailSuccess(""));
-      yield put(setMessage({ type: 'success', message: result.message }));
-      yield delay(6000);
-      yield put(setMessage(null));
-    }
-  } catch (error) {
-    yield put(
-      setMessage({
-        type: 'error',
-        message: error.response
-          ? error.response.data.message || error.response.data.error
-          : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
-      }),
-    );
-    yield delay(8000);
-    yield put(setMessage(null));
-  }
-}
+// export function* isResendConfirmEmail() {
+//   const token = yield select(userToken);
+//   try {
+//     const result = yield resendConfirmEmailApi(token).then(function (response) {
+//       return response.data.data;
+//     });
+//     if (result) {
+//       // yield put(resendConfirmEmailSuccess(""));
+//       yield put(setMessage({ type: 'success', message: result.message }));
+//       yield delay(6000);
+//       yield put(setMessage(null));
+//     }
+//   } catch (error) {
+//     yield put(
+//       setMessage({
+//         type: 'error',
+//         message: error.response
+//           ? error.response.data.message || error.response.data.error
+//           : 'Oops!!, Poor internet connection, Please check your connectivity, And try again',
+//       }),
+//     );
+//     yield delay(8000);
+//     yield put(setMessage(null));
+//   }
+// }
 
 // export function* isChangePassword({ payload: { old_password, new_password } }) {
 //   const token = yield select(userToken);
@@ -220,26 +220,11 @@ export function* signOut() {
 //   yield takeLatest(UserActionTypes.SIGN_IN_BY_TOKEN_START, signByToken);
 // }
 
-export function* onResendConfirmEmail() {
+export function* onBookAppointment() {
   yield takeLatest(
-    UserActionTypes.RESEND_CONFIRM_EMAIL_START,
-    isResendConfirmEmail,
+    AppointmentTypes.BOOK_APPOINTMENT_START,
+    isUserAuthenticated,
   );
-}
-export function* onResetPassword() {
-  yield takeLatest(UserActionTypes.RESET_PASSWORD, isResetPassword);
-}
-
-export function* onCheckUserSession() {
-  yield takeLatest(UserActionTypes.CHECK_USER_SESSION, isUserAuthenticated);
-}
-
-export function* onSignOutStart() {
-  yield takeLatest(UserActionTypes.SIGN_OUT_START, signOut);
-}
-
-export function* onSignUpStart() {
-  yield takeLatest(UserActionTypes.SIGN_UP_START, signUp);
 }
 
 // export function* onSignUpSuccess() {
@@ -248,11 +233,7 @@ export function* onSignUpStart() {
 
 export function* appointmentSagas() {
   yield all([
-    call(onResendConfirmEmail),
-    call(onResetPassword),
-    call(onCheckUserSession),
-    call(onSignOutStart),
-    call(onSignUpStart),
+    call(onBookAppointment),
     // call(onSignUpSuccess),
   ]);
 }

@@ -12,7 +12,7 @@ import { name as appName } from './app.json';
 import { MenuProvider } from 'react-native-popup-menu';
 import PubNub from 'pubnub';
 import { PubNubProvider, usePubNub } from 'pubnub-react';
-
+import { Provider as RNPProvider } from 'react-native-paper';
 // import Clipboard from '@react-native-community/clipboard';
 // import admob, {MaxAdContentRating} from '@react-native-firebase/admob';
 // import RNFetchBlob from 'rn-fetch-blob';
@@ -60,17 +60,19 @@ const RNRedux = () => (
   // >
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <PubNubProvider client={pubnub}>
-        <MenuProvider
-          customStyles={{
-            menuProviderWrapper: {
-              // backgroundColor: 'green',
-              padding: 0,
-            },
-          }}>
-          <App />
-        </MenuProvider>
-      </PubNubProvider>
+      <RNPProvider>
+        <PubNubProvider client={pubnub}>
+          <MenuProvider
+            customStyles={{
+              menuProviderWrapper: {
+                // backgroundColor: 'green',
+                padding: 0,
+              },
+            }}>
+            <App />
+          </MenuProvider>
+        </PubNubProvider>
+      </RNPProvider>
     </PersistGate>
   </Provider>
   //{/* </NetworkProvider> */}
