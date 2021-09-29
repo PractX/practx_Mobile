@@ -6,3 +6,8 @@ export const selectIsLoading = createSelector(
   [selectAppointment],
   (appointment) => appointment.isLoading,
 );
+
+export const selectAppointments = createSelector(
+  [selectAppointment],
+  (appointment) => appointment.appointments,
+);

@@ -36,6 +36,11 @@ import { FlatList } from 'react-native';
 import AppointmentBooking from './AppointmentBooking';
 import { getAppointmentStart } from '../../../redux/appointment/appointment.actions';
 import { connect } from 'react-redux';
+import {
+  selectAppointments,
+  selectIsLoading,
+} from '../../../redux/appointment/appointment.selector';
+import { createStructuredSelector } from 'reselect';
 
 // const Stack = createStackNavigator();
 
@@ -76,7 +81,12 @@ const appointmentData = [
   },
 ];
 
-const Appointments = ({ navigation, getAppointmentStart }) => {
+const Appointments = ({
+  navigation,
+  getAppointmentStart,
+  allAppointments,
+  isLoading,
+}) => {
   const bottomSheetRef = useRef();
   const { colors } = useTheme();
   const [style1, setStyle1] = useState();
@@ -352,8 +362,13 @@ const Appointments = ({ navigation, getAppointmentStart }) => {
   );
 };
 
+const mapStateToProps = createStructuredSelector({
+  allAppointments: selectAppointments,
+  isLoading: selectIsLoading,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   getAppointmentStart: (data) => dispatch(getAppointmentStart(data)),
 });
 
-export default connect(null, mapDispatchToProps)(Appointments);
+export default connect(mapStateToProps, mapDispatchToProps)(Appointments);
