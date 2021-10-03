@@ -42,7 +42,7 @@ const userToken = (state) => state.user.token.key;
 const userExpire = (state) => state.user.token.expire;
 
 export function* isBookAppointment({
-  payload: { title, description, date, practiceId },
+  payload: { title, description, date, practiceId, navigation },
 }) {
   const token = yield select(userToken);
   try {
@@ -61,9 +61,9 @@ export function* isBookAppointment({
       type: 'success',
     });
     yield put(setIsLoading(false));
-    yield delay(5000);
 
-    // yield put(navigation.navigate('verifyAccount'));
+    yield delay(5000);
+    yield navigation && put(navigation.navigate('Appointments'));
   } catch (error) {
     console.log(error);
     console.log(error.response);

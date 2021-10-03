@@ -314,7 +314,7 @@ const AppointmentBooking = ({
                 title: '',
                 description: '',
               }}
-              onSubmit={async (values) => {
+              onSubmit={async (values, { resetForm }) => {
                 console.log({
                   ...values,
                   practiceId: selectedPractice?.id,
@@ -328,7 +328,10 @@ const AppointmentBooking = ({
                   date:
                     selectedDate &&
                     new Date(selectedDate?.replaceAll('/', '-')).toISOString(),
+                  navigation,
                 });
+                // do your stuff
+                resetForm();
               }}>
               {({ handleChange, handleBlur, handleSubmit, values }) => (
                 <View>
