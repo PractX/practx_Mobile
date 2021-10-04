@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 // import Constants from 'expo-constants';
 import * as Animatable from 'react-native-animatable';
+import Moment from 'moment';
 // import { ThemeContext } from '../context/ThemeContext';
 
 // import {
@@ -43,7 +44,7 @@ const theme = {
   text3: '#555',
 };
 
-const Appointment = ({ type, styling }) => {
+const Appointment = ({ item, practice, status, styling }) => {
   const { colors } = useTheme();
 
   return (
@@ -56,8 +57,9 @@ const Appointment = ({ type, styling }) => {
       <View style={{ flexDirection: 'row' }}>
         <FastImage
           source={{
-            uri:
-              'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/200px-No-Image-Placeholder.svg.png',
+            uri: practice?.logo
+              ? practice?.logo
+              : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/200px-No-Image-Placeholder.svg.png',
             // values.avatar
             //   ? values.avatar
             //   : 'https://api.duniagames.co.id/api/content/upload/file/8143860661599124172.jpg',
@@ -80,7 +82,7 @@ const Appointment = ({ type, styling }) => {
                 fontFamily: 'SofiaProSemiBold',
                 color: colors.text,
               }}>
-              Dr John Snow
+              {item.title}
             </Text>
           </View>
 
@@ -91,7 +93,40 @@ const Appointment = ({ type, styling }) => {
               fontFamily: 'SofiaProRegular',
               color: theme.text2,
             }}>
-            09:00 AM - 12:00 PM
+            {/* 09:00 AM - 12:00 PM */}
+            {/* {Moment(item.date).format('d MMM')} */}
+            {Moment(item.date).format('HH:mm A') +
+              ' - ' +
+              (
+                '0' +
+                parseInt(
+                  item?.duration?.hours
+                    ? parseInt(
+                        Moment(item.date).format('HH:mmA').split(':')[0],
+                        10,
+                      ) + item?.duration?.hours
+                    : parseInt(
+                        Moment(item.date).format('HH:mmA').split(':')[0],
+                        10,
+                      ),
+                  10,
+                )
+              ).slice(-2) +
+              ':' +
+              (
+                '0' +
+                parseInt(
+                  item?.duration?.minutes
+                    ? parseInt(
+                        Moment(item.date).format('HH:mmA').split(':')[1],
+                        10,
+                      ) + item?.duration?.minutes
+                    : parseInt(
+                        Moment(item.date).format('HH:mmA').split(':')[1],
+                      ),
+                )
+              ).slice(-2) +
+              Moment(item.date).format(' A')}
           </Text>
 
           {/* ........ call text............. */}
@@ -101,16 +136,26 @@ const Appointment = ({ type, styling }) => {
               style={{
                 ...styles.dot,
                 backgroundColor:
-                  type === 'video' ? colors.quinary : colors.quaternary,
+                  status === 'pending'
+                    ? colors.text_2
+                    : status === 'approved'
+                    ? colors.tertiary
+                    : colors.danger,
               }}
             />
             <Text
               style={{
-                color: type === 'video' ? colors.quinary : colors.quaternary,
+                color:
+                  status === 'pending'
+                    ? colors.text_2
+                    : status === 'approved'
+                    ? colors.tertiary
+                    : colors.danger,
                 fontSize: normalize(10.5),
                 fontFamily: 'SofiaProRegular',
+                textTransform: 'capitalize',
               }}>
-              {type === 'video' ? 'Video call' : 'Voice call'}
+              {status}
             </Text>
           </View>
         </View>
@@ -119,7 +164,11 @@ const Appointment = ({ type, styling }) => {
         <TouchableOpacity
           style={{
             backgroundColor:
-              type === 'video' ? colors.quinary : colors.quaternary,
+              status === 'pending'
+                ? colors.text_2
+                : status === 'approved'
+                ? colors.tertiary
+                : colors.danger,
             borderRadius: 10,
             marginBottom: 5,
             width: 35,
@@ -127,8 +176,8 @@ const Appointment = ({ type, styling }) => {
             justifyContent: 'center',
           }}>
           <Icon
-            type={type === 'video' ? 'foundation' : 'foundation'}
-            name={type === 'video' ? 'video' : 'telephone'}
+            type={status === 'video' ? 'foundation' : 'foundation'}
+            name={status === 'video' ? 'video' : 'telephone'}
             color="white"
             size={normalize(18)}
             style={

@@ -48,7 +48,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
 
-const appointmentData = [
+const appointmentDatas = [
   {
     type: 'voice',
   },
@@ -89,21 +89,71 @@ const Appointments = ({
 }) => {
   const bottomSheetRef = useRef();
   const { colors } = useTheme();
+  const appointmentData = allAppointments?.rows;
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
   const [showAppointmentBooking, setShowAppointmentBooking] = useState(true);
   const isDrawerOpen = useIsDrawerOpen();
-  const [selectedDate, setSelectedDate] = useState({
-    [new Date().toISOString().split('T')[0]]: {
-      selected: true,
-      selectedColor: colors.secondary,
-      customStyles: {
-        container: {
-          borderRadius: 8,
+  const [pickedDate, setPickedDate] = useState(
+    new Date().toISOString().split('T')[0],
+  );
+
+  const appointmentDate = Object.fromEntries(
+    appointmentData?.map((item) =>
+      item.date.split('T')[0] >= new Date().toISOString().split('T')[0]
+        ? [
+            item.date.split('T')[0],
+            {
+              selected: true,
+              selectedColor: colors.primary,
+              customStyles: {
+                container: {
+                  borderRadius: 50,
+                  // backgroundColor: colors.primary,
+                },
+              },
+              marked: true,
+              dotColor: 'white',
+            },
+          ]
+        : {},
+    ),
+  );
+
+  const [selectedDate, setSelectedDate] = useState(
+    appointmentDate
+      ? {
+          ...appointmentDate,
+          [new Date().toISOString().split('T')[0]]: {
+            selected: true,
+            selectedColor: colors.secondary,
+            customStyles: {
+              container: {
+                borderRadius: 50,
+              },
+            },
+          },
+        }
+      : {
+          [new Date().toISOString().split('T')[0]]: {
+            selected: true,
+            selectedColor: colors.secondary,
+            customStyles: {
+              container: {
+                borderRadius: 50,
+              },
+            },
+          },
         },
-      },
-    },
-  });
+  );
+
+  console.log(
+    'Data Appointments',
+    appointmentData,
+    'Result',
+    pickedDate,
+    appointmentData.filter((it) => it.date.split('T')[0] === pickedDate),
+  );
 
   useEffect(() => {
     getAppointmentStart();
@@ -178,7 +228,7 @@ const Appointments = ({
           style={{
             // backgroundColor: 'green',
             marginTop: 50,
-            height: 360,
+            height: 400,
           }}>
           <Calendar
             key={colors.mode}
@@ -190,55 +240,46 @@ const Appointments = ({
             // disableArrowLeft={true}
             // Disable right arrow. Default = false
             // disableArrowRight={true}
-
             enableSwipeMonths={true}
             horizontal={true}
             // pagingEnabled={true}
             showScrollIndicator={true}
-            onDayPress={(day) =>
-              setSelectedDate({
+            onDayPress={(day) => {
+              console.log('Date', day.dateString);
+              setPickedDate(day.dateString);
+              return setSelectedDate({
+                ...appointmentDate,
                 [day.dateString]: {
                   selected: true,
                   selectedColor: colors.secondary,
                   customStyles: {
                     container: {
-                      borderRadius: 8,
+                      borderRadius: 50,
+                      backgroundColor: colors.secondary,
                     },
                   },
                 },
-              })
-            }
+              });
+            }}
             minDate={new Date().toISOString().split('T')[0]}
             current={new Date().toISOString().split('T')[0]}
             markingType={'custom'}
             markedDates={{
-              '2021-01-31': {
-                customStyles: {
-                  container: {
-                    backgroundColor: colors.primary,
-                    borderRadius: 8,
-                  },
-                },
-                selected: true,
-                // marked: true,
-                // selectedColor: colors.primary,
-                // dotColor: 'white',
-                // textColor: 'green',
-              },
-              '2021-02-11': {
-                customStyles: {
-                  container: {
-                    backgroundColor: colors.primary,
-                    borderRadius: 8,
-                  },
-                },
-                selected: true,
-                // marked: true,
-                // selectedColor: colors.primary,
-                // dotColor: 'white',
-                // textColor: 'green',
-              },
+              // '2021-02-11': {
+              //   customStyles: {
+              //     container: {
+              //       backgroundColor: colors.primary,
+              //       borderRadius: 8,
+              //     },
+              //   },
+              //   selected: true,
+              //   // marked: true,
+              //   // selectedColor: colors.primary,
+              //   // dotColor: 'white',
+              //   // textColor: 'green',
+              // },
               ...selectedDate,
+              // ...appointmentDate,
             }}
             theme={{
               backgroundColor: colors.background,
@@ -289,7 +330,7 @@ const Appointments = ({
             }}>
             Today's Appointment
           </Text>
-          {appointmentData ? (
+          {appointmentDatas ? (
             <View
               style={{
                 height: windowHeight - 370,
@@ -307,17 +348,21 @@ const Appointments = ({
                 updateCellsBatchingPeriod={5}
                 showsVerticalScrollIndicator={true}
                 style={{ marginBottom: 50 }}
-                data={appointmentData}
+                data={appointmentData?.filter(
+                  (it) => it.date.split('T')[0] === pickedDate,
+                )}
                 numColumns={1}
                 renderItem={({ item, index }) => (
                   <AppointmentList
                     id={index}
-                    type={item.type}
+                    item={item}
+                    practice={item.Practice}
+                    status={item?.approvalStatus}
                     styling={[
                       {
                         width: style1 === 'open' ? appwidth - 50 : appwidth,
                       },
-                      index === appointmentData.length - 1 && {
+                      index === appointmentDatas.length - 1 && {
                         paddingBottom: 60,
                       },
                     ]}
