@@ -391,11 +391,12 @@ const ChatBubble = ({
                     style={[
                       {
                         width: 250,
-                        height: 250,
+                        height: 220,
                         backgroundColor: colors.background_1,
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
+                        // borderTopLeftRadius: 20,
+                        // borderTopRightRadius: 20,
                         borderBottomRightRadius: 20,
+                        marginTop: 10,
                       },
                       // currentPracticeId === practice.id && {
                       //   borderWidth: 1,
