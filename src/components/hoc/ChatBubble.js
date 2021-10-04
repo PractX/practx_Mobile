@@ -259,9 +259,9 @@ const ChatBubble = ({
             source={{
               uri:
                 message.message.userType === 'practice' && groupPractice
-                  ? groupPractice.logo
+                  ? groupPractice?.logo
                   : practice
-                  ? practice.logo
+                  ? practice?.logo
                   : practiceStaff.length
                   ? message.message.file
                     ? practiceStaff.find(
@@ -272,7 +272,7 @@ const ChatBubble = ({
                             staff.id === message.message.message.staffId,
                         ).avatar ||
                         'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
-                      : groupPractice.logo ||
+                      : groupPractice?.logo ||
                         'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
                     : practiceStaff.find(
                         (staff) => staff.id === message.message.staffId,
@@ -307,12 +307,14 @@ const ChatBubble = ({
             {message.messageType === 4 ? (
               <View
                 style={{
-                  height: message.message.file.name.match(/.(aac)$/i)
+                  height: message.message.file.name.match(/.(aac|svg)$/i)
                     ? null
                     : 252,
                   backgroundColor: colors.background_1,
                   alignItems: 'center',
-                  width: 252,
+                  width: message.message.file.name.match(/.(pdf|svg|doc|txt)$/i)
+                    ? null
+                    : 252,
                   // width: appwidth - 50,
                   justifyContent: 'center',
                   borderTopLeftRadius: 20,
@@ -453,7 +455,38 @@ const ChatBubble = ({
                     }
                   />
                 ) : (
-                  <Text>Doc</Text>
+                  <View
+                    style={{
+                      alignSelf: 'center',
+                      flex: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      paddingHorizontal: 20,
+                    }}>
+                    <Icon
+                      name={'file-document'}
+                      type={'material-community'}
+                      color={colors.text}
+                      size={normalize(60)}
+                      style={{
+                        alignSelf: 'center',
+                        paddingTop: 20,
+                        // marginBottom: 10,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: normalize(10),
+                        fontFamily: 'SofiaProRegular',
+                        color: colors.primary,
+                        textAlign: 'left',
+                        paddingTop: 15,
+                        paddingBottom: 10,
+                        marginRight: 6,
+                      }}>
+                      {message.message.file.name}
+                    </Text>
+                  </View>
                 )}
               </View>
             ) : (
