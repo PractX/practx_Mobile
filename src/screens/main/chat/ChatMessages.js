@@ -171,7 +171,9 @@ const ChatMessages = ({
                 .groups
               ? subgroups
                   .find((item) => item.practiceId === currentPracticeId)
-                  .groups.find((item) => item.id === 17)
+                  .groups.find(
+                    (item) => item.id === parseInt(params.ids.split('-')[3]),
+                  )
               : {}
             : {},
           navigation: navigation,

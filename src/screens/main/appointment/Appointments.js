@@ -132,7 +132,7 @@ const Appointments = ({
                           ? colors.tertiary
                           : colors.primary_light1,
                       dots: appointmentData
-                        .map((it) => {
+                        ?.map((it) => {
                           if (
                             it.date.split('T')[0] === item.date.split('T')[0]
                           ) {
@@ -170,7 +170,7 @@ const Appointments = ({
   console.log(
     'Appointment Date',
     appointmentData
-      .map((it) => {
+      ?.map((it) => {
         if (it.date.split('T')[0] === '2021-10-21') {
           return {
             key: 'vacation',
