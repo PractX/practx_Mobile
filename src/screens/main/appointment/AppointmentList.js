@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 // import Constants from 'expo-constants';
 import * as Animatable from 'react-native-animatable';
-import Moment from 'moment';
+import moment from 'moment';
 // import { ThemeContext } from '../context/ThemeContext';
 
 // import {
@@ -67,7 +67,7 @@ const Appointment = ({ item, practice, status, styling }) => {
           style={{
             width: 60,
             height: 60,
-            borderRadius: 10,
+            borderRadius: 20,
             backgroundColor: colors.background_1,
             alignSelf: 'center',
             marginRight: 10,
@@ -94,19 +94,19 @@ const Appointment = ({ item, practice, status, styling }) => {
               color: theme.text2,
             }}>
             {/* 09:00 AM - 12:00 PM */}
-            {/* {Moment(item.date).format('d MMM')} */}
-            {Moment(item.date).format('HH:mm A') +
+            {/* {moment(item.date).format('d MMM')} */}
+            {moment(item.date).format('HH:mm A') +
               ' - ' +
               (
                 '0' +
                 parseInt(
                   item?.duration?.hours
                     ? parseInt(
-                        Moment(item.date).format('HH:mmA').split(':')[0],
+                        moment(item.date).format('HH:mmA').split(':')[0],
                         10,
                       ) + item?.duration?.hours
                     : parseInt(
-                        Moment(item.date).format('HH:mmA').split(':')[0],
+                        moment(item.date).format('HH:mmA').split(':')[0],
                         10,
                       ),
                   10,
@@ -118,15 +118,17 @@ const Appointment = ({ item, practice, status, styling }) => {
                 parseInt(
                   item?.duration?.minutes
                     ? parseInt(
-                        Moment(item.date).format('HH:mmA').split(':')[1],
+                        moment(item.date).format('HH:mmA').split(':')[1],
                         10,
                       ) + item?.duration?.minutes
                     : parseInt(
-                        Moment(item.date).format('HH:mmA').split(':')[1],
+                        moment(item.date).format('HH:mmA').split(':')[1],
+                        10,
                       ),
+                  10,
                 )
               ).slice(-2) +
-              Moment(item.date).format(' A')}
+              moment(item.date).format(' A')}
           </Text>
 
           {/* ........ call text............. */}

@@ -228,16 +228,38 @@ const AppointmentBooking = ({
               borderWidth: 0.8,
               borderRadius: 10,
             }}>
-            <Text
+            <View
               style={{
-                fontSize: normalize(14),
-                fontFamily: 'SofiaProSemiBold',
-                color: colors.text,
-                textAlign: 'center',
                 paddingBottom: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}>
-              Choose a practice
-            </Text>
+              <Text
+                style={{
+                  fontSize: normalize(14),
+                  fontFamily: 'SofiaProSemiBold',
+                  color: colors.text,
+                  textAlign: 'center',
+                }}>
+                Choose a practice
+              </Text>
+              {/* <Icon
+                name="heart-plus-outline"
+                // name="stethoscope"
+                type="material-community"
+                color={colors.text}
+                // onPress={avatar.press}
+                size={normalize(14)}
+                style={{
+                  color: colors.text,
+                  alignSelf: 'center',
+                  paddingLeft: 8
+                  ,
+                }}
+              /> */}
+            </View>
+
             <ScrollView style={{ backgroundColor: colors.background }}>
               {joinedPractices.map((l, i) => (
                 <ListItem

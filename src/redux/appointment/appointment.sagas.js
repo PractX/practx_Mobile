@@ -61,9 +61,9 @@ export function* isBookAppointment({
       type: 'success',
     });
     yield put(setIsLoading(false));
-
-    yield delay(5000);
+    yield delay(500);
     yield navigation && put(navigation.navigate('Appointments'));
+    yield delay(5000);
   } catch (error) {
     console.log(error);
     console.log(error.response);

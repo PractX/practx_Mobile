@@ -1010,13 +1010,13 @@ const ChatScreen = ({
             type === 'dm'
               ? [
                   {
-                    name: 'calendar-today',
-                    type: 'material-community',
+                    name: 'calendar',
+                    type: 'ant-design',
                     onPress: () => navigation.navigate('Appointments', {}),
                     buttonType: 'save',
                   },
                   {
-                    name: 'ios-call',
+                    name: 'ios-call-outline',
                     type: 'ionicon',
                     onPress: null,
                     buttonType: 'save',

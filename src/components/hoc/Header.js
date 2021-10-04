@@ -238,7 +238,7 @@ const Header = ({
                         : practice.specialty}
                     </Text>
                   )} */}
-                  {practice || group ? (
+                  {(practice && signalType) || (group && signalType) ? (
                     <Text
                       style={{
                         color: colors.text,

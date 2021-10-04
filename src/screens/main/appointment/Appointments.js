@@ -3,35 +3,25 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import * as Animatable from 'react-native-animatable';
 // import { ThemeContext } from '../context/ThemeContext';
 import BottomSheet from 'reanimated-bottom-sheet';
-
-import {
-  Button,
-  Text,
-  Content,
-  Title,
-  Right,
-  Left,
-  Icon,
-  Body,
-  Thumbnail,
-} from 'native-base';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import {
   View,
   StyleSheet,
   Dimensions,
+  Text,
   Image,
   TextInput,
   ScrollView,
 } from 'react-native';
 import AppointmentList from './AppointmentList';
 import Header from '../../../components/hoc/Header';
+import moment from 'moment';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView } from 'react-navigation';
-import { useTheme } from '@react-navigation/native';
+import { useIsFocused, useTheme } from '@react-navigation/native';
 import { useIsDrawerOpen } from '@react-navigation/drawer';
-import { normalize } from 'react-native-elements';
+import { normalize, Icon } from 'react-native-elements';
 import { FlatList } from 'react-native';
 import AppointmentBooking from './AppointmentBooking';
 import { getAppointmentStart } from '../../../redux/appointment/appointment.actions';
@@ -89,6 +79,7 @@ const Appointments = ({
 }) => {
   const bottomSheetRef = useRef();
   const { colors } = useTheme();
+  const isFocused = useIsFocused();
   const appointmentData = allAppointments?.rows;
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
@@ -97,32 +88,103 @@ const Appointments = ({
   const [pickedDate, setPickedDate] = useState(
     new Date().toISOString().split('T')[0],
   );
+  const [appointmentDate, setAppointmentDate] = useState([]);
 
-  const appointmentDate = Object.fromEntries(
-    appointmentData?.map((item) =>
-      item.date.split('T')[0] >= new Date().toISOString().split('T')[0]
-        ? [
-            item.date.split('T')[0],
-            {
-              selected: true,
-              selectedColor: colors.primary,
-              customStyles: {
-                container: {
-                  borderRadius: 50,
-                  // backgroundColor: colors.primary,
-                },
-              },
-              marked: true,
-              dotColor: 'white',
-            },
-          ]
-        : {},
-    ),
+  // const appointmentDate =
+  //   appointmentData && appointmentData.length > 0
+  //     ? Object.fromEntries(
+  //         appointmentData?.map((item) =>
+  //           item.date.split('T')[0] >= new Date().toISOString().split('T')[0]
+  //             ? [
+  //                 item.date.split('T')[0],
+  //                 {
+  //                   selected: true,
+  //                   selectedColor: colors.primary,
+  //                   customStyles: {
+  //                     container: {
+  //                       borderRadius: 50,
+  //                       // backgroundColor: colors.primary,
+  //                     },
+  //                   },
+  //                   marked: true,
+  //                   dotColor: 'white',
+  //                 },
+  //               ]
+  //             : {},
+  //         ),
+  //       )
+  //     : [];
+
+  useEffect(() => {
+    appointmentData?.length > 0
+      ? setAppointmentDate(
+          Object.fromEntries(
+            appointmentData?.map((item) =>
+              item.date.split('T')[0] >= new Date().toISOString().split('T')[0]
+                ? [
+                    item.date.split('T')[0],
+                    {
+                      selected: true,
+                      selectedColor:
+                        item?.approvalStatus === 'pending'
+                          ? colors.text_2
+                          : item?.approvalStatus === 'approved'
+                          ? colors.tertiary
+                          : colors.primary_light1,
+                      dots: appointmentData
+                        .map((it) => {
+                          if (
+                            it.date.split('T')[0] === item.date.split('T')[0]
+                          ) {
+                            return {
+                              key: 'vacation',
+                              color: 'red',
+                              selectedDotColor:
+                                it.approvalStatus === 'approved'
+                                  ? colors.success0
+                                  : it.approvalStatus === 'declined'
+                                  ? colors.danger_3
+                                  : 'white',
+                            };
+                          }
+                        })
+                        ?.filter((ut) => ut !== undefined),
+
+                      customStyles: {
+                        container: {
+                          borderRadius: 50,
+                          // backgroundColor: colors.primary,
+                        },
+                      },
+                      marked: true,
+                      dotColor: 'white',
+                    },
+                  ]
+                : {},
+            ),
+          ),
+        )
+      : setAppointmentDate({});
+  }, [allAppointments]);
+
+  console.log(
+    'Appointment Date',
+    appointmentData
+      .map((it) => {
+        if (it.date.split('T')[0] === '2021-10-21') {
+          return {
+            key: 'vacation',
+            color: 'red',
+            selectedDotColor: 'white',
+          };
+        }
+      })
+      ?.filter((ut) => ut !== undefined),
   );
 
-  const [selectedDate, setSelectedDate] = useState(
-    appointmentDate
-      ? {
+  useEffect(() => {
+    appointmentDate && Object.keys(appointmentDate)?.length > 0
+      ? setSelectedDate({
           ...appointmentDate,
           [new Date().toISOString().split('T')[0]]: {
             selected: true,
@@ -133,8 +195,8 @@ const Appointments = ({
               },
             },
           },
-        }
-      : {
+        })
+      : setSelectedDate({
           [new Date().toISOString().split('T')[0]]: {
             selected: true,
             selectedColor: colors.secondary,
@@ -144,16 +206,26 @@ const Appointments = ({
               },
             },
           },
-        },
-  );
+        });
+  }, [appointmentDate]);
 
-  console.log(
-    'Data Appointments',
-    appointmentData,
-    'Result',
-    pickedDate,
-    appointmentData.filter((it) => it.date.split('T')[0] === pickedDate),
-  );
+  const [selectedDate, setSelectedDate] = useState({
+    [new Date().toISOString().split('T')[0]]: {
+      selected: true,
+      selectedColor: colors.secondary,
+      customStyles: {
+        container: {
+          borderRadius: 50,
+        },
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (isFocused) {
+      getAppointmentStart();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     getAppointmentStart();
@@ -209,8 +281,8 @@ const Appointments = ({
           title="Appointments"
           hideCancel={true}
           iconRight1={{
-            name: 'calendar-plus',
-            type: 'material-community',
+            name: 'calendar-plus-o',
+            type: 'font-awesome',
             size: normalize(20),
             // onPress: () => bottomSheetRef.current.snapTo(0),
             onPress: () => navigation.navigate('AppointmentBooking'),
@@ -228,93 +300,95 @@ const Appointments = ({
           style={{
             // backgroundColor: 'green',
             marginTop: 50,
-            height: 400,
+            height: 390,
           }}>
-          <Calendar
-            key={colors.mode}
-            // onDayPress={(day) => {
-            //   console.log('selected day', day);
-            // }}
-            // style={{ padding: 0 }}
-            // Disable left arrow. Default = false
-            // disableArrowLeft={true}
-            // Disable right arrow. Default = false
-            // disableArrowRight={true}
-            enableSwipeMonths={true}
-            horizontal={true}
-            // pagingEnabled={true}
-            showScrollIndicator={true}
-            onDayPress={(day) => {
-              console.log('Date', day.dateString);
-              setPickedDate(day.dateString);
-              return setSelectedDate({
-                ...appointmentDate,
-                [day.dateString]: {
-                  selected: true,
-                  selectedColor: colors.secondary,
-                  customStyles: {
-                    container: {
-                      borderRadius: 50,
-                      backgroundColor: colors.secondary,
+          {appointmentDate && (
+            <Calendar
+              key={colors.mode}
+              // onDayPress={(day) => {
+              //   console.log('selected day', day);
+              // }}
+              // style={{ padding: 0 }}
+              // Disable left arrow. Default = false
+              // disableArrowLeft={true}
+              // Disable right arrow. Default = false
+              // disableArrowRight={true}
+              enableSwipeMonths={true}
+              horizontal={true}
+              // pagingEnabled={true}
+              showScrollIndicator={true}
+              onDayPress={(day) => {
+                console.log('Date', day.dateString);
+                setPickedDate(day.dateString);
+                return setSelectedDate({
+                  ...appointmentDate,
+                  [day.dateString]: {
+                    selected: true,
+                    selectedColor: colors.secondary,
+                    customStyles: {
+                      container: {
+                        borderRadius: 50,
+                        backgroundColor: colors.secondary,
+                      },
                     },
                   },
-                },
-              });
-            }}
-            minDate={new Date().toISOString().split('T')[0]}
-            current={new Date().toISOString().split('T')[0]}
-            markingType={'custom'}
-            markedDates={{
-              // '2021-02-11': {
-              //   customStyles: {
-              //     container: {
-              //       backgroundColor: colors.primary,
-              //       borderRadius: 8,
-              //     },
-              //   },
-              //   selected: true,
-              //   // marked: true,
-              //   // selectedColor: colors.primary,
-              //   // dotColor: 'white',
-              //   // textColor: 'green',
-              // },
-              ...selectedDate,
-              // ...appointmentDate,
-            }}
-            theme={{
-              backgroundColor: colors.background,
-              calendarBackground: colors.background,
-              textSectionTitleColor: colors.text,
-              // textSectionTitleDisabledColor: 'yellow',
-              selectedDayBackgroundColor: colors.primary,
-              selectedDayTextColor: '#ffffff',
+                });
+              }}
+              minDate={new Date().toISOString().split('T')[0]}
+              current={new Date().toISOString().split('T')[0]}
+              markingType={'multi-dot'}
+              markedDates={{
+                // '2021-02-11': {
+                //   customStyles: {
+                //     container: {
+                //       backgroundColor: colors.primary,
+                //       borderRadius: 8,
+                //     },
+                //   },
+                //   selected: true,
+                //   // marked: true,
+                //   // selectedColor: colors.primary,
+                //   // dotColor: 'white',
+                //   // textColor: 'green',
+                // },
+                ...selectedDate,
+                // ...appointmentDate,
+              }}
+              theme={{
+                backgroundColor: colors.background,
+                calendarBackground: colors.background,
+                textSectionTitleColor: colors.text,
+                // textSectionTitleDisabledColor: 'yellow',
+                selectedDayBackgroundColor: colors.primary,
+                selectedDayTextColor: '#ffffff',
 
-              todayTextColor: colors.secondary,
-              dayTextColor: colors.text,
-              textDisabledColor: colors.text_2,
-              textDayFontFamily: 'SofiaProRegular',
-              textMonthFontFamily: 'SofiaProSemiBold',
-              textDayHeaderFontFamily: 'SofiaProRegular',
-              dotColor: colors.primary,
-              selectedDotColor: colors.text,
-              arrowColor: colors.text,
-              // disabledArrowColor: '#d9e1e8',
-              monthTextColor: colors.text,
-              // indicatorColor: colors.text,
-              // textDayFontWeight: '300',
-              // textMonthFontWeight: 'bold',
-              // textDayHeaderFontWeight: '300',
-              textDayFontSize: normalize(11),
-              textMonthFontSize: normalize(13),
-              textDayHeaderFontSize: normalize(12),
-            }}
-          />
+                todayTextColor: colors.secondary,
+                dayTextColor: colors.text,
+                textDisabledColor: colors.text_2,
+                textDayFontFamily: 'SofiaProRegular',
+                textMonthFontFamily: 'SofiaProSemiBold',
+                textDayHeaderFontFamily: 'SofiaProRegular',
+                dotColor: colors.primary,
+                selectedDotColor: colors.text,
+                arrowColor: colors.text,
+                // disabledArrowColor: '#d9e1e8',
+                monthTextColor: colors.text,
+                // indicatorColor: colors.text,
+                // textDayFontWeight: '300',
+                // textMonthFontWeight: 'bold',
+                // textDayHeaderFontWeight: '300',
+                textDayFontSize: normalize(11),
+                textMonthFontSize: normalize(13),
+                textDayHeaderFontSize: normalize(12),
+              }}
+            />
+          )}
         </View>
         <View
           style={{
             alignSelf: 'center',
             justifyContent: 'center',
-            height: windowHeight - 433,
+            height: windowHeight - 413,
             width: '100%',
             // alignSelf: 'center',
             // marginBottom: 100,
@@ -328,12 +402,14 @@ const Appointments = ({
               fontFamily: 'SofiaProSemiBold',
               fontSize: normalize(13),
             }}>
-            Today's Appointment
+            {pickedDate === new Date().toISOString().split('T')[0]
+              ? "Today's Appointment"
+              : moment(pickedDate).format('ddd d MMM') + ' Appointments'}
           </Text>
           {appointmentDatas ? (
             <View
               style={{
-                height: windowHeight - 370,
+                height: windowHeight - 400,
               }}>
               <FlatList
                 // refreshControl={
@@ -347,11 +423,55 @@ const Appointments = ({
                 initialNumToRender={5}
                 updateCellsBatchingPeriod={5}
                 showsVerticalScrollIndicator={true}
-                style={{ marginBottom: 50 }}
-                data={appointmentData?.filter(
-                  (it) => it.date.split('T')[0] === pickedDate,
-                )}
+                style={{ marginBottom: 100 }}
+                data={
+                  appointmentData?.filter(
+                    (it) => it.date.split('T')[0] === pickedDate,
+                  ) || []
+                }
                 numColumns={1}
+                ListEmptyComponent={() => (
+                  <View
+                    style={{
+                      // margin: 0,
+                      marginTop: 30,
+                      marginBottom: 50,
+                      height: '100%',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Icon
+                      type="font-awesome"
+                      name="calendar-times-o"
+                      color={colors.text_2 + 'c0'}
+                      size={normalize(28)}
+                      style={
+                        {
+                          // fontSize: 11,
+                          // margin: 0,
+                          // alignSelf: 'center',
+                        }
+                      }
+                    />
+                    <Text
+                      style={{
+                        marginHorizontal: 20,
+                        marginTop: 10,
+                        marginBottom: 5,
+                        color: colors.text_2 + 'c0',
+                        fontFamily: 'Comfortaa-Bold',
+                        fontSize: normalize(13),
+                        textAlign: 'center',
+                      }}>
+                      You have no appointment
+                      {/* {pickedDate === new Date().toISOString().split('T')[0]
+                        ? "Today's Appointment"
+                        : moment(pickedDate).format('ddd d MMM') +
+                          ' Appointments'} */}
+                    </Text>
+                  </View>
+                )}
                 renderItem={({ item, index }) => (
                   <AppointmentList
                     id={index}
@@ -362,7 +482,11 @@ const Appointments = ({
                       {
                         width: style1 === 'open' ? appwidth - 50 : appwidth,
                       },
-                      index === appointmentDatas.length - 1 && {
+                      index ===
+                        appointmentData?.filter(
+                          (it) => it.date.split('T')[0] === pickedDate,
+                        )?.length -
+                          1 && {
                         paddingBottom: 60,
                       },
                     ]}
