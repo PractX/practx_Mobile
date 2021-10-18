@@ -22,7 +22,7 @@ import FastImage from 'react-native-fast-image';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import BottomSheet from 'reanimated-bottom-sheet';
-import DateTimePicker from '@react-native-community/datetimepicker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native';
 import DatePicker, { getFormatedDate } from 'react-native-modern-datepicker';
 import InputBox from '../../../components/hoc/InputBox';

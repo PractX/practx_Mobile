@@ -1,11 +1,7 @@
 
 #import <React/RCTLinkingManager.h>
 // Add this above the `@end`:
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url
- options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
- return [RCTLinkingManager application:app openURL:url options:options];
-}
+
 
 #import <UserNotifications/UserNotifications.h>
 #import <RNCPushNotificationIOS.h>
@@ -86,6 +82,12 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
   center.delegate = self;
   
   return YES;
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url
+ options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+ return [RCTLinkingManager application:app openURL:url options:options];
 }
 
 //Called when a notification is delivered to a foreground app.
