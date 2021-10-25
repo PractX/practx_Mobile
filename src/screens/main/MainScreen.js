@@ -118,11 +118,31 @@ const MainScreen = ({
     onRegister: function (token) {
       console.log('TOKEN:', token);
       if (token.os === 'ios' && pubnub) {
-        pubnub.push.addChannels({
-          channels: chatChannels,
-          device: token.token,
-          pushGateway: 'apns',
-        });
+        // pubnub.push.addChannels(
+        //   {
+        //     channels: chatChannels,
+        //     device: token.token,
+        //     pushGateway: 'apns2',
+        //     environment: 'production', /// Required for APNS2
+        //     topic: 'com.bcapturetech.practx',
+        //   },
+        //   function (status) {
+        //     console.log('Testing APNS2', status);
+        //   },
+        // );
+        pubnub.push.addChannels(
+          {
+            // channels: chatChannels,
+            channels: ['channel1'],
+            device: token.token,
+            pushGateway: 'apns2',
+            environment: 'development', // Required for APNs2
+            topic: 'com.bcapturetech.practx', // Required for APNs2
+          },
+          function (status) {
+            console.log(status);
+          },
+        );
         // Send iOS Notification from debug console: {"pn_apns":{"aps":{"alert":"Hello World."}}}
       } else if (token.os === 'android' && pubnub) {
         // console.log(pubnub);
@@ -139,109 +159,6 @@ const MainScreen = ({
     // Called when a remote or local notification is opened or received.
     onNotification: function (notification) {
       console.log('NOTIFICATION:', notification);
-      const testArray = [
-        {
-          id: 17,
-          name: 'Billing',
-          subgroupChats: [
-            {
-              id: 32,
-              PatientSubgroup: {
-                patientId: 32,
-                subgroupId: 17,
-                channelName: '32_17_bBew4Tsm0',
-                createdAt: '2021-05-20T23:27:00.660Z',
-                updatedAt: '2021-05-20T23:27:00.660Z',
-              },
-            },
-          ],
-        },
-        {
-          id: 18,
-          name: 'Frontdesk',
-          subgroupChats: [
-            {
-              id: 32,
-              PatientSubgroup: {
-                patientId: 32,
-                subgroupId: 18,
-                channelName: '32_18_rsPyDKvnt4',
-                createdAt: '2021-05-20T23:27:00.663Z',
-                updatedAt: '2021-05-20T23:27:00.663Z',
-              },
-            },
-          ],
-        },
-        {
-          id: 24,
-          name: 'Front office',
-          subgroupChats: [
-            {
-              id: 32,
-              PatientSubgroup: {
-                patientId: 32,
-                subgroupId: 24,
-                channelName: '32_24_Yx4YAO6NSH',
-                createdAt: '2021-07-03T21:27:52.030Z',
-                updatedAt: '2021-07-03T21:27:52.030Z',
-              },
-            },
-          ],
-        },
-        {
-          id: 25,
-          name: 'Billing dept',
-          subgroupChats: [
-            {
-              id: 32,
-              PatientSubgroup: {
-                patientId: 32,
-                subgroupId: 25,
-                channelName: '32_25_FNawpJUEOs',
-                createdAt: '2021-07-03T21:27:52.035Z',
-                updatedAt: '2021-07-03T21:27:52.035Z',
-              },
-            },
-          ],
-        },
-        {
-          id: 26,
-          name: 'Sleep tech',
-          subgroupChats: [
-            {
-              id: 32,
-              PatientSubgroup: {
-                patientId: 32,
-                subgroupId: 26,
-                channelName: '32_26_X0PRJdDex',
-                createdAt: '2021-07-03T21:27:52.237Z',
-                updatedAt: '2021-07-03T21:27:52.237Z',
-              },
-            },
-          ],
-        },
-        {
-          id: 27,
-          name: 'Respiratory therapist',
-          subgroupChats: [
-            {
-              id: 32,
-              PatientSubgroup: {
-                patientId: 32,
-                subgroupId: 27,
-                channelName: '32_27_1GujRZ9Ndg',
-                createdAt: '2021-07-03T21:27:52.293Z',
-                updatedAt: '2021-07-03T21:27:52.293Z',
-              },
-            },
-          ],
-        },
-      ];
-
-      console.log(
-        'Find data',
-        testArray.find((item) => item.id === 18),
-      );
       // setInitialState('chats');
       setGroupCha([...new Set([...groupCha, notification.data.channel])]);
       console.log(notification.data.type);
@@ -302,6 +219,7 @@ const MainScreen = ({
 
     // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
     onRegistrationError: function (err) {
+      console.log('THis is the error registering notification', err);
       console.error(err.message, err);
     },
 
@@ -351,6 +269,22 @@ const MainScreen = ({
       // return true;
     }
   }, [isInitialRender]);
+  const [permissions, setPermissions] = useState({});
+  // useEffect(() => {
+  //   PushNotificationIOS.addEventListener('notification', onRemoteNotification);
+  // });
+
+  // const onRemoteNotification = (notification) => {
+  //   console.log('IOS NOTIFICATION TEST', notification);
+  //   const isClicked = notification.getData().userInteraction === 1;
+
+  //   if (isClicked) {
+  //     // Navigate user to another screen
+  //   } else {
+  //     // Do something else with push notification
+  //   }
+  // };
+
   return (
     <Drawer.Navigator
       drawerContent={(props) => <DrawerContent {...props} />}

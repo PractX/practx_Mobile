@@ -1,10 +1,8 @@
+#import <UserNotifications/UserNotifications.h>
+#import <RNCPushNotificationIOS.h>
 
 #import <React/RCTLinkingManager.h>
 // Add this above the `@end`:
-
-
-#import <UserNotifications/UserNotifications.h>
-#import <RNCPushNotificationIOS.h>
 
 #import "AppDelegate.h"
 
@@ -84,16 +82,16 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
   return YES;
 }
 
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url
- options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
-{
- return [RCTLinkingManager application:app openURL:url options:options];
-}
-
 //Called when a notification is delivered to a foreground app.
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
 {
   completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge);
+}
+
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url
+ options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+ return [RCTLinkingManager application:app openURL:url options:options];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
