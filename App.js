@@ -41,6 +41,7 @@ import {
   selectCurrentChatChannel,
 } from './src/redux/practices/practices.selector';
 import { setCurrentChatChannel } from './src/redux/practices/practices.actions';
+import notifee, { EventType } from '@notifee/react-native';
 
 function SplashScreen() {
   return (
@@ -156,6 +157,32 @@ const App = ({
         setIsReady(true);
       });
   }, [getInitialState, themeMode]);
+
+  // Subscribe to events
+  useEffect(() => {
+    return notifee.onForegroundEvent(({ type, detail }) => {
+      console.log('Action Type', type, EventType);
+      switch (type) {
+        case EventType.DISMISSED:
+          console.log('User dismissed notification', detail.notification);
+          break;
+        case EventType.PRESS:
+          console.log('User pressed notification', detail.notification);
+          break;
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    return notifee.onBackgroundEvent(async ({ type, detail }) => {
+      const { notification, pressAction, input } = detail;
+
+      if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
+        console.log('Replying', input);
+        // updateChatOnServer(notification.data.conversationId, input);
+      }
+    });
+  }, []);
 
   if (!isReady) {
     return <></>;

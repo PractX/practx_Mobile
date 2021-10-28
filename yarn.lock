@@ -1025,6 +1025,11 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@notifee/react-native@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@notifee/react-native/-/react-native-3.0.2.tgz#6ae0b64091467784924d662211f5174b9c39f952"
+  integrity sha512-Idfc9YnaLsxwpPyBn3Nbdn9UOWwlJq7PrUe0MFeuZnYr0+5n+JhuYLg7CY9/jqUhnjYGz1RdzVCB6Ie7uxle8g==
+
 "@peculiar/asn1-schema@^2.0.27":
   version "2.0.27"
   resolved "https://registry.yarnpkg.com/@peculiar/asn1-schema/-/asn1-schema-2.0.27.tgz#1ee3b2b869ff3200bcc8ec60e6c87bd5a6f03fe0"

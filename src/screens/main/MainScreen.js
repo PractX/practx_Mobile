@@ -22,6 +22,7 @@ import {
 import { setCurrentChatChannel } from '../../redux/practices/practices.actions';
 import { usePubNub } from 'pubnub-react';
 import Appointment from './appointment/Appointment';
+import notifee, { EventType } from '@notifee/react-native';
 
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -38,57 +39,105 @@ const MainScreen = ({
   const [groupCha, setGroupCha] = useState([]);
 
   function pushLocalNotification({ id, data }) {
+    console.log('Test notify', data);
     // console.log('Group cha in notify', groupCha);
     // console.log('Screen', navigationRef.current.getCurrentRoute().name);
-    PushNotification.localNotification({
-      /* Android Only Properties */
-      channelId: data.channel, // (required) channelId, if the channel doesn't exist, notification will not trigger.
-      ticker: data.title, // (optional)
-      showWhen: true, // (optional) default: true
-      autoCancel: true, // (optional) default: true
-      largeIcon: 'ic_launcher', // (optional) default: "ic_launcher". Use "" for no large icon.
-      largeIconUrl: data.practiceImage
-        ? data.practiceImage
-        : 'https://icon-library.com/images/staff-icon-png/staff-icon-png-17.jpg', // (optional) default: undefined
-      smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher". Use "" for default small icon.
-      // data: data,
-      // bigText: data.body, // (optional) default: "message" prop
-      subText: data.type === 'gm' ? data.subtitle : '', // (optional) default: none
-      // bigPictureUrl: 'https://media.wired.com/photos/5b899992404e112d2df1e94e/master/pass/trash2-01.jpg', // (optional) default: undefined
-      // bigLargeIcon: 'ic_launcher', // (optional) default: undefined
-      bigLargeIconUrl:
-        'https://www.google.com/url?sa=i&url=https%3A%2F%2Fthenounproject.com%2Fterm%2Furl%2F&psig=AOvVaw0O76RRHtfjmmHni_NygrN9&ust=1631266534744000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCIjPpMfL8fICFQAAAAAdAAAAABAJ', // (optional) default: undefined
-      color: 'gray', // (optional) default: system default
-      vibrate: true, // (optional) default: true
-      vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
-      // tag: 'some_tag', // (optional) add tag to message
-      group: 'group', // (optional) add group to message
-      groupSummary: !groupCha.includes(data.channel), // (optional) set this notification to be the group summary for a group of notifications, default: false
-      ongoing: false, // (optional) set whether this is an "ongoing" notification
-      priority: 'high', // (optional) set notification priority, default: high
-      visibility: 'private', // (optional) set notification visibility, default: private
-      ignoreInForeground: false, // (optional) if true, the notification will not be visible when the app is in the foreground (useful for parity with how iOS notifications appear). should be used in combine with `com.dieam.reactnativepushnotification.notification_foreground` setting
-      shortcutId: 'shortcut-id', // (optional) If this notification is duplicative of a Launcher shortcut, sets the id of the shortcut, in case the Launcher wants to hide the shortcut, default undefined
-      onlyAlertOnce: false, // (optional) alert will open only once with sound and notify, default: false
+    // PushNotification.localNotification({
+    //   /* Android Only Properties */
+    //   channelId: data.channel, // (required) channelId, if the channel doesn't exist, notification will not trigger.
+    //   ticker: data.title, // (optional)
+    //   showWhen: true, // (optional) default: true
+    //   autoCancel: true, // (optional) default: true
+    //   largeIcon: 'ic_launcher', // (optional) default: "ic_launcher". Use "" for no large icon.
+    //   largeIconUrl: data.practiceImage
+    //     ? data.practiceImage
+    //     : 'https://icon-library.com/images/staff-icon-png/staff-icon-png-17.jpg', // (optional) default: undefined
+    //   smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher". Use "" for default small icon.
+    //   // data: data,
+    //   // bigText: data.body, // (optional) default: "message" prop
+    //   subText: data.type === 'gm' ? data.subtitle : '', // (optional) default: none
+    //   // bigPictureUrl: 'https://media.wired.com/photos/5b899992404e112d2df1e94e/master/pass/trash2-01.jpg', // (optional) default: undefined
+    //   // bigLargeIcon: 'ic_launcher', // (optional) default: undefined
+    //   bigLargeIconUrl:
+    //     'https://www.google.com/url?sa=i&url=https%3A%2F%2Fthenounproject.com%2Fterm%2Furl%2F&psig=AOvVaw0O76RRHtfjmmHni_NygrN9&ust=1631266534744000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCIjPpMfL8fICFQAAAAAdAAAAABAJ', // (optional) default: undefined
+    //   color: 'gray', // (optional) default: system default
+    //   vibrate: true, // (optional) default: true
+    //   vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+    //   // tag: 'some_tag', // (optional) add tag to message
+    //   group: 'group', // (optional) add group to message
+    //   groupSummary: !groupCha.includes(data.channel), // (optional) set this notification to be the group summary for a group of notifications, default: false
+    //   ongoing: false, // (optional) set whether this is an "ongoing" notification
+    //   priority: 'high', // (optional) set notification priority, default: high
+    //   visibility: 'private', // (optional) set notification visibility, default: private
+    //   ignoreInForeground: false, // (optional) if true, the notification will not be visible when the app is in the foreground (useful for parity with how iOS notifications appear). should be used in combine with `com.dieam.reactnativepushnotification.notification_foreground` setting
+    //   shortcutId: 'shortcut-id', // (optional) If this notification is duplicative of a Launcher shortcut, sets the id of the shortcut, in case the Launcher wants to hide the shortcut, default undefined
+    //   onlyAlertOnce: false, // (optional) alert will open only once with sound and notify, default: false
 
-      when: null, // (optional) Add a timestamp (Unix timestamp value in milliseconds) pertaining to the notification (usually the time the event occurred). For apps targeting Build.VERSION_CODES.N and above, this time is not shown anymore by default and must be opted into by using `showWhen`, default: null.
-      usesChronometer: false, // (optional) Show the `when` field as a stopwatch. Instead of presenting `when` as a timestamp, the notification will show an automatically updating display of the minutes and seconds since when. Useful when showing an elapsed time (like an ongoing phone call), default: false.
-      timeoutAfter: null, // (optional) Specifies a duration in milliseconds after which this notification should be canceled, if it is not already canceled, default: null
+    //   when: null, // (optional) Add a timestamp (Unix timestamp value in milliseconds) pertaining to the notification (usually the time the event occurred). For apps targeting Build.VERSION_CODES.N and above, this time is not shown anymore by default and must be opted into by using `showWhen`, default: null.
+    //   usesChronometer: false, // (optional) Show the `when` field as a stopwatch. Instead of presenting `when` as a timestamp, the notification will show an automatically updating display of the minutes and seconds since when. Useful when showing an elapsed time (like an ongoing phone call), default: false.
+    //   timeoutAfter: null, // (optional) Specifies a duration in milliseconds after which this notification should be canceled, if it is not already canceled, default: null
 
-      messageId: 'google:message_id', // (optional) added as `message_id` to intent extras so opening push notification can find data stored by @react-native-firebase/messaging module.
+    //   messageId: 'google:message_id', // (optional) added as `message_id` to intent extras so opening push notification can find data stored by @react-native-firebase/messaging module.
 
-      // actions: ['Yes', 'No'], // (Android only) See the doc for notification actions to know more
-      // FOR CHAT REPLY TODO
-      invokeApp: false, // (optional) This enable click on actions to bring back the application to foreground or stay in background, default: true
+    //   // actions: ['Yes', 'No'], // (Android only) See the doc for notification actions to know more
+    //   // FOR CHAT REPLY TODO
+    //   invokeApp: false, // (optional) This enable click on actions to bring back the application to foreground or stay in background, default: true
 
-      /* iOS only properties */
-      // category: '', // (optional) default: empty string
-      // subtitle: 'My Notification Subtitle', // (optional) smaller title below notification title
+    //   /* iOS only properties */
+    //   // category: '', // (optional) default: empty string
+    //   // subtitle: 'My Notification Subtitle', // (optional) smaller title below notification title
 
-      /* iOS and Android properties */
-      id: id, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
-      title: !groupCha.includes(data.channel) ? data.title : data.title, // (optional)
-      message:
+    //   /* iOS and Android properties */
+    //   id: id, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
+    //   title: !groupCha.includes(data.channel) ? data.title : data.title, // (optional)
+    //   message:
+    //     data.messageType === 'text'
+    //       ? data.body
+    //       : data.messageType === 'image'
+    //       ? '📷 Photo'
+    //       : data.messageType === 'video'
+    //       ? '🎥 Video'
+    //       : data.messageType === 'voiceNote'
+    //       ? '🎤 Voice message'
+    //       : data.messageType === 'file'
+    //       ? '📁 File'
+    //       : data.body, // (required)// (required)
+    //   picture: 'https://www.example.tld/picture.jpg', // (optional) Display an picture with the notification, alias of `bigPictureUrl` for Android. default: undefined
+    //   userInfo: data, // (optional) default: {} (using null throws a JSON value '<null>' error)
+    //   playSound: true, // (optional) default: true
+    //   soundName: 'practx_notify', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+    //   // number: 10, // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
+    //   // repeatType: 'day', // (optional) Repeating interval. Check 'Repeating Notifications' section for more info.
+    // });
+    // chaList = data.type;
+  }
+
+  async function onDisplayNotification({ data, groupCha }) {
+    // Create a channel
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+
+    console.log('CHannel ID', channelId);
+    await notifee.setNotificationCategories([
+      {
+        id: data.channel,
+        summaryFormat: 'You have %u+ unread messages from %@.',
+        actions: [
+          {
+            id: 'reply',
+            title: 'Reply',
+            input: true,
+          },
+        ],
+      },
+    ]);
+
+    // Display a notification
+    await notifee.displayNotification({
+      title: data.title,
+      body:
         data.messageType === 'text'
           ? data.body
           : data.messageType === 'image'
@@ -99,15 +148,39 @@ const MainScreen = ({
           ? '🎤 Voice message'
           : data.messageType === 'file'
           ? '📁 File'
-          : data.body, // (required)// (required)
-      picture: 'https://www.example.tld/picture.jpg', // (optional) Display an picture with the notification, alias of `bigPictureUrl` for Android. default: undefined
-      userInfo: data, // (optional) default: {} (using null throws a JSON value '<null>' error)
-      playSound: true, // (optional) default: true
-      soundName: 'practx_notify', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
-      // number: 10, // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
-      // repeatType: 'day', // (optional) Repeating interval. Check 'Repeating Notifications' section for more info.
+          : data.body, // (required)
+      android: {
+        channelId,
+        // smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+      },
+      ios: {
+        attachments: [
+          // {
+          //   // iOS resource
+          //   url: 'local-image.png',
+          //   thumbnailHidden: true,
+          // },
+          // {
+          //   // Local file path.
+          //   url: '/Path/on/device/to/local/file.mp4',
+          //   thumbnailTime: 3, // optional
+          // },
+          // {
+          //   // React Native asset.
+          //   url: require('./assets/my-image.gif'),
+          // },
+          {
+            // Remote image
+            url:
+              'https://thumbs.dreamstime.com/b/golden-retriever-dog-21668976.jpg',
+          },
+        ],
+        categoryId: data.channel,
+        summaryArgument: data.title,
+        summaryArgumentCount: 1,
+        sound: 'practx_notify.wav',
+      },
     });
-    // chaList = data.type;
   }
 
   // PushNotification.popInitialNotification((notification) => {
@@ -130,10 +203,11 @@ const MainScreen = ({
         //     console.log('Testing APNS2', status);
         //   },
         // );
+        console.log('Date', new Date().getTime());
         pubnub.push.addChannels(
           {
-            // channels: chatChannels,
-            channels: ['channel1'],
+            channels: chatChannels,
+            // channels: ['channel1'],
             device: token.token,
             pushGateway: 'apns2',
             environment: 'development', // Required for APNs2
@@ -172,17 +246,24 @@ const MainScreen = ({
       // }
       if (!notification.userInteraction) {
         // notification.data.channel;
+        console.log('I am here 1');
         if (
           !notification.foreground ||
           currentChatChannel !== notification.data.channel
         ) {
-          pushLocalNotification({
-            id: notification.id,
+          console.log('I am here 1a');
+          // pushLocalNotification({
+          //   id: notification.id ? notification.id : '2',
+          //   data: notification.data,
+          //   groupCha: groupCha,
+          // });
+          onDisplayNotification({
             data: notification.data,
             groupCha: groupCha,
           });
         }
       } else {
+        console.log('I am here 2');
         setGroupCha([]);
         Linking.openURL(
           `practx://chatMessages/${

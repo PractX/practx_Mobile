@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* practx_MobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* practx_MobileTests.m */; };
 		0658828D2BC74A129F1BA560 /* SofiaProRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9754529F534F463CAA53620D /* SofiaProRegular.ttf */; };
+		07AB2BB4272A481100030C52 /* practx_notify.wav in Resources */ = {isa = PBXBuildFile; fileRef = 07AB2BB3272A481100030C52 /* practx_notify.wav */; };
 		0E4181DB93744F25A8C65E6B /* SofiaProBlack-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F7B94932A4A4AC78F4EC06A /* SofiaProBlack-Italic.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -73,6 +74,7 @@
 		00E356EE1AD99517003FC87E /* practx_MobileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = practx_MobileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* practx_MobileTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = practx_MobileTests.m; sourceTree = "<group>"; };
+		07AB2BB3272A481100030C52 /* practx_notify.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = practx_notify.wav; path = ../../../../Downloads/practx_notify.wav; sourceTree = "<group>"; };
 		11A6F6BFD6D84D959BB905B7 /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
 		1259EEEC26D84EC087B345C4 /* SofiaProExtraLight-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SofiaProExtraLight-Italic.ttf"; path = "../assets/fonts/SofiaProExtraLight-Italic.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* practx_Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = practx_Mobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -246,6 +248,7 @@
 		02930FC4EF4C429081CF4501 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				07AB2BB3272A481100030C52 /* practx_notify.wav */,
 				821235FBB66F48439AFAB5AE /* AntDesign.ttf */,
 				798D959AC8F745FD9C3C24D2 /* Entypo.ttf */,
 				37CC7A2F737D47EB9FDDB05A /* EvilIcons.ttf */,
@@ -605,6 +608,7 @@
 				AF80DDBC0F32490889C1D2BE /* SofiaProSemiBold.ttf in Resources */,
 				34844D4C3CA4438FA5CF4A59 /* SofiaProUltraLight-Italic.ttf in Resources */,
 				1A1034FBA5804737AAF409BA /* SofiaProUltraLight.ttf in Resources */,
+				07AB2BB4272A481100030C52 /* practx_notify.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
