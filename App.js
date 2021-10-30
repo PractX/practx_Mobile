@@ -160,8 +160,8 @@ const App = ({
 
   // Subscribe to events
   useEffect(() => {
-    return notifee.onForegroundEvent(({ type, detail }) => {
-      console.log('Action Type', type, EventType);
+    const unsubscribe = notifee.onForegroundEvent(({ type, detail }) => {
+      console.log('Action Type', type);
       switch (type) {
         case EventType.DISMISSED:
           console.log('User dismissed notification', detail.notification);
@@ -171,17 +171,7 @@ const App = ({
           break;
       }
     });
-  }, []);
-
-  useEffect(() => {
-    return notifee.onBackgroundEvent(async ({ type, detail }) => {
-      const { notification, pressAction, input } = detail;
-
-      if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
-        console.log('Replying', input);
-        // updateChatOnServer(notification.data.conversationId, input);
-      }
-    });
+    return () => unsubscribe();
   }, []);
 
   if (!isReady) {

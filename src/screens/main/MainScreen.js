@@ -119,10 +119,10 @@ const MainScreen = ({
       name: 'Default Channel',
     });
 
-    console.log('CHannel ID', channelId);
+    console.log('Data', data);
     await notifee.setNotificationCategories([
       {
-        id: data.channel,
+        id: 'message',
         summaryFormat: 'You have %u+ unread messages from %@.',
         actions: [
           {
@@ -175,7 +175,7 @@ const MainScreen = ({
               'https://thumbs.dreamstime.com/b/golden-retriever-dog-21668976.jpg',
           },
         ],
-        categoryId: data.channel,
+        categoryId: 'message',
         summaryArgument: data.title,
         summaryArgumentCount: 1,
         sound: 'practx_notify.wav',

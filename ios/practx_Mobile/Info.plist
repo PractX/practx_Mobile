@@ -76,6 +76,20 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>Comfortaa-Bold.ttf</string>
+		<string>Comfortaa-Light.ttf</string>
+		<string>Comfortaa-Regular.ttf</string>
+		<string>FuturaStd-Bold.otf</string>
+		<string>Helvetica-Bold.ttf</string>
+		<string>Helvetica-Light.ttf</string>
+		<string>Helvetica.ttf</string>
+		<string>SFProDisplay-Light.ttf</string>
+		<string>SofiaProBlack-Italic.ttf</string>
+		<string>SofiaProBlack.ttf</string>
+		<string>SofiaProExtraLight.ttf</string>
+		<string>Roboto_medium.ttf</string>
+		<string>Roboto.ttf</string>
+		<string>rubicon-icon-font.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
