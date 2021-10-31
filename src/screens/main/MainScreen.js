@@ -23,6 +23,7 @@ import { setCurrentChatChannel } from '../../redux/practices/practices.actions';
 import { usePubNub } from 'pubnub-react';
 import Appointment from './appointment/Appointment';
 import notifee, { EventType } from '@notifee/react-native';
+import { selectCurrentUser } from '../../redux/user/user.selector';
 
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -30,6 +31,7 @@ const MainScreen = ({
   chatChannels,
   setCurrentChatChannel,
   currentChatChannel,
+  currentUser,
 }) => {
   const pubnub = usePubNub();
   const dimensions = useWindowDimensions();
@@ -112,14 +114,33 @@ const MainScreen = ({
     // chaList = data.type;
   }
 
+  function toString(o) {
+    Object.keys(o).forEach((k) => {
+      if (typeof o[k] === 'object') {
+        return toString(o[k]);
+      }
+
+      o[k] = '' + o[k];
+    });
+
+    return o;
+  }
+
   async function onDisplayChatNotification({ data, groupCha }) {
     // Create a channel
     // const channelId = await notifee.createChannel({
     //   id: 'default',
     //   name: 'Default Channel',
     // });
-
-    console.log('Data', data);
+    toString(data);
+    // toString(currentUser);
+    // console.log('Data  Objectt', {
+    //   ...data,
+    //   userId: currentUser?.id.toString(),
+    //   chatId: currentUser?.chatId,
+    //   firstname: currentUser?.firstname,
+    //   lastname: currentUser?.lastname,
+    // });
     notifee.setNotificationCategories([
       {
         id: 'message',
@@ -137,6 +158,14 @@ const MainScreen = ({
     // Display a notification
     await notifee.displayNotification({
       title: data.title,
+      subtitle: data.type === 'gm' ? data.subtitle : '',
+      data: {
+        ...data,
+        userId: currentUser?.id.toString(),
+        chatId: currentUser?.chatId,
+        firstname: currentUser?.firstname,
+        lastname: currentUser?.lastname,
+      },
       body:
         data.messageType === 'text'
           ? data.body
@@ -418,7 +447,7 @@ const MainScreen = ({
 
 const mapStateToProps = createStructuredSelector({
   // themeMode: selectThemeMode,
-  // user: selectCurrentUser,
+  currentUser: selectCurrentUser,
   chatChannels: selectChatChannels,
   currentChatChannel: selectCurrentChatChannel,
 });

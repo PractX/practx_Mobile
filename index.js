@@ -43,50 +43,48 @@ YellowBox.ignoreWarnings(['']);
 //   }
 // });
 
-// const sendMessage = (data) => {
-//   // console.log('Channel name', channelName);
-//   // console.log('SENDING____')
+const sendMessage = (data, input) => {
+  console.log('Channel name', data);
+  // console.log('SENDING____')
 
-//   //UNCOMMENT LATER
+  //UNCOMMENT LATER
 
-//   // chatRef.scrollToEnd();
-//   pubnub.setUUID(currentUser ? currentUser.chatId : 0);
-//   if (data) {
-//     pubnub.publish(
-//       {
-//         message: {
-//           // text: data[0].text,
-//           text: data,
-//           userType: 'patient',
-//           profile: {
-//             id: currentUser.id,
-//             name: currentUser.firstname + ' ' + currentUser.lastname,
-//           },
-//         },
-//         channel: channelName,
-//       },
-//       (status, response) => {
-//         // setMessage('');
-//         // handle status, response
-//         status.error
-//           ? setErrorMessage("Couldn't send message")
-//           : setErrorMessage('');
-//         console.log('Status', status);
-//         console.log('Response', response);
-//         // console.log(oldLength, 'SENT____', messages.length);
-//       },
-//     );
-//   } else {
-//     console.log('NO message');
-//   }
-// };
+  // chatRef.scrollToEnd();
+  pubnub.setUUID(data ? data?.chatId : 0);
+  if (data) {
+    pubnub.publish(
+      {
+        message: {
+          // text: data[0].text,
+          text: input,
+          userType: 'patient',
+          profile: {
+            id: parseInt(data?.userId),
+            name: data?.firstname + ' ' + data?.lastname,
+          },
+        },
+        channel: data?.channel,
+      },
+      (status, response) => {
+        // setMessage('');
+        // handle status, response
+        console.log('Status', status);
+        console.log('Response', response);
+        // console.log(oldLength, 'SENT____', messages.length);
+      },
+    );
+  } else {
+    console.log('NO message');
+  }
+};
 
 notifee.onBackgroundEvent(async ({ type, detail }) => {
   const { notification, pressAction, input } = detail;
 
   if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
     console.log('Replied Text-------------', input);
-    console.log('Notification', detail);
+    console.log('Notification', notification);
+    sendMessage(notification?.data, input);
     // updateChatOnServer(notification.data.conversationId, input);
   }
 });
