@@ -112,15 +112,15 @@ const MainScreen = ({
     // chaList = data.type;
   }
 
-  async function onDisplayNotification({ data, groupCha }) {
+  async function onDisplayChatNotification({ data, groupCha }) {
     // Create a channel
-    const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
-    });
+    // const channelId = await notifee.createChannel({
+    //   id: 'default',
+    //   name: 'Default Channel',
+    // });
 
     console.log('Data', data);
-    await notifee.setNotificationCategories([
+    notifee.setNotificationCategories([
       {
         id: 'message',
         summaryFormat: 'You have %u+ unread messages from %@.',
@@ -150,31 +150,31 @@ const MainScreen = ({
           ? '📁 File'
           : data.body, // (required)
       android: {
-        channelId,
+        channelId: data.channel,
         // smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
       },
       ios: {
-        attachments: [
-          // {
-          //   // iOS resource
-          //   url: 'local-image.png',
-          //   thumbnailHidden: true,
-          // },
-          // {
-          //   // Local file path.
-          //   url: '/Path/on/device/to/local/file.mp4',
-          //   thumbnailTime: 3, // optional
-          // },
-          // {
-          //   // React Native asset.
-          //   url: require('./assets/my-image.gif'),
-          // },
-          {
-            // Remote image
-            url:
-              'https://thumbs.dreamstime.com/b/golden-retriever-dog-21668976.jpg',
-          },
-        ],
+        // attachments: [
+        //   // {
+        //   //   // iOS resource
+        //   //   url: 'local-image.png',
+        //   //   thumbnailHidden: true,
+        //   // },
+        //   // {
+        //   //   // Local file path.
+        //   //   url: '/Path/on/device/to/local/file.mp4',
+        //   //   thumbnailTime: 3, // optional
+        //   // },
+        //   // {
+        //   //   // React Native asset.
+        //   //   url: require('./assets/my-image.gif'),
+        //   // },
+        //   {
+        //     // Remote image
+        //     url:
+        //       'https://thumbs.dreamstime.com/b/golden-retriever-dog-21668976.jpg',
+        //   },
+        // ],
         categoryId: 'message',
         summaryArgument: data.title,
         summaryArgumentCount: 1,
@@ -257,7 +257,7 @@ const MainScreen = ({
           //   data: notification.data,
           //   groupCha: groupCha,
           // });
-          onDisplayNotification({
+          onDisplayChatNotification({
             data: notification.data,
             groupCha: groupCha,
           });

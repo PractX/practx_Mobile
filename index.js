@@ -13,6 +13,7 @@ import { MenuProvider } from 'react-native-popup-menu';
 import PubNub from 'pubnub';
 import { PubNubProvider, usePubNub } from 'pubnub-react';
 import { Provider as RNPProvider } from 'react-native-paper';
+import notifee, { EventType } from '@notifee/react-native';
 // import Clipboard from '@react-native-community/clipboard';
 // import admob, {MaxAdContentRating} from '@react-native-firebase/admob';
 // import RNFetchBlob from 'rn-fetch-blob';
@@ -36,6 +37,59 @@ const pubnub = new PubNub({
 });
 
 YellowBox.ignoreWarnings(['']);
+// notifee.onBackgroundEvent(async ({ type, detail }) => {
+//   if (type === EventType.PRESS) {
+//     console.log('User pressed the notification.', detail.pressAction.id);
+//   }
+// });
+
+// const sendMessage = (data) => {
+//   // console.log('Channel name', channelName);
+//   // console.log('SENDING____')
+
+//   //UNCOMMENT LATER
+
+//   // chatRef.scrollToEnd();
+//   pubnub.setUUID(currentUser ? currentUser.chatId : 0);
+//   if (data) {
+//     pubnub.publish(
+//       {
+//         message: {
+//           // text: data[0].text,
+//           text: data,
+//           userType: 'patient',
+//           profile: {
+//             id: currentUser.id,
+//             name: currentUser.firstname + ' ' + currentUser.lastname,
+//           },
+//         },
+//         channel: channelName,
+//       },
+//       (status, response) => {
+//         // setMessage('');
+//         // handle status, response
+//         status.error
+//           ? setErrorMessage("Couldn't send message")
+//           : setErrorMessage('');
+//         console.log('Status', status);
+//         console.log('Response', response);
+//         // console.log(oldLength, 'SENT____', messages.length);
+//       },
+//     );
+//   } else {
+//     console.log('NO message');
+//   }
+// };
+
+notifee.onBackgroundEvent(async ({ type, detail }) => {
+  const { notification, pressAction, input } = detail;
+
+  if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
+    console.log('Replied Text-------------', input);
+    console.log('Notification', detail);
+    // updateChatOnServer(notification.data.conversationId, input);
+  }
+});
 // SHOW NETWORK DEBUG
 // global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
 // global.FormData = global.originalFormData || global.FormData;
