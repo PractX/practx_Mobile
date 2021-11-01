@@ -13,7 +13,6 @@
 		"bundle-aab-apk": "bundletool build-apks --bundle=/home/joshmat/My_Projects/PractX/practx_Mobile/android/app/build/outputs/bundle/release/app-release.aab --output=/home/joshmat/My_Projects/PractX/practx_Mobile/android/app/build/outputs/bundle/release/practx_app.apks --ks=/home/joshmat/My_Projects/PractX/practx_Mobile/android/app/my-upload-key.keystore --ks-pass=pass:Practx@2021 --ks-key-alias=my-key-alias --key-pass=pass:Practx@2021"
 	},
 	"dependencies": {
-		"@notifee/react-native": "^3.0.3",
 		"@react-native-community/async-storage": "^1.12.1",
 		"@react-native-community/audio-toolkit": "^2.0.3",
 		"@react-native-community/masked-view": "^0.1.10",

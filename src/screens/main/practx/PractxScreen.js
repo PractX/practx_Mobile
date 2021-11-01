@@ -44,7 +44,7 @@ import PracticeDetails from '../../../components/hoc/PracticeDetails';
 import MainHeader from '../../../components/hoc/MainHeader';
 import { ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import notifee from '@notifee/react-native';
+// import notifee from '@notifee/react-native';
 // import { getAllPracticesStart } from '../../redux/practices/practices.actions';
 
 const windowWidth = Dimensions.get('window').width;
@@ -153,23 +153,23 @@ const Practx = ({
     return 0.5 - Math.random();
   }
 
-  async function onDisplayNotification() {
-    // Create a channel
-    const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
-    });
+  // async function onDisplayNotification() {
+  //   // Create a channel
+  //   const channelId = await notifee.createChannel({
+  //     id: 'default',
+  //     name: 'Default Channel',
+  //   });
 
-    // Display a notification
-    await notifee.displayNotification({
-      title: 'Notification Title',
-      body: 'Main body content of the notification',
-      android: {
-        channelId,
-        smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
-      },
-    });
-  }
+  //   // Display a notification
+  //   await notifee.displayNotification({
+  //     title: 'Notification Title',
+  //     body: 'Main body content of the notification',
+  //     android: {
+  //       channelId,
+  //       smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+  //     },
+  //   });
+  // }
 
   return (
     <SafeAreaView
@@ -287,7 +287,7 @@ const Practx = ({
                         //   opt3: false,
                         // });
                         // navigation.navigate('PractxSearch');
-                        onDisplayNotification();
+                        // onDisplayNotification();
                       });
                     }}
                     style={{

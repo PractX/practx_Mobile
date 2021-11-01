@@ -1025,10 +1025,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@notifee/react-native@^3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@notifee/react-native/-/react-native-3.0.3.tgz#a037b9711a2b0dd43eecfa77df48a59a914de24f"
-  integrity sha512-DT3x7qCwd5trihEHCkGWe0p3wjBzs0hEaCAtCa43mAOWcm3k6G7k4A6JpylJDCNTJpW3af1u21e3XKmdDe34oQ==
+"@notifee/react-native@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@notifee/react-native/-/react-native-3.0.4.tgz#936df3435b36c6d38afd93717bd5c31ee307b468"
+  integrity sha512-a/SMIDJLTRElBql9+FLUU+VQek+iOvb/BcBr3fhORhI17pmrOpNnfoVBguoimr/JFK8k8/3uVXF02uDwuJvUCQ==
 
 "@peculiar/asn1-schema@^2.0.27":
   version "2.0.27"

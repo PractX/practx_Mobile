@@ -41,7 +41,7 @@ import {
   selectCurrentChatChannel,
 } from './src/redux/practices/practices.selector';
 import { setCurrentChatChannel } from './src/redux/practices/practices.actions';
-import notifee, { EventType } from '@notifee/react-native';
+// import notifee, { EventType } from '@notifee/react-native';
 
 function SplashScreen() {
   return (
@@ -159,28 +159,28 @@ const App = ({
   }, [getInitialState, themeMode]);
 
   // Subscribe to events
-  useEffect(() => {
-    const unsubscribe = notifee.onForegroundEvent(({ type, detail }) => {
-      const { notification, pressAction, input } = detail;
-      if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
-        console.log('In app Replied Text-------------', input);
-        // console.log('Notification', notification);
-        // sendMessage(notification?.data, input);
-        // updateChatOnServer(notification.data.conversationId, input);
-      } else {
-        console.log('Action Type', type);
-        switch (type) {
-          case EventType.DISMISSED:
-            console.log('User dismissed notification', detail.notification);
-            break;
-          case EventType.PRESS:
-            console.log('User pressed notification', detail.notification);
-            break;
-        }
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = notifee.onForegroundEvent(({ type, detail }) => {
+  //     const { notification, pressAction, input } = detail;
+  //     if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
+  //       console.log('In app Replied Text-------------', input);
+  //       // console.log('Notification', notification);
+  //       // sendMessage(notification?.data, input);
+  //       // updateChatOnServer(notification.data.conversationId, input);
+  //     } else {
+  //       console.log('Action Type', type);
+  //       switch (type) {
+  //         case EventType.DISMISSED:
+  //           console.log('User dismissed notification', detail.notification);
+  //           break;
+  //         case EventType.PRESS:
+  //           console.log('User pressed notification', detail.notification);
+  //           break;
+  //       }
+  //     }
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
 
   // useEffect(() => {
   //   notifee.onBackgroundEvent(async ({ type, detail }) => {

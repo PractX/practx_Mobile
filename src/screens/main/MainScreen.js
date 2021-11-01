@@ -22,7 +22,7 @@ import {
 import { setCurrentChatChannel } from '../../redux/practices/practices.actions';
 import { usePubNub } from 'pubnub-react';
 import Appointment from './appointment/Appointment';
-import notifee, { EventType } from '@notifee/react-native';
+// import notifee, { EventType } from '@notifee/react-native';
 import { selectCurrentUser } from '../../redux/user/user.selector';
 
 const Drawer = createDrawerNavigator();
@@ -141,75 +141,75 @@ const MainScreen = ({
     //   firstname: currentUser?.firstname,
     //   lastname: currentUser?.lastname,
     // });
-    notifee.setNotificationCategories([
-      {
-        id: 'message',
-        summaryFormat: 'You have %u+ unread messages from %@.',
-        actions: [
-          {
-            id: 'reply',
-            title: 'Reply',
-            input: true,
-          },
-        ],
-      },
-    ]);
+    // notifee.setNotificationCategories([
+    //   {
+    //     id: 'message',
+    //     summaryFormat: 'You have %u+ unread messages from %@.',
+    //     actions: [
+    //       {
+    //         id: 'reply',
+    //         title: 'Reply',
+    //         input: true,
+    //       },
+    //     ],
+    //   },
+    // ]);
 
-    // Display a notification
-    await notifee.displayNotification({
-      title: data.title,
-      subtitle: data.type === 'gm' ? data.subtitle : '',
-      data: {
-        ...data,
-        userId: currentUser?.id.toString(),
-        chatId: currentUser?.chatId,
-        firstname: currentUser?.firstname,
-        lastname: currentUser?.lastname,
-      },
-      body:
-        data.messageType === 'text'
-          ? data.body
-          : data.messageType === 'image'
-          ? '📷 Photo'
-          : data.messageType === 'video'
-          ? '🎥 Video'
-          : data.messageType === 'voiceNote'
-          ? '🎤 Voice message'
-          : data.messageType === 'file'
-          ? '📁 File'
-          : data.body, // (required)
-      android: {
-        channelId: data.channel,
-        // smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
-      },
-      ios: {
-        // attachments: [
-        //   // {
-        //   //   // iOS resource
-        //   //   url: 'local-image.png',
-        //   //   thumbnailHidden: true,
-        //   // },
-        //   // {
-        //   //   // Local file path.
-        //   //   url: '/Path/on/device/to/local/file.mp4',
-        //   //   thumbnailTime: 3, // optional
-        //   // },
-        //   // {
-        //   //   // React Native asset.
-        //   //   url: require('./assets/my-image.gif'),
-        //   // },
-        //   {
-        //     // Remote image
-        //     url:
-        //       'https://thumbs.dreamstime.com/b/golden-retriever-dog-21668976.jpg',
-        //   },
-        // ],
-        categoryId: 'message',
-        summaryArgument: data.title,
-        summaryArgumentCount: 1,
-        sound: 'practx_notify.wav',
-      },
-    });
+    // // Display a notification
+    // await notifee.displayNotification({
+    //   title: data.title,
+    //   subtitle: data.type === 'gm' ? data.subtitle : '',
+    //   data: {
+    //     ...data,
+    //     userId: currentUser?.id.toString(),
+    //     chatId: currentUser?.chatId,
+    //     firstname: currentUser?.firstname,
+    //     lastname: currentUser?.lastname,
+    //   },
+    //   body:
+    //     data.messageType === 'text'
+    //       ? data.body
+    //       : data.messageType === 'image'
+    //       ? '📷 Photo'
+    //       : data.messageType === 'video'
+    //       ? '🎥 Video'
+    //       : data.messageType === 'voiceNote'
+    //       ? '🎤 Voice message'
+    //       : data.messageType === 'file'
+    //       ? '📁 File'
+    //       : data.body, // (required)
+    //   android: {
+    //     channelId: data.channel,
+    //     // smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+    //   },
+    //   ios: {
+    //     // attachments: [
+    //     //   // {
+    //     //   //   // iOS resource
+    //     //   //   url: 'local-image.png',
+    //     //   //   thumbnailHidden: true,
+    //     //   // },
+    //     //   // {
+    //     //   //   // Local file path.
+    //     //   //   url: '/Path/on/device/to/local/file.mp4',
+    //     //   //   thumbnailTime: 3, // optional
+    //     //   // },
+    //     //   // {
+    //     //   //   // React Native asset.
+    //     //   //   url: require('./assets/my-image.gif'),
+    //     //   // },
+    //     //   {
+    //     //     // Remote image
+    //     //     url:
+    //     //       'https://thumbs.dreamstime.com/b/golden-retriever-dog-21668976.jpg',
+    //     //   },
+    //     // ],
+    //     categoryId: 'message',
+    //     summaryArgument: data.title,
+    //     summaryArgumentCount: 1,
+    //     sound: 'practx_notify.wav',
+    //   },
+    // });
   }
 
   // PushNotification.popInitialNotification((notification) => {

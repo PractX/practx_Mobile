@@ -1,7 +1,7 @@
 /**
  * @format
  */
-
+// "@notifee/react-native": "^3.0.4",
 import { AppRegistry } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import App from './App';
@@ -13,7 +13,7 @@ import { MenuProvider } from 'react-native-popup-menu';
 import PubNub from 'pubnub';
 import { PubNubProvider, usePubNub } from 'pubnub-react';
 import { Provider as RNPProvider } from 'react-native-paper';
-import notifee, { EventType } from '@notifee/react-native';
+// import notifee, { EventType } from '@notifee/react-native';
 // import Clipboard from '@react-native-community/clipboard';
 // import admob, {MaxAdContentRating} from '@react-native-firebase/admob';
 // import RNFetchBlob from 'rn-fetch-blob';
@@ -78,16 +78,16 @@ const sendMessage = (data, input) => {
   }
 };
 
-notifee.onBackgroundEvent(async ({ type, detail }) => {
-  const { notification, pressAction, input } = detail;
+// notifee.onBackgroundEvent(async ({ type, detail }) => {
+//   const { notification, pressAction, input } = detail;
 
-  if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
-    console.log('Replied Text-------------', input);
-    console.log('Notification', notification);
-    sendMessage(notification?.data, input);
-    // updateChatOnServer(notification.data.conversationId, input);
-  }
-});
+//   if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
+//     console.log('Replied Text-------------', input);
+//     console.log('Notification', notification);
+//     sendMessage(notification?.data, input);
+//     // updateChatOnServer(notification.data.conversationId, input);
+//   }
+// });
 // SHOW NETWORK DEBUG
 // global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
 // global.FormData = global.originalFormData || global.FormData;
