@@ -3,18 +3,17 @@
 buildscript {
     ext {
         buildToolsVersion = "30.0.2"
-        minSdkVersion = 24
+        minSdkVersion = 21
         compileSdkVersion = 30
         targetSdkVersion = 30
-        kotlinVersion = '1.5.0'
-        ndkVersion = "20.1.5948944"
+        ndkVersion = "21.4.7075529"
     }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath('com.android.tools.build:gradle:3.5.3')
+        classpath("com.android.tools.build:gradle:4.2.2")
         classpath('com.google.gms:google-services:4.3.3')
         // For react-native-audio-recorder-player
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
@@ -26,6 +25,7 @@ buildscript {
 
 allprojects {
     repositories {
+        mavenCentral()
         mavenLocal()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
@@ -40,7 +40,6 @@ allprojects {
         }
 
         google()
-        jcenter()
         maven { url 'https://www.jitpack.io' }
     }
 }

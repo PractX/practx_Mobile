@@ -130,6 +130,21 @@ const getMessages = (cha) => {
 
 
 
+POD project.pbxproj
+
+7076AFA54A6D98E31BDDF3AD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				51DDC52BB11F247A38D330A5 /* Pods-RnDiffApp.debug.xcconfig */,
+				C4B4AD1F94CFC5C0FE3BAA50 /* Pods-RnDiffApp.release.xcconfig */,
+				724F2BC7C97CE50C0F57478D /* Pods-RnDiffApp-RnDiffAppTests.debug.xcconfig */,
+				C904101816ED5721CF5ADEB8 /* Pods-RnDiffApp-RnDiffAppTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+
+
+
 
 // SWIPER
 <SwipeButton
