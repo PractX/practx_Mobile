@@ -148,7 +148,7 @@ const App = ({
   useEffect(() => {
     getInitialState()
       .catch(() => {})
-      .then((initState) => {
+      .then(initState => {
         console.log('InitState', initState);
         if (initState !== undefined) {
           setInitialState(initState);
@@ -300,7 +300,7 @@ const mapStateToProps = createStructuredSelector({
   chatChannels: selectChatChannels,
   currentChatChannel: selectCurrentChatChannel,
 });
-const mapDispatchToProps = (dispatch) => ({
-  setCurrentChatChannel: (data) => dispatch(setCurrentChatChannel(data)),
+const mapDispatchToProps = dispatch => ({
+  setCurrentChatChannel: data => dispatch(setCurrentChatChannel(data)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -119,7 +119,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
  * and the benefits of using Hermes will therefore be sharply reduced.
  */
-def enableHermes = project.e */
+
 def enableHermes = project.ext.react.get("enableHermes", false);
 /**
  * Architectures to build native code for in debug.
@@ -128,7 +128,11 @@ def nativeArchitectures = project.getProperties().get("reactNativeDebugArchitect
 android {
     ndkVersion rootProject.ext.ndkVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
-
+    configurations.all {
+        resolutionStrategy {
+            force 'androidx.browser:browser:1.3.0'
+        }
+    }
     defaultConfig {
         applicationId "com.practx_mobile"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -201,7 +205,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
+    implementation 'androidx.core:core-ktx:1.7.0-alpha01'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     // If your app supports Android versions before Ice Cream Sandwich (API level 14)
@@ -212,13 +216,16 @@ dependencies {
 
     // For WebP support, including animated WebP
     implementation 'com.facebook.fresco:animated-webp:2.1.0'
-    implementation 'com.facebook.fresco:webpsupport:2.0.0'
+
+    implementation 'com.facebook.fresco:animated-drawable:2.1.0'
 
     // For WebP support, without animations
-    implementation 'com.facebook.fresco:webpsupport:2.0.0'
+    implementation 'com.facebook.fresco:webpsupport:2.1.0'
 
     // React native push notification
     implementation project(':react-native-push-notification')
+
+    implementation 'com.yqritc:android-scalablevideoview:1.0.4'
 
     implementation 'com.google.firebase:firebase-analytics:17.3.0'
 
