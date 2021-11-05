@@ -161,7 +161,7 @@ const ChatScreen = ({
   //   directionalOffsetThreshold: 150,
   // };
 
-  const addTime = (timetoken) => {
+  const addTime = timetoken => {
     const unixTimestamp = timetoken / 10000000;
     const gmtDate = new Date(unixTimestamp * 1000);
     const localeDateTime = gmtDate.toLocaleString();
@@ -211,7 +211,7 @@ const ChatScreen = ({
   //   );
   //   pubnub.subscribe({ channels });
   // };
-  const addSignal = (eventType) => {
+  const addSignal = eventType => {
     pubnub.signal(
       {
         message: {
@@ -228,9 +228,9 @@ const ChatScreen = ({
   };
 
   const getSignal = () =>
-    signals ? signals.find((i) => i.channel === channelName) : null;
+    signals ? signals.find(i => i.channel === channelName) : null;
 
-  const sendMessage = (data) => {
+  const sendMessage = data => {
     // console.log('Channel name', channelName);
     // console.log('SENDING____')
 
@@ -326,7 +326,7 @@ const ChatScreen = ({
   const getOldMessages = useCallback((cha, readyMessage) => {
     setRefreshing(true);
     console.log('=== GET OLD MESSAGES FROM CHANNEL =====: ', cha);
-    const channelMsgs = allMessages.find((i) => i.channel === cha);
+    const channelMsgs = allMessages.find(i => i.channel === cha);
     // console.log(channelMsgs);
     const channels = [cha];
     if (channelMsgs && !readyMessage) {
@@ -352,7 +352,7 @@ const ChatScreen = ({
             if (msgs && msgs.length && msgs[0].timetoken !== channelMsgs.fst) {
               // channelMsgs.lst = msgs[msgs.length - 1].timetoken
               channelMsgs.fst = msgs[0].timetoken;
-              let newMsgs = await msgs.map((item) =>
+              let newMsgs = await msgs.map(item =>
                 Object.assign(item, {
                   _id: item.timetoken,
                   user: { _id: item.uuid },
@@ -365,7 +365,7 @@ const ChatScreen = ({
 
                 // channelMsgs.messages = [...msgs]
                 const newSavedMessages = allMessages.filter(
-                  (i) => i.channel !== channelMsgs.channel,
+                  i => i.channel !== channelMsgs.channel,
                 );
                 console.log('=== channelMsgs =====: ', channelMsgs);
                 console.log('=== newSavedMessages =====: ', newSavedMessages);
@@ -389,7 +389,7 @@ const ChatScreen = ({
             } else {
               console.log('Ready Message testing');
               const newSavedMessages = allMessages.filter(
-                (i) => i.channel !== channelMsgs.channel,
+                i => i.channel !== channelMsgs.channel,
               );
               setAllMessages([...newSavedMessages, channelMsgs]);
             }
@@ -423,10 +423,10 @@ const ChatScreen = ({
     } else {
       console.log('Getting newer message');
       if (allMessages.length) {
-        const newChannelMsgs = allMessages.find((i) => i.channel === cha);
+        const newChannelMsgs = allMessages.find(i => i.channel === cha);
         if (newChannelMsgs) {
           const newSavedMessages = allMessages.filter(
-            (i) => i.channel !== newChannelMsgs.channel,
+            i => i.channel !== newChannelMsgs.channel,
           );
 
           // console.log('=== channelMsgs =====: ', channelMsgs);
@@ -531,8 +531,8 @@ const ChatScreen = ({
       // console.log('New MESSAgE Available__');
 
       addMessages(
-        allMessages.find((item) => item.channel === channelName)
-          ? allMessages.find((item) => item.channel === channelName).messages
+        allMessages.find(item => item.channel === channelName)
+          ? allMessages.find(item => item.channel === channelName).messages
           : [],
       );
       // if (chatRef !== undefined && messages.length > 1) {
@@ -548,7 +548,7 @@ const ChatScreen = ({
   // useMemo(() => {}, [isFocused, chatRef, messages]);
   const getUniqueListBy = (arr, key) => {
     return [
-      ...new Map([...arr].reverse().map((item) => [item[key], item])).values(),
+      ...new Map([...arr].reverse().map(item => [item[key], item])).values(),
     ];
   };
 
@@ -561,9 +561,9 @@ const ChatScreen = ({
       //   allMessages.find((item) => item.channel === channelName).messages,
       // );
       if (
-        allMessages.find((item) => item.channel === channelName) &&
-        allMessages.find((item) => item.channel === channelName).messages
-          .length < 10
+        allMessages.find(item => item.channel === channelName) &&
+        allMessages.find(item => item.channel === channelName).messages.length <
+          10
       ) {
         console.log('message is less than 10');
         setLoader(true);
@@ -649,7 +649,7 @@ const ChatScreen = ({
       AVFormatIDKeyIOS: AVEncodingOption.aac,
     };
     const result = await audioRecorderPlayer.startRecorder(path, audioSet);
-    audioRecorderPlayer.addRecordBackListener((e) => {
+    audioRecorderPlayer.addRecordBackListener(e => {
       setRecordTime({
         recordSecs: e.currentPosition,
         recordTime: audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
@@ -688,12 +688,12 @@ const ChatScreen = ({
     // console.log('Generating Test', generateName(6, 'record'));
   }, []);
 
-  const onStartPlay = useCallback(async (uri) => {
+  const onStartPlay = useCallback(async uri => {
     console.log('onStartPlay', uri);
     try {
       const msg = await audioRecorderPlayer.startPlayer(uri);
       console.log('Play', msg);
-      audioRecorderPlayer.addPlayBackListener((e) => {
+      audioRecorderPlayer.addPlayBackListener(e => {
         setAudioTime({
           currentPositionSec: e.currentPosition,
           currentDurationSec: e.duration,
@@ -719,7 +719,7 @@ const ChatScreen = ({
 
   // let dataMsg = [] allMessages.find((item) => item.channel === channelName);
 
-  const renderActions = (props) => {
+  const renderActions = props => {
     return (
       <>
         {onRecording ? (
@@ -785,7 +785,7 @@ const ChatScreen = ({
     );
   };
 
-  const renderAccessory = (props) => {
+  const renderAccessory = props => {
     return (
       <View
         style={{
@@ -930,7 +930,7 @@ const ChatScreen = ({
   //   return runes.substr(text, text.length - 1, 1);
   // };
 
-  const renderSender = (props) => {
+  const renderSender = props => {
     return (
       <Send
         {...props}
@@ -1097,7 +1097,7 @@ const ChatScreen = ({
                       />
                       {messages.length &&
                         getUniqueListBy(messages, 'day').some(
-                          (item) =>
+                          item =>
                             item.timetoken === props.currentMessage.timetoken,
                         ) && (
                           <>
@@ -1217,7 +1217,7 @@ const ChatScreen = ({
                 onFocus: () => setShowEmoji(false),
               }}
               text={inputText}
-              onInputTextChanged={(text) => setInputText(text)}
+              onInputTextChanged={text => setInputText(text)}
               // focusTextInput={true}
               textInputStyle={{
                 backgroundColor: colors.background,
@@ -1240,7 +1240,7 @@ const ChatScreen = ({
               }}
               // renderInputToolbar={() => <></>}
               // renderInputToolbar={null}
-              renderFooter={(props) => {
+              renderFooter={props => {
                 return (
                   <View style={{ width: appwidth, alignSelf: 'center' }}>
                     {sending || errorMessage ? (
@@ -1386,7 +1386,7 @@ const ChatScreen = ({
                 );
               }}
               // ANCHOR
-              renderInputToolbar={(props) => (
+              renderInputToolbar={props => (
                 <InputToolbar
                   {...props}
                   renderAccessory={() =>
@@ -1396,7 +1396,7 @@ const ChatScreen = ({
                       ? renderAccessory()
                       : null
                   }
-                  renderComposer={(cProps) => (
+                  renderComposer={cProps => (
                     <>
                       {onRecording ? (
                         <View
@@ -1473,7 +1473,7 @@ const ChatScreen = ({
                   )}
                   renderActions={renderActions}
                   renderSend={
-                    (messageProps) => {
+                    messageProps => {
                       return (
                         <>
                           {inputText ? (
@@ -1573,7 +1573,7 @@ const ChatScreen = ({
               keyboardShouldPersistTaps={false}
               // maxInputLength={20}
               inverted={true}
-              renderLoadEarlier={(props) => (
+              renderLoadEarlier={props => (
                 <LoadEarlier
                   {...props}
                   label="Load earlier messages"
@@ -1808,10 +1808,10 @@ const ChatScreen = ({
               categoryHighlightColor={colors.text}
               categoryDefautColor={colors.text_3}
               // tabBarStyle={{color: 'green'}}
-              onClick={(emoji) => {
+              onClick={emoji => {
                 Keyboard.dismiss();
                 console.log(emoji);
-                setInputText((input) => input + emoji.code);
+                setInputText(input => input + emoji.code);
               }}
               onRemove={() => {
                 // setInputText(backspace(inputText));
@@ -1866,11 +1866,11 @@ const mapStateToProps = createStructuredSelector({
   signals: selectSignals,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   // getPracticesAllStart: () => dispatch(getPracticesAllStart()),
-  editProfile: (data) => dispatch(editProfile(data)),
-  setAllMessages: (data) => dispatch(setAllMessages(data)),
-  setCurrentChatChannel: (data) => dispatch(setCurrentChatChannel(data)),
+  editProfile: data => dispatch(editProfile(data)),
+  setAllMessages: data => dispatch(setAllMessages(data)),
+  setCurrentChatChannel: data => dispatch(setCurrentChatChannel(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

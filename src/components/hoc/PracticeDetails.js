@@ -59,7 +59,7 @@ const PracticeDetails = ({
   // const member = practice.patients.filter((val) => val.id === userId);
   const [loading, setLoading] = useState(false);
 
-  const joinPractice = (practiceId) => {
+  const joinPractice = practiceId => {
     setLoading(true);
     joinPractices(practiceId);
   };
@@ -89,7 +89,7 @@ const PracticeDetails = ({
         }}
         onPress={() => {
           console.log(bottomSheetRef.current);
-          bottomSheetRef.current.snapTo(2);
+          bottomSheetRef.current.snapTo(1);
         }}>
         <Icon
           name="linear-scale"
@@ -600,10 +600,10 @@ const mapStateToProps = createStructuredSelector({
   isLoading: selectIsLoading,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  joinPractices: (practiceId) => dispatch(joinPractices(practiceId)),
-  setPracticeId: (id) => dispatch(setPracticeId(id)),
-  leavePracticeStart: (id) => dispatch(leavePracticeStart(id)),
+const mapDispatchToProps = dispatch => ({
+  joinPractices: practiceId => dispatch(joinPractices(practiceId)),
+  setPracticeId: id => dispatch(setPracticeId(id)),
+  leavePracticeStart: id => dispatch(leavePracticeStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PracticeDetails);

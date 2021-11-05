@@ -7317,10 +7317,10 @@ react-native-popup-menu@^0.15.10:
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.15.10.tgz#49f2a67c8d1ea329f44e56288eca4a5c04835828"
   integrity sha512-w7MaicsfpclK7g/omjMchNaXwhMi0apt/DC734AbHuJTWCfv5mF3JgL1UzRW19ncFMBRfQeYapPy/zUyJCGgEQ==
 
-react-native-push-notification@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-8.0.1.tgz#76aeca0736363ad821c4497cdb6994bf14a5d21c"
-  integrity sha512-kUQMOQS7VdYDC/thEscr5Dvjuyhftexk3cgXdyP8CGxnxKxVqWuR3907+ll694bDO8YMEjNRJW968TydHkk1wA==
+react-native-push-notification@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-8.1.1.tgz#a41d20c70ea5a7709417e96261b225461f8dc73a"
+  integrity sha512-XpBtG/w+a6WXTxu6l1dNYyTiHnbgnvjoc3KxPTxYkaIABRmvuJZkFxqruyGvfCw7ELAlZEAJO+dthdTabCe1XA==
 
 react-native-ratings@^7.3.0:
   version "7.6.1"

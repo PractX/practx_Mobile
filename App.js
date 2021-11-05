@@ -41,7 +41,9 @@ import {
   selectCurrentChatChannel,
 } from './src/redux/practices/practices.selector';
 import { setCurrentChatChannel } from './src/redux/practices/practices.actions';
-// import notifee, { EventType } from '@notifee/react-native';
+import notifee, { EventType } from '@notifee/react-native';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import SendReplyMessage from './src/components/hoc/SendReplyMessage';
 
 function SplashScreen() {
   return (
@@ -145,6 +147,25 @@ const App = ({
     setCurrentChatChannel('');
   }, []);
 
+  // useEffect(() => {
+  //   const type = 'notification';
+  //   PushNotificationIOS.addEventListener(type, onRemoteNotification);
+  //   return () => {
+  //     PushNotificationIOS.removeEventListener(type);
+  //   };
+  // });
+
+  // const onRemoteNotification = notification => {
+  //   console.log('Notification IOS', notification);
+  //   const isClicked = notification.getData().userInteraction === 1;
+
+  //   if (isClicked) {
+  //     // Navigate user to another screen
+  //   } else {
+  //     // Do something else with push notification
+  //   }
+  // };
+
   useEffect(() => {
     getInitialState()
       .catch(() => {})
@@ -159,28 +180,29 @@ const App = ({
   }, [getInitialState, themeMode]);
 
   // Subscribe to events
-  // useEffect(() => {
-  //   const unsubscribe = notifee.onForegroundEvent(({ type, detail }) => {
-  //     const { notification, pressAction, input } = detail;
-  //     if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
-  //       console.log('In app Replied Text-------------', input);
-  //       // console.log('Notification', notification);
-  //       // sendMessage(notification?.data, input);
-  //       // updateChatOnServer(notification.data.conversationId, input);
-  //     } else {
-  //       console.log('Action Type', type);
-  //       switch (type) {
-  //         case EventType.DISMISSED:
-  //           console.log('User dismissed notification', detail.notification);
-  //           break;
-  //         case EventType.PRESS:
-  //           console.log('User pressed notification', detail.notification);
-  //           break;
-  //       }
-  //     }
-  //   });
-  //   return () => unsubscribe();
-  // }, []);
+  useEffect(() => {
+    const unsubscribe = notifee.onForegroundEvent(({ type, detail }) => {
+      console.log('Forground event-------------', type);
+      const { notification, pressAction, input } = detail;
+      if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
+        console.log('In appss Replied Text-------------', input);
+        // console.log('Notification', notification);
+        SendReplyMessage(notification?.data, input);
+        // updateChatOnServer(notification.data.conversationId, input);
+      } else {
+        console.log('Action Type', type);
+        switch (type) {
+          case EventType.DISMISSED:
+            console.log('User dismissed notification', detail.notification);
+            break;
+          case EventType.PRESS:
+            console.log('User pressed notification', detail.notification);
+            break;
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   // useEffect(() => {
   //   notifee.onBackgroundEvent(async ({ type, detail }) => {

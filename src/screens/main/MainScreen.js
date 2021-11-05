@@ -22,8 +22,9 @@ import {
 import { setCurrentChatChannel } from '../../redux/practices/practices.actions';
 import { usePubNub } from 'pubnub-react';
 import Appointment from './appointment/Appointment';
-// import notifee, { EventType } from '@notifee/react-native';
+import notifee, { EventType } from '@notifee/react-native';
 import { selectCurrentUser } from '../../redux/user/user.selector';
+import SendReplyMessage from '../../components/hoc/SendReplyMessage';
 
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -115,7 +116,7 @@ const MainScreen = ({
   }
 
   function toString(o) {
-    Object.keys(o).forEach((k) => {
+    Object.keys(o).forEach(k => {
       if (typeof o[k] === 'object') {
         return toString(o[k]);
       }
@@ -133,7 +134,6 @@ const MainScreen = ({
     //   name: 'Default Channel',
     // });
     toString(data);
-    // toString(currentUser);
     // console.log('Data  Objectt', {
     //   ...data,
     //   userId: currentUser?.id.toString(),
@@ -141,75 +141,86 @@ const MainScreen = ({
     //   firstname: currentUser?.firstname,
     //   lastname: currentUser?.lastname,
     // });
-    // notifee.setNotificationCategories([
-    //   {
-    //     id: 'message',
-    //     summaryFormat: 'You have %u+ unread messages from %@.',
-    //     actions: [
-    //       {
-    //         id: 'reply',
-    //         title: 'Reply',
-    //         input: true,
-    //       },
-    //     ],
-    //   },
-    // ]);
 
-    // // Display a notification
-    // await notifee.displayNotification({
-    //   title: data.title,
-    //   subtitle: data.type === 'gm' ? data.subtitle : '',
-    //   data: {
-    //     ...data,
-    //     userId: currentUser?.id.toString(),
-    //     chatId: currentUser?.chatId,
-    //     firstname: currentUser?.firstname,
-    //     lastname: currentUser?.lastname,
-    //   },
-    //   body:
-    //     data.messageType === 'text'
-    //       ? data.body
-    //       : data.messageType === 'image'
-    //       ? '📷 Photo'
-    //       : data.messageType === 'video'
-    //       ? '🎥 Video'
-    //       : data.messageType === 'voiceNote'
-    //       ? '🎤 Voice message'
-    //       : data.messageType === 'file'
-    //       ? '📁 File'
-    //       : data.body, // (required)
-    //   android: {
-    //     channelId: data.channel,
-    //     // smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
-    //   },
-    //   ios: {
-    //     // attachments: [
-    //     //   // {
-    //     //   //   // iOS resource
-    //     //   //   url: 'local-image.png',
-    //     //   //   thumbnailHidden: true,
-    //     //   // },
-    //     //   // {
-    //     //   //   // Local file path.
-    //     //   //   url: '/Path/on/device/to/local/file.mp4',
-    //     //   //   thumbnailTime: 3, // optional
-    //     //   // },
-    //     //   // {
-    //     //   //   // React Native asset.
-    //     //   //   url: require('./assets/my-image.gif'),
-    //     //   // },
-    //     //   {
-    //     //     // Remote image
-    //     //     url:
-    //     //       'https://thumbs.dreamstime.com/b/golden-retriever-dog-21668976.jpg',
-    //     //   },
-    //     // ],
-    //     categoryId: 'message',
-    //     summaryArgument: data.title,
-    //     summaryArgumentCount: 1,
-    //     sound: 'practx_notify.wav',
-    //   },
-    // });
+    await notifee.createChannel({
+      id: 'custom-sound',
+      name: 'Channel with custom sound',
+      sound: 'practx_notify',
+    });
+
+    notifee.setNotificationCategories([
+      {
+        id: 'message',
+        summaryFormat: 'You have %u+ unread messages from %@.',
+        actions: [
+          {
+            id: 'reply',
+            title: 'Reply',
+            input: true,
+          },
+        ],
+      },
+    ]);
+
+    // Display a notification
+    await notifee.displayNotification({
+      title: data.title,
+      subtitle: data.type === 'gm' ? data.subtitle : '',
+      data: {
+        ...data,
+        userId: currentUser?.id.toString(),
+        chatId: currentUser?.chatId,
+        firstname: currentUser?.firstname,
+        lastname: currentUser?.lastname,
+      },
+      body:
+        data.messageType === 'text'
+          ? data.body
+          : data.messageType === 'image'
+          ? '📷 Photo'
+          : data.messageType === 'video'
+          ? '🎥 Video'
+          : data.messageType === 'voiceNote'
+          ? '🎤 Voice message'
+          : data.messageType === 'file'
+          ? '📁 File'
+          : data.body, // (required)
+      android: {
+        channelId: data.channel,
+        smallIcon: 'ic_notification', // optional, defaults to 'ic_launcher'.
+        circularLargeIcon: data.practiceImage
+          ? data.practiceImage
+          : 'https://icon-library.com/images/staff-icon-png/staff-icon-png-17.jpg',
+        sound: 'practx_notify',
+      },
+      ios: {
+        // attachments: [
+        //   // {
+        //   //   // iOS resource
+        //   //   url: 'local-image.png',
+        //   //   thumbnailHidden: true,
+        //   // },
+        //   // {
+        //   //   // Local file path.
+        //   //   url: '/Path/on/device/to/local/file.mp4',
+        //   //   thumbnailTime: 3, // optional
+        //   // },
+        //   // {
+        //   //   // React Native asset.
+        //   //   url: require('./assets/my-image.gif'),
+        //   // },
+        //   {
+        //     // Remote image
+        //     url:
+        //       'https://thumbs.dreamstime.com/b/golden-retriever-dog-21668976.jpg',
+        //   },
+        // ],
+        categoryId: 'message',
+        summaryArgument: data.title,
+        summaryArgumentCount: 1,
+        sound: 'practx_notify.wav',
+      },
+    });
   }
 
   // PushNotification.popInitialNotification((notification) => {
@@ -395,9 +406,20 @@ const MainScreen = ({
   //   }
   // };
 
+  notifee.onBackgroundEvent(async ({ type, detail }) => {
+    const { notification, pressAction, input } = detail;
+
+    if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
+      console.log('Replied Text-------------', input);
+      console.log('Notification', notification);
+      SendReplyMessage(notification?.data, input);
+      // updateChatOnServer(notification.data.conversationId, input);
+    }
+  });
+
   return (
     <Drawer.Navigator
-      drawerContent={(props) => <DrawerContent {...props} />}
+      drawerContent={props => <DrawerContent {...props} />}
       drawerStyle={{
         width: !isInitialRender ? 0 : windowWidth - 80,
         // backgroundColor: 'white',
@@ -451,7 +473,7 @@ const mapStateToProps = createStructuredSelector({
   chatChannels: selectChatChannels,
   currentChatChannel: selectCurrentChatChannel,
 });
-const mapDispatchToProps = (dispatch) => ({
-  setCurrentChatChannel: (data) => dispatch(setCurrentChatChannel(data)),
+const mapDispatchToProps = dispatch => ({
+  setCurrentChatChannel: data => dispatch(setCurrentChatChannel(data)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);
