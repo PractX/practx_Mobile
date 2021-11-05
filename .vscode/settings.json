@@ -1,12 +1,13 @@
 {
   "cSpell.words": [
-    "Formik",
-    "Pactices",
-    "Practx",
-    "Pressable",
     "firstname",
     "forgotpass",
-    "lastname"
+    "Formik",
+    "lastname",
+    "Notifee",
+    "Pactices",
+    "Practx",
+    "Pressable"
   ],
   "workbench.editor.enablePreviewFromQuickOpen": true,
   "workbench.editor.enablePreviewFromCodeNavigation": true

@@ -181,29 +181,6 @@ const App = ({
   }, [getInitialState, themeMode]);
 
   // Subscribe to events
-  useEffect(() => {
-    const unsubscribe = notifee.onForegroundEvent(({ type, detail }) => {
-      console.log('Forground event-------------', type);
-      const { notification, pressAction, input } = detail;
-      if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
-        console.log('In appss Replied Text-------------', input);
-        // console.log('Notification', notification);
-        SendReplyMessage(notification?.data, input, pubnub);
-        // updateChatOnServer(notification.data.conversationId, input);
-      } else {
-        console.log('Action Type', type);
-        switch (type) {
-          case EventType.DISMISSED:
-            console.log('User dismissed notification', detail.notification);
-            break;
-          case EventType.PRESS:
-            console.log('User pressed notification', detail.notification);
-            break;
-        }
-      }
-    });
-    return () => unsubscribe();
-  }, []);
 
   // useEffect(() => {
   //   notifee.onBackgroundEvent(async ({ type, detail }) => {

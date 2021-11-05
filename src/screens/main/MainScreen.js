@@ -409,6 +409,8 @@ const MainScreen = ({
   notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction, input } = detail;
 
+    console.log('Event type for notification', EventType.ACTION_PRESS);
+
     if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
       console.log('Replied Text-------------', input);
       console.log('Notification', notification);
@@ -416,6 +418,66 @@ const MainScreen = ({
       // updateChatOnServer(notification.data.conversationId, input);
     }
   });
+
+  useEffect(() => {
+    const unsubscribe = notifee.onForegroundEvent(async ({ type, detail }) => {
+      let displayedNotification = await notifee.getDisplayedNotifications();
+      if (displayedNotification) {
+        console.log('Forground event-------------', type);
+        const { notification, pressAction, input } = detail;
+        if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
+          console.log('In appss Replied Text-------------', input);
+          // console.log('Notification', notification);
+          SendReplyMessage(notification?.data, input, pubnub);
+          // updateChatOnServer(notification.data.conversationId, input);
+        } else {
+          console.log('Action Type', type);
+          switch (type) {
+            case EventType.DISMISSED:
+              console.log('User dismissed notification', detail.notification);
+              break;
+            case EventType.PRESS:
+              console.log(
+                'User pressed notification',
+                detail.notification?.data?.channel,
+              );
+              // console.log(
+              //   'DisplayedNotification ',
+              //   displayedNotification
+              //     .filter(
+              //       item =>
+              //         item?.notification?.data?.channel ===
+              //         detail.notification?.data?.channel,
+              //     )
+              //     .map(it => it?.id),
+              // );
+              Linking.openURL(
+                `practx://chatMessages/${
+                  notification.data.practiceId +
+                  '-' +
+                  notification.data.channel +
+                  '-' +
+                  notification.data.type +
+                  '-' +
+                  notification.data.groupId
+                }`,
+              );
+              await notifee.cancelDisplayedNotifications(
+                displayedNotification
+                  .filter(
+                    item =>
+                      item?.notification?.data?.channel ===
+                      detail.notification?.data?.channel,
+                  )
+                  .map(it => it?.id),
+              );
+              break;
+          }
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   return (
     <Drawer.Navigator
