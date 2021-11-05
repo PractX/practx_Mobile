@@ -60,6 +60,7 @@ const App = ({
   chatChannels,
   setCurrentChatChannel,
 }) => {
+  const pubnub = usePubNub();
   const routeNameRef = React.useRef();
   const navigationRef = React.useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -187,7 +188,7 @@ const App = ({
       if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
         console.log('In appss Replied Text-------------', input);
         // console.log('Notification', notification);
-        SendReplyMessage(notification?.data, input);
+        SendReplyMessage(notification?.data, input, pubnub);
         // updateChatOnServer(notification.data.conversationId, input);
       } else {
         console.log('Action Type', type);

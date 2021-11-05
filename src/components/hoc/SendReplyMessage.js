@@ -1,8 +1,8 @@
 import React from 'react';
 import { usePubNub } from 'pubnub-react';
 
-const SendReplyMessage = (data, input) => {
-  const pubnub = usePubNub();
+const SendReplyMessage = (data, input, pubnub) => {
+  // const pubnub = usePubNub();
   console.log('Channel name', data);
   // console.log('SENDING____')
 

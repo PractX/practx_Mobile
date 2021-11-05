@@ -412,7 +412,7 @@ const MainScreen = ({
     if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
       console.log('Replied Text-------------', input);
       console.log('Notification', notification);
-      SendReplyMessage(notification?.data, input);
+      SendReplyMessage(notification?.data, input, pubnub);
       // updateChatOnServer(notification.data.conversationId, input);
     }
   });
