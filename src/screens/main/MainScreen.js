@@ -179,6 +179,7 @@ const MainScreen = ({
           chatId: currentUser?.chatId,
           firstname: currentUser?.firstname,
           lastname: currentUser?.lastname,
+          notifeeGroupId: data.channel + '-group',
         },
         android: {
           channelId,
@@ -189,6 +190,18 @@ const MainScreen = ({
           groupSummary: true,
           groupId: data.channel,
           groupAlertBehavior: AndroidGroupAlertBehavior.SUMMARY,
+          actions: [
+            {
+              title: 'Reply',
+              icon: 'https://my-cdn.com/icons/reply.png',
+              pressAction: {
+                id: 'reply',
+              },
+              input: {
+                placeholder: `Reply to ${data.title}...`,
+              }, // enable free text input
+            },
+          ],
         },
       });
     }
@@ -228,6 +241,18 @@ const MainScreen = ({
         vibrationPattern: [300, 500],
         groupId: data.channel,
         // groupAlertBehavior: AndroidGroupAlertBehavior.SUMMARY,
+        actions: [
+          {
+            title: 'Reply',
+            icon: 'https://my-cdn.com/icons/reply.png',
+            pressAction: {
+              id: 'reply',
+            },
+            input: {
+              placeholder: `Reply to ${data.title}...`,
+            }, // enable free text input
+          },
+        ],
       },
       ios: {
         // attachments: [
@@ -308,7 +333,7 @@ const MainScreen = ({
     // See: https://support.pubnub.com/hc/en-us/articles/360051495432-How-can-I-troubleshoot-my-push-notification-issues-
     // Called when a remote or local notification is opened or received.
     onNotification: function (notification) {
-      console.log('NOTIFICATION:', notification);
+      console.log('NOTIFICATION:----REMOTE', notification);
       // setInitialState('chats');
       setGroupCha([...new Set([...groupCha, notification.data.channel])]);
       console.log(notification.data.type);
@@ -445,7 +470,7 @@ const MainScreen = ({
   notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction, input } = detail;
     let displayedNotification = await notifee.getDisplayedNotifications();
-    console.log('Notification Type ----', type);
+    console.log('Notification Type ----', notification);
 
     if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
       console.log('Replied Text-------------', input);
@@ -490,6 +515,15 @@ const MainScreen = ({
         console.log('In appss Replied Text-------------', input);
         // console.log('Notification', notification);
         SendReplyMessage(notification?.data, input, pubnub);
+        await notifee.cancelDisplayedNotifications(
+          displayedNotification
+            .filter(
+              item =>
+                item?.notification?.data?.channel ===
+                detail.notification?.data?.channel,
+            )
+            .map(it => it?.id),
+        );
         // updateChatOnServer(notification.data.conversationId, input);
       } else {
         console.log('Action Type', type);
