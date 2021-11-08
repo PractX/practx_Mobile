@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { useWindowDimensions, Linking } from 'react-native';
+import { useWindowDimensions, Linking, Platform } from 'react-native';
 import DrawerContent from './DrawerContent';
 // import Practices from './practice/Practices';
 import Profile from './profile/Profile';
@@ -22,7 +22,11 @@ import {
 import { setCurrentChatChannel } from '../../redux/practices/practices.actions';
 import { usePubNub } from 'pubnub-react';
 import Appointment from './appointment/Appointment';
-import notifee, { EventType } from '@notifee/react-native';
+import notifee, {
+  AndroidImportance,
+  EventType,
+  AndroidGroupAlertBehavior,
+} from '@notifee/react-native';
 import { selectCurrentUser } from '../../redux/user/user.selector';
 import SendReplyMessage from '../../components/hoc/SendReplyMessage';
 
@@ -128,6 +132,7 @@ const MainScreen = ({
   }
 
   async function onDisplayChatNotification({ data, groupCha }) {
+    console.log('Image', data);
     // Create a channel
     // const channelId = await notifee.createChannel({
     //   id: 'default',
@@ -142,25 +147,51 @@ const MainScreen = ({
     //   lastname: currentUser?.lastname,
     // });
 
-    await notifee.createChannel({
-      id: 'custom-sound',
-      name: 'Channel with custom sound',
-      sound: 'practx_notify',
+    const channelId = await notifee.createChannel({
+      id: 'important',
+      name: 'Important Notifications',
+      importance: AndroidImportance.HIGH,
     });
-
-    notifee.setNotificationCategories([
-      {
-        id: 'message',
-        summaryFormat: 'You have %u+ unread messages from %@.',
-        actions: [
-          {
-            id: 'reply',
-            title: 'Reply',
-            input: true,
-          },
-        ],
-      },
-    ]);
+    if (Platform.OS === 'ios') {
+      notifee.setNotificationCategories([
+        {
+          id: 'message',
+          summaryFormat: 'You have %u+ unread messages from %@.',
+          actions: [
+            {
+              id: 'reply',
+              title: 'Reply',
+              input: true,
+            },
+          ],
+        },
+      ]);
+    } else {
+      notifee.displayNotification({
+        id: data.channel + '-group',
+        title: 'Messages',
+        subtitle: `${data.type === 'gm' ? data.subtitle : data.title}  ${
+          data.type === 'gm' ? '• ' + data.title : ''
+        }`,
+        data: {
+          ...data,
+          userId: currentUser?.id.toString(),
+          chatId: currentUser?.chatId,
+          firstname: currentUser?.firstname,
+          lastname: currentUser?.lastname,
+        },
+        android: {
+          channelId,
+          importance: AndroidImportance.HIGH,
+          smallIcon: 'ic_notification',
+          largeIcon: data.practiceImage,
+          circularLargeIcon: data.practiceImage,
+          groupSummary: true,
+          groupId: data.channel,
+          groupAlertBehavior: AndroidGroupAlertBehavior.SUMMARY,
+        },
+      });
+    }
 
     // Display a notification
     await notifee.displayNotification({
@@ -186,12 +217,17 @@ const MainScreen = ({
           ? '📁 File'
           : data.body, // (required)
       android: {
-        channelId: data.channel,
+        channelId: channelId,
+        importance: AndroidImportance.HIGH,
         smallIcon: 'ic_notification', // optional, defaults to 'ic_launcher'.
+        largeIcon: data.practiceImage,
         circularLargeIcon: data.practiceImage
           ? data.practiceImage
           : 'https://icon-library.com/images/staff-icon-png/staff-icon-png-17.jpg',
         sound: 'practx_notify',
+        vibrationPattern: [300, 500],
+        groupId: data.channel,
+        // groupAlertBehavior: AndroidGroupAlertBehavior.SUMMARY,
       },
       ios: {
         // attachments: [
@@ -408,71 +444,95 @@ const MainScreen = ({
 
   notifee.onBackgroundEvent(async ({ type, detail }) => {
     const { notification, pressAction, input } = detail;
-
-    console.log('Event type for notification', EventType.ACTION_PRESS);
+    let displayedNotification = await notifee.getDisplayedNotifications();
+    console.log('Notification Type ----', type);
 
     if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
       console.log('Replied Text-------------', input);
       console.log('Notification', notification);
       SendReplyMessage(notification?.data, input, pubnub);
       // updateChatOnServer(notification.data.conversationId, input);
+    } else if (type === EventType.PRESS) {
+      console.log(
+        'Event is Pressed type for notification',
+        EventType.ACTION_PRESS,
+        notification,
+      );
+      Linking.openURL(
+        `practx://chatMessages/${
+          notification.data.practiceId +
+          '-' +
+          notification.data.channel +
+          '-' +
+          notification.data.type +
+          '-' +
+          notification.data.groupId
+        }`,
+      );
+      await notifee.cancelDisplayedNotifications(
+        displayedNotification
+          .filter(
+            item =>
+              item?.notification?.data?.channel ===
+              detail.notification?.data?.channel,
+          )
+          .map(it => it?.id),
+      );
     }
   });
 
   useEffect(() => {
     const unsubscribe = notifee.onForegroundEvent(async ({ type, detail }) => {
       let displayedNotification = await notifee.getDisplayedNotifications();
-      if (displayedNotification) {
-        console.log('Forground event-------------', type);
-        const { notification, pressAction, input } = detail;
-        if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
-          console.log('In appss Replied Text-------------', input);
-          // console.log('Notification', notification);
-          SendReplyMessage(notification?.data, input, pubnub);
-          // updateChatOnServer(notification.data.conversationId, input);
-        } else {
-          console.log('Action Type', type);
-          switch (type) {
-            case EventType.DISMISSED:
-              console.log('User dismissed notification', detail.notification);
-              break;
-            case EventType.PRESS:
-              console.log(
-                'User pressed notification',
-                detail.notification?.data?.channel,
-              );
-              // console.log(
-              //   'DisplayedNotification ',
-              //   displayedNotification
-              //     .filter(
-              //       item =>
-              //         item?.notification?.data?.channel ===
-              //         detail.notification?.data?.channel,
-              //     )
-              //     .map(it => it?.id),
-              // );
-              Linking.openURL(
-                `practx://chatMessages/${
-                  notification.data.practiceId +
-                  '-' +
-                  notification.data.channel +
-                  '-' +
-                  notification.data.type +
-                  '-' +
-                  notification.data.groupId
-                }`,
-              );
-              await notifee.cancelDisplayedNotifications(
-                displayedNotification
-                  .filter(
-                    item =>
-                      item?.notification?.data?.channel ===
-                      detail.notification?.data?.channel,
-                  )
-                  .map(it => it?.id),
-              );
-              break;
-          }
+      console.log('Forground event-------------', type);
+      const { notification, pressAction, input } = detail;
+      if (type === EventType.ACTION_PRESS && pressAction.id === 'reply') {
+        console.log('In appss Replied Text-------------', input);
+        // console.log('Notification', notification);
+        SendReplyMessage(notification?.data, input, pubnub);
+        // updateChatOnServer(notification.data.conversationId, input);
+      } else {
+        console.log('Action Type', type);
+        switch (type) {
+          case EventType.DISMISSED:
+            console.log('User dismissed notification', detail.notification);
+            break;
+          case EventType.PRESS:
+            console.log(
+              'User pressed notification',
+              detail.notification?.data?.channel,
+            );
+            // console.log(
+            //   'DisplayedNotification ',
+            //   displayedNotification
+            //     .filter(
+            //       item =>
+            //         item?.notification?.data?.channel ===
+            //         detail.notification?.data?.channel,
+            //     )
+            //     .map(it => it?.id),
+            // );
+            Linking.openURL(
+              `practx://chatMessages/${
+                notification.data.practiceId +
+                '-' +
+                notification.data.channel +
+                '-' +
+                notification.data.type +
+                '-' +
+                notification.data.groupId
+              }`,
+            );
+            await notifee.cancelDisplayedNotifications(
+              displayedNotification
+                .filter(
+                  item =>
+                    item?.notification?.data?.channel ===
+                    detail.notification?.data?.channel,
+                )
+                .map(it => it?.id),
+            );
+            break;
         }
       }
     });

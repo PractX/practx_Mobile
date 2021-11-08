@@ -33,7 +33,7 @@ const pubnub = new PubNub({
   restore: true, // enable catchup on missed messages
   // logVerbosity: true,
   ssl: true,
-  presenceTimeout: 300,
+  // presenceTimeout: 300,
   // uuid: 'myUniqueUUID',
 });
 

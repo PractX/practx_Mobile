@@ -105,7 +105,7 @@ const Practx = ({
   useMemo(() => {
     if (practiceDms && practiceDms.length > 0) {
       let pract = joinedPractices.find(
-        (i) => !practiceDms.some((k) => i.id === k.id),
+        i => !practiceDms.some(k => i.id === k.id),
       );
       if (pract) {
         console.log('Startig new Chat', pract);
@@ -115,7 +115,7 @@ const Practx = ({
     } else {
       if (joinedPractices && joinedPractices.length > 0) {
         console.log('First new Chat');
-        chatWithPracticeStart(joinedPractices.map((i) => i.id)[0]);
+        chatWithPracticeStart(joinedPractices.map(i => i.id)[0]);
         getPracticesDmsStart();
       }
     }
@@ -127,6 +127,10 @@ const Practx = ({
 
   useEffect(() => {
     if (isFocused) {
+      setPracticeData({
+        show: false,
+        data: null,
+      });
       setFilter({
         opt1: true,
         opt2: true,
@@ -353,7 +357,7 @@ const Practx = ({
                   renderItem={({ item, index }) => {
                     const pending = item.requests;
                     const member = currentUser
-                      ? item.patients.filter((val) => val.id === currentUser.id)
+                      ? item.patients.filter(val => val.id === currentUser.id)
                       : [];
                     if (member.length) {
                       return (
@@ -527,13 +531,13 @@ const mapStateToProps = createStructuredSelector({
   filter: selectFilter,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   getPracticesAllStart: () => dispatch(getPracticesAllStart()),
   getJoinedPracticesStart: () => dispatch(getJoinedPracticesStart()),
   getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
-  getPracticeSubgroupsStart: (id) => dispatch(getPracticeSubgroupsStart()),
-  setFilter: (data) => dispatch(setFilter(data)),
-  chatWithPracticeStart: (data) => dispatch(chatWithPracticeStart(data)),
+  getPracticeSubgroupsStart: id => dispatch(getPracticeSubgroupsStart()),
+  setFilter: data => dispatch(setFilter(data)),
+  chatWithPracticeStart: data => dispatch(chatWithPracticeStart(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Practx);
