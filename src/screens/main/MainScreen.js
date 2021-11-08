@@ -476,6 +476,15 @@ const MainScreen = ({
       console.log('Replied Text-------------', input);
       console.log('Notification', notification);
       SendReplyMessage(notification?.data, input, pubnub);
+      await notifee.cancelDisplayedNotifications(
+        displayedNotification
+          .filter(
+            item =>
+              item?.notification?.data?.channel ===
+              detail.notification?.data?.channel,
+          )
+          .map(it => it?.id),
+      );
       // updateChatOnServer(notification.data.conversationId, input);
     } else if (type === EventType.PRESS) {
       console.log(
