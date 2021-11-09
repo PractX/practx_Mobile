@@ -371,7 +371,7 @@ PODS:
     - React
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNAudioRecorderPlayer (3.1.2):
+  - RNAudioRecorderPlayer (3.2.0):
     - React-Core
   - RNCAsyncStorage (1.12.1):
     - React-Core
@@ -425,7 +425,7 @@ PODS:
     - React
   - RNSVG (12.1.1):
     - React
-  - RNVectorIcons (8.1.0):
+  - RNVectorIcons (9.0.0):
     - React-Core
   - SDWebImage (5.12.1):
     - SDWebImage/Core (= 5.12.1)
@@ -698,7 +698,7 @@ SPEC CHECKSUMS:
   ReactCommon: 620442811dc6f707b4bf5e3b27d4f19c12d5a821
   ReactNativeAudioToolkit: de9610f323e855ac6574be8c99621f3d57c5df06
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNAudioRecorderPlayer: 4bc5de2316d8a04358c22fb42b6855fc983f3889
+  RNAudioRecorderPlayer: 324ca2b805e95e57107dfc0c6c45709f716a06fd
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNCPushNotificationIOS: 5ee247e594d0b5df3cd7be74b51035a0d91807eb
@@ -709,7 +709,7 @@ SPEC CHECKSUMS:
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNSoundPlayer: 82f62dab0d14eff221a2f55dda3094abd50085d4
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
-  RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
+  RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
   SDWebImage: 4dc3e42d9ec0c1028b960a33ac6b637bb432207b
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   Yoga: 2b4a01651f42a32f82e6cef3830a3ba48088237f

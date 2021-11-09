@@ -7,7 +7,8 @@
     "Notifee",
     "Pactices",
     "Practx",
-    "Pressable"
+    "Pressable",
+    "pubnub"
   ],
   "workbench.editor.enablePreviewFromQuickOpen": true,
   "workbench.editor.enablePreviewFromCodeNavigation": true

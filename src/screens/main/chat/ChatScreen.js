@@ -90,13 +90,14 @@ import { SvgXml } from 'react-native-svg';
 import typingIcon from '../../../../assets/gif/typingIndicator.gif';
 import { Image } from 'react-native';
 import { PermissionsAndroid } from 'react-native';
-// import SoundPlayer from 'react-native-sound-player'
 
 const { flags, sports, food } = Categories;
 // console.log(Categories);
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.9;
+
+const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const ChatScreen = ({
   navigation,
@@ -111,7 +112,6 @@ const ChatScreen = ({
   signals,
   setCurrentChatChannel,
 }) => {
-  const audioRecorderPlayer = new AudioRecorderPlayer();
   const [chatRef, setChatRef] = useState();
   const { colors } = useTheme();
   const inputRef = useRef();
@@ -127,6 +127,7 @@ const ChatScreen = ({
     type,
     groupPractice,
   } = params;
+
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
@@ -517,14 +518,14 @@ const ChatScreen = ({
     };
   }, [inputText, currentUser]);
 
-  useEffect(() => {
-    if (onRecording && currentUser) {
-      console.log('Recordings');
-      addSignal('recording_on');
-    } else if (!onRecording && currentUser) {
-      addSignal('recording_off');
-    }
-  }, [onRecording, currentUser]);
+  // useEffect(() => {
+  //   if (onRecording && currentUser) {
+  //     console.log('Recordings');
+  //     addSignal('recording_on');
+  //   } else if (!onRecording && currentUser) {
+  //     addSignal('recording_off');
+  //   }
+  // }, [onRecording, currentUser]);
 
   useMemo(() => {
     if (isFocused || allMessages) {
@@ -602,7 +603,7 @@ const ChatScreen = ({
       });
   }, [extraData]);
   const [audioTime, setAudioTime] = useState();
-  const onStartRecord = useCallback(async () => {
+  async function onStartRecord() {
     if (Platform.OS === 'android') {
       try {
         const grants = await PermissionsAndroid.requestMultiple([
@@ -622,7 +623,6 @@ const ChatScreen = ({
             PermissionsAndroid.RESULTS.GRANTED
         ) {
           console.log('Permissions granted');
-          setOnRecording(true);
         } else {
           console.log('All required permissions not granted');
           return;
@@ -632,9 +632,9 @@ const ChatScreen = ({
         return;
       }
     }
-
+    setOnRecording(true);
     let date = Date.now().toString();
-
+    const meteringEnabled = false;
     const dirs = RNFetchBlob.fs.dirs;
     const path = Platform.select({
       ios: `${generateName(4, 'vn')}_${date}.aac`,
@@ -648,7 +648,12 @@ const ChatScreen = ({
       AVNumberOfChannelsKeyIOS: 2,
       AVFormatIDKeyIOS: AVEncodingOption.aac,
     };
-    const result = await audioRecorderPlayer.startRecorder(path, audioSet);
+    const result = await audioRecorderPlayer.startRecorder(
+      path,
+      audioSet,
+      meteringEnabled,
+    );
+
     audioRecorderPlayer.addRecordBackListener(e => {
       setRecordTime({
         recordSecs: e.currentPosition,
@@ -656,15 +661,17 @@ const ChatScreen = ({
       });
       return;
     });
-  }, []);
 
-  const onStopRecord = useCallback(async () => {
-    const result = await audioRecorderPlayer.stopRecorder();
+    console.log('Audio result', result);
+  }
+
+  async function onStopRecord() {
+    await audioRecorderPlayer.stopRecorder();
     audioRecorderPlayer.removeRecordBackListener();
     setRecordTime({
       recordSecs: 0,
     });
-  }, []);
+  }
 
   const onSendRecordedFile = useCallback(async () => {
     const result = await audioRecorderPlayer.stopRecorder();
@@ -1446,8 +1453,10 @@ const ChatScreen = ({
 
                           <TouchableOpacity
                             onPress={() => {
-                              setOnRecording(false);
-                              onStopRecord();
+                              requestAnimationFrame(() => {
+                                onStopRecord();
+                                setOnRecording(false);
+                              });
                             }}
                             style={{
                               alignSelf: 'center',
@@ -1507,17 +1516,19 @@ const ChatScreen = ({
                           ) : (
                             <TouchableOpacity
                               onPress={() => {
-                                if (inputText) {
-                                  sendMessage(messageProps.text);
-                                } else {
-                                  if (onRecording) {
-                                    onSendRecordedFile();
+                                requestAnimationFrame(() => {
+                                  if (inputText) {
+                                    sendMessage(messageProps.text);
                                   } else {
-                                    console.log('Pressed');
+                                    if (onRecording) {
+                                      onSendRecordedFile();
+                                    } else {
+                                      console.log('Pressed');
 
-                                    onStartRecord();
+                                      onStartRecord();
+                                    }
                                   }
-                                }
+                                });
                               }}
                               style={{
                                 alignSelf: 'center',
