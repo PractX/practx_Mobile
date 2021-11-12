@@ -44,6 +44,7 @@ import { setCurrentChatChannel } from './src/redux/practices/practices.actions';
 import notifee, { EventType } from '@notifee/react-native';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import SendReplyMessage from './src/components/hoc/SendReplyMessage';
+import { getSocket, SocketContext } from './src/context/socketContext';
 
 function SplashScreen() {
   return (
@@ -212,43 +213,46 @@ const App = ({
   return (
     <>
       {/* <SafeAreaView style={{ flex: 2, backgroundColor: state.color }}> */}
-      <StatusBar backgroundColor={state.color} barStyle={state.scheme} />
-      <NavigationContainer
-        initialState={initialState}
-        theme={state.theme}
-        ref={navigationRef}
-        onReady={() =>
-          (routeNameRef.current = navigationRef.current.getCurrentRoute().name)
-        }>
-        <Stack.Navigator initialRouteName="NoAuth" headerMode="none">
-          {isLoading ? (
-            // We haven't finished checking for the token yet
-            <Stack.Screen name="Splash" component={SplashScreen} />
-          ) : (user === null && token === null) || (user === null && token) ? (
-            // No token found, user isn't signed in
-            <Stack.Screen name="AuthScreen" component={AuthScreen} />
-          ) : (
-            // User is signed in
-            <Stack.Screen name="MainScreen" component={MainScreen} />
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-      <FlashMessage
-        animated={true}
-        animationDuration={500}
-        floating={true}
-        position={'right'}
-        style={{
-          width: '70%',
-          alignSelf: 'center',
-          zIndex: 20000,
-          top: Platform.OS === 'ios' ? 30 : 0,
-          // alignItems: 'center',
-        }}
-        titleStyle={{ textAlign: 'left', fontFamily: 'SofiaProRegular' }}
-        duration={4000}
-        icon={{ icon: 'auto', position: 'right' }}
-      />
+      <SocketContext.Provider value={getSocket}>
+        <StatusBar backgroundColor={state.color} barStyle={state.scheme} />
+        <NavigationContainer
+          initialState={initialState}
+          theme={state.theme}
+          ref={navigationRef}
+          onReady={() =>
+            (routeNameRef.current = navigationRef.current.getCurrentRoute().name)
+          }>
+          <Stack.Navigator initialRouteName="NoAuth" headerMode="none">
+            {isLoading ? (
+              // We haven't finished checking for the token yet
+              <Stack.Screen name="Splash" component={SplashScreen} />
+            ) : (user === null && token === null) ||
+              (user === null && token) ? (
+              // No token found, user isn't signed in
+              <Stack.Screen name="AuthScreen" component={AuthScreen} />
+            ) : (
+              // User is signed in
+              <Stack.Screen name="MainScreen" component={MainScreen} />
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+        <FlashMessage
+          animated={true}
+          animationDuration={500}
+          floating={true}
+          position={'right'}
+          style={{
+            width: '70%',
+            alignSelf: 'center',
+            zIndex: 20000,
+            top: Platform.OS === 'ios' ? 30 : 0,
+            // alignItems: 'center',
+          }}
+          titleStyle={{ textAlign: 'left', fontFamily: 'SofiaProRegular' }}
+          duration={4000}
+          icon={{ icon: 'auto', position: 'right' }}
+        />
+      </SocketContext.Provider>
       {/* </SafeAreaView> */}
     </>
   );

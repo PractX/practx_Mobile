@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useWindowDimensions, Linking, Platform } from 'react-native';
 import DrawerContent from './DrawerContent';
@@ -27,8 +27,9 @@ import notifee, {
   EventType,
   AndroidGroupAlertBehavior,
 } from '@notifee/react-native';
-import { selectCurrentUser } from '../../redux/user/user.selector';
+import { selectCurrentUser, selectToken } from '../../redux/user/user.selector';
 import SendReplyMessage from '../../components/hoc/SendReplyMessage';
+import { SocketContext } from '../../context/socketContext';
 
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -37,6 +38,7 @@ const MainScreen = ({
   setCurrentChatChannel,
   currentChatChannel,
   currentUser,
+  token,
 }) => {
   const pubnub = usePubNub();
   const dimensions = useWindowDimensions();
@@ -44,6 +46,37 @@ const MainScreen = ({
   let lastId = 0;
   let chaList = '';
   const [groupCha, setGroupCha] = useState([]);
+
+  const getSocket = useContext(SocketContext);
+  useEffect(() => {
+    if (token) {
+      // loadPage();
+
+      // subscribe to socket events
+      const socket = getSocket(token);
+
+      const listener = data => {
+        console.log('notification data: ', data);
+        if (
+          data.action === 'Book appointment for patient' ||
+          data.action === 'Book appointment' ||
+          data.action === 'approved appointment' ||
+          data.action === 'declined appointment'
+        ) {
+          // loadPage();
+          console.log('New CHanges made from socket');
+        }
+      };
+
+      socket.on('notifications', listener);
+
+      return () => {
+        // before the component is destroyed
+        // unbind all event handlers used in this component
+        socket.off('notifications', listener);
+      };
+    }
+  }, [token, getSocket]);
 
   function pushLocalNotification({ id, data }) {
     console.log('Test notify', data);
@@ -634,6 +667,7 @@ const MainScreen = ({
 
 const mapStateToProps = createStructuredSelector({
   // themeMode: selectThemeMode,
+  token: selectToken,
   currentUser: selectCurrentUser,
   chatChannels: selectChatChannels,
   currentChatChannel: selectCurrentChatChannel,

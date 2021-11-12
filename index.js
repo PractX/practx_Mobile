@@ -23,7 +23,7 @@ import { NetworkProvider } from 'react-native-offline';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 // curl 'http://ps.pndsn.com/v1/push/sub-key/sub-c-1657f96e-df4e-11eb-b709-22f598fbfd18/devices/e9a0cde23c63bdb1b71efd67c0cab471538ff17899964bc43291ccce99432f34?type=apns2'
-
+import SocketContext, { getSocket } from './src/context/socketContext';
 const pubnub = new PubNub({
   // http://pubsub.pubnub.com/v1/push/sub-key/sub-c-1657f96e-df4e-11eb-b709-22f598fbfd18/devices/e9a0cde23c63bdb1b71efd67c0cab471538ff17899964bc43291ccce99432f34?type=apns
   publishKey: 'pub-c-56fcc9f4-b494-494f-8ec3-5ade985b98b5',
