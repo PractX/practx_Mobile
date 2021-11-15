@@ -183,7 +183,7 @@ const PracticeDetails = ({
                   top: 20,
                   right: type === 'pending' ? 20 : 20,
                 }}>
-                {type === 'pending' ? (
+                {isLoading === 'success' || type === 'pending' ? (
                   <Icon
                     name="progress-clock"
                     type="material-community"

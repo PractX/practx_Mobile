@@ -82,15 +82,16 @@ const MainScreen = ({
             break;
           case 'Remove patient':
             data?.practiceId === currentPracticeId && setPracticeId(0);
-            getPracticesAllStart();
-            getJoinedPracticesStart();
-            getPracticesDmsStart();
             showMessage({
               message: `You have being removed from ${data?.initiatorName}`,
               type: 'none',
-              position: 'top',
-              statusBarHeight: Platform.OS === 'ios' ? 20 : 0,
+              duration: 5000,
             });
+            setTimeout(() => {
+              getPracticesAllStart();
+              getJoinedPracticesStart();
+              getPracticesDmsStart();
+            }, 1000);
             break;
           default:
             break;

@@ -617,7 +617,7 @@ const ChatScreen = ({
   useEffect(() => {
     joinedPractices.find(item => item.id === currentPracticeId) === undefined &&
       navigation.navigate('ChatMessages');
-  }, [currentPracticeId, joinedPractices, navigation]);
+  }, [currentPracticeId]);
 
   const [audioTime, setAudioTime] = useState();
   async function onStartRecord() {

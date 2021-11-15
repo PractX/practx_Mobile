@@ -245,9 +245,9 @@ const App = ({
             width: '70%',
             alignSelf: 'center',
             zIndex: 20000,
+            top: Platform.OS === 'ios' ? 20 : 0,
             // alignItems: 'center',
           }}
-          statusBarHeight={0}
           titleStyle={{ textAlign: 'left', fontFamily: 'SofiaProRegular' }}
           duration={4000}
           icon={{ icon: 'auto', position: 'right' }}

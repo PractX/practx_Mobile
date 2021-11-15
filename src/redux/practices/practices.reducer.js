@@ -162,7 +162,7 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isFetching: false,
-        isLoading: false,
+        // isLoading: false,
         practices: action.payload,
       };
 

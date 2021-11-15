@@ -33,10 +33,10 @@ import {
 import { showMessage } from 'react-native-flash-message';
 
 // const userActive = state => state.user.currentUser;
-const userToken = (state) => state.user.token.key;
-const havePracticeId = (state) => state.practice.currentPracticeId;
-const practiceSubgroups = (state) => state.practice.practiceSubgroups;
-const joinedPractices = (state) => state.practice.joinedPractices;
+const userToken = state => state.user.token.key;
+const havePracticeId = state => state.practice.currentPracticeId;
+const practiceSubgroups = state => state.practice.practiceSubgroups;
+const joinedPractices = state => state.practice.joinedPractices;
 
 export function* willGetAllPractices() {
   const token = yield select(userToken);
@@ -49,7 +49,7 @@ export function* willGetAllPractices() {
     });
     console.log(result);
     let data = yield result.practices.rows.filter(
-      (item) => item.patients.length === 1,
+      item => item.patients.length === 1,
     );
     if (currentPracticeId > 0 && data.length) {
       console.log('have the Id');
@@ -179,6 +179,7 @@ export function* willJoinPractices({ payload: practiceId }) {
       type: 'success',
     });
     yield put(getPracticesAllStart());
+    yield put(setLoading('success'));
   } catch (error) {
     console.log(error.response);
     if (error.response) {
@@ -282,9 +283,9 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
     // });
     console.log('Data >>>>', result.subgroups);
     if (result.subgroups.length > 0) {
-      yield result.subgroups.forEach((element) => {
+      yield result.subgroups.forEach(element => {
         const fold = willChatWithSubgroup(practiceId, element.id, token).then(
-          (res) => res,
+          res => res,
         );
         // console.log('Started ++++ subgroups', fold);
         // subgroupsArr.push(fold);
@@ -307,7 +308,7 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
       token,
       practiceId,
       allSubGroups,
-    ).then((res) => {
+    ).then(res => {
       return res;
     });
     console.log('Res >>', subgroups);
@@ -375,7 +376,7 @@ async function getAllSubgroup(token, practiceId, allSubGroups) {
     });
     if (result) {
       const practice = result.subgroupChats.practices.find(
-        (practice) => practice.id === practiceId,
+        practice => practice.id === practiceId,
       );
       // console.log('All Subgroups chat', result);
 
@@ -418,7 +419,7 @@ async function getAllSubgroup(token, practiceId, allSubGroups) {
 }
 
 function getUniqueListBy(arr, key) {
-  return [...new Map(arr.map((item) => [item[key], item])).values()];
+  return [...new Map(arr.map(item => [item[key], item])).values()];
 }
 
 export function* willChatWithPractice({ payload: practiceId }) {
@@ -459,7 +460,7 @@ export function* willLeavePractice({ payload: { practiceId, practiceName } }) {
   const token = yield select(userToken);
   // const allSubGroups = yield select(practiceSubgroups);
   const myJoinedPractices = yield select(joinedPractices);
-  const newPractice = myJoinedPractices.find((item) => item.id !== practiceId);
+  const newPractice = myJoinedPractices.find(item => item.id !== practiceId);
   console.log('PracticeID >>', newPractice, '-----', practiceId, practiceName);
   try {
     const result = yield leavePracticeApi(token, practiceId).then(function (
