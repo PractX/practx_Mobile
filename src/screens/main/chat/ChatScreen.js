@@ -46,6 +46,8 @@ import { usePubNub } from 'pubnub-react';
 import { RefreshControl } from 'react-native';
 import {
   selectAllMessages,
+  selectCurrentPracticeId,
+  selectJoinedPractices,
   selectPracticeStaffs,
   selectSignals,
 } from '../../../redux/practices/practices.selector';
@@ -111,6 +113,8 @@ const ChatScreen = ({
   practiceStaffs,
   signals,
   setCurrentChatChannel,
+  joinedPractices,
+  currentPracticeId,
 }) => {
   const [chatRef, setChatRef] = useState();
   const { colors } = useTheme();
@@ -602,6 +606,19 @@ const ChatScreen = ({
         swipeEnabled: true,
       });
   }, [extraData]);
+
+  // TODO
+  // console.log('My CURRENT PRactice', currentPracticeId);
+  console.log(
+    'FIND JOINED',
+    currentPracticeId,
+    joinedPractices.find(item => item.id === currentPracticeId),
+  );
+  useEffect(() => {
+    joinedPractices.find(item => item.id === currentPracticeId) === undefined &&
+      navigation.navigate('ChatMessages');
+  }, [currentPracticeId, joinedPractices, navigation]);
+
   const [audioTime, setAudioTime] = useState();
   async function onStartRecord() {
     if (Platform.OS === 'android') {
@@ -1874,6 +1891,8 @@ const mapStateToProps = createStructuredSelector({
   isLoading: selectIsLoading,
   allMessages: selectAllMessages,
   practiceStaffs: selectPracticeStaffs,
+  joinedPractices: selectJoinedPractices,
+  currentPracticeId: selectCurrentPracticeId,
   signals: selectSignals,
 });
 

@@ -22,7 +22,7 @@ import {
   setPracticeId,
   chatWithPracticeStart,
   getPracticesDmsStart,
-  getPracticeSubgroupsStart
+  getPracticeSubgroupsStart,
 } from '../../redux/practices/practices.actions';
 import { selectIsLoading } from '../../redux/practices/practices.selector';
 import { createStructuredSelector } from 'reselect';
@@ -60,10 +60,10 @@ const PracticeBox = ({
 }) => {
   const { colors } = useTheme();
   const pending = practice.requests;
-  const member = practice.patients.filter((val) => val.id === userId);
+  const member = practice.patients.filter(val => val.id === userId);
   const [loading, setLoading] = useState(false);
 
-  const joinPractice = (practiceId) => {
+  const joinPractice = practiceId => {
     if (practiceId === practice.id) {
       setLoading(true);
     }
@@ -72,27 +72,25 @@ const PracticeBox = ({
 
   useEffect(() => {
     console.log('Heo here');
-    
+
     !isLoading && setLoading(false);
-    
   }, [isLoading, practice]);
 
   return (
     <TouchableOpacity
-      onPress={() =>{
-          navigation.navigate('SinglePractice', {
-            navigation,
-            practice,
-            userId,
-            searchData,
-          });
-          if(practice && member && member.length) {
-            chatWithPracticeStart(practice.id)
-            getPracticesDmsStart();
-            getPracticeSubgroupsStart(practice.id);
-          }
+      onPress={() => {
+        navigation.navigate('SinglePractice', {
+          navigation,
+          practice,
+          userId,
+          searchData,
+        });
+        if (practice && member && member.length) {
+          chatWithPracticeStart(practice.id);
+          getPracticesDmsStart();
+          getPracticeSubgroupsStart(practice.id);
         }
-      }
+      }}
       style={{
         marginTop: 15,
         marginBottom: 10,
@@ -216,12 +214,12 @@ const mapStateToProps = createStructuredSelector({
   isLoading: selectIsLoading,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  joinPractices: (practiceId) => dispatch(joinPractices(practiceId)),
-  setPracticeId: (id) => dispatch(setPracticeId(id)),
-  chatWithPracticeStart: (data) => dispatch(chatWithPracticeStart(data)),
+const mapDispatchToProps = dispatch => ({
+  joinPractices: practiceId => dispatch(joinPractices(practiceId)),
+  setPracticeId: id => dispatch(setPracticeId(id)),
+  chatWithPracticeStart: data => dispatch(chatWithPracticeStart(data)),
   getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
-  getPracticeSubgroupsStart: (id) => dispatch(getPracticeSubgroupsStart(id)),
+  getPracticeSubgroupsStart: id => dispatch(getPracticeSubgroupsStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PracticeBox);

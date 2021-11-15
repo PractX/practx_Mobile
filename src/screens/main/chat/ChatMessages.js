@@ -102,7 +102,7 @@ const ChatMessages = ({
   const time = d.getTime();
   const [newMsgAvailable, setNewMsgAvailable] = useState(false);
 
-  const addTime = (timetoken) => {
+  const addTime = timetoken => {
     const unixTimestamp = timetoken / 10000000;
     const gmtDate = new Date(unixTimestamp * 1000);
     const localeDateTime = gmtDate.toLocaleString();
@@ -142,12 +142,12 @@ const ChatMessages = ({
           practice:
             practiceDms &&
             practiceDms.find(
-              (item) => item.id === parseInt(params.ids.split('-')[0]),
+              item => item.id === parseInt(params.ids.split('-')[0]),
             ),
           channelName: params.ids.split('-')[1],
           practiceDms,
           subgroups: subgroups.find(
-            (items) => items.practiceId === parseInt(params.ids.split('-')[0]),
+            items => items.practiceId === parseInt(params.ids.split('-')[0]),
           ),
           group: null,
           navigation: navigation,
@@ -159,20 +159,20 @@ const ChatMessages = ({
           groupPractice:
             practiceDms &&
             practiceDms.find(
-              (item) => item.id === parseInt(params.ids.split('-')[0]),
+              item => item.id === parseInt(params.ids.split('-')[0]),
             ),
           channelName: params.ids.split('-')[1],
           practiceDms,
           subgroups: subgroups.find(
-            (items) => items.practiceId === parseInt(params.ids.split('-')[0]),
+            items => items.practiceId === parseInt(params.ids.split('-')[0]),
           ),
-          group: subgroups.find((item) => item.practiceId === currentPracticeId)
-            ? subgroups.find((item) => item.practiceId === currentPracticeId)
+          group: subgroups.find(item => item.practiceId === currentPracticeId)
+            ? subgroups.find(item => item.practiceId === currentPracticeId)
                 .groups
               ? subgroups
-                  .find((item) => item.practiceId === currentPracticeId)
+                  .find(item => item.practiceId === currentPracticeId)
                   .groups.find(
-                    (item) => item.id === parseInt(params.ids.split('-')[3]),
+                    item => item.id === parseInt(params.ids.split('-')[3]),
                   )
               : {}
             : {},
@@ -185,10 +185,10 @@ const ChatMessages = ({
 
   const getAllChannelMessages = useCallback((dms, subGroups) => {
     // const dmsCha = dms.map((i) => i.channelName); /// When backend guy delete
-    const dmsCha = dms.map((i) => i.Dm.channelName);
+    const dmsCha = dms.map(i => i.Dm.channelName);
     let newSubGroups = [];
-    subGroups.map((i) =>
-      i.map((j) =>
+    subGroups.map(i =>
+      i.map(j =>
         newSubGroups.push(j.subgroupChats[0].PatientSubgroup.channelName),
       ),
     );
@@ -216,9 +216,9 @@ const ChatMessages = ({
           let allMsgs = [];
           // console.log('C_DATA__', channels);
 
-          allChannels.map(async (i) => {
+          allChannels.map(async i => {
             const msgs = channels[i];
-            const newMsg = msgs.map((item) =>
+            const newMsg = msgs.map(item =>
               Object.assign(item, {
                 _id: item.timetoken,
                 user: { _id: item.uuid },
@@ -292,14 +292,14 @@ const ChatMessages = ({
       console.log('=== GET MESSAGES FROM CHANNEL =====: ', cha);
       console.log('ALL____', allMessages);
 
-      const channelMsgs = allMessages.find((i) => i.channel === cha);
+      const channelMsgs = allMessages.find(i => i.channel === cha);
       console.log('Finding--', channelMsgs);
       // console.log('Current Date____', time);
       if (channelMsgs) {
         channelMsgs.lst = msg.timetoken;
         channelMsgs.messages = [...channelMsgs.messages, msg];
         const newSavedMessages = allMessages.filter(
-          (i) => i.channel !== channelMsgs.channel,
+          i => i.channel !== channelMsgs.channel,
         );
 
         console.log('=== channelMsgs =====: ', channelMsgs);
@@ -461,7 +461,7 @@ const ChatMessages = ({
       chatWithPracticeStart(
         currentPracticeId === 0
           ? joinedPractices && joinedPractices.length > 0
-            ? joinedPractices.map((i) => i.id)[joinedPractices.length - 1]
+            ? joinedPractices.map(i => i.id)[joinedPractices.length - 1]
             : 0
           : currentPracticeId,
       );
@@ -470,7 +470,7 @@ const ChatMessages = ({
       getPracticeSubgroupsStart(
         currentPracticeId === 0
           ? joinedPractices && joinedPractices.length > 0
-            ? joinedPractices.map((i) => i.id)[joinedPractices.length - 1]
+            ? joinedPractices.map(i => i.id)[joinedPractices.length - 1]
             : 0
           : currentPracticeId,
       );
@@ -496,7 +496,7 @@ const ChatMessages = ({
         start: Date.now(),
         end: '16307191225656025',
       },
-      (result) => {
+      result => {
         console.log(result);
       },
     );
@@ -510,8 +510,8 @@ const ChatMessages = ({
       getPracticeStaffStart(currentPracticeId);
       // getLastMessages();
       removeChannel();
-      const me = subgroups.find((item) => item.practiceId === currentPracticeId)
-        ? subgroups.find((item) => item.practiceId === currentPracticeId)
+      const me = subgroups.find(item => item.practiceId === currentPracticeId)
+        ? subgroups.find(item => item.practiceId === currentPracticeId)
         : [];
 
       console.log('WORKING__', me);
@@ -530,7 +530,7 @@ const ChatMessages = ({
       if (practiceDms.length) {
         getAllChannelMessages(
           practiceDms,
-          subgroups.map((item) => [...item.groups]),
+          subgroups.map(item => [...item.groups]),
         );
       }
     }
@@ -542,7 +542,7 @@ const ChatMessages = ({
       pubnub.setUUID(currentUser ? currentUser.chatId : 0);
 
       const listener = {
-        message: (messageEvent) => {
+        message: messageEvent => {
           console.log('Add event  listener', messageEvent);
           const msg = {
             channel: messageEvent.channel,
@@ -580,12 +580,12 @@ const ChatMessages = ({
                 customFields: true,
               },
             })
-            .then((data) => {
+            .then(data => {
               if (data.status === 200) {
                 if (data.data.length > 0) {
-                  const channels = data.data.map((res) => res.channel.id);
+                  const channels = data.data.map(res => res.channel.id);
                   const timetoken = data.data.map(
-                    (res) => res.custom.lastReadTimetoken,
+                    res => res.custom.lastReadTimetoken,
                   );
 
                   pubnub
@@ -593,11 +593,11 @@ const ChatMessages = ({
                       channels: channels,
                       channelTimetokens: timetoken,
                     })
-                    .then((response) => {
+                    .then(response => {
                       // set all messages count to a global variable
                       // dispatch(setMessagesCount(response.channels))
                     })
-                    .catch((error) => {
+                    .catch(error => {
                       console.log(
                         error,
                         '------ Error Message count ======== ',
@@ -610,7 +610,7 @@ const ChatMessages = ({
             });
         },
 
-        file: (picture) => {
+        file: picture => {
           const msg = {
             channel: picture.channel,
             message: { file: picture.file, message: picture.message },
@@ -628,7 +628,7 @@ const ChatMessages = ({
         signal: function (s) {
           // handle signal
           console.log('pubnub signal: ', s);
-          const _signals = signals.filter((i) => i.channel !== s.channel);
+          const _signals = signals.filter(i => i.channel !== s.channel);
           setSignals([..._signals, s]);
           var channelName = s.channel; // The channel to which the signal was published
           var channelGroup = s.subscription; // The channel group or wildcard subscription match (if exists)
@@ -779,7 +779,7 @@ const ChatMessages = ({
                   leavePracticeStart({
                     practiceId: currentPracticeId,
                     practiceName: joinedPractices.find(
-                      (item) => item.id === currentPracticeId,
+                      item => item.id === currentPracticeId,
                     ).practiceName,
                   })
                 }>
@@ -799,23 +799,23 @@ const ChatMessages = ({
               signals={signals}
               item={
                 practiceDms &&
-                practiceDms.find((item) => item.id === currentPracticeId)
+                practiceDms.find(item => item.id === currentPracticeId)
               }
               allMessages={
                 practiceDms
-                  ? allMessages.find((it) =>
-                      practiceDms.find((item) => item.id === currentPracticeId)
+                  ? allMessages.find(it =>
+                      practiceDms.find(item => item.id === currentPracticeId)
                         ? it.channel ===
                           practiceDms.find(
-                            (item) => item.id === currentPracticeId,
+                            item => item.id === currentPracticeId,
                           ).Dm.channelName
                         : '',
                     )
                     ? allMessages.find(
-                        (it) =>
+                        it =>
                           it.channel ===
                           practiceDms.find(
-                            (item) => item.id === currentPracticeId,
+                            item => item.id === currentPracticeId,
                           ).Dm.channelName,
                       )
                     : null
@@ -850,10 +850,8 @@ const ChatMessages = ({
                 </View>
                 {currentPracticeId &&
                 subgroups.length > 0 &&
-                subgroups.find(
-                  (item) => item.practiceId === currentPracticeId,
-                ) &&
-                subgroups.find((item) => item.practiceId === currentPracticeId)
+                subgroups.find(item => item.practiceId === currentPracticeId) &&
+                subgroups.find(item => item.practiceId === currentPracticeId)
                   .groups.length > 0 ? (
                   <View
                     style={{
@@ -877,10 +875,10 @@ const ChatMessages = ({
                       contentContainerStyle={{ flexGrow: 1 }}
                       data={
                         subgroups.find(
-                          (item) => item.practiceId === currentPracticeId,
+                          item => item.practiceId === currentPracticeId,
                         )
                           ? subgroups.find(
-                              (item) => item.practiceId === currentPracticeId,
+                              item => item.practiceId === currentPracticeId,
                             ).groups
                           : []
                       }
@@ -892,20 +890,18 @@ const ChatMessages = ({
                           item={item}
                           practices={
                             practiceDms &&
-                            practiceDms.find(
-                              (it) => it.id === currentPracticeId,
-                            )
+                            practiceDms.find(it => it.id === currentPracticeId)
                           }
                           allMessages={
                             practiceDms && allMessages && subgroups
                               ? allMessages.find(
-                                  (it) =>
+                                  it =>
                                     it.channel ===
                                     item.subgroupChats[0].PatientSubgroup
                                       .channelName,
                                 )
                                 ? allMessages.find(
-                                    (it) =>
+                                    it =>
                                       it.channel ===
                                       item.subgroupChats[0].PatientSubgroup
                                         .channelName,
@@ -924,12 +920,11 @@ const ChatMessages = ({
                                 style1 === 'open' ? appwidth - 50 : appwidth,
                             },
                             subgroups.find(
-                              (item) => item.practiceId === currentPracticeId,
+                              item => item.practiceId === currentPracticeId,
                             ) &&
                               index ===
                                 subgroups.find(
-                                  (item) =>
-                                    item.practiceId === currentPracticeId,
+                                  item => item.practiceId === currentPracticeId,
                                 ).groups.length -
                                   1 && {
                                 paddingBottom: 60,
@@ -1024,18 +1019,18 @@ const mapStateToProps = createStructuredSelector({
   chatChannels: selectChatChannels,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   // getPracticesAllStart: () => dispatch(getPracticesAllStart()),
   getJoinedPracticesStart: () => dispatch(getJoinedPracticesStart()),
-  setFilter: (data) => dispatch(setFilter(data)),
+  setFilter: data => dispatch(setFilter(data)),
   getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
-  chatWithPracticeStart: (data) => dispatch(chatWithPracticeStart(data)),
-  getPracticeSubgroupsStart: (id) => dispatch(getPracticeSubgroupsStart(id)),
-  setAllMessages: (msg) => dispatch(setAllMessages(msg)),
-  getPracticeStaffStart: (id) => dispatch(getPracticeStaffStart(id)),
-  leavePracticeStart: (id) => dispatch(leavePracticeStart(id)),
-  setSignals: (data) => dispatch(setSignals(data)),
-  setChatChannels: (channels) => dispatch(setChatChannels(channels)),
+  chatWithPracticeStart: data => dispatch(chatWithPracticeStart(data)),
+  getPracticeSubgroupsStart: id => dispatch(getPracticeSubgroupsStart(id)),
+  setAllMessages: msg => dispatch(setAllMessages(msg)),
+  getPracticeStaffStart: id => dispatch(getPracticeStaffStart(id)),
+  leavePracticeStart: id => dispatch(leavePracticeStart(id)),
+  setSignals: data => dispatch(setSignals(data)),
+  setChatChannels: channels => dispatch(setChatChannels(channels)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatMessages);

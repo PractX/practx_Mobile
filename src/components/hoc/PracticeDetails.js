@@ -11,6 +11,7 @@ import {
   ScrollView,
   Alert,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import { Button, Icon, ListItem } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -103,6 +104,30 @@ const PracticeDetails = ({
         />
       </TouchableOpacity>
 
+      <Pressable
+        style={{
+          position: 'absolute',
+          top: 20,
+          left: 20,
+          justifyContent: 'center',
+        }}
+        onPress={() => {
+          requestAnimationFrame(() => {
+            bottomSheetRef.current.snapTo(1);
+          });
+        }}>
+        <Icon
+          name="x"
+          type="feather"
+          color={colors.text}
+          size={normalize(18)}
+          style={{
+            marginRight: 0,
+            // alignSelf: 'center',
+          }}
+        />
+      </Pressable>
+
       {practiceData.data && (
         <View style={{ width: windowWidth }}>
           <View
@@ -174,7 +199,7 @@ const PracticeDetails = ({
                         practiceId: data.id,
                         practiceName: data.practiceName,
                       });
-                      bottomSheetRef.current.snapTo(2);
+                      bottomSheetRef.current.snapTo(1);
                       // await setPracticeId(practice.id);
                       // await navigation.navigate('Chats');
                     }}
@@ -212,7 +237,6 @@ const PracticeDetails = ({
                   <Button
                     title="Join"
                     onPress={() => {
-                      console.log('Joining');
                       joinPractice(data.id);
                       // await setPracticeId(practice.id);
                       // await navigation.navigate('Chats');
