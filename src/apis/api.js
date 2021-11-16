@@ -8,10 +8,11 @@ import {
   REACT_APP_GET_SUBGROUPS,
   REACT_APP_SEARCH_PRACTICES,
   REACT_APP_GET_PRACTICES_STAFF,
+  REACT_APP_GET_NOTIFICATION,
 } from '@env';
 import { Platform } from 'react-native';
 
-export const getPracticesApi = async (token) => {
+export const getPracticesApi = async token => {
   const headers = {
     'Content-Type': 'application/json',
     Authorization: token,
@@ -21,7 +22,7 @@ export const getPracticesApi = async (token) => {
   return collectionsMap;
 };
 
-export const getJoinedPracticeApi = async (token) => {
+export const getJoinedPracticeApi = async token => {
   // console.log(token);
   const headers = {
     'Content-Type': 'application/json',
@@ -44,7 +45,7 @@ export const joinPracticeApi = async (practiceId, token) => {
   return collectionsMap;
 };
 
-export const getPracticesDmsApi = async (token) => {
+export const getPracticesDmsApi = async token => {
   const headers = {
     'Content-Type': 'application/json',
     Authorization: token,
@@ -138,7 +139,7 @@ export const chatWithSubgroupApi = async (practiceId, subgroupId, token) => {
   return collectionsMap;
 };
 
-export const getAllSubgroupApi = async (token) => {
+export const getAllSubgroupApi = async token => {
   const headers = {
     'Content-Type': 'application/json',
     Authorization: token,
@@ -202,12 +203,22 @@ export const bookAppointmentApi = async (practiceId, data, token) => {
   return collectionsMap;
 };
 
-export const getAllAppointmentsApi = async (token) => {
+export const getAllAppointmentsApi = async token => {
   const headers = {
     'Content-Type': 'application/json',
     Authorization: token,
   };
   const apiUrl = REACT_APP_API + REACT_APP_EDIT_PROFILE + '/appointments';
+  const data = await Axios.get(apiUrl, { headers: headers });
+  return data;
+};
+
+export const getAllNotificationsApi = async token => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const apiUrl = REACT_APP_API + REACT_APP_GET_NOTIFICATION;
   const data = await Axios.get(apiUrl, { headers: headers });
   return data;
 };

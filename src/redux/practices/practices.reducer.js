@@ -11,6 +11,7 @@ const INITIAL_STATE = {
   practiceDms: [],
   practiceSubgroups: [],
   practiceStaffs: [],
+  patientNotifications: null,
   error: null,
   allMessages: [],
   searchResult: [],
@@ -191,6 +192,18 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isFetching: false,
         isLoading: true,
+      };
+    case PracticesActionTypes.GET_ALL_PATIENT_NOTIFICATION_START:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case PracticesActionTypes.GET_ALL_PATIENT_NOTIFICATION_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        isLoading: false,
+        patientNotifications: action.payload,
       };
     case PracticesActionTypes.SET_LOADING:
       return {

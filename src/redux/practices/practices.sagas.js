@@ -11,6 +11,7 @@ import {
   getPracticeSubGroupApi,
   joinPracticeApi,
   searchPracticesApi,
+  getAllNotificationsApi,
 } from '../../apis/api';
 import PracticesActionTypes from './practices.types';
 import { REACT_APP_MONT } from '@env';
@@ -500,10 +501,62 @@ export function* willLeavePractice({ payload: { practiceId, practiceName } }) {
   }
 }
 
+export function* willGetAllPatientNotifications() {
+  const token = yield select(userToken);
+  const currentPracticeId = yield select(havePracticeId);
+  console.log('Get all practice notifications');
+  // console.log('going in aoi');
+  try {
+    const result = yield getAllNotificationsApi(token).then(function (
+      response,
+    ) {
+      return response.data;
+    });
+    console.log('Get all practice notifications -- data', result);
+
+    // yield put(getPracticesAllSuccess(result.practices));
+  } catch (error) {
+    console.log(error);
+    let eMsg = '';
+    if (error.response) {
+      error.response.data.errors.map(function (i, err) {
+        if (error.response.data.errors.length > 1) {
+          eMsg += err + 1 + '. ' + i + '\n';
+          console.log(eMsg);
+        } else {
+          eMsg += i;
+          console.log(eMsg);
+        }
+      });
+      showMessage({
+        message: eMsg,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    // showMessage({
+    //   message: error.response ? error.response.data.errors : error.message,
+    //   type: 'danger',
+    // });
+    // yield delay(2000);
+  }
+}
+
 export function* onGetAllPractices() {
   yield takeLatest(
     PracticesActionTypes.GET_ALL_PRACTICES_START,
     willGetAllPractices,
+  );
+}
+
+export function* onGetAllPatientNotifications() {
+  yield takeLatest(
+    PracticesActionTypes.GET_ALL_PATIENT_NOTIFICATION_START,
+    willGetAllPatientNotifications,
   );
 }
 
@@ -569,5 +622,6 @@ export function* practicesSagas() {
     call(onGetPracticeSubgroups),
     call(onChatWithPractice),
     call(onGetPracticeStaff),
+    call(onGetAllPatientNotifications),
   ]);
 }

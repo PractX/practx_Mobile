@@ -26,6 +26,7 @@ import {
   setFilter,
   chatWithPracticeStart,
   getPracticeSubgroupsStart,
+  getAllPatientNotificationStart,
 } from '../../../redux/practices/practices.actions';
 import {
   selectAllPractices,
@@ -65,6 +66,7 @@ const Practx = ({
   joinedPractices,
   practiceDms,
   chatWithPracticeStart,
+  getAllPatientNotificationStart,
 }) => {
   const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
@@ -127,6 +129,7 @@ const Practx = ({
 
   useEffect(() => {
     if (isFocused) {
+      getAllPatientNotificationStart();
       setPracticeData({
         show: false,
         data: null,
@@ -538,6 +541,8 @@ const mapDispatchToProps = dispatch => ({
   getPracticeSubgroupsStart: id => dispatch(getPracticeSubgroupsStart()),
   setFilter: data => dispatch(setFilter(data)),
   chatWithPracticeStart: data => dispatch(chatWithPracticeStart(data)),
+  getAllPatientNotificationStart: data =>
+    dispatch(getAllPatientNotificationStart(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Practx);

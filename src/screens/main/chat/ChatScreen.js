@@ -742,14 +742,19 @@ const ChatScreen = ({
   }, []);
 
   // let dataMsg = [] allMessages.find((item) => item.channel === channelName);
-
+  //TODO
   const renderActions = props => {
     return (
       <>
         {onRecording ? (
           <></>
         ) : (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignSelf: 'center',
+            }}>
             <Actions
               {...props}
               icon={() => (
@@ -762,17 +767,20 @@ const ChatScreen = ({
                   color={'white'}
                 />
               )}
-              onPressActionButton={() =>
-                showAccessories
-                  ? setShowAccessories(false)
-                  : setShowAccessories(true)
-              }
+              onPressActionButton={() => {
+                if (showAccessories) {
+                  setShowAccessories(false);
+                } else {
+                  Keyboard.dismiss();
+                  setShowAccessories(true);
+                }
+              }}
               containerStyle={{
                 backgroundColor: colors.primary,
                 borderRadius: 100,
                 height: 28,
                 width: 28,
-                marginTop: 8,
+                marginTop: 5,
                 alignSelf: 'center',
                 justifyContent: 'center',
               }}
@@ -781,11 +789,12 @@ const ChatScreen = ({
               {...props}
               icon={() => (
                 <Icon
-                  name={showEmoji ? 'keyboard' : 'smile'}
-                  type={'font-awesome-5'}
+                  name={showEmoji ? 'keyboard' : 'emotsmile'}
+                  type={showEmoji ? 'font-awesome-5' : 'simple-line-icon'}
                   // action={setShowEmoji}
                   // value={showEmoji}
-                  size={normalize(Platform.OS === 'ios' ? 20 : 22)}
+                  size={normalize(Platform.OS === 'ios' ? 21 : 22)}
+                  style={{ alignSelf: 'center' }}
                   color={colors.text}
                 />
               )}
@@ -1036,7 +1045,7 @@ const ChatScreen = ({
                   {
                     name: 'calendar',
                     type: 'ant-design',
-                    onPress: () => navigation.navigate('Appointments', {}),
+                    onPress: () => navigation.navigate('Appointment', {}),
                     buttonType: 'save',
                   },
                   {
@@ -1250,7 +1259,7 @@ const ChatScreen = ({
                 fontFamily: 'SofiaProRegular',
                 fontSize: normalize(14),
                 alignItems: 'center',
-                marginTop: 10,
+                // marginTop: 10,
 
                 //fff
                 // color: '#222B45',
@@ -1258,7 +1267,7 @@ const ChatScreen = ({
                 // borderWidth: 1,
                 // borderRadius: 5,
                 // borderColor: '#E4E9F2',
-                paddingTop: 8.5,
+                // paddingTop: 8.5,
                 paddingHorizontal: 12,
                 marginLeft: 0,
               }}
@@ -1409,7 +1418,7 @@ const ChatScreen = ({
                   </View>
                 );
               }}
-              // ANCHOR
+              // TODO
               renderInputToolbar={props => (
                 <InputToolbar
                   {...props}
@@ -1429,7 +1438,7 @@ const ChatScreen = ({
                             width: appwidth - normalize(40),
                             // width: appwidth + 50,
                             backgroundColor: colors.background_1,
-                            height: 55,
+                            height: 40,
                             marginHorizontal: 10,
                             paddingHorizontal: 10,
                             alignSelf: 'center',
@@ -1508,6 +1517,7 @@ const ChatScreen = ({
                               style={{
                                 alignSelf: 'center',
                                 marginRight: 10,
+                                marginBottom: 10,
                               }}>
                               <View
                                 style={{
@@ -1550,12 +1560,15 @@ const ChatScreen = ({
                               style={{
                                 alignSelf: 'center',
                                 marginRight: 10,
+                                alignItems: 'center',
+                                marginBottom: onRecording ? 0 : 10,
                               }}>
                               <View
                                 style={{
                                   backgroundColor: colors.primary,
                                   height: 35,
                                   width: 35,
+                                  marginTop: 3,
                                   alignSelf: 'center',
                                   justifyContent: 'center',
                                   marginLeft: 10,
