@@ -38,8 +38,8 @@ import { showMessage, hideMessage } from 'react-native-flash-message';
 import { clearPracticeData } from '../practices/practices.actions';
 
 // const userActive = state => state.user.currentUser;
-const userToken = (state) => state.user.token.key;
-const userExpire = (state) => state.user.token.expire;
+const userToken = state => state.user.token.key;
+const userExpire = state => state.user.token.expire;
 
 export function* isBookAppointment({
   payload: { title, description, date, practiceId, navigation },
@@ -55,15 +55,12 @@ export function* isBookAppointment({
     ).then(function (response) {
       return response.data;
     });
-    console.log(result);
+    yield delay(1000);
     showMessage({
       message: result.message,
       type: 'success',
     });
-    yield put(setIsLoading(false));
-    yield delay(500);
-    yield navigation && put(navigation.navigate('Appointments'));
-    yield delay(5000);
+    yield put(setIsLoading('success'));
   } catch (error) {
     console.log(error);
     console.log(error.response);

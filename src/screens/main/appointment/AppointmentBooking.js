@@ -140,6 +140,10 @@ const AppointmentBooking = ({
         swipeEnabled: true,
       });
   }, [extraData]);
+
+  useEffect(() => {
+    isLoading === 'success' && navigation.navigate('Appointments');
+  }, [isLoading, navigation]);
   // selectedDate;
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -424,7 +428,7 @@ const AppointmentBooking = ({
                     }}
                     minimumDate={minimumDate}
                     isGregorian={true}
-                    onSelectedChange={(date) => setSelectedDate(date)}
+                    onSelectedChange={date => setSelectedDate(date)}
                   />
 
                   <View style={styles.loginButtonView}>
@@ -458,7 +462,7 @@ const AppointmentBooking = ({
                         fontFamily: 'SofiaProSemiBold',
                         fontSize: normalize(14),
                       }}
-                      loading={isLoading}
+                      loading={isLoading && isLoading !== 'success'}
                     />
                   </View>
                 </View>
@@ -487,8 +491,8 @@ const mapStateToProps = createStructuredSelector({
   isLoading: selectIsLoading,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  bookAppointment: (data) => dispatch(bookAppointment(data)),
+const mapDispatchToProps = dispatch => ({
+  bookAppointment: data => dispatch(bookAppointment(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppointmentBooking);
