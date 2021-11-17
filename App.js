@@ -235,7 +235,7 @@ const App = ({
           floating={true}
           position={'right'}
           style={{
-            width: '70%',
+            width: '90%',
             alignSelf: 'center',
             zIndex: 20000,
             top: Platform.OS === 'ios' ? 20 : 0,

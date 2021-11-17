@@ -30,6 +30,7 @@ import { useTheme } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import { normalize } from 'react-native-elements';
+import timeAgo from '../../../utils/timeAgo';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -44,15 +45,26 @@ const theme = {
   text3: '#555',
 };
 
-const AppointmentList = ({ item, practice, status, styling }) => {
+const NotificationList = ({
+  item,
+  practice,
+  status,
+  notificationData,
+  styling,
+  section,
+}) => {
   const { colors } = useTheme();
-
+  console.log(section);
   return (
     <View
       style={[
         styling,
         styles.card,
-        { borderBottomColor: colors.background_1, borderBottomWidth: 0.5 },
+        {
+          width: appwidth,
+          borderBottomColor: colors.background_1,
+          borderBottomWidth: 0.5,
+        },
       ]}>
       <View style={{ flexDirection: 'row' }}>
         <FastImage
@@ -93,73 +105,10 @@ const AppointmentList = ({ item, practice, status, styling }) => {
               fontFamily: 'SofiaProRegular',
               color: theme.text2,
             }}>
-            {/* 09:00 AM - 12:00 PM */}
-            {/* {moment(item.date).format('d MMM')} */}
-            {moment(item.date).format('HH:mm A') +
-              ' - ' +
-              (
-                '0' +
-                parseInt(
-                  item?.duration?.hours
-                    ? parseInt(
-                        moment(item.date).format('HH:mmA').split(':')[0],
-                        10,
-                      ) + item?.duration?.hours
-                    : parseInt(
-                        moment(item.date).format('HH:mmA').split(':')[0],
-                        10,
-                      ),
-                  10,
-                )
-              ).slice(-2) +
-              ':' +
-              (
-                '0' +
-                parseInt(
-                  item?.duration?.minutes
-                    ? parseInt(
-                        moment(item.date).format('HH:mmA').split(':')[1],
-                        10,
-                      ) + item?.duration?.minutes
-                    : parseInt(
-                        moment(item.date).format('HH:mmA').split(':')[1],
-                        10,
-                      ),
-                  10,
-                )
-              ).slice(-2) +
-              moment(item.date).format(' A')}
+            {timeAgo(item.time)}
           </Text>
 
           {/* ........ call text............. */}
-
-          <View style={{ ...styles.flexrow, marginTop: 3 }}>
-            <View
-              style={{
-                ...styles.dot,
-                backgroundColor:
-                  status === 'pending'
-                    ? colors.text_2
-                    : status === 'approved'
-                    ? colors.tertiary
-                    : colors.danger,
-              }}
-            />
-            <Text
-              style={{
-                color:
-                  status === 'pending'
-                    ? colors.text_2
-                    : status === 'approved'
-                    ? colors.tertiary
-                    : colors.danger,
-                fontSize: normalize(10.5),
-                fontFamily: 'SofiaProRegular',
-                textTransform: 'capitalize',
-              }}>
-              {status}
-            </Text>
-          </View>
         </View>
       </View>
       <View style={{ justifyContent: 'center' }}>
@@ -224,4 +173,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppointmentList;
+export default NotificationList;

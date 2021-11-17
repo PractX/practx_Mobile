@@ -116,7 +116,7 @@ const MainHeader = ({
       </TouchableOpacity>
       <View style={{ flexDirection: 'row', marginRight: 10 }}>
         {notifyIcon && (
-          <TouchableOpacity onPress={() => console.log('hello world')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
             <Icon
               name="ios-notifications-outline"
               type="ionicon"

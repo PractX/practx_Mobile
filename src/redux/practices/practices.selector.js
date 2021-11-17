@@ -1,14 +1,14 @@
 import { createSelector } from 'reselect';
 
-const selectPractices = (state) => state.practice;
+const selectPractices = state => state.practice;
 
 export const selectAllPractices = createSelector(
   [selectPractices],
-  (practices) => {
+  practices => {
     const { filter } = practices;
     // console.log(filter);
     if (practices.practices) {
-      const data = practices.practices.rows.filter((item) => {
+      const data = practices.practices.rows.filter(item => {
         // console.log(item);
         if (
           filter.opt1 === true &&
@@ -70,39 +70,39 @@ export const selectAllPractices = createSelector(
 );
 export const selectFilter = createSelector(
   [selectPractices],
-  (practices) => practices.filter,
+  practices => practices.filter,
 );
 export const selectIsLoading = createSelector(
   [selectPractices],
-  (practices) => practices.isLoading,
+  practices => practices.isLoading,
 );
 
 export const selectIsFetching = createSelector(
   [selectPractices],
-  (practices) => practices.isFetching,
+  practices => practices.isFetching,
 );
 
 export const selectIsSearching = createSelector(
   [selectPractices],
-  (practices) => practices.isSearching,
+  practices => practices.isSearching,
 );
 
 export const selectJoinedPractices = createSelector(
   [selectPractices],
-  (practices) => practices.joinedPractices,
+  practices => practices.joinedPractices,
 );
 
 export const selectCurrentPracticeId = createSelector(
   [selectPractices],
-  (practices) => practices.currentPracticeId,
+  practices => practices.currentPracticeId,
 );
 
 export const selectPracticeDms = createSelector(
   [selectPractices],
-  (practices) => {
+  practices => {
     if (practices.practiceDms) {
       const data = practices.practiceDms.filter(
-        (item) => item.practiceId !== null,
+        item => item.practiceId !== null,
       );
       return data;
     } else {
@@ -113,46 +113,51 @@ export const selectPracticeDms = createSelector(
 
 export const selectPracticeSubgroups = createSelector(
   [selectPractices],
-  (practices) => practices.practiceSubgroups,
+  practices => practices.practiceSubgroups,
 );
 
 export const selectPracticeStaffs = createSelector(
   [selectPractices],
-  (practices) => practices.practiceStaffs,
+  practices => practices.practiceStaffs,
 );
 
 export const selectAllMessages = createSelector(
   [selectPractices],
-  (practices) => practices.allMessages,
+  practices => practices.allMessages,
 );
 
 export const selectSearchResult = createSelector(
   [selectPractices],
-  (practices) => practices.searchResult,
+  practices => practices.searchResult,
 );
 export const selectSearchData = createSelector(
   [selectPractices],
-  (practices) => practices.searchData,
+  practices => practices.searchData,
 );
 
 export const selectSearchHistory = createSelector(
   [selectPractices],
-  (practices) => practices.searchHistory,
+  practices => practices.searchHistory,
 );
 
 export const selectSignals = createSelector(
   [selectPractices],
-  (practices) => practices.signals,
+  practices => practices.signals,
 );
 
 export const selectChatChannels = createSelector(
   [selectPractices],
-  (practices) => practices.chatChannels,
+  practices => practices.chatChannels,
 );
 
 export const selectCurrentChatChannel = createSelector(
   [selectPractices],
-  (practices) => practices.currentChatChannel,
+  practices => practices.currentChatChannel,
+);
+
+export const selectPatientNotifications = createSelector(
+  [selectPractices],
+  practices => practices.patientNotifications,
 );
 // joinedPractice;
 // export const selectToken = createSelector([selectUser], (user) => user.token);

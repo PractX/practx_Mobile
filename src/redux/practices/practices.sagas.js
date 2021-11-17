@@ -29,6 +29,7 @@ import {
   setPracticeId,
   getJoinedPracticesStart,
   getPracticesDmsStart,
+  getAllPatientNotificationSuccess,
   // setPracticeId,
 } from './practices.actions';
 import { showMessage } from 'react-native-flash-message';
@@ -514,7 +515,7 @@ export function* willGetAllPatientNotifications() {
     });
     console.log('Get all practice notifications -- data', result);
 
-    // yield put(getPracticesAllSuccess(result.practices));
+    yield put(getAllPatientNotificationSuccess(result.notifications));
   } catch (error) {
     console.log(error);
     let eMsg = '';
