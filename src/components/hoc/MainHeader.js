@@ -36,6 +36,7 @@ const MainHeader = ({
   practice,
   group,
   width,
+  allNotifications,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
@@ -130,14 +131,27 @@ const MainHeader = ({
             <View
               style={{
                 position: 'absolute',
-                right: 3,
-                top: 2,
-                width: 6,
-                height: 6,
+                right: -5,
+                top: -2,
                 backgroundColor: colors.primary,
-                borderRadius: 50,
-              }}
-            />
+                borderRadius: 100,
+                alignItems: 'center',
+                alignSelf: 'center',
+              }}>
+              <Text
+                style={{
+                  fontSize: normalize(7.5),
+                  fontFamily: 'SofiaProRegular',
+                  color: 'white',
+                  textAlign: 'center',
+                  paddingVertical: allNotifications?.count > 99 ? 2.5 : 1.5,
+                  paddingHorizontal: allNotifications?.count > 99 ? 2 : 2.5,
+                }}>
+                {allNotifications?.count > 99
+                  ? allNotifications.count + '+'
+                  : allNotifications.count}
+              </Text>
+            </View>
           </TouchableOpacity>
         )}
       </View>

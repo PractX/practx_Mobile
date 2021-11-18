@@ -34,6 +34,7 @@ import {
   selectIsFetching,
   selectPracticeDms,
   selectJoinedPractices,
+  selectPatientNotifications,
 } from '../../../redux/practices/practices.selector';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import { MenuProvider } from 'react-native-popup-menu';
@@ -67,6 +68,7 @@ const Practx = ({
   practiceDms,
   chatWithPracticeStart,
   getAllPatientNotificationStart,
+  allNotifications,
 }) => {
   const bottomSheetRef = useRef(null);
   const { colors } = useTheme();
@@ -230,6 +232,7 @@ const Practx = ({
             buttonType: 'filter',
           }}
           notifyIcon={true}
+          allNotifications={allNotifications}
           checkState={checkState}
           setCheckState={setCheckState}
           setFilter={setFilter}
@@ -531,6 +534,7 @@ const mapStateToProps = createStructuredSelector({
   joinedPractices: selectJoinedPractices,
   practices: selectAllPractices,
   practiceDms: selectPracticeDms,
+  allNotifications: selectPatientNotifications,
   filter: selectFilter,
 });
 

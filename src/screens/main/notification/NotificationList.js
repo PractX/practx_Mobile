@@ -31,6 +31,7 @@ import { Icon } from 'react-native-elements';
 import FastImage from 'react-native-fast-image';
 import { normalize } from 'react-native-elements';
 import timeAgo from '../../../utils/timeAgo';
+import isToday from '../../../utils/isToday';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -45,16 +46,60 @@ const theme = {
   text3: '#555',
 };
 
-const NotificationList = ({
-  item,
-  practice,
-  status,
-  notificationData,
-  styling,
-  section,
-}) => {
+const NotificationList = ({ item, practice, currentUser, styling }) => {
   const { colors } = useTheme();
-  console.log(section);
+  const actionText = (action, practices) => {
+    switch (action) {
+      case 'Join request':
+        return {
+          text: `have just made a request to join ${practices.practiceName}, it is currently on pending and waiting for approval`,
+          color: colors.text_2,
+        };
+      case 'Book appointment':
+        return {
+          text:
+            'have just made a request to schedule an appointment with ${practices.practiceName}',
+          color: colors.text_2,
+        };
+      case 'Book appointment for patient':
+        return {
+          text:
+            'have just scheduled an appointment for you, please go to the appointment screen to view more details about the appointment date and time',
+          color: colors.tertiary_1,
+        };
+      case 'Declined appointment':
+        return {
+          text:
+            'have just declined your appointment schedule. You can chat with them to reschedule another date for the appointment',
+          color: colors.danger,
+        };
+      case 'Approved appointment':
+        return {
+          text:
+            'have just approved your appointment schedule, please go to appointment screen to view more details of the time and date.',
+          color: colors.tertiary_1,
+        };
+      case 'Accept join request':
+        return {
+          text:
+            'have just accepted your join request. Now you have access to chat with them, create a schedule for appoint, etc.',
+          color: colors.tertiary_1,
+        };
+      case 'Remove patient':
+        return {
+          text:
+            'have just removed you from there practices. You can request to join again, so you have access to chat with them, create a schedule for appoint, etc.',
+          color: colors.danger,
+        };
+      case 'Leave practice':
+        return {
+          text: `have just left ${practices.practiceName}. So, you do not have access to chat with them, create a schedule for appoint, etc.`,
+          color: colors.danger,
+        };
+      default:
+        return { text: 'foo', color: colors.text_2 };
+    }
+  };
   return (
     <View
       style={[
@@ -66,12 +111,15 @@ const NotificationList = ({
           borderBottomWidth: 0.5,
         },
       ]}>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', flex: 0.7 }}>
         <FastImage
           source={{
-            uri: practice?.logo
-              ? practice?.logo
-              : 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/200px-No-Image-Placeholder.svg.png',
+            uri:
+              item.recipientId === item.patientId
+                ? practice?.logo ||
+                  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/200px-No-Image-Placeholder.svg.png'
+                : currentUser.avatar ||
+                  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/200px-No-Image-Placeholder.svg.png',
             // values.avatar
             //   ? values.avatar
             //   : 'https://api.duniagames.co.id/api/content/upload/file/8143860661599124172.jpg',
@@ -81,65 +129,98 @@ const NotificationList = ({
             height: 60,
             borderRadius: 20,
             backgroundColor: colors.background_1,
+            borderWidth: 1,
+            borderColor: colors.background_1,
             alignSelf: 'center',
             marginRight: 10,
           }}
           resizeMode={FastImage.resizeMode.cover}
         />
-        <View style={{}}>
+        <View
+          style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
           <View style={styles.cardhead}>
             <Text
               style={{
-                fontSize: normalize(12),
+                fontSize: normalize(11),
                 fontFamily: 'SofiaProSemiBold',
                 color: colors.text,
-              }}>
-              {item.title}
+              }}
+              numberOfLines={2}>
+              {item.recipientId === item.patientId
+                ? practice.practiceName
+                : 'You'}{' '}
+              <Text
+                style={{
+                  fontSize: normalize(10),
+                  fontFamily: 'SofiaProRegular',
+                  color: colors.text,
+                }}
+                numberOfLines={2}>
+                {actionText(item.action, practice).text}
+              </Text>
             </Text>
           </View>
-
-          <Text
+          <View
             style={{
-              marginTop: 5,
-              fontSize: normalize(11),
+              fontSize: normalize(8),
               fontFamily: 'SofiaProRegular',
-              color: theme.text2,
+              color: 'white',
+              paddingHorizontal: 0,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
             }}>
-            {timeAgo(item.time)}
-          </Text>
+            <View
+              style={{
+                paddingVertical: 2,
+                paddingHorizontal: 5,
+                backgroundColor: actionText(item.action, practice).color,
+              }}>
+              <Text
+                style={{
+                  fontSize: normalize(8),
+                  fontFamily: 'SofiaProRegular',
+                  color: 'white',
+                }}>
+                {item.action}
+              </Text>
+            </View>
+          </View>
 
           {/* ........ call text............. */}
         </View>
       </View>
       <View style={{ justifyContent: 'center' }}>
-        <TouchableOpacity
+        {isToday(item.time.split('T')[0]) && (
+          <View
+            style={{
+              backgroundColor: colors.quinary,
+              width: 30,
+              alignSelf: 'center',
+              borderColor: colors.background_1,
+              borderRadius: 2,
+            }}>
+            <Text
+              style={{
+                fontSize: normalize(9),
+                fontFamily: 'SofiaProBlack',
+                color: '#0000008e',
+                textAlign: 'center',
+              }}>
+              NEW
+            </Text>
+          </View>
+        )}
+        <Text
           style={{
-            backgroundColor:
-              status === 'pending'
-                ? colors.text_2
-                : status === 'approved'
-                ? colors.tertiary
-                : colors.danger,
-            borderRadius: 10,
-            marginBottom: 5,
-            width: 35,
-            height: 35,
-            justifyContent: 'center',
+            marginTop: 5,
+            fontSize: normalize(10),
+            fontFamily: 'SofiaProMedium',
+            color: theme.text2,
           }}>
-          <Icon
-            type={status === 'video' ? 'foundation' : 'foundation'}
-            name={status === 'video' ? 'video' : 'telephone'}
-            color="white"
-            size={normalize(18)}
-            style={
-              {
-                // fontSize: 11,
-                // margin: 0,
-                // alignSelf: 'center',
-              }
-            }
-          />
-        </TouchableOpacity>
+          {isToday(item.createdAt)
+            ? timeAgo(item.createdAt, 'short')
+            : timeAgo(item.createdAt.split('T')[0], 'short')}
+        </Text>
       </View>
     </View>
   );
@@ -160,7 +241,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   cardhead: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
   },
   dot: {
     backgroundColor: 'green',

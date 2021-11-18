@@ -29,6 +29,7 @@ import {
 } from '../../redux/practices/practices.actions';
 import { usePubNub } from 'pubnub-react';
 import Appointment from './appointment/Appointment';
+import { useIsFocused, useTheme } from '@react-navigation/native';
 import notifee, {
   AndroidImportance,
   EventType,
@@ -40,6 +41,7 @@ import { SocketContext } from '../../context/socketContext';
 import { getAppointmentStart } from '../../redux/appointment/appointment.actions';
 import { showMessage } from 'react-native-flash-message';
 import Notification from './notification/Notification';
+import { Icon } from 'react-native-elements';
 
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -59,8 +61,7 @@ const MainScreen = ({
   const pubnub = usePubNub();
   const dimensions = useWindowDimensions();
   const [isInitialRender, setIsInitialRender] = useState(false);
-  let lastId = 0;
-  let chaList = '';
+  const { colors } = useTheme();
   const [groupCha, setGroupCha] = useState([]);
 
   const getSocket = useContext(SocketContext);
@@ -75,10 +76,41 @@ const MainScreen = ({
         console.log('notification data: ', data);
         switch (data.action) {
           case 'Accept join request':
+            showMessage({
+              message: `${data?.initiatorName} have approved your request to join there practice.`,
+              type: 'none',
+              duration: 6000,
+              icon: { icon: 'auto', position: 'left' },
+              renderFlashMessageIcon: () => (
+                <Icon
+                  type="ionicon"
+                  name="ios-notifications-sharp"
+                  color={'white'}
+                  style={{ paddingRight: 10 }}
+                />
+              ),
+              backgroundColor: colors.background_3,
+            });
             getPracticesAllStart();
             getJoinedPracticesStart();
+            getAppointmentStart();
             break;
           case 'Approved appointment':
+            showMessage({
+              message: `${data?.initiatorName} have approved your appointment schedule`,
+              type: 'none',
+              duration: 6000,
+              icon: { icon: 'auto', position: 'left' },
+              renderFlashMessageIcon: () => (
+                <Icon
+                  type="ionicon"
+                  name="ios-notifications-sharp"
+                  color={'white'}
+                  style={{ paddingRight: 10 }}
+                />
+              ),
+              backgroundColor: colors.background_3,
+            });
             getAppointmentStart();
             break;
           case 'Remove patient':
@@ -86,9 +118,20 @@ const MainScreen = ({
             showMessage({
               message: `You have being removed from ${data?.initiatorName}`,
               type: 'none',
-              duration: 5000,
+              duration: 6000,
+              icon: { icon: 'auto', position: 'left' },
+              renderFlashMessageIcon: () => (
+                <Icon
+                  type="ionicon"
+                  name="ios-notifications-sharp"
+                  color={'white'}
+                  style={{ paddingRight: 10 }}
+                />
+              ),
+              backgroundColor: colors.background_3,
             });
             setTimeout(() => {
+              getAppointmentStart();
               getPracticesAllStart();
               getJoinedPracticesStart();
               getPracticesDmsStart();

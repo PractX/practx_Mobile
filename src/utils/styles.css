@@ -1,6 +1,6 @@
 #mo {
   color: rgb(0, 124, 0);
-  background: #242424
+  background: #03a711
 }
 
 .light {
@@ -10,6 +10,7 @@
   primary_dark: '#038125',
   secondary: '#00c7e5',
   tertiary: '#44b94e',
+  tertiary_1: '#399941',
   quaternary: '#5654dc',
   quinary: '#ffa873',
   senary: '#fce7ea',
@@ -36,6 +37,7 @@
   primary_dark: '#038125',
   secondary: '#00c7e5',
   tertiary: '#44b94e',
+  tertiary_1: '#399941',
   quaternary: '#5654dc',
   quinary: '#ffa873',
   senary: '#fce7ea',

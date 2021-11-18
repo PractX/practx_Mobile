@@ -23,7 +23,6 @@ import { useIsFocused, useTheme } from '@react-navigation/native';
 import { useIsDrawerOpen } from '@react-navigation/drawer';
 import { normalize, Icon } from 'react-native-elements';
 import { FlatList } from 'react-native';
-import { getAppointmentStart } from '../../../redux/appointment/appointment.actions';
 import { connect } from 'react-redux';
 import {
   selectAppointments,
@@ -33,6 +32,11 @@ import { createStructuredSelector } from 'reselect';
 import { showMessage } from 'react-native-flash-message';
 import { selectPatientNotifications } from '../../../redux/practices/practices.selector';
 import timeAgo from '../../../utils/timeAgo';
+import { selectCurrentUser } from '../../../redux/user/user.selector';
+import isToday from '../../../utils/isToday';
+import { getAllPatientNotificationStart } from '../../../redux/practices/practices.actions';
+import datesGroupByComponent from '../../../utils/datesGroupByComponent';
+import convertToArray from '../../../utils/convertToArray';
 // const Stack = createStackNavigator();
 
 const windowWidth = Dimensions.get('window').width;
@@ -74,15 +78,14 @@ const appointmentDatas = [
 
 const Notification = ({
   navigation,
-  getAppointmentStart,
-  allAppointments,
+  currentUser,
+  getAllPatientNotificationStart,
   allNotifications,
   isLoading,
 }) => {
   const bottomSheetRef = useRef();
   const { colors } = useTheme();
   const isFocused = useIsFocused();
-  const appointmentData = allAppointments?.rows;
   const [style1, setStyle1] = useState();
   const [refreshing, setRefreshing] = useState(false);
   const [notificationData, setNotificationData] = useState([]);
@@ -91,98 +94,6 @@ const Notification = ({
     new Date().toISOString().split('T')[0],
   );
   const [appointmentDate, setAppointmentDate] = useState([]);
-
-  // const appointmentDate =
-  //   appointmentData && appointmentData.length > 0
-  //     ? Object.fromEntries(
-  //         appointmentData?.map((item) =>
-  //           item.date.split('T')[0] >= new Date().toISOString().split('T')[0]
-  //             ? [
-  //                 item.date.split('T')[0],
-  //                 {
-  //                   selected: true,
-  //                   selectedColor: colors.primary,
-  //                   customStyles: {
-  //                     container: {
-  //                       borderRadius: 50,
-  //                       // backgroundColor: colors.primary,
-  //                     },
-  //                   },
-  //                   marked: true,
-  //                   dotColor: 'white',
-  //                 },
-  //               ]
-  //             : {},
-  //         ),
-  //       )
-  //     : [];
-
-  useEffect(() => {
-    appointmentData?.length > 0
-      ? setAppointmentDate(
-          Object.fromEntries(
-            appointmentData?.map(item =>
-              item.date.split('T')[0] >= new Date().toISOString().split('T')[0]
-                ? [
-                    item.date.split('T')[0],
-                    {
-                      selected: true,
-                      selectedColor:
-                        item?.approvalStatus === 'pending'
-                          ? colors.text_2
-                          : item?.approvalStatus === 'approved'
-                          ? colors.tertiary
-                          : colors.primary_light1,
-                      dots: appointmentData
-                        ?.map(it => {
-                          if (
-                            it.date.split('T')[0] === item.date.split('T')[0]
-                          ) {
-                            return {
-                              key: 'vacation',
-                              color: 'red',
-                              selectedDotColor:
-                                it.approvalStatus === 'approved'
-                                  ? colors.success0
-                                  : it.approvalStatus === 'declined'
-                                  ? colors.danger_3
-                                  : 'white',
-                            };
-                          }
-                        })
-                        ?.filter(ut => ut !== undefined),
-
-                      customStyles: {
-                        container: {
-                          borderRadius: 50,
-                          // backgroundColor: colors.primary,
-                        },
-                      },
-                      marked: true,
-                      dotColor: 'white',
-                    },
-                  ]
-                : {},
-            ),
-          ),
-        )
-      : setAppointmentDate({});
-  }, [allAppointments]);
-
-  console.log(
-    'Appointment Date',
-    appointmentData
-      ?.map(it => {
-        if (it.date.split('T')[0] === '2021-10-21') {
-          return {
-            key: 'vacation',
-            color: 'red',
-            selectedDotColor: 'white',
-          };
-        }
-      })
-      ?.filter(ut => ut !== undefined),
-  );
 
   useEffect(() => {
     appointmentDate && Object.keys(appointmentDate)?.length > 0
@@ -223,65 +134,61 @@ const Notification = ({
     },
   });
 
+  // useEffect(() => {
+  //   if (isFocused) {
+  //   }
+  // }, [isFocused]);
+
   useEffect(() => {
     if (isFocused) {
-      getAppointmentStart();
-      showMessage({
-        message: 'You have being removed from Super medical practice',
-        type: 'none',
-        duration: 6000,
-        icon: { icon: 'auto', position: 'left' },
-        renderFlashMessageIcon: () => (
-          <Icon
-            type="ionicon"
-            name="ios-notifications-sharp"
-            color={'white'}
-            style={{ paddingRight: 10 }}
-          />
-        ),
-        backgroundColor: colors.background_3,
-      });
-    }
-  }, [isFocused]);
-
-  function datesGroupByComponent(dates, token) {
-    return dates.reduce(function (val, obj) {
-      // console.log('DATE TIME', moment(obj.time, 'MM/DD/YYYY'));
-      let comp = moment(obj.time, 'YYYY/MM/DD').format(token);
-      (val[comp] = val[comp] || []).push(obj);
-      return val;
-    }, {});
-  }
-  function convertToArray(obj) {
-    const length = Math.max(...Object.keys(obj));
-    const res = Array.from({ length }, (_, i) => obj[i + 1] || 0).filter(
-      it => it !== 0,
-    );
-    return res;
-  }
-  // 09034301510
-  useEffect(() => {
-    if (allNotifications) {
-      // const gmtDate = new Date(unixTimestamp * 1000);
-      // const localeDateTime = gmtDate.toLocaleString();
-      // setNewMessageTime(timeAgo(gmtDate));
+      getAllPatientNotificationStart();
       setNotificationData(
         convertToArray(datesGroupByComponent(allNotifications.rows, 'D'))
           .map(it => {
             return {
-              title: timeAgo(it[0].time),
+              title: isToday(it[it.length - 1].createdAt)
+                ? timeAgo(it[it.length - 1].createdAt)
+                : timeAgo(it[it.length - 1].createdAt.split('T')[0]),
               data: it,
             };
           })
+          .map(its => {
+            its.data.sort(function (a, b) {
+              // Turn your strings into dates, and then subtract them
+              // to get a value that is either negative, positive, or zero.
+              return new Date(b.time) - new Date(a.time);
+            });
+            return its;
+          })
           .reverse(),
       );
-      console.log('All Notifications---', notificationData);
     }
-  }, [allNotifications]);
-  // allNotifications;
-  // 07015922425
+  }, [isFocused]);
+
   useEffect(() => {
-    getAppointmentStart();
+    setNotificationData(
+      convertToArray(datesGroupByComponent(allNotifications.rows, 'D'))
+        .map(it => {
+          return {
+            title: isToday(it[it.length - 1].createdAt)
+              ? timeAgo(it[it.length - 1].createdAt)
+              : timeAgo(it[it.length - 1].createdAt.split('T')[0]),
+            data: it,
+          };
+        })
+        .map(its => {
+          its.data.sort(function (a, b) {
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return new Date(b.time) - new Date(a.time);
+          });
+          return its;
+        })
+        .reverse(),
+    );
+  }, [allNotifications]);
+
+  useEffect(() => {
     if (isDrawerOpen) {
       setStyle1('open');
       console.log('Open');
@@ -310,11 +217,8 @@ const Notification = ({
       <View
         style={[
           style1 === 'open' && {
-            // borderWidth: 20,
             backgroundColor: colors.background,
             height: '100%',
-            // zIndex: 100,
-            // IOS
             shadowOffset: {
               width: 0,
               height: 2,
@@ -325,8 +229,6 @@ const Notification = ({
             elevation: 3,
             borderRadius: 30,
             overflow: 'hidden',
-            // flexDirection: 'column',
-            // justifyContent: 'space-between',
           },
         ]}>
         <Header
@@ -352,25 +254,47 @@ const Notification = ({
             // alignSelf: 'center',
             // marginBottom: 100,
           }}>
-          {/* <Text
-            style={{
-              marginHorizontal: 20,
-              marginTop: 10,
-              marginBottom: 5,
-              color: colors.text,
-              fontFamily: 'SofiaProSemiBold',
-              fontSize: normalize(13),
-            }}>
-            {pickedDate === new Date().toISOString().split('T')[0]
-              ? "Today's Appointment"
-              : moment(pickedDate).format('ddd d MMM') + ' Appointments'}
-          </Text> */}
           <SectionList
             sections={notificationData}
+            // sections={[]}
             keyExtractor={(item, index) => item + index}
             initialNumToRender={5}
             updateCellsBatchingPeriod={5}
             showsVerticalScrollIndicator={true}
+            ListEmptyComponent={() => (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingTop: windowHeight / 6,
+                }}>
+                <Icon
+                  name="bell-off"
+                  type="material-community"
+                  color={colors.text_2}
+                  size={normalize(70)}
+                  style={{ marginBottom: 10 }}
+                />
+                <Text
+                  style={{
+                    fontSize: normalize(17),
+                    fontFamily: 'SofiaProSemiBold',
+                    color: colors.text,
+                    marginBottom: 5,
+                  }}>
+                  Nothing here!!!
+                </Text>
+                <Text
+                  style={{
+                    fontSize: normalize(14),
+                    fontFamily: 'SofiaProMedium',
+                    color: colors.text,
+                    textAlign: 'center',
+                  }}>
+                  {'You have no notification available \n check again later'}
+                </Text>
+              </View>
+            )}
             renderItem={({ item, sections, index }) => (
               // <EventLists item={item} navigation={navigation} styles={styles} />
               <NotificationList
@@ -379,10 +303,12 @@ const Notification = ({
                 navigation={navigation}
                 notificationData={notificationData}
                 section={sections}
+                currentUser={currentUser}
               />
             )}
-            renderSectionHeader={({ section: { title, gigs } }) =>
-              title !== notificationData[0].title ? (
+            renderSectionHeader={
+              ({ section: { title, gigs } }) => (
+                // title !== notificationData[0].title ? (
                 <View
                   style={[
                     {
@@ -405,7 +331,8 @@ const Notification = ({
                     {title}
                   </Text>
                 </View>
-              ) : null
+              )
+              // ) : null
             }
             style={{
               marginTop: 50,
@@ -439,13 +366,14 @@ const Notification = ({
 };
 
 const mapStateToProps = createStructuredSelector({
-  allAppointments: selectAppointments,
+  currentUser: selectCurrentUser,
   allNotifications: selectPatientNotifications,
   isLoading: selectIsLoading,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getAppointmentStart: data => dispatch(getAppointmentStart(data)),
+  getAllPatientNotificationStart: () =>
+    dispatch(getAllPatientNotificationStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Notification);

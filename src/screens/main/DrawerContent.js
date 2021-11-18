@@ -85,7 +85,7 @@ const DrawerContent = ({
 
   const toggleSwitch = () => {
     isEnabled ? setTheme('Light') : setTheme('Dark');
-    setIsEnabled((previousState) => !previousState);
+    setIsEnabled(previousState => !previousState);
   };
 
   // console.log(currentUser);
@@ -118,7 +118,7 @@ const DrawerContent = ({
     //   })
     //   .catch((error) => setLoginText('Login'));
   };
-  const search = (value) => {
+  const search = value => {
     console.log(value);
   };
   useMemo(() => {
@@ -403,7 +403,7 @@ const DrawerContent = ({
                   });
                 }}
               /> */}
-              {/* <DrawerItem
+              <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
                   fontSize: normalize(13),
@@ -420,7 +420,7 @@ const DrawerContent = ({
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'AddGroup',
+                      'Notification',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -428,7 +428,6 @@ const DrawerContent = ({
                   });
                 }}
               />
-             */}
             </View>
 
             {/* ---------------------------- Customer Support ---------------------------- */}
@@ -542,7 +541,7 @@ const DrawerContent = ({
                 onColor={colors.background_1}
                 offColor={colors.background_1}
                 size="medium"
-                onToggle={(isOn) => toggleSwitch()}
+                onToggle={isOn => toggleSwitch()}
                 icon={
                   isEnabled ? (
                     <Icon
@@ -725,12 +724,12 @@ const mapStateToProps = createStructuredSelector({
   currentNetState: selectNetState,
   storageDownload: selectDownloadStorage,
 });
-const mapDispatchToProps = (dispatch) => ({
-  setTheme: (mode) => dispatch(setTheme(mode)),
-  setCurrentUser: (data) => dispatch(setCurrentUser(data)),
+const mapDispatchToProps = dispatch => ({
+  setTheme: mode => dispatch(setTheme(mode)),
+  setCurrentUser: data => dispatch(setCurrentUser(data)),
   signOutStart: () => dispatch(signOutStart()),
-  setMyDownloads: (data) => dispatch(setMyDownloads(data)),
-  setFilter: (data) => dispatch(setFilter(data)),
+  setMyDownloads: data => dispatch(setMyDownloads(data)),
+  setFilter: data => dispatch(setFilter(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DrawerContent);
