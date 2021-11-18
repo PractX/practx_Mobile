@@ -63,8 +63,10 @@ const AppointmentBooking = ({
   setShowAppointmentBooking,
   extraData,
   bookAppointment,
+  route,
 }) => {
   const { colors } = useTheme();
+  const { params } = route;
   const isFocused = useIsFocused();
   const [style1, setStyle1] = useState();
   console.log(practiceData);
@@ -157,13 +159,21 @@ const AppointmentBooking = ({
   };
 
   useEffect(() => {
-    if (isFocused && selectedPractice === null) {
+    if (isFocused && params) {
+      setSelectedPractice(params?.practice);
+    } else if (isFocused && selectedPractice === null) {
       setTimeout(() => {
         console.log('Good', selectedPractice);
         showModal();
       }, 1000);
     }
-  }, [isFocused, selectedPractice]);
+  }, [isFocused, selectedPractice, params]);
+
+  useEffect(() => {
+    if (params) {
+      setSelectedPractice(params?.practice);
+    }
+  }, [params]);
 
   return (
     <SafeAreaView

@@ -1045,7 +1045,11 @@ const ChatScreen = ({
                   {
                     name: 'calendar',
                     type: 'ant-design',
-                    onPress: () => navigation.navigate('Appointment', {}),
+                    onPress: () =>
+                      navigation.navigate('Appointment', {
+                        to: 'AppointmentBooking',
+                        practice: practice,
+                      }),
                     buttonType: 'save',
                   },
                   {

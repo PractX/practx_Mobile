@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Dimensions, TextInput, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Appointments from './Appointments';
@@ -7,7 +7,8 @@ import AppointmentBooking from './AppointmentBooking';
 
 const Stack = createStackNavigator();
 
-const Appointment = ({ navigation }) => {
+const Appointment = ({ navigation, route }) => {
+  const { params } = route;
   // console.log(navigation.dangerouslyGetState());
   // Stack.navigationOptions = ({ navigation }) => {
   //     navigation.state.index !== undefined
@@ -22,13 +23,19 @@ const Appointment = ({ navigation }) => {
   //     drawerLockMode,
   //   };
   // };
+  useEffect(() => {
+    if (params) {
+      console.log('Pramssss--', params);
+      navigation.navigate(params?.to, { practice: params?.practice });
+    }
+  }, [params]);
   return (
     <Stack.Navigator initialRouteName="Appointments" headerMode="none">
       <Stack.Screen name="Appointments">
-        {(props) => <Appointments {...props} extraData={navigation} />}
+        {props => <Appointments {...props} extraData={navigation} />}
       </Stack.Screen>
       <Stack.Screen name="AppointmentBooking">
-        {(props) => <AppointmentBooking {...props} extraData={navigation} />}
+        {props => <AppointmentBooking {...props} extraData={navigation} />}
       </Stack.Screen>
       {/* <Stack.Screen name="Settings" component={Settings} /> */}
     </Stack.Navigator>

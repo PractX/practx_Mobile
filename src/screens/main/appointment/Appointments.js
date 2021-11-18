@@ -76,8 +76,10 @@ const Appointments = ({
   getAppointmentStart,
   allAppointments,
   isLoading,
+  route,
 }) => {
   const bottomSheetRef = useRef();
+  const { params } = route;
   const { colors } = useTheme();
   const isFocused = useIsFocused();
   const appointmentData = allAppointments?.rows;
@@ -119,7 +121,7 @@ const Appointments = ({
     appointmentData?.length > 0
       ? setAppointmentDate(
           Object.fromEntries(
-            appointmentData?.map((item) =>
+            appointmentData?.map(item =>
               item.date.split('T')[0] >= new Date().toISOString().split('T')[0]
                 ? [
                     item.date.split('T')[0],
@@ -132,7 +134,7 @@ const Appointments = ({
                           ? colors.tertiary
                           : colors.primary_light1,
                       dots: appointmentData
-                        ?.map((it) => {
+                        ?.map(it => {
                           if (
                             it.date.split('T')[0] === item.date.split('T')[0]
                           ) {
@@ -148,7 +150,7 @@ const Appointments = ({
                             };
                           }
                         })
-                        ?.filter((ut) => ut !== undefined),
+                        ?.filter(ut => ut !== undefined),
 
                       customStyles: {
                         container: {
@@ -170,7 +172,7 @@ const Appointments = ({
   console.log(
     'Appointment Date',
     appointmentData
-      ?.map((it) => {
+      ?.map(it => {
         if (it.date.split('T')[0] === '2021-10-21') {
           return {
             key: 'vacation',
@@ -179,7 +181,7 @@ const Appointments = ({
           };
         }
       })
-      ?.filter((ut) => ut !== undefined),
+      ?.filter(ut => ut !== undefined),
   );
 
   useEffect(() => {
@@ -317,7 +319,7 @@ const Appointments = ({
               horizontal={true}
               // pagingEnabled={true}
               showScrollIndicator={true}
-              onDayPress={(day) => {
+              onDayPress={day => {
                 console.log('Date', day.dateString);
                 setPickedDate(day.dateString);
                 return setSelectedDate({
@@ -426,7 +428,7 @@ const Appointments = ({
                 style={{ marginBottom: 100 }}
                 data={
                   appointmentData?.filter(
-                    (it) => it.date.split('T')[0] === pickedDate,
+                    it => it.date.split('T')[0] === pickedDate,
                   ) || []
                 }
                 numColumns={1}
@@ -484,7 +486,7 @@ const Appointments = ({
                       },
                       index ===
                         appointmentData?.filter(
-                          (it) => it.date.split('T')[0] === pickedDate,
+                          it => it.date.split('T')[0] === pickedDate,
                         )?.length -
                           1 && {
                         paddingBottom: 60,
@@ -536,8 +538,8 @@ const mapStateToProps = createStructuredSelector({
   isLoading: selectIsLoading,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  getAppointmentStart: (data) => dispatch(getAppointmentStart(data)),
+const mapDispatchToProps = dispatch => ({
+  getAppointmentStart: data => dispatch(getAppointmentStart(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Appointments);

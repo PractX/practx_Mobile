@@ -44,7 +44,7 @@ const DmsBox = ({
           10000000;
       const gmtDate = new Date(unixTimestamp * 1000);
       // const localeDateTime = gmtDate.toLocaleString();
-      setNewMessageTime(timeAgo(gmtDate));
+      setNewMessageTime(timeAgo(gmtDate, 'short'));
     }
   }, [allMessages, time]);
 
@@ -52,7 +52,7 @@ const DmsBox = ({
 
   // console.log('Available Signals', signals, '----', dmChannel);
   const getSignal = () =>
-    signals ? signals.find((i) => i.channel === dmChannel) : null;
+    signals ? signals.find(i => i.channel === dmChannel) : null;
   // const handleMessage = (event) => {
   //   const message = event.message;
   //   if (typeof message === 'string' || message.hasOwnProperty('text')) {
@@ -85,7 +85,7 @@ const DmsBox = ({
           channelName:
             item && item.Dm && item.Dm.channelName && item.Dm.channelName,
           practiceDms,
-          subgroups: subgroups.find((items) => items.practiceId === item.id),
+          subgroups: subgroups.find(items => items.practiceId === item.id),
           group: null,
           navigation: navigation,
           type: 'dm',
@@ -133,9 +133,7 @@ const DmsBox = ({
               channelName:
                 item && item.Dm && item.Dm.channelName && item.Dm.channelName,
               practiceDms,
-              subgroups: subgroups.find(
-                (items) => items.practiceId === item.id,
-              ),
+              subgroups: subgroups.find(items => items.practiceId === item.id),
               group: null,
               navigation: navigation,
               type: 'dm',

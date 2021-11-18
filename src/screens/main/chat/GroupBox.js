@@ -49,7 +49,7 @@ const GroupBox = ({
           10000000;
       const gmtDate = new Date(unixTimestamp * 1000);
       // const localeDateTime = gmtDate.toLocaleString();
-      setNewMessageTime(timeAgo(gmtDate));
+      setNewMessageTime(timeAgo(gmtDate, 'short'));
     }
   }, [allMessages, time]);
 
@@ -59,7 +59,7 @@ const GroupBox = ({
     item.subgroupChats[0].PatientSubgroup.channelName;
 
   const getSignal = () =>
-    signals ? signals.find((i) => i.channel === groupChannel) : null;
+    signals ? signals.find(i => i.channel === groupChannel) : null;
   // const handleMessage = (event) => {
   //   const message = event.message;
   //   if (typeof message === 'string' || message.hasOwnProperty('text')) {
@@ -95,9 +95,7 @@ const GroupBox = ({
             item.subgroupChats.length > 0 &&
             item.subgroupChats[0].PatientSubgroup.channelName,
           practiceDms,
-          subgroups: subgroups.find(
-            (items) => items.practiceId === practices.id,
-          ),
+          subgroups: subgroups.find(items => items.practiceId === practices.id),
           type: 'group',
         });
       }}
@@ -157,7 +155,7 @@ const GroupBox = ({
                 item.subgroupChats[0].PatientSubgroup.channelName,
               practiceDms,
               subgroups: subgroups.find(
-                (items) => items.practiceId === practices.id,
+                items => items.practiceId === practices.id,
               ),
               type: 'group',
             });

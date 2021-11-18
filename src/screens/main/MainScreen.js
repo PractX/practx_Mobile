@@ -21,6 +21,7 @@ import {
   selectCurrentPracticeId,
 } from '../../redux/practices/practices.selector';
 import {
+  getAllPatientNotificationStart,
   getJoinedPracticesStart,
   getPracticesAllStart,
   getPracticesDmsStart,
@@ -57,6 +58,7 @@ const MainScreen = ({
   getPracticesDmsStart,
   setPracticeId,
   currentPracticeId,
+  getAllPatientNotificationStart,
 }) => {
   const pubnub = usePubNub();
   const dimensions = useWindowDimensions();
@@ -91,9 +93,29 @@ const MainScreen = ({
               ),
               backgroundColor: colors.background_3,
             });
+            getAllPatientNotificationStart();
             getPracticesAllStart();
             getJoinedPracticesStart();
             getAppointmentStart();
+            break;
+          case 'Book appointment for patient':
+            showMessage({
+              message: `${data?.initiatorName} have just scheduled an appointment for you.`,
+              type: 'none',
+              duration: 6000,
+              icon: { icon: 'auto', position: 'left' },
+              renderFlashMessageIcon: () => (
+                <Icon
+                  type="ionicon"
+                  name="ios-notifications-sharp"
+                  color={'white'}
+                  style={{ paddingRight: 10 }}
+                />
+              ),
+              backgroundColor: colors.background_3,
+            });
+            getAppointmentStart();
+            getAllPatientNotificationStart();
             break;
           case 'Approved appointment':
             showMessage({
@@ -111,6 +133,26 @@ const MainScreen = ({
               ),
               backgroundColor: colors.background_3,
             });
+            getAllPatientNotificationStart();
+            getAppointmentStart();
+            break;
+          case 'Declined appointment':
+            showMessage({
+              message: `${data?.initiatorName} have just declined your appointment schedule`,
+              type: 'none',
+              duration: 6000,
+              icon: { icon: 'auto', position: 'left' },
+              renderFlashMessageIcon: () => (
+                <Icon
+                  type="ionicon"
+                  name="ios-notifications-sharp"
+                  color={'white'}
+                  style={{ paddingRight: 10 }}
+                />
+              ),
+              backgroundColor: colors.background_3,
+            });
+            getAllPatientNotificationStart();
             getAppointmentStart();
             break;
           case 'Remove patient':
@@ -131,11 +173,15 @@ const MainScreen = ({
               backgroundColor: colors.background_3,
             });
             setTimeout(() => {
+              getAllPatientNotificationStart();
               getAppointmentStart();
               getPracticesAllStart();
               getJoinedPracticesStart();
               getPracticesDmsStart();
             }, 1000);
+            break;
+          case 'Leave practice':
+            getAllPatientNotificationStart();
             break;
           default:
             break;
@@ -690,5 +736,7 @@ const mapDispatchToProps = dispatch => ({
   getAppointmentStart: data => dispatch(getAppointmentStart(data)),
   getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
   setPracticeId: id => dispatch(setPracticeId(id)),
+  getAllPatientNotificationStart: () =>
+    dispatch(getAllPatientNotificationStart()),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

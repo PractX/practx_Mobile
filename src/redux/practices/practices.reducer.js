@@ -193,6 +193,12 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         isFetching: false,
         isLoading: true,
       };
+    case PracticesActionTypes.LEAVE_PRACTICE_START:
+      return {
+        ...state,
+        isFetching: false,
+        isLoading: true,
+      };
     case PracticesActionTypes.GET_ALL_PATIENT_NOTIFICATION_START:
       return {
         ...state,

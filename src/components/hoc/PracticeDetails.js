@@ -190,7 +190,7 @@ const PracticeDetails = ({
                     color={colors.text_2}
                     size={normalize(20)}
                   />
-                ) : type === 'member' ? (
+                ) : isLoading !== 'left' && type === 'member' ? (
                   <Button
                     title="Leave"
                     onPress={() => {
@@ -199,7 +199,10 @@ const PracticeDetails = ({
                         practiceId: data.id,
                         practiceName: data.practiceName,
                       });
-                      bottomSheetRef.current.snapTo(1);
+                      setTimeout(() => {
+                        bottomSheetRef.current.snapTo(1);
+                      }, 5000);
+
                       // await setPracticeId(practice.id);
                       // await navigation.navigate('Chats');
                     }}

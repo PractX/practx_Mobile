@@ -475,6 +475,7 @@ export function* willLeavePractice({ payload: { practiceId, practiceName } }) {
     } else {
       yield put(setPracticeId(0));
     }
+
     yield put(getJoinedPracticesStart());
     yield put(getPracticesAllStart());
     yield put(getPracticesDmsStart());
@@ -482,7 +483,7 @@ export function* willLeavePractice({ payload: { practiceId, practiceName } }) {
       message: `You have successfully left ${practiceName}`,
       type: 'success',
     });
-    console.log('Leaving data >>>>', result);
+    yield put(setLoading('left'));
 
     // yield put(getPracticeStaffSuccess(result.practiceStaffs.staffs));
   } catch (error) {
