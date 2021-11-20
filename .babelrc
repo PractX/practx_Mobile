@@ -6,7 +6,7 @@
     }
   },
   "plugins": [
-    // "transform-remove-console",
+    "transform-remove-console",
     [
       "babel-plugin-inline-import",
       
