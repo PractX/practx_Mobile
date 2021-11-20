@@ -148,7 +148,7 @@ const MainHeader = ({
                   paddingVertical: allNotifications?.count > 99 ? 2.5 : 1.5,
                   paddingHorizontal: allNotifications?.count > 99 ? 2 : 2.5,
                 }}>
-                {allNotifications?.count > 99 ? '99+' : allNotifications.count}
+                {allNotifications?.count > 99 ? '99+' : allNotifications?.count}
               </Text>
             </View>
           </TouchableOpacity>
