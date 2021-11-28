@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import NotificationList from './NotificationList';
 import Header from '../../../components/hoc/Header';
-import moment from 'moment';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView } from 'react-navigation';
@@ -24,6 +23,7 @@ import { useIsDrawerOpen } from '@react-navigation/drawer';
 import { normalize, Icon } from 'react-native-elements';
 import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
+// 07015922425
 import {
   selectAppointments,
   selectIsLoading,

@@ -222,3 +222,13 @@ export const getAllNotificationsApi = async token => {
   const data = await Axios.get(apiUrl, { headers: headers });
   return data;
 };
+
+export const viewAllNotificationsApi = async token => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const apiUrl = REACT_APP_API + REACT_APP_GET_NOTIFICATION;
+  const data = await Axios.get(apiUrl, { headers: headers });
+  return data;
+};
