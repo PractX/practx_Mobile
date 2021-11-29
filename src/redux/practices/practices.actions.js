@@ -59,6 +59,11 @@ export const getAllPatientNotificationSuccess = data => ({
   payload: data,
 });
 
+export const markNotification = id => ({
+  type: PracticesActionTypes.MARK_NOTIFICATION,
+  payload: id,
+});
+
 export const getPracticeStaffSuccess = data => ({
   type: PracticesActionTypes.GET_PRACTICE_STAFF_SUCCESS,
   payload: data,

@@ -12,6 +12,7 @@ import {
   joinPracticeApi,
   searchPracticesApi,
   getAllNotificationsApi,
+  markNotificationApi,
 } from '../../apis/api';
 import PracticesActionTypes from './practices.types';
 import { REACT_APP_MONT } from '@env';
@@ -30,6 +31,7 @@ import {
   getJoinedPracticesStart,
   getPracticesDmsStart,
   getAllPatientNotificationSuccess,
+  getAllPatientNotificationStart,
   // setPracticeId,
 } from './practices.actions';
 import { showMessage } from 'react-native-flash-message';
@@ -548,10 +550,59 @@ export function* willGetAllPatientNotifications() {
   }
 }
 
+export function* willMarkNotifications({ payload: id }) {
+  const token = yield select(userToken);
+  console.log('going in aoi', id);
+  try {
+    const result = yield markNotificationApi(id, token).then(function (
+      response,
+    ) {
+      return response;
+    });
+    console.log('mark notifications -- data', result);
+    yield put(getAllPatientNotificationStart());
+  } catch (error) {
+    console.log('Main error', error);
+    let eMsg = '';
+    if (error.response) {
+      error?.response?.data?.errors?.map(function (i, err) {
+        if (error.response.data.errors.length > 1) {
+          eMsg += err + 1 + '. ' + i + '\n';
+          console.log(eMsg);
+        } else {
+          eMsg += i;
+          console.log(eMsg);
+        }
+      });
+      showMessage({
+        message: eMsg,
+        type: 'danger',
+      });
+    } else {
+      showMessage({
+        message: error.message,
+        type: 'danger',
+      });
+    }
+    // showMessage({
+    //   message: error.response ? error.response.data.errors : error.message,
+    //   type: 'danger',
+    // });
+    // yield delay(2000);
+  }
+}
+
 export function* onGetAllPractices() {
   yield takeLatest(
     PracticesActionTypes.GET_ALL_PRACTICES_START,
     willGetAllPractices,
+  );
+}
+
+export function* onMarkNotifications() {
+  yield takeLatest(
+    PracticesActionTypes.MARK_NOTIFICATION,
+    willMarkNotifications,
   );
 }
 
@@ -625,5 +676,6 @@ export function* practicesSagas() {
     call(onChatWithPractice),
     call(onGetPracticeStaff),
     call(onGetAllPatientNotifications),
+    call(onMarkNotifications),
   ]);
 }

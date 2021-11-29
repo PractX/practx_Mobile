@@ -232,3 +232,14 @@ export const viewAllNotificationsApi = async token => {
   const data = await Axios.get(apiUrl, { headers: headers });
   return data;
 };
+
+export const markNotificationApi = async (id, token) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: token,
+  };
+  const apiUrl =
+    REACT_APP_API + REACT_APP_GET_NOTIFICATION + `/${id}/mark-seen`;
+  const data = await Axios.patch(apiUrl, {}, { headers: headers });
+  return data;
+};

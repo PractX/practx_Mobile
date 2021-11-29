@@ -232,7 +232,9 @@ const Practx = ({
             buttonType: 'filter',
           }}
           notifyIcon={true}
-          allNotifications={allNotifications}
+          allNotifications={
+            allNotifications?.rows?.filter(it => !it.patientSeen)?.length
+          }
           checkState={checkState}
           setCheckState={setCheckState}
           setFilter={setFilter}

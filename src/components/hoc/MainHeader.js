@@ -131,7 +131,7 @@ const MainHeader = ({
             <View
               style={{
                 position: 'absolute',
-                right: allNotifications?.count > 20 ? -8 : -5,
+                right: allNotifications > 20 ? -8 : -5,
                 top: -2,
                 minWidth: 15,
                 backgroundColor: colors.primary,
@@ -145,10 +145,10 @@ const MainHeader = ({
                   fontFamily: 'SofiaProRegular',
                   color: 'white',
                   textAlign: 'center',
-                  paddingVertical: allNotifications?.count > 20 ? 2.5 : 1.5,
-                  paddingHorizontal: allNotifications?.count > 20 ? 2 : 2.5,
+                  paddingVertical: allNotifications > 20 ? 2.5 : 2.5,
+                  paddingHorizontal: allNotifications > 20 ? 2 : 2.5,
                 }}>
-                {allNotifications?.count > 20 ? '20+' : allNotifications?.count}
+                {allNotifications > 20 ? '20+' : allNotifications}
               </Text>
             </View>
           </TouchableOpacity>

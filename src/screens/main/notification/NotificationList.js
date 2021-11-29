@@ -46,7 +46,15 @@ const theme = {
   text3: '#555',
 };
 
-const NotificationList = ({ item, practice, currentUser, styling }) => {
+const NotificationList = ({
+  item,
+  practice,
+  currentUser,
+  styling,
+  setCurrentNotification,
+  showModal,
+  markNotification,
+}) => {
   const { colors } = useTheme();
   const actionText = (action, practices) => {
     switch (action) {
@@ -101,7 +109,15 @@ const NotificationList = ({ item, practice, currentUser, styling }) => {
     }
   };
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => {
+        markNotification(item.id);
+        setCurrentNotification({
+          ...item,
+          action: actionText(item.action, practice).text,
+        });
+        showModal();
+      }}
       style={[
         styling,
         styles.card,
@@ -189,8 +205,8 @@ const NotificationList = ({ item, practice, currentUser, styling }) => {
           {/* ........ call text............. */}
         </View>
       </View>
-      <View style={{ justifyContent: 'center' }}>
-        {isToday(item.time.split('T')[0]) && (
+      <View style={{ justifyContent: 'space-around' }}>
+        {isToday(item.time.split('T')[0]) && !item.patientSeen && (
           <View
             style={{
               backgroundColor: colors.quinary,
@@ -198,6 +214,8 @@ const NotificationList = ({ item, practice, currentUser, styling }) => {
               alignSelf: 'center',
               borderColor: colors.background_1,
               borderRadius: 2,
+              paddingVertical: 2,
+              alignItems: 'center',
             }}>
             <Text
               style={{
@@ -216,13 +234,25 @@ const NotificationList = ({ item, practice, currentUser, styling }) => {
             fontSize: normalize(10),
             fontFamily: 'SofiaProMedium',
             color: theme.text2,
+            textAlign: 'center',
           }}>
           {isToday(item.createdAt)
             ? timeAgo(item.createdAt, 'short')
             : timeAgo(item.createdAt.split('T')[0], 'short')}
         </Text>
+        {!item.patientSeen && (
+          <View
+            style={{
+              width: 6,
+              height: 6,
+              backgroundColor: colors.primary,
+              borderRadius: 200,
+              alignSelf: 'center',
+            }}
+          />
+        )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

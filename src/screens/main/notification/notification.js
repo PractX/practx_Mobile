@@ -12,6 +12,7 @@ import {
   Image,
   TextInput,
   SectionList,
+  ScrollView,
 } from 'react-native';
 import NotificationList from './NotificationList';
 import Header from '../../../components/hoc/Header';
@@ -20,7 +21,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaView } from 'react-navigation';
 import { useIsFocused, useTheme } from '@react-navigation/native';
 import { useIsDrawerOpen } from '@react-navigation/drawer';
-import { normalize, Icon } from 'react-native-elements';
+import { normalize, Icon, ListItem, Button } from 'react-native-elements';
 import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 // 07015922425
@@ -34,9 +35,14 @@ import { selectPatientNotifications } from '../../../redux/practices/practices.s
 import timeAgo from '../../../utils/timeAgo';
 import { selectCurrentUser } from '../../../redux/user/user.selector';
 import isToday from '../../../utils/isToday';
-import { getAllPatientNotificationStart } from '../../../redux/practices/practices.actions';
+import {
+  getAllPatientNotificationStart,
+  markNotification,
+} from '../../../redux/practices/practices.actions';
 import datesGroupByComponent from '../../../utils/datesGroupByComponent';
 import convertToArray from '../../../utils/convertToArray';
+import { Modal, Portal } from 'react-native-paper';
+import { Avatar } from 'react-native-elements/dist/avatar/Avatar';
 // const Stack = createStackNavigator();
 
 const windowWidth = Dimensions.get('window').width;
@@ -82,6 +88,7 @@ const Notification = ({
   getAllPatientNotificationStart,
   allNotifications,
   isLoading,
+  markNotification,
 }) => {
   const bottomSheetRef = useRef();
   const { colors } = useTheme();
@@ -93,46 +100,16 @@ const Notification = ({
   const [pickedDate, setPickedDate] = useState(
     new Date().toISOString().split('T')[0],
   );
-  const [appointmentDate, setAppointmentDate] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [currentNotification, setCurrentNotification] = useState(null);
 
-  useEffect(() => {
-    appointmentDate && Object.keys(appointmentDate)?.length > 0
-      ? setSelectedDate({
-          ...appointmentDate,
-          [new Date().toISOString().split('T')[0]]: {
-            selected: true,
-            selectedColor: colors.secondary,
-            customStyles: {
-              container: {
-                borderRadius: 50,
-              },
-            },
-          },
-        })
-      : setSelectedDate({
-          [new Date().toISOString().split('T')[0]]: {
-            selected: true,
-            selectedColor: colors.secondary,
-            customStyles: {
-              container: {
-                borderRadius: 50,
-              },
-            },
-          },
-        });
-  }, [appointmentDate]);
+  const showModal = () => setVisible(true);
+  const hideModal = () => {
+    setCurrentNotification(null);
+    setVisible(false);
+  };
 
-  const [selectedDate, setSelectedDate] = useState({
-    [new Date().toISOString().split('T')[0]]: {
-      selected: true,
-      selectedColor: colors.secondary,
-      customStyles: {
-        container: {
-          borderRadius: 50,
-        },
-      },
-    },
-  });
+  console.log('Current notification', currentNotification);
 
   // useEffect(() => {
   //   if (isFocused) {
@@ -245,6 +222,86 @@ const Notification = ({
           // }}
           // notifyIcon={true}
         />
+        <Portal>
+          <Modal
+            visible={visible}
+            onDismiss={hideModal}
+            contentContainerStyle={{
+              backgroundColor: colors.background,
+              width: appwidth - 50,
+              height: 300,
+              paddingVertical: 20,
+              alignSelf: 'center',
+              borderColor: colors.background_1,
+              borderWidth: 0.8,
+              borderRadius: 10,
+            }}>
+            <View
+              style={{
+                paddingBottom: 10,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Avatar
+                rounded
+                source={{
+                  uri:
+                    currentNotification?.initiatorId ===
+                    currentNotification?.patientId
+                      ? currentUser?.avatar
+                      : currentNotification?.Practice?.logo,
+                }}
+                size={60}
+              />
+            </View>
+
+            <ScrollView
+              style={{
+                backgroundColor: colors.background,
+                paddingHorizontal: 16,
+              }}>
+              <Text
+                style={{
+                  fontSize: normalize(14),
+                  fontFamily: 'SofiaProSemiBold',
+                  lineHeight: 16,
+                  color: colors.primary,
+                  marginTop: 15,
+                }}>
+                {currentNotification?.initiatorId ===
+                currentNotification?.patientId
+                  ? 'You'
+                  : currentNotification?.Practice?.practiceName}{' '}
+                <Text
+                  style={{
+                    fontSize: normalize(13),
+                    fontFamily: 'SofiaProRegular',
+                    color: colors.text,
+                  }}>
+                  {currentNotification?.action}
+                </Text>
+              </Text>
+            </ScrollView>
+            <Button
+              title="Close"
+              onPress={() => hideModal()}
+              rounded
+              buttonStyle={[
+                {
+                  backgroundColor: colors.primary,
+                  width: '50%',
+                  alignSelf: 'center',
+                },
+              ]}
+              titleStyle={{
+                fontFamily: 'SofiaProSemiBold',
+                fontSize: normalize(13),
+              }}
+              loading={isLoading}
+            />
+          </Modal>
+        </Portal>
         <View
           style={{
             alignSelf: 'center',
@@ -304,6 +361,9 @@ const Notification = ({
                 notificationData={notificationData}
                 section={sections}
                 currentUser={currentUser}
+                showModal={showModal}
+                setCurrentNotification={setCurrentNotification}
+                markNotification={markNotification}
               />
             )}
             renderSectionHeader={
@@ -372,6 +432,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
+  markNotification: id => dispatch(markNotification(id)),
   getAllPatientNotificationStart: () =>
     dispatch(getAllPatientNotificationStart()),
 });
