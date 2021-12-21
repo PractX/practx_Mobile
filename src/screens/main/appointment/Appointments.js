@@ -276,6 +276,7 @@ const Appointments = ({
             overflow: 'hidden',
             // flexDirection: 'column',
             // justifyContent: 'space-between',
+            opacity: 0.1,
           },
         ]}>
         <Header

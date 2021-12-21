@@ -413,7 +413,7 @@ const DrawerContent = ({
                 inactiveTintColor={colors.text}
                 activeTintColor={colors.secondary}
                 focused={
-                  navigation.dangerouslyGetState().index === 2 ? true : false
+                  navigation.dangerouslyGetState().index === 5 ? true : false
                 }
                 activeBackgroundColor={null}
                 label="Notifications"

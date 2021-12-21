@@ -220,6 +220,7 @@ const Practx = ({
             borderTopWidth: colors.mode === 'dark' ? 3 : 0,
             borderLeftWidth: colors.mode === 'dark' ? 1 : 0,
             // alignSelf: 'center',
+            opacity: 0.1,
           },
         ]}>
         <MainHeader
@@ -498,34 +499,36 @@ const Practx = ({
           }}
         />
       )}
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={[660, 0]}
-        borderRadius={40}
-        renderContent={() => (
-          <>
-            <View
-              style={{
-                flex: 1,
-                position: 'absolute',
-                backgroundColor: '#000000b9',
-                height: '100%',
-                width: '100%',
-              }}
-            />
-            <PracticeDetails
-              bottomSheetRef={bottomSheetRef}
-              navigation={navigation}
-              practiceData={practiceData}
-            />
-          </>
-        )}
-        initialSnap={1}
-        onOpenStart={() => setPracticeData({ ...practiceData, show: true })}
-        onOpenEnd={() => setPracticeData({ ...practiceData, show: true })}
-        onCloseStart={() => setPracticeData({ ...practiceData, show: false })}
-        onCloseEnd={() => setPracticeData({ show: false })}
-      />
+      {!isDrawerOpen && (
+        <BottomSheet
+          ref={bottomSheetRef}
+          snapPoints={[660, 0]}
+          borderRadius={40}
+          renderContent={() => (
+            <>
+              <View
+                style={{
+                  flex: 1,
+                  position: 'absolute',
+                  backgroundColor: '#000000b9',
+                  height: '100%',
+                  width: '100%',
+                }}
+              />
+              <PracticeDetails
+                bottomSheetRef={bottomSheetRef}
+                navigation={navigation}
+                practiceData={practiceData}
+              />
+            </>
+          )}
+          initialSnap={1}
+          onOpenStart={() => setPracticeData({ ...practiceData, show: true })}
+          onOpenEnd={() => setPracticeData({ ...practiceData, show: true })}
+          onCloseStart={() => setPracticeData({ ...practiceData, show: false })}
+          onCloseEnd={() => setPracticeData({ show: false })}
+        />
+      )}
     </SafeAreaView>
   );
 };

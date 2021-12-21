@@ -732,6 +732,7 @@ const ChatMessages = ({
             elevation: 3,
             borderRadius: 30,
             overflow: 'hidden',
+            opacity: 0.1,
           },
         ]}>
         <Header navigation={navigation} title="Messages" notifyIcon={true} />

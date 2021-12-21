@@ -165,12 +165,12 @@ const AppointmentList = ({ item, practice, status, styling }) => {
       <View style={{ justifyContent: 'center' }}>
         <TouchableOpacity
           style={{
-            backgroundColor:
-              status === 'pending'
-                ? colors.text_2
-                : status === 'approved'
-                ? colors.tertiary
-                : colors.danger,
+            // backgroundColor:
+            //   status === 'pending'
+            //     ? colors.text_2
+            //     : status === 'approved'
+            //     ? colors.tertiary
+            //     : colors.danger,
             borderRadius: 10,
             marginBottom: 5,
             width: 35,
@@ -178,10 +178,22 @@ const AppointmentList = ({ item, practice, status, styling }) => {
             justifyContent: 'center',
           }}>
           <Icon
-            type={status === 'video' ? 'foundation' : 'foundation'}
-            name={status === 'video' ? 'video' : 'telephone'}
-            color="white"
-            size={normalize(18)}
+            type={'ionicon'}
+            name={
+              status === 'pending'
+                ? 'ios-time-sharp'
+                : status === 'approved'
+                ? 'ios-checkmark-circle-sharp'
+                : 'ios-close-circle-sharp'
+            }
+            color={
+              status === 'pending'
+                ? colors.text_2
+                : status === 'approved'
+                ? colors.tertiary
+                : colors.danger
+            }
+            size={normalize(32)}
             style={
               {
                 // fontSize: 11,
