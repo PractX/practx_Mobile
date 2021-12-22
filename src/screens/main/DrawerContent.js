@@ -478,7 +478,7 @@ const DrawerContent = ({
                   });
                 }}
               />
-              <DrawerItem
+              {/* <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
                   fontSize: normalize(13),
@@ -502,7 +502,7 @@ const DrawerContent = ({
                     );
                   });
                 }}
-              />
+              /> */}
               <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
@@ -513,14 +513,14 @@ const DrawerContent = ({
                 inactiveTintColor={colors.text}
                 activeTintColor={colors.secondary}
                 focused={
-                  navigation.dangerouslyGetState().index === 8 ? true : false
+                  navigation.dangerouslyGetState().index === 5 ? true : false
                 }
                 activeBackgroundColor={null}
-                label="Help Center"
+                label="Help & Feedback"
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'AddGroup',
+                      'HelpFeedback',
                       // , {
                       //   screen: 'Home',
                       // }
