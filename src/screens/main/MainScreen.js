@@ -44,6 +44,7 @@ import { showMessage } from 'react-native-flash-message';
 import Notification from './notification/Notification';
 import { Icon } from 'react-native-elements';
 import HelpFeedback from './helpFeedback/HelpFeedback';
+import Settings from './settings/Settings';
 
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -688,6 +689,7 @@ const MainScreen = ({
       <Drawer.Screen name="Appointment" component={Appointment} />
       <Drawer.Screen name="Media" component={Media} />
       <Drawer.Screen name="Notification" component={Notification} />
+      <Drawer.Screen name="Settings" component={Settings} />
       <Drawer.Screen name="HelpFeedback" component={HelpFeedback} />
       {/* <Drawer.Screen
         name="EditProfile"

@@ -470,7 +470,7 @@ const DrawerContent = ({
                 onPress={() => {
                   requestAnimationFrame(() => {
                     navigation.navigate(
-                      'AddGroup',
+                      'Settings',
                       // , {
                       //   screen: 'Home',
                       // }
@@ -513,7 +513,7 @@ const DrawerContent = ({
                 inactiveTintColor={colors.text}
                 activeTintColor={colors.secondary}
                 focused={
-                  navigation.dangerouslyGetState().index === 5 ? true : false
+                  navigation.dangerouslyGetState().index === 7 ? true : false
                 }
                 activeBackgroundColor={null}
                 label="Help & Feedback"

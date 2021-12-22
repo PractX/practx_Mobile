@@ -56,7 +56,7 @@ import Header from '../../../components/hoc/Header';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 // import InAppReview from 'react-native-in-app-review';
 
-const HelpFeedBack = ({
+const Settings = ({
   navigation,
   currentUser,
   setCurrentUser,
@@ -555,4 +555,4 @@ const mapDispatchToProps = dispatch => ({
   // setCurrentUser: data => dispatch(setCurrentUser(data)),
   // setMyDownloads: data => dispatch(setMyDownloads(data)),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(HelpFeedBack);
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);
