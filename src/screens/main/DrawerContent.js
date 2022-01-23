@@ -453,7 +453,8 @@ const DrawerContent = ({
                   Customer support
                 </Text>
               </View>
-              <DrawerItem
+              {/* TODO */}
+              {/* <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',
                   fontSize: normalize(13),
@@ -477,7 +478,7 @@ const DrawerContent = ({
                     );
                   });
                 }}
-              />
+              /> */}
               {/* <DrawerItem
                 labelStyle={{
                   fontFamily: 'SofiaProSemiBold',

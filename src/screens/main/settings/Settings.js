@@ -128,14 +128,14 @@ const Settings = ({
     //   console.log(deviceName);
     // });
     if (isFocused) {
-      StatusBar.setBackgroundColor(colors.background_1);
+      StatusBar.setBackgroundColor(colors.background);
       console.log(myDownloads);
     }
     // return () => {
     //   StatusBar.setBackgroundColor(colors.background);
     // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused, setMyDownloads, currentUser, colors.background_1]);
+  }, [isFocused, setMyDownloads, currentUser, colors.background]);
   useEffect(() => {
     // InAppReview.isAvailable();
 

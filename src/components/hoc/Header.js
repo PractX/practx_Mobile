@@ -67,7 +67,7 @@ const Header = ({
     <View
       style={{
         position: searchData && searchData.hideTitle ? 'relative' : 'absolute',
-        zIndex: 100,
+        zIndex: 500,
         height: subgroups && subgroups.show ? null : 50,
         width: Math.round(Dimensions.get('window').width),
         borderBottomColor: colors.background_1,
@@ -406,7 +406,7 @@ const Header = ({
               alignItems: 'center',
             }}>
             <TextInput
-              ref={(input) => {
+              ref={input => {
                 setSearchRef(input);
                 setTextInput(input);
               }}
@@ -425,7 +425,7 @@ const Header = ({
                 fontSize: normalize(14),
                 width: '100%',
               }}
-              onChangeText={(text) => {
+              onChangeText={text => {
                 setSearchText(text);
                 text.length >= 2 &&
                   setTimeout(() => {
@@ -753,7 +753,7 @@ const Header = ({
               flexWrap: 'wrap',
               justifyContent: 'center',
             }}>
-            {subgroups.data.groups.map((item) => (
+            {subgroups.data.groups.map(item => (
               <TouchableOpacity
                 onPress={() => {
                   // console.log(item);

@@ -69,7 +69,7 @@ const HelpFeedBack = ({
   const ref = React.useRef(null);
   const isFocused = useIsFocused();
   const [homeLoaded, setHomeLoaded] = useState(false);
-  useScrollToTop(ref);
+  // useScrollToTop(ref);
   const { colors } = useTheme();
   const [viewSubmit, setViewSubmit] = useState(false);
   const [comment, setComment] = useState('');
@@ -128,7 +128,7 @@ const HelpFeedBack = ({
     //   console.log(deviceName);
     // });
     if (isFocused) {
-      StatusBar.setBackgroundColor(colors.background_1);
+      StatusBar.setBackgroundColor(colors.background);
       console.log(myDownloads);
     }
     // return () => {
@@ -199,7 +199,7 @@ const HelpFeedBack = ({
         ]}>
         <Header
           navigation={navigation}
-          title="Notifications"
+          title="Help & Feedback"
           hideCancel={true}
           // iconRight1={{
           //   name: 'calendar-plus-o',
@@ -212,7 +212,8 @@ const HelpFeedBack = ({
           // notifyIcon={true}
         />
         <KeyboardAwareScrollView
-          style={{ height: Dimensions.get('window').height }}>
+          style={{ height: '100%' }}
+          extraScrollHeight={200}>
           <SvgXml
             style={{ alignSelf: 'center', marginBottom: 20, marginTop: 60 }}
             width="180"
@@ -292,7 +293,11 @@ const HelpFeedBack = ({
               size={normalize(17)}
             /> */}
               <ScrollView
-                style={{ marginBottom: 20, flexDirection: 'row' }}
+                style={{
+                  marginBottom: 20,
+                  flexDirection: 'row',
+                  width: Dimensions.get('screen').width,
+                }}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 keyboardDismissMode="none"
@@ -443,7 +448,7 @@ const HelpFeedBack = ({
             </View>
           </CardView>
           {isFocused && (
-            <Animatable.View
+            <View
               animation={'fadeInUp'}
               duration={2000}
               style={{
@@ -517,7 +522,7 @@ const HelpFeedBack = ({
                   padding: 5,
                 }}
               />
-            </Animatable.View>
+            </View>
           )}
         </KeyboardAwareScrollView>
       </View>
