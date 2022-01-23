@@ -67,7 +67,7 @@ const Header = ({
     <View
       style={{
         position: searchData && searchData.hideTitle ? 'relative' : 'absolute',
-        zIndex: 500,
+        zIndex: 5000,
         height: subgroups && subgroups.show ? null : 50,
         width: Math.round(Dimensions.get('window').width),
         borderBottomColor: colors.background_1,

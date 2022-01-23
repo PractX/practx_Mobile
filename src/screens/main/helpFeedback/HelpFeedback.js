@@ -184,6 +184,7 @@ const HelpFeedBack = ({
           style1 === 'open' && {
             backgroundColor: colors.background,
             height: '100%',
+            width: '100%',
             shadowOffset: {
               width: 0,
               height: 2,
@@ -212,7 +213,7 @@ const HelpFeedBack = ({
           // notifyIcon={true}
         />
         <KeyboardAwareScrollView
-          style={{ height: '100%' }}
+          style={{ height: '100%', width: '100%' }}
           extraScrollHeight={200}>
           <SvgXml
             style={{ alignSelf: 'center', marginBottom: 20, marginTop: 60 }}
@@ -225,7 +226,7 @@ const HelpFeedBack = ({
             style={{
               // position: keyBoardFocused ? 'absolute' : null,
               // top: keyBoardFocused ? '30%' : null,
-              width: '80%',
+              width: Dimensions.get('screen').width,
               alignSelf: 'center',
               backgroundColor: colors.background,
               marginHorizontal: 30,
@@ -277,7 +278,7 @@ const HelpFeedBack = ({
             </View>
             <View
               style={{
-                width: '100%',
+                width: Dimensions.get('screen').width,
                 flexDirection: 'column',
                 alignItems: 'center',
                 paddingLeft: 20,
@@ -418,7 +419,7 @@ const HelpFeedBack = ({
                 style={[
                   styles.searchInput,
                   {
-                    width: '100%',
+                    width: '80%',
                     height: 80,
                     color: colors.text,
                     fontFamily: 'Comfortaa-Light',
