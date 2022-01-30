@@ -20,6 +20,7 @@ const INITIAL_STATE = {
   signals: [],
   chatChannels: [],
   currentChatChannel: '',
+  messageCount: null,
 };
 
 const practicesReducer = (state = INITIAL_STATE, action) => {
@@ -216,6 +217,11 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isLoading: action.payload,
         isFetching: action.payload,
+      };
+    case PracticesActionTypes.MESSAGE_COUNT_UPDATE:
+      return {
+        ...state,
+        messageCount: action.payload,
       };
     default:
       return state;

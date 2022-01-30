@@ -155,6 +155,11 @@ export const selectCurrentChatChannel = createSelector(
   practices => practices.currentChatChannel,
 );
 
+export const selectMessageCount = createSelector(
+  [selectPractices],
+  practices => practices.messageCount,
+);
+
 export const selectPatientNotifications = createSelector(
   [selectPractices],
   practices => practices.patientNotifications,

@@ -69,6 +69,11 @@ const MainScreen = ({
   const [groupCha, setGroupCha] = useState([]);
 
   const getSocket = useContext(SocketContext);
+
+  useEffect(() => {
+    notifee.setBadgeCount(1).then(() => console.log('Badge count set!'));
+  }, []);
+
   useEffect(() => {
     if (token) {
       // loadPage();

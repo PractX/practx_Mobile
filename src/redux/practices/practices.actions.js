@@ -149,6 +149,11 @@ export const setCurrentChatChannel = data => ({
   payload: data,
 });
 
+export const messagesCountUpdate = data => ({
+  type: PracticesActionTypes.MESSAGE_COUNT_UPDATE,
+  payload: data,
+});
+
 export const clearPracticeData = () => ({
   type: PracticesActionTypes.CLEAR_PRACTICE_DATA,
 });
