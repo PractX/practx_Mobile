@@ -23,6 +23,9 @@ const GroupBox = ({
   subgroups,
   signals,
   currentUser,
+  messageCount,
+  channel,
+  resetMsgCount,
 }) => {
   const { colors } = useTheme();
   const pubnub = usePubNub();
@@ -31,8 +34,18 @@ const GroupBox = ({
   const [newMessageTime, setNewMessageTime] = useState('');
   const d = new Date();
   const time = d.getTime();
+  const [msgCount, setMsgCount] = useState(0);
 
-  // console.log('The whole Item', item);
+  // console.log('The whole Item --Cha--', msgCount);
+
+  useEffect(() => {
+    Object.entries(messageCount).forEach(([key, value]) => {
+      if (key === channel) {
+        console.log('The Value', key, '----', value);
+        setMsgCount(value);
+      }
+    });
+  }, [messageCount]);
   // const addTime = (message) => {
 
   // };
@@ -98,6 +111,7 @@ const GroupBox = ({
           subgroups: subgroups.find(items => items.practiceId === practices.id),
           type: 'group',
         });
+        resetMsgCount(channel);
       }}
       style={[
         styling,
@@ -263,26 +277,28 @@ const GroupBox = ({
           }}>
           {allMessages && newMessageTime ? newMessageTime : null}
         </Text>
-        {/* <View
-          style={{
-            backgroundColor: colors.primary,
-            borderRadius: 8,
-            paddingVertical: 5,
-            paddingHorizontal: 12,
-            // width: 20,
-            // height: 20,
-          }}>
-          <Text
+        {msgCount > 0 && (
+          <View
             style={{
-              color: 'white',
-              fontSize: normalize(13),
-              fontFamily: 'SofiaProRegular',
-              // backgroundColor: colors.primary,
-              textAlign: 'center',
+              backgroundColor: colors.primary,
+              borderRadius: 100,
+              paddingVertical: 4,
+              paddingHorizontal: 8,
+              // width: 20,
+              // height: 20,
             }}>
-            {1}
-          </Text>
-        </View> */}
+            <Text
+              style={{
+                color: 'white',
+                fontSize: normalize(11),
+                fontFamily: 'SofiaProRegular',
+                // backgroundColor: colors.primary,
+                textAlign: 'center',
+              }}>
+              {msgCount > 9 ? '9+' : msgCount}
+            </Text>
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );

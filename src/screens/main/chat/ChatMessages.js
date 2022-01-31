@@ -41,6 +41,7 @@ import {
   leavePracticeStart,
   setSignals,
   setChatChannels,
+  setMessagesCount,
 } from '../../../redux/practices/practices.actions';
 import { RefreshControl } from 'react-native';
 import {
@@ -49,6 +50,7 @@ import {
   selectCurrentPracticeId,
   selectIsFetching,
   selectJoinedPractices,
+  selectMessageCount,
   selectPracticeDms,
   selectPracticeSubgroups,
   selectSignals,
@@ -87,6 +89,8 @@ const ChatMessages = ({
   setSignals,
   chatChannels,
   setChatChannels,
+  setMessagesCount,
+  messageCount,
 }) => {
   const { colors } = useTheme();
   const ref = useRef();
@@ -132,6 +136,141 @@ const ChatMessages = ({
   //     },
   //   );
   // };
+
+  console.log(
+    'Message count calculate',
+    Object.entries(messageCount).forEach(
+      ([key, value]) => key === '32_13_ciqrmNksp' && value,
+    ),
+  );
+
+  //TODO     MESSAGE COUNT
+
+  const getMessageCounts = (allChannels, timetoken) => {
+    pubnub
+      .messageCounts({
+        channels: allChannels,
+        channelTimetokens: timetoken,
+      })
+      .then(response => {
+        // set all messages count to a global variable
+        setMessagesCount(response.channels);
+      })
+      .catch(error => {});
+  };
+
+  const resetMsgCount = channel => {
+    pubnub.time((status, response) => {
+      if (!status.error) {
+        pubnub.objects
+          .setMemberships({
+            channels: [
+              {
+                id: channel,
+                custom: {
+                  lastReadTimetoken: response.timetoken,
+                },
+              },
+            ],
+            include: {
+              customFields: true,
+            },
+          })
+          .then(data => {
+            if (data.status === 200) {
+              if (data.data.length > 0) {
+                const channels = data.data.map(res => res.channel.id);
+                const timetoken = data.data.map(
+                  res => res.custom.lastReadTimetoken,
+                );
+
+                pubnub
+                  .messageCounts({
+                    channels: channels,
+                    channelTimetokens: timetoken,
+                  })
+                  .then(response => {
+                    setMessagesCount(response.channels);
+                  })
+                  .catch(error => {});
+              }
+            }
+          });
+      }
+    });
+  };
+
+  const setMsgCount = allChannels => {
+    pubnub.objects
+      .getMemberships({
+        uuid: currentUser.chatId,
+        include: {
+          customFields: true,
+        },
+      })
+      .then(data => {
+        if (data.status === 200) {
+          console.log('Hello to all message count-', data);
+          if (data.data.length > 0) {
+            const channels = data.data.map(res => res.channel.id);
+            const timetoken = data.data.map(
+              res => res.custom.lastReadTimetoken,
+            );
+
+            if (allChannels && allChannels.length) {
+              let otherChannels = [];
+              allChannels.map(channel => {
+                if (!channels.find(i => i === channel)) {
+                  otherChannels.push(channel);
+                }
+              });
+              console.log('otherChannels: ', otherChannels);
+              if (otherChannels.length) {
+                pubnub.objects
+                  .setMemberships({
+                    channels: [
+                      ...otherChannels.map(channel => ({
+                        id: channel,
+                        custom: {
+                          lastReadTimetoken: time,
+                        },
+                      })),
+                    ],
+                    include: {
+                      customFields: true,
+                    },
+                  })
+                  .then(data => {
+                    if (data.status === 200) {
+                      getMessageCounts(allChannels, timetoken);
+                    }
+                  })
+                  .catch(error => {
+                    getMessageCounts(channels, timetoken);
+                  });
+              } else {
+                getMessageCounts(channels, timetoken);
+              }
+            } else {
+              getMessageCounts(channels, timetoken);
+            }
+          }
+        }
+      })
+      .catch(error => {});
+  };
+
+  useEffect(() => {
+    if (currentUser && pubnub) {
+      // getOldMessages(profile.channelName);
+      if (chatChannels.length > 0) {
+        setMsgCount(chatChannels);
+        // hereNow(channels);
+      }
+    }
+  }, [currentUser]);
+
+  // TODO END
 
   useEffect(() => {
     if (params && params.ids) {
@@ -236,28 +375,6 @@ const ChatMessages = ({
           setAllMessages(allMsgs);
           // console.log('NEW_ALL_MESSAGE+++++', allMsgs);
           // setAllMessages(allMsgs);
-
-          // pubnub.time((status, response) => {
-          //   if (!status.error) {
-          //     pubnub.objects.setMemberships({
-          //       channels: [
-          //         {
-          //           id: allChannels[0],
-          //           custom: {
-          //             lastReadTimetoken: response.timetoken,
-          //           },
-          //         },
-          //       ],
-          //     });
-
-          //     // dispatch(Actions.messagesCountUpdate(allChannels[0]));
-          //     // console.log(
-          //     //   allChannels[0],
-          //     //   '=== MESSAGE COUNT =====:',
-          //     //   messagesCount[allChannels[0]],
-          //     // );
-          //   }
-          // });
         }
       },
     );
@@ -265,6 +382,8 @@ const ChatMessages = ({
     // console.log('___ALLCHANNELS SUBSCRIBING TO___', allChannels);
 
     pubnub.subscribe({ channels: allChannels, withPresence: true });
+
+    setMsgCount(allChannels);
   }, []);
 
   // useEffect(() => {
@@ -306,26 +425,6 @@ const ChatMessages = ({
         console.log('=== newSavedMessages =====: ', newSavedMessages);
         setAllMessages([...newSavedMessages, channelMsgs]);
         setNewMsgAvailable(false);
-
-        // pubnub.time((status, response)=>{
-        // 	if(!status.error){
-
-        // 		pubnub.objects.setMemberships({
-        // 			channels: [{
-        // 				id: channels[0],
-        // 				custom: {
-        // 						lastReadTimetoken: response.timetoken,
-        // 				}
-        // 			}]
-
-        // 		})
-
-        // 		dispatch(Actions.messagesCountUpdate(channels[0]))
-        // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
-
-        // 	}
-
-        // })
       } else {
         console.log('TESTING mESSAGE eRROR');
         setAllMessages([
@@ -338,26 +437,6 @@ const ChatMessages = ({
           },
         ]);
         setNewMsgAvailable(true);
-
-        // pubnub.time((status, response)=>{
-        // 	if(!status.error){
-
-        // 		pubnub.objects.setMemberships({
-        // 			channels: [{
-        // 				id: channels[0],
-        // 				custom: {
-        // 						lastReadTimetoken: response.timetoken,
-        // 				}
-        // 			}]
-
-        // 		})
-
-        // 		dispatch(Actions.messagesCountUpdate(channels[0]))
-        // 		console.log(channels[0], "=== MESSAGE COUNT =====:", messagesCount[channels[0]])
-
-        // 	}
-
-        // })
       }
 
       // pubnub.subscribe({ channels });
@@ -558,56 +637,12 @@ const ChatMessages = ({
           console.log('Events', messageEvent);
           getMessages(messageEvent.channel, msg);
           // getLastMessages(messageEvent.channel, msg);
-          console.log('Events', messageEvent);
 
-          pubnub.objects.setMemberships({
-            channels: [
-              {
-                id: messageEvent.channel,
-                custom: {
-                  lastReadTimetoken: messageEvent.timetoken,
-                },
-              },
-            ],
-          });
+          setMsgCount(chatChannels);
+          console.log('Events', messageEvent);
 
           // Get memberships and all messages count as well
           // pubnub.his
-          pubnub.objects
-            .getMemberships({
-              uuid: messageEvent.publisher,
-              include: {
-                customFields: true,
-              },
-            })
-            .then(data => {
-              if (data.status === 200) {
-                if (data.data.length > 0) {
-                  const channels = data.data.map(res => res.channel.id);
-                  const timetoken = data.data.map(
-                    res => res.custom.lastReadTimetoken,
-                  );
-
-                  pubnub
-                    .messageCounts({
-                      channels: channels,
-                      channelTimetokens: timetoken,
-                    })
-                    .then(response => {
-                      // set all messages count to a global variable
-                      // dispatch(setMessagesCount(response.channels))
-                    })
-                    .catch(error => {
-                      console.log(
-                        error,
-                        '------ Error Message count ======== ',
-                      );
-                    });
-                } else {
-                  console.log(data, '------ No Message count ======== ');
-                }
-              }
-            });
         },
 
         file: picture => {
@@ -623,6 +658,8 @@ const ChatMessages = ({
           };
           console.log('Picture Events', picture);
           getMessages(picture.channel, msg);
+
+          setMsgCount(chatChannels);
         },
 
         signal: function (s) {
@@ -826,6 +863,12 @@ const ChatMessages = ({
               currentUser={currentUser}
               practiceDms={practiceDms}
               subgroups={subgroups}
+              resetMsgCount={resetMsgCount}
+              messageCount={messageCount}
+              channel={
+                practiceDms.find(item => item.id === currentPracticeId).Dm
+                  .channelName
+              }
               navigation={navigation}
               newDate={d}
               styling={{
@@ -914,7 +957,11 @@ const ChatMessages = ({
                           practiceDms={practiceDms}
                           navigation={navigation}
                           subgroups={subgroups}
-                          // channel
+                          resetMsgCount={resetMsgCount}
+                          messageCount={messageCount}
+                          channel={
+                            item.subgroupChats[0].PatientSubgroup.channelName
+                          }
                           styling={[
                             {
                               width:
@@ -1018,6 +1065,7 @@ const mapStateToProps = createStructuredSelector({
   allMessages: selectAllMessages,
   signals: selectSignals,
   chatChannels: selectChatChannels,
+  messageCount: selectMessageCount,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -1032,6 +1080,7 @@ const mapDispatchToProps = dispatch => ({
   leavePracticeStart: id => dispatch(leavePracticeStart(id)),
   setSignals: data => dispatch(setSignals(data)),
   setChatChannels: channels => dispatch(setChatChannels(channels)),
+  setMessagesCount: data => dispatch(setMessagesCount(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatMessages);

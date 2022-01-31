@@ -218,7 +218,7 @@ const practicesReducer = (state = INITIAL_STATE, action) => {
         isLoading: action.payload,
         isFetching: action.payload,
       };
-    case PracticesActionTypes.MESSAGE_COUNT_UPDATE:
+    case PracticesActionTypes.SET_MESSAGE_COUNT:
       return {
         ...state,
         messageCount: action.payload,
