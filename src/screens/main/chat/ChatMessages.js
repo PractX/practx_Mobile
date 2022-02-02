@@ -51,6 +51,7 @@ import {
   selectIsFetching,
   selectJoinedPractices,
   selectMessageCount,
+  selectPatientNotifications,
   selectPracticeDms,
   selectPracticeSubgroups,
   selectSignals,
@@ -61,6 +62,7 @@ import PracticeList from './PracticeList';
 import DmsBox from './DmsBox';
 import { ActivityIndicator } from 'react-native-paper';
 import GroupBox from './GroupBox';
+import { removeItem, setItem, getItem } from '../../../utils/storage';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -91,6 +93,7 @@ const ChatMessages = ({
   setChatChannels,
   setMessagesCount,
   messageCount,
+  allNotifications,
 }) => {
   const { colors } = useTheme();
   const ref = useRef();
@@ -152,9 +155,17 @@ const ChatMessages = ({
         channels: allChannels,
         channelTimetokens: timetoken,
       })
-      .then(response => {
+      .then(async response => {
         // set all messages count to a global variable
+        let mCount =
+          (await Object.values(response.channels).reduce(
+            (partialSum, a) => partialSum + a,
+            0,
+          )) + allNotifications?.rows?.filter(it => !it.patientSeen)?.length;
+
+        console.log('Count', mCount);
         setMessagesCount(response.channels);
+        mCount && (await setItem('msgCount', mCount.toString()));
       })
       .catch(error => {});
   };
@@ -189,8 +200,18 @@ const ChatMessages = ({
                     channels: channels,
                     channelTimetokens: timetoken,
                   })
-                  .then(response => {
+                  .then(async response => {
+                    let mCount =
+                      (await Object.values(response.channels).reduce(
+                        (partialSum, a) => partialSum + a,
+                        0,
+                      )) +
+                      allNotifications?.rows?.filter(it => !it.patientSeen)
+                        ?.length;
+
+                    console.log('Count', mCount);
                     setMessagesCount(response.channels);
+                    mCount && (await setItem('msgCount', mCount.toString()));
                   })
                   .catch(error => {});
               }
@@ -1066,6 +1087,7 @@ const mapStateToProps = createStructuredSelector({
   signals: selectSignals,
   chatChannels: selectChatChannels,
   messageCount: selectMessageCount,
+  allNotifications: selectPatientNotifications,
 });
 
 const mapDispatchToProps = dispatch => ({

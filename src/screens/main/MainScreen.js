@@ -47,6 +47,7 @@ import Notification from './notification/Notification';
 import { Icon } from 'react-native-elements';
 import HelpFeedback from './helpFeedback/HelpFeedback';
 import Settings from './settings/Settings';
+import { removeItem, setItem, getItem } from '../../utils/storage';
 
 const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -74,6 +75,8 @@ const MainScreen = ({
 
   const getSocket = useContext(SocketContext);
 
+  // setItem('authToken', idToken.jwtToken);
+
   useEffect(() => {
     console.log(
       'Message counts---',
@@ -97,7 +100,8 @@ const MainScreen = ({
       // subscribe to socket events
       const socket = getSocket(token);
 
-      const listener = data => {
+      const listener = async data => {
+        const count = await getItem('msgCount');
         console.log('notification data: ', data);
         switch (data.action) {
           case 'Accept join request':
@@ -218,6 +222,12 @@ const MainScreen = ({
           // loadPage();
           console.log('New CHanges made from socket');
         }
+        setItem('msgCount', count + 1);
+
+        console.log('Recent count', count);
+        notifee
+          .setBadgeCount(count + 1)
+          .then(() => console.log('Badge count set!'));
       };
 
       socket.on('notifications', listener);
@@ -443,7 +453,7 @@ const MainScreen = ({
     // Something not working?
     // See: https://support.pubnub.com/hc/en-us/articles/360051495432-How-can-I-troubleshoot-my-push-notification-issues-
     // Called when a remote or local notification is opened or received.
-    onNotification: function (notification) {
+    onNotification: async function (notification) {
       console.log('NOTIFICATION:----REMOTE', notification);
       // setInitialState('chats');
       setGroupCha([...new Set([...groupCha, notification.data.channel])]);
@@ -464,6 +474,7 @@ const MainScreen = ({
           currentChatChannel !== notification.data.channel
         ) {
           console.log('I am here 1a');
+          const count = await getItem('msgCount');
           // pushLocalNotification({
           //   id: notification.id ? notification.id : '2',
           //   data: notification.data,
@@ -473,6 +484,12 @@ const MainScreen = ({
             data: notification.data,
             groupCha: groupCha,
           });
+          setItem('msgCount', count + 1);
+
+          console.log('Recent count', count);
+          notifee
+            .setBadgeCount(count + 1)
+            .then(() => console.log('Badge count set!'));
         }
       } else {
         console.log('I am here 2');

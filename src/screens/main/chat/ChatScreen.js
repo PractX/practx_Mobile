@@ -48,6 +48,7 @@ import {
   selectAllMessages,
   selectCurrentPracticeId,
   selectJoinedPractices,
+  selectPatientNotifications,
   selectPracticeStaffs,
   selectSignals,
 } from '../../../redux/practices/practices.selector';
@@ -93,6 +94,7 @@ import { SvgXml } from 'react-native-svg';
 import typingIcon from '../../../../assets/gif/typingIndicator.gif';
 import { Image } from 'react-native';
 import { PermissionsAndroid } from 'react-native';
+import { removeItem, setItem, getItem } from '../../../utils/storage';
 
 const { flags, sports, food } = Categories;
 // console.log(Categories);
@@ -117,6 +119,7 @@ const ChatScreen = ({
   joinedPractices,
   currentPracticeId,
   setMessagesCount,
+  allNotifications,
 }) => {
   const [chatRef, setChatRef] = useState();
   const { colors } = useTheme();
@@ -207,8 +210,18 @@ const ChatScreen = ({
                     channels: channels,
                     channelTimetokens: timetoken,
                   })
-                  .then(response => {
+                  .then(async response => {
+                    let mCount =
+                      (await Object.values(response.channels).reduce(
+                        (partialSum, a) => partialSum + a,
+                        0,
+                      )) +
+                      allNotifications?.rows?.filter(it => !it.patientSeen)
+                        ?.length;
+
+                    console.log('Count', mCount);
                     setMessagesCount(response.channels);
+                    mCount && (await setItem('msgCount', mCount.toString()));
                   })
                   .catch(error => {});
               }
@@ -1954,6 +1967,7 @@ const mapStateToProps = createStructuredSelector({
   joinedPractices: selectJoinedPractices,
   currentPracticeId: selectCurrentPracticeId,
   signals: selectSignals,
+  allNotifications: selectPatientNotifications,
 });
 
 const mapDispatchToProps = dispatch => ({
