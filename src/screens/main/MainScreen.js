@@ -19,6 +19,8 @@ import {
   selectChatChannels,
   selectCurrentChatChannel,
   selectCurrentPracticeId,
+  selectMessageCount,
+  selectPatientNotifications,
 } from '../../redux/practices/practices.selector';
 import {
   getAllPatientNotificationStart,
@@ -61,6 +63,8 @@ const MainScreen = ({
   setPracticeId,
   currentPracticeId,
   getAllPatientNotificationStart,
+  messageCount,
+  allNotifications,
 }) => {
   const pubnub = usePubNub();
   const dimensions = useWindowDimensions();
@@ -71,8 +75,20 @@ const MainScreen = ({
   const getSocket = useContext(SocketContext);
 
   useEffect(() => {
-    notifee.setBadgeCount(1).then(() => console.log('Badge count set!'));
-  }, []);
+    console.log(
+      'Message counts---',
+      Object.values(messageCount).reduce((partialSum, a) => partialSum + a, 0) +
+        allNotifications?.rows?.filter(it => !it.patientSeen)?.length,
+    );
+    notifee
+      .setBadgeCount(
+        Object.values(messageCount).reduce(
+          (partialSum, a) => partialSum + a,
+          0,
+        ) + allNotifications?.rows?.filter(it => !it.patientSeen)?.length || 0,
+      )
+      .then(() => console.log('Badge count set!'));
+  }, [messageCount, allNotifications]);
 
   useEffect(() => {
     if (token) {
@@ -737,6 +753,8 @@ const mapStateToProps = createStructuredSelector({
   chatChannels: selectChatChannels,
   currentChatChannel: selectCurrentChatChannel,
   currentPracticeId: selectCurrentPracticeId,
+  messageCount: selectMessageCount,
+  allNotifications: selectPatientNotifications,
 });
 const mapDispatchToProps = dispatch => ({
   setCurrentChatChannel: data => dispatch(setCurrentChatChannel(data)),

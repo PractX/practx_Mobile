@@ -214,7 +214,7 @@ const HelpFeedBack = ({
         />
         <KeyboardAwareScrollView
           style={{ height: '100%', width: '100%' }}
-          extraScrollHeight={200}>
+          extraScrollHeight={Platform.OS === 'ios' ? 20 : 200}>
           <SvgXml
             style={{ alignSelf: 'center', marginBottom: 20, marginTop: 60 }}
             width="180"

@@ -128,29 +128,31 @@ const MainHeader = ({
                 marginLeft: 10,
               }}
             />
-            <View
-              style={{
-                position: 'absolute',
-                right: allNotifications > 20 ? -8 : -5,
-                top: -2,
-                minWidth: 15,
-                backgroundColor: colors.primary,
-                borderRadius: 100,
-                alignItems: 'center',
-                alignSelf: 'center',
-              }}>
-              <Text
+            {allNotifications > 0 && (
+              <View
                 style={{
-                  fontSize: normalize(7.5),
-                  fontFamily: 'SofiaProRegular',
-                  color: 'white',
-                  textAlign: 'center',
-                  paddingVertical: allNotifications > 20 ? 2.5 : 2.5,
-                  paddingHorizontal: allNotifications > 20 ? 2 : 2.5,
+                  position: 'absolute',
+                  right: allNotifications > 20 ? -8 : -5,
+                  top: -2,
+                  minWidth: 15,
+                  backgroundColor: colors.primary,
+                  borderRadius: 100,
+                  alignItems: 'center',
+                  alignSelf: 'center',
                 }}>
-                {allNotifications > 20 ? '20+' : allNotifications}
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    fontSize: normalize(7.5),
+                    fontFamily: 'SofiaProRegular',
+                    color: 'white',
+                    textAlign: 'center',
+                    paddingVertical: allNotifications > 20 ? 2.5 : 2.5,
+                    paddingHorizontal: allNotifications > 20 ? 2 : 2.5,
+                  }}>
+                  {allNotifications > 20 ? '20+' : allNotifications}
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
         )}
       </View>

@@ -54,6 +54,7 @@ import {
 import {
   setAllMessages,
   setCurrentChatChannel,
+  setMessagesCount,
 } from '../../../redux/practices/practices.actions';
 // import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import EmojiSelector, { Categories } from 'react-native-emoji-selector';
@@ -115,6 +116,7 @@ const ChatScreen = ({
   setCurrentChatChannel,
   joinedPractices,
   currentPracticeId,
+  setMessagesCount,
 }) => {
   const [chatRef, setChatRef] = useState();
   const { colors } = useTheme();
@@ -173,6 +175,47 @@ const ChatScreen = ({
     // const time = localeDateTime.split(', ')[1];
     // return checkAmPm(time.slice(0, -3));
     return localeDateTime.split(', ')[0];
+  };
+
+  const resetMsgCount = channel => {
+    pubnub.time((status, response) => {
+      if (!status.error) {
+        pubnub.objects
+          .setMemberships({
+            channels: [
+              {
+                id: channel,
+                custom: {
+                  lastReadTimetoken: response.timetoken,
+                },
+              },
+            ],
+            include: {
+              customFields: true,
+            },
+          })
+          .then(data => {
+            if (data.status === 200) {
+              if (data.data.length > 0) {
+                const channels = data.data.map(res => res.channel.id);
+                const timetoken = data.data.map(
+                  res => res.custom.lastReadTimetoken,
+                );
+
+                pubnub
+                  .messageCounts({
+                    channels: channels,
+                    channelTimetokens: timetoken,
+                  })
+                  .then(response => {
+                    setMessagesCount(response.channels);
+                  })
+                  .catch(error => {});
+              }
+            }
+          });
+      }
+    });
   };
   // const getAllMessages = (cha, num) => {
   //   // const myChannels = [cha];
@@ -534,7 +577,7 @@ const ChatScreen = ({
   useMemo(() => {
     if (isFocused || allMessages) {
       // console.log('New MESSAgE Available__');
-
+      resetMsgCount(channelName);
       addMessages(
         allMessages.find(item => item.channel === channelName)
           ? allMessages.find(item => item.channel === channelName).messages
@@ -1918,6 +1961,7 @@ const mapDispatchToProps = dispatch => ({
   editProfile: data => dispatch(editProfile(data)),
   setAllMessages: data => dispatch(setAllMessages(data)),
   setCurrentChatChannel: data => dispatch(setCurrentChatChannel(data)),
+  setMessagesCount: data => dispatch(setMessagesCount(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
