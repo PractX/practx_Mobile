@@ -95,6 +95,7 @@ import typingIcon from '../../../../assets/gif/typingIndicator.gif';
 import { Image } from 'react-native';
 import { PermissionsAndroid } from 'react-native';
 import { removeItem, setItem, getItem } from '../../../utils/storage';
+import ImageView from 'react-native-image-viewing';
 
 const { flags, sports, food } = Categories;
 // console.log(Categories);
@@ -161,6 +162,9 @@ const ChatScreen = ({
   const pubnub = usePubNub();
   const [onRecording, setOnRecording] = useState(false);
   const [vnFile, setVnFile] = useState();
+  const [isVisible, setIsVisible] = useState(true);
+  const [chatImagePrev, setChatImagePrev] = useState('');
+
   const [recordTime, setRecordTime] = useState({
     recordSecs: 0,
     recordTime: 0,
@@ -993,7 +997,7 @@ const ChatScreen = ({
           }
           containerStyle={{ marginLeft: 30 }}
         />
-        <Actions
+        {/* <Actions
           {...props}
           options
           icon={() => (
@@ -1010,7 +1014,7 @@ const ChatScreen = ({
             showEmoji ? setShowEmoji(false) : setShowEmoji(true)
           }
           containerStyle={{ marginLeft: 30 }}
-        />
+        /> */}
       </View>
     );
   };
@@ -1069,8 +1073,20 @@ const ChatScreen = ({
     );
   };
 
+  // NOTE
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <ImageView
+        images={[
+          {
+            uri: chatImagePrev,
+          },
+        ]}
+        imageIndex={0}
+        visible={isVisible}
+        onRequestClose={() => setIsVisible(false)}
+      />
       <View style={{ flex: 1 }}>
         <Header
           navigation={navigation}
@@ -1187,6 +1203,9 @@ const ChatScreen = ({
                         onPausePlay={onPausePlay}
                         onStopPlay={onStopPlay}
                         audioTime={audioTime}
+                        isVisible={isVisible}
+                        setIsVisible={setIsVisible}
+                        setChatImagePrev={setChatImagePrev}
                       />
                       {messages.length &&
                         getUniqueListBy(messages, 'day').some(

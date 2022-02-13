@@ -36,6 +36,8 @@ const ChatBubble = ({
   // onPausePlay,
   // onStopPlay,
   // audioTime,
+  setIsVisible,
+  setChatImagePrev,
 }) => {
   const videoRef = useRef(null);
   const audioRef = useRef(null);
@@ -47,7 +49,7 @@ const ChatBubble = ({
   // console.log(Player.isStopped);
   // console.log(audioPlayers);
   // console.log('Bubble ID', audioRef);
-  const checkAmPm = (time) => {
+  const checkAmPm = time => {
     if (time.split(':')[0] > 12) {
       return time + ' pm';
     } else {
@@ -55,7 +57,7 @@ const ChatBubble = ({
     }
   };
 
-  const addTime = (msg) => {
+  const addTime = msg => {
     const unixTimestamp = msg.timetoken / 10000000;
     // const gmtDate = new Date(unixTimestamp * 1000);
     // const localeDateTime = gmtDate.toLocaleString('en-US', {
@@ -265,20 +267,19 @@ const ChatBubble = ({
                   : practiceStaff.length
                   ? message.message.file
                     ? practiceStaff.find(
-                        (staff) => staff.id === message.message.message.staffId,
+                        staff => staff.id === message.message.message.staffId,
                       )
                       ? practiceStaff.find(
-                          (staff) =>
-                            staff.id === message.message.message.staffId,
+                          staff => staff.id === message.message.message.staffId,
                         ).avatar ||
                         'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
                       : groupPractice?.logo ||
                         'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
                     : practiceStaff.find(
-                        (staff) => staff.id === message.message.staffId,
+                        staff => staff.id === message.message.staffId,
                       )
                     ? practiceStaff.find(
-                        (staff) => staff.id === message.message.staffId,
+                        staff => staff.id === message.message.staffId,
                       ).avatar ||
                       'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
                     : 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg'
@@ -373,40 +374,53 @@ const ChatBubble = ({
                       }}>
                       {practiceStaff.length
                         ? practiceStaff.find(
-                            (staff) =>
+                            staff =>
                               staff.id === message.message.message.staffId,
                           ).firstname
                         : ''}
                     </Text>
                   </View>
                 )}
+                {/* //NOTE */}
                 {message.message.file.name.match(/.(jpg|jpeg|png|gif)$/i) ? (
-                  <FastImage
-                    source={{
-                      uri: pubnub.getFileUrl({
-                        channel: message.channel,
-                        id: message.message.file.id,
-                        name: message.message.file.name,
-                      }),
-                      priority: FastImage.priority.high,
-                    }}
-                    style={[
-                      {
-                        width: 250,
-                        height: 220,
-                        backgroundColor: colors.background_1,
-                        // borderTopLeftRadius: 20,
-                        // borderTopRightRadius: 20,
-                        borderBottomRightRadius: 20,
-                        marginTop: 10,
-                      },
-                      // currentPracticeId === practice.id && {
-                      //   borderWidth: 1,
-                      //   borderColor: colors.text,
-                      // },
-                    ]}
-                    resizeMode={FastImage.resizeMode.cover}
-                  />
+                  <TouchableOpacity
+                    onPress={() => {
+                      setChatImagePrev(
+                        pubnub.getFileUrl({
+                          channel: message.channel,
+                          id: message.message.file.id,
+                          name: message.message.file.name,
+                        }),
+                      );
+                      setIsVisible(true);
+                    }}>
+                    <FastImage
+                      source={{
+                        uri: pubnub.getFileUrl({
+                          channel: message.channel,
+                          id: message.message.file.id,
+                          name: message.message.file.name,
+                        }),
+                        priority: FastImage.priority.high,
+                      }}
+                      style={[
+                        {
+                          width: 250,
+                          height: 220,
+                          backgroundColor: colors.background_1,
+                          // borderTopLeftRadius: 20,
+                          // borderTopRightRadius: 20,
+                          borderBottomRightRadius: 20,
+                          marginTop: 10,
+                        },
+                        // currentPracticeId === practice.id && {
+                        //   borderWidth: 1,
+                        //   borderColor: colors.text,
+                        // },
+                      ]}
+                      resizeMode={FastImage.resizeMode.cover}
+                    />
+                  </TouchableOpacity>
                 ) : message.message.file.name.match(/.(mp4)$/i) ? (
                   <FastImage
                     source={{
@@ -547,7 +561,7 @@ const ChatBubble = ({
                       }}>
                       {practiceStaff.length
                         ? practiceStaff.find(
-                            (staff) => staff.id === message.message.staffId,
+                            staff => staff.id === message.message.staffId,
                           ).firstname
                         : ''}
                     </Text>
