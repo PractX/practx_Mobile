@@ -96,6 +96,9 @@ import { Image } from 'react-native';
 import { PermissionsAndroid } from 'react-native';
 import { removeItem, setItem, getItem } from '../../../utils/storage';
 import ImageView from 'react-native-image-viewing';
+import Video from 'react-native-video';
+import MediaControls, { PLAYER_STATES } from 'react-native-media-controls';
+import VideoModal from '../../../components/hoc/VideoModal';
 
 const { flags, sports, food } = Categories;
 // console.log(Categories);
@@ -162,8 +165,9 @@ const ChatScreen = ({
   const pubnub = usePubNub();
   const [onRecording, setOnRecording] = useState(false);
   const [vnFile, setVnFile] = useState();
-  const [isVisible, setIsVisible] = useState(true);
-  const [chatImagePrev, setChatImagePrev] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+  const [chatMediaPrev, setChatMediaPrev] = useState('');
+  const [isVideoVisible, setIsVideoVisible] = useState(false);
 
   const [recordTime, setRecordTime] = useState({
     recordSecs: 0,
@@ -1080,13 +1084,19 @@ const ChatScreen = ({
       <ImageView
         images={[
           {
-            uri: chatImagePrev,
+            uri: chatMediaPrev,
           },
         ]}
         imageIndex={0}
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       />
+      {isVideoVisible && (
+        <VideoModal
+          chatMediaPrev={chatMediaPrev}
+          setIsVideoVisible={setIsVideoVisible}
+        />
+      )}
       <View style={{ flex: 1 }}>
         <Header
           navigation={navigation}
@@ -1205,7 +1215,8 @@ const ChatScreen = ({
                         audioTime={audioTime}
                         isVisible={isVisible}
                         setIsVisible={setIsVisible}
-                        setChatImagePrev={setChatImagePrev}
+                        setChatMediaPrev={setChatMediaPrev}
+                        setIsVideoVisible={setIsVideoVisible}
                       />
                       {messages.length &&
                         getUniqueListBy(messages, 'day').some(

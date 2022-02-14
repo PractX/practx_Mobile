@@ -9,12 +9,12 @@ import { usePubNub } from 'pubnub-react';
 import { Day } from 'react-native-gifted-chat';
 import moment from 'moment';
 import { Icon } from 'react-native-elements';
-import Video from 'react-native-video';
+// import Video from 'react-native-video';
 import { useRef } from 'react';
 import AudioPlayer from '../../utils/audioPlayer';
 import { TouchableOpacity } from 'react-native';
 // import WaveForm from 'react-native-audiowaveform';
-import Audio from 'react-native-video';
+// import Audio from 'react-native-video';
 import ProgressBar from '../../utils/progressBar';
 import { useState } from 'react';
 import VoiceNoteRecorder from './VoiceNoteRecorder';
@@ -37,7 +37,8 @@ const ChatBubble = ({
   // onStopPlay,
   // audioTime,
   setIsVisible,
-  setChatImagePrev,
+  setChatMediaPrev,
+  setIsVideoVisible,
 }) => {
   const videoRef = useRef(null);
   const audioRef = useRef(null);
@@ -385,7 +386,7 @@ const ChatBubble = ({
                 {message.message.file.name.match(/.(jpg|jpeg|png|gif)$/i) ? (
                   <TouchableOpacity
                     onPress={() => {
-                      setChatImagePrev(
+                      setChatMediaPrev(
                         pubnub.getFileUrl({
                           channel: message.channel,
                           id: message.message.file.id,
@@ -422,38 +423,51 @@ const ChatBubble = ({
                     />
                   </TouchableOpacity>
                 ) : message.message.file.name.match(/.(mp4)$/i) ? (
-                  <FastImage
-                    source={{
-                      uri: pubnub.getFileUrl({
-                        channel: message.channel,
-                        id: message.message.file.id,
-                        name: message.message.file.name,
-                      }),
-                      priority: FastImage.priority.high,
-                    }}
-                    style={[
-                      {
-                        width: 250,
-                        height: 250,
-                        backgroundColor: colors.background_1,
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                        borderBottomRightRadius: 20,
-                      },
-                      // currentPracticeId === practice.id && {
-                      //   borderWidth: 1,
-                      //   borderColor: colors.text,
-                      // },
-                    ]}
-                    resizeMode={FastImage.resizeMode.cover}>
-                    <Icon
-                      name={'play-circle'}
-                      type={'font-awesome'}
-                      color={colors.text}
-                      size={normalize(55)}
-                      style={[{ alignSelf: 'center', marginTop: '40%' }]}
-                    />
-                  </FastImage>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setChatMediaPrev(
+                        pubnub.getFileUrl({
+                          channel: message.channel,
+                          id: message.message.file.id,
+                          name: message.message.file.name,
+                        }),
+                      );
+                      setIsVideoVisible(true);
+                    }}>
+                    <FastImage
+                      source={{
+                        uri: pubnub.getFileUrl({
+                          channel: message.channel,
+                          id: message.message.file.id,
+                          name: message.message.file.name,
+                        }),
+                        priority: FastImage.priority.high,
+                      }}
+                      style={[
+                        {
+                          width: 250,
+                          height: 220,
+                          backgroundColor: colors.background_1,
+                          borderTopLeftRadius: 20,
+                          borderTopRightRadius: 20,
+                          borderBottomRightRadius: 20,
+                          marginTop: 10,
+                        },
+                        // currentPracticeId === practice.id && {
+                        //   borderWidth: 1,
+                        //   borderColor: colors.text,
+                        // },
+                      ]}
+                      resizeMode={FastImage.resizeMode.cover}>
+                      <Icon
+                        name={'play-circle'}
+                        type={'font-awesome'}
+                        color={colors.text}
+                        size={normalize(55)}
+                        style={[{ alignSelf: 'center', marginTop: '30%' }]}
+                      />
+                    </FastImage>
+                  </TouchableOpacity>
                 ) : message.message.file.name.match(/.(aac)$/i) ? (
                   <VoiceNoteRecorder
                     position="left"
