@@ -1093,8 +1093,10 @@ const ChatScreen = ({
       />
       {isVideoVisible && (
         <VideoModal
+          navigation={navigation}
           chatMediaPrev={chatMediaPrev}
           setIsVideoVisible={setIsVideoVisible}
+          setChatMediaPrev={setChatMediaPrev}
         />
       )}
       <View style={{ flex: 1 }}>

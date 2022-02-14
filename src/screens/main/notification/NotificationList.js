@@ -56,6 +56,7 @@ const NotificationList = ({
   markNotification,
 }) => {
   const { colors } = useTheme();
+  console.log('NotificationList', item);
   const actionText = (action, practices) => {
     switch (action) {
       case 'Join request':
@@ -65,8 +66,7 @@ const NotificationList = ({
         };
       case 'Book appointment':
         return {
-          text:
-            'have just made a request to schedule an appointment with ${practices.practiceName}',
+          text: `have just made a request to schedule an appointment with ${practices.practiceName}`,
           color: colors.text_2,
         };
       case 'Book appointment for patient':

@@ -1,9 +1,11 @@
 // @ts-check
 // /** @type {import("./react-native-media-controls/index")} */
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import {
+  BackHandler,
   Dimensions,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,10 +15,16 @@ import Video from 'react-native-video';
 import MediaControls, { PLAYER_STATES } from 'react-native-media-controls';
 import { Icon, normalize } from 'react-native-elements';
 import { useTheme } from '@react-navigation/native';
+import Orientation from 'react-native-orientation-locker';
 
 const noop = () => {};
 
-const VideoModal = ({ chatMediaPrev, setIsVideoVisible }) => {
+const VideoModal = ({
+  navigation,
+  chatMediaPrev,
+  setIsVideoVisible,
+  setChatMediaPrev,
+}) => {
   const { colors } = useTheme();
   const videoPlayer = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
@@ -61,6 +69,39 @@ const VideoModal = ({ chatMediaPrev, setIsVideoVisible }) => {
 
   const onSeeking = currentTime => setCurrentTime(currentTime);
 
+  const handleBackButton = useCallback(() => {
+    if (isFullScreen) {
+      Orientation.lockToPortrait();
+      return true;
+    } else {
+      navigation.goBack();
+      return false;
+    }
+  }, [isFullScreen, navigation]);
+
+  const handleOrientation = orientation => {
+    console.log('Orientation: ', orientation);
+    orientation === 'LANDSCAPE-LEFT' || orientation === 'LANDSCAPE-RIGHT'
+      ? (setIsFullScreen(true), StatusBar.setHidden(true))
+      : (setIsFullScreen(false), StatusBar.setHidden(false));
+  };
+
+  const handleFullscreen = () => {
+    isFullScreen ? Orientation.lockToPortrait() : Orientation.lockToLandscape();
+  };
+
+  useMemo(() => {
+    Orientation.addOrientationListener(handleOrientation);
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    return () => {
+      // setState({ play: true, showControls: false, sound: true });
+      Orientation.removeOrientationListener(handleOrientation);
+      // BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+    };
+  }, [handleBackButton]);
+
+  console.log('Is Full screen', isFullScreen);
+
   return (
     <View style={styles.container}>
       <Video
@@ -71,45 +112,72 @@ const VideoModal = ({ chatMediaPrev, setIsVideoVisible }) => {
         paused={paused}
         ref={ref => (videoPlayer.current = ref)}
         fullscreenAutorotate={true}
-        fullscreen={true}
-        resizeMode="contain"
+        fullscreenOrientation="all"
+        // fullscreen={true}
+        // controls={false}
+        onTouchCancel={() => {
+          Orientation.lockToPortrait();
+          // setIsVideoVisible(false);
+          setIsFullScreen(false);
+          setChatMediaPrev('');
+          setIsVideoVisible(false);
+        }}
+        fullscreen={isFullScreen ? true : false}
+        resizeMode="cover"
         source={{
           uri: chatMediaPrev,
         }}
+        style={
+          isFullScreen
+            ? [
+                styles.fullMediaPlayer,
+                {
+                  backgroundColor: colors.background,
+                },
+              ]
+            : [
+                styles.mediaPlayer,
+                {
+                  backgroundColor: colors.background,
+                },
+              ]
+        }
         repeat
-        style={styles.mediaPlayer}
+        // style={styles.mediaPlayer}
         volume={0.0}
       />
-      <MediaControls
-        isFullScreen={isFullScreen}
-        containerStyle={{}}
-        duration={duration}
-        isLoading={isLoading}
-        mainColor="orange"
-        onFullScreen={() => console.log('Hello')}
-        onPaused={onPaused}
-        onReplay={onReplay}
-        onSeek={onSeek}
-        onSeeking={onSeeking}
-        playerState={playerState}
-        progress={currentTime}>
-        <MediaControls.Toolbar>
-          <TouchableOpacity
-            style={styles.toolbar}
-            onPress={() => setIsVideoVisible(false)}>
-            <Icon
-              name={'x'}
-              type={'feather'}
-              color={colors.text}
-              size={normalize(28)}
-              style={{
-                color: colors.text,
-                // alignSelf: 'center',
-              }}
-            />
-          </TouchableOpacity>
-        </MediaControls.Toolbar>
-      </MediaControls>
+      {!isFullScreen && (
+        <MediaControls
+          isFullScreen={isFullScreen}
+          containerStyle={{}}
+          duration={duration}
+          isLoading={isLoading}
+          mainColor="orange"
+          onFullScreen={() => handleFullscreen()}
+          onPaused={onPaused}
+          onReplay={onReplay}
+          onSeek={onSeek}
+          onSeeking={onSeeking}
+          playerState={playerState}
+          progress={currentTime}>
+          <MediaControls.Toolbar>
+            <TouchableOpacity
+              style={styles.toolbar}
+              onPress={() => setIsVideoVisible(false)}>
+              <Icon
+                name={'x'}
+                type={'feather'}
+                color={colors.text}
+                size={normalize(28)}
+                style={{
+                  color: colors.text,
+                  // alignSelf: 'center',
+                }}
+              />
+            </TouchableOpacity>
+          </MediaControls.Toolbar>
+        </MediaControls>
+      )}
     </View>
   );
 };
@@ -130,6 +198,9 @@ const styles = StyleSheet.create({
     // backgroundColor: 'white',
     padding: 10,
     borderRadius: 5,
+  },
+  fullMediaPlayer: {
+    display: 'none',
   },
   mediaPlayer: {
     position: 'absolute',

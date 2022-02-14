@@ -140,30 +140,30 @@ const Notification = ({
           .reverse(),
       );
     }
-  }, [isFocused]);
-
-  useEffect(() => {
-    setNotificationData(
-      convertToArray(datesGroupByComponent(allNotifications.rows, 'D'))
-        .map(it => {
-          return {
-            title: isToday(it[it.length - 1].createdAt)
-              ? timeAgo(it[it.length - 1].createdAt)
-              : timeAgo(it[it.length - 1].createdAt.split('T')[0]),
-            data: it,
-          };
-        })
-        .map(its => {
-          its.data.sort(function (a, b) {
-            // Turn your strings into dates, and then subtract them
-            // to get a value that is either negative, positive, or zero.
-            return new Date(b.time) - new Date(a.time);
-          });
-          return its;
-        })
-        .reverse(),
-    );
   }, [allNotifications]);
+
+  // useEffect(() => {
+  //   setNotificationData(
+  //     convertToArray(datesGroupByComponent(allNotifications.rows, 'D'))
+  //       .map(it => {
+  //         return {
+  //           title: isToday(it[it.length - 1].createdAt)
+  //             ? timeAgo(it[it.length - 1].createdAt)
+  //             : timeAgo(it[it.length - 1].createdAt.split('T')[0]),
+  //           data: it,
+  //         };
+  //       })
+  //       .map(its => {
+  //         its.data.sort(function (a, b) {
+  //           // Turn your strings into dates, and then subtract them
+  //           // to get a value that is either negative, positive, or zero.
+  //           return new Date(b.time) - new Date(a.time);
+  //         });
+  //         return its;
+  //       })
+  //       .reverse(),
+  //   );
+  // }, [allNotifications]);
 
   useEffect(() => {
     if (isDrawerOpen) {
