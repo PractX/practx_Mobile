@@ -158,7 +158,7 @@ const ChatMessages = ({
       .then(async response => {
         // set all messages count to a global variable
         let mCount =
-          (await Object.values(response.channels).reduce(
+          (await Object.values(response.channels)??.reduce(
             (partialSum, a) => partialSum + a,
             0,
           )) + allNotifications?.rows?.filter(it => !it.patientSeen)?.length;
@@ -202,7 +202,7 @@ const ChatMessages = ({
                   })
                   .then(async response => {
                     let mCount =
-                      (await Object.values(response.channels).reduce(
+                      (await Object.values(response.channels)?.reduce(
                         (partialSum, a) => partialSum + a,
                         0,
                       )) +

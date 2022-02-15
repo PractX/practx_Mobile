@@ -78,19 +78,21 @@ const MainScreen = ({
   // setItem('authToken', idToken.jwtToken);
 
   useEffect(() => {
-    console.log(
-      'Message counts---',
-      Object.values(messageCount).reduce((partialSum, a) => partialSum + a, 0) +
-        allNotifications?.rows?.filter(it => !it.patientSeen)?.length,
-    );
-    notifee
-      .setBadgeCount(
-        Object.values(messageCount).reduce(
-          (partialSum, a) => partialSum + a,
-          0,
-        ) + allNotifications?.rows?.filter(it => !it.patientSeen)?.length || 0,
-      )
-      .then(() => console.log('Badge count set!'));
+    // console.log(
+    //   'Message counts---',
+    //   Object.values(messageCount).reduce((partialSum, a) => partialSum + a, 0) +
+    //     allNotifications?.rows?.filter(it => !it.patientSeen)?.length,
+    // );
+    Platform.OS === 'ios' &&
+      notifee
+        .setBadgeCount(
+          Object.values(messageCount).reduce(
+            (partialSum, a) => partialSum + a,
+            0,
+          ) + allNotifications?.rows?.filter(it => !it.patientSeen)?.length ||
+            0,
+        )
+        .then(() => console.log('Badge count set!'));
   }, [messageCount, allNotifications]);
 
   useEffect(() => {
