@@ -39,12 +39,14 @@ const GroupBox = ({
   // console.log('The whole Item --Cha--', msgCount);
 
   useEffect(() => {
-    Object.entries(messageCount).forEach(([key, value]) => {
-      if (key === channel) {
-        console.log('The Value', key, '----', value);
-        setMsgCount(value);
-      }
-    });
+    messageCount &&
+      Object.keys(messageCount).length > 0 &&
+      Object.entries(messageCount).forEach(([key, value]) => {
+        if (key === channel) {
+          console.log('The Value', key, '----', value);
+          setMsgCount(value);
+        }
+      });
   }, [messageCount]);
   // const addTime = (message) => {
 

@@ -276,6 +276,7 @@ const PracticeDetails = ({
                 onPress={async () => {
                   await bottomSheetRef.current.snapTo(1);
                   setTimeout(() => {
+                    setShowOverlay(false);
                     setPracticeId(data.id);
                     navigation.navigate('Chats');
                   }, 200);

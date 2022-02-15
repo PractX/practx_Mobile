@@ -493,7 +493,10 @@ const Practx = ({
       </View>
       {showOverlay && (
         <TouchableOpacity
-          onPress={() => bottomSheetRef.current.snapTo(1)}
+          onPress={() => {
+            bottomSheetRef.current.snapTo(1);
+            showOverlay && setShowOverlay(false);
+          }}
           style={{
             flex: 1,
             position: 'absolute',
