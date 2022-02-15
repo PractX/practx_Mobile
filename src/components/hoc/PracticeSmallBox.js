@@ -66,13 +66,15 @@ const PracticeSmallBox = ({
   getPracticesDmsStart,
   getPracticeSubgroupsStart,
   bottomSheetRef,
+  showOverlay,
+  setShowOverlay,
 }) => {
   const { colors } = useTheme();
   const pending = practice.requests;
-  const member = practice.patients.filter((val) => val.id === userId);
+  const member = practice.patients.filter(val => val.id === userId);
   const [loading, setLoading] = useState(false);
 
-  const joinPractice = (practiceId) => {
+  const joinPractice = practiceId => {
     if (practiceId === practice.id) {
       setLoading(true);
     }
@@ -86,9 +88,10 @@ const PracticeSmallBox = ({
   return (
     <TouchableOpacity
       onPress={async () => {
-        if (practiceData.show) {
-          setPracticeData({ show: false });
+        if (showOverlay) {
+          setShowOverlay(false);
         } else {
+          setShowOverlay(true);
           bottomSheetRef.current.snapTo(0);
           setPracticeData({
             show: true,
@@ -213,12 +216,12 @@ const mapStateToProps = createStructuredSelector({
   joinedPractices: selectJoinedPractices,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  joinPractices: (practiceId) => dispatch(joinPractices(practiceId)),
-  setPracticeId: (id) => dispatch(setPracticeId(id)),
-  chatWithPracticeStart: (data) => dispatch(chatWithPracticeStart(data)),
+const mapDispatchToProps = dispatch => ({
+  joinPractices: practiceId => dispatch(joinPractices(practiceId)),
+  setPracticeId: id => dispatch(setPracticeId(id)),
+  chatWithPracticeStart: data => dispatch(chatWithPracticeStart(data)),
   getPracticesDmsStart: () => dispatch(getPracticesDmsStart()),
-  getPracticeSubgroupsStart: (id) => dispatch(getPracticeSubgroupsStart(id)),
+  getPracticeSubgroupsStart: id => dispatch(getPracticeSubgroupsStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PracticeSmallBox);

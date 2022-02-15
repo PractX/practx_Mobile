@@ -140,13 +140,6 @@ const ChatMessages = ({
   //   );
   // };
 
-  console.log(
-    'Message count calculate',
-    Object.entries(messageCount).forEach(
-      ([key, value]) => key === '32_13_ciqrmNksp' && value,
-    ),
-  );
-
   //TODO     MESSAGE COUNT
 
   const getMessageCounts = (allChannels, timetoken) => {
@@ -158,7 +151,7 @@ const ChatMessages = ({
       .then(async response => {
         // set all messages count to a global variable
         let mCount =
-          (await Object.values(response.channels)??.reduce(
+          (await Object.values(response.channels)?.reduce(
             (partialSum, a) => partialSum + a,
             0,
           )) + allNotifications?.rows?.filter(it => !it.patientSeen)?.length;

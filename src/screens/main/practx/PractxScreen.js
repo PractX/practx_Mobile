@@ -82,6 +82,7 @@ const Practx = ({
     show: false,
     data: null,
   });
+  const [showOverlay, setShowOverlay] = useState(false);
 
   const renderContent = () => (
     <View
@@ -378,6 +379,8 @@ const Practx = ({
                           practiceData={practiceData}
                           setPracticeData={setPracticeData}
                           bottomSheetRef={bottomSheetRef}
+                          showOverlay={showOverlay}
+                          setShowOverlay={setShowOverlay}
                         />
                       );
                     }
@@ -488,14 +491,16 @@ const Practx = ({
           </View>
         )}
       </View>
-      {practiceData.show && (
-        <View
+      {showOverlay && (
+        <TouchableOpacity
+          onPress={() => bottomSheetRef.current.snapTo(1)}
           style={{
             flex: 1,
             position: 'absolute',
             backgroundColor: '#000000b9',
-            height: '100%',
-            width: '100%',
+            height: Dimensions.get('window').height,
+            width: Dimensions.get('window').width,
+            zIndex: 100,
           }}
         />
       )}
@@ -506,27 +511,30 @@ const Practx = ({
           borderRadius={40}
           renderContent={() => (
             <>
-              <View
+              {/* <View
                 style={{
-                  flex: 1,
+                  // flex: 1,
                   position: 'absolute',
                   backgroundColor: '#000000b9',
-                  height: '100%',
-                  width: '100%',
+                  height: Dimensions.get('window').height,
+                  width: Dimensions.get('window').width,
+                  zIndex: 6000,
                 }}
-              />
+              /> */}
               <PracticeDetails
                 bottomSheetRef={bottomSheetRef}
                 navigation={navigation}
                 practiceData={practiceData}
+                setPracticeData={setPracticeData}
+                setShowOverlay={setShowOverlay}
               />
             </>
           )}
           initialSnap={1}
-          onOpenStart={() => setPracticeData({ ...practiceData, show: true })}
-          onOpenEnd={() => setPracticeData({ ...practiceData, show: true })}
-          onCloseStart={() => setPracticeData({ ...practiceData, show: false })}
-          onCloseEnd={() => setPracticeData({ show: false })}
+          onOpenStart={() => setShowOverlay(true)}
+          onOpenEnd={() => setShowOverlay(true)}
+          onCloseStart={() => setShowOverlay(false)}
+          onCloseEnd={() => setShowOverlay(false)}
         />
       )}
     </SafeAreaView>

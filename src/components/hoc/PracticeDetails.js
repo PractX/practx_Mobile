@@ -52,6 +52,7 @@ const PracticeDetails = ({
   setPracticeData,
   joinPractices,
   leavePracticeStart,
+  setShowOverlay,
 }) => {
   const { colors } = useTheme();
   const { show, data, type } = practiceData;
@@ -75,6 +76,9 @@ const PracticeDetails = ({
         backgroundColor: colors.background,
         minHeight: 660,
         marginBottom: 70,
+        borderWidth: 1,
+        borderRadius: 50,
+        borderColor: colors.background_1,
       }}>
       {/* <Icon
         onPress={() => console.log('hello')}
@@ -89,8 +93,9 @@ const PracticeDetails = ({
           justifyContent: 'center',
         }}
         onPress={() => {
-          console.log(bottomSheetRef.current);
+          // console.log(bottomSheetRef.current);
           bottomSheetRef.current.snapTo(1);
+          // setShowOverlay(false);
         }}>
         <Icon
           name="linear-scale"
@@ -103,30 +108,6 @@ const PracticeDetails = ({
           }}
         />
       </TouchableOpacity>
-
-      <Pressable
-        style={{
-          position: 'absolute',
-          top: 20,
-          left: 20,
-          justifyContent: 'center',
-        }}
-        onPress={() => {
-          requestAnimationFrame(() => {
-            bottomSheetRef.current.snapTo(1);
-          });
-        }}>
-        <Icon
-          name="x"
-          type="feather"
-          color={colors.text}
-          size={normalize(18)}
-          style={{
-            marginRight: 0,
-            // alignSelf: 'center',
-          }}
-        />
-      </Pressable>
 
       {practiceData.data && (
         <View style={{ width: windowWidth }}>
