@@ -1080,7 +1080,7 @@ const ChatScreen = ({
 
   // NOTE
 
-  console.log('All Practice data', practice);
+  // console.log('All Practice data', practice
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -1144,7 +1144,8 @@ const ChatScreen = ({
                     {
                       name: 'ios-call-outline',
                       type: 'ionicon',
-                      onPress: () => Linking.openURL(`tel:${'data.mobileNo'}`),
+                      onPress: () =>
+                        Linking.openURL(`tel:${practice.mobileNo}`),
                       buttonType: 'save',
                     },
                   ]

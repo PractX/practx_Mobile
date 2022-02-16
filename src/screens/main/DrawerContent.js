@@ -625,10 +625,10 @@ const DrawerContent = ({
               {
                 width: '75%',
                 alignSelf: 'center',
-                borderTopWidth: 1,
-                borderColor: colors.background_1,
+                // borderTopWidth: 1,
+                // borderColor: colors.background_1,
                 paddingTop: 20,
-                paddingBottom: 10,
+                paddingBottom: 20,
               },
             ]}
             labelStyle={{
