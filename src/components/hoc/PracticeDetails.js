@@ -12,6 +12,7 @@ import {
   Alert,
   TouchableOpacity,
   Pressable,
+  Linking,
 } from 'react-native';
 import { Button, Icon, ListItem } from 'react-native-elements';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -299,7 +300,8 @@ const PracticeDetails = ({
                     backgroundColor: colors.background_1,
                   },
                 ]}
-                onPress={() => console.log('Hello bro')}>
+                //NOTE
+                onPress={() => Linking.openURL(`tel:${data.mobileNo}`)}>
                 <Icon
                   name="ios-call"
                   type="ionicon"

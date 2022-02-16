@@ -100,68 +100,20 @@ const ChatBubble = ({
                 justifyContent: 'center',
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
-                borderBottomRightRadius: 20,
+                borderBottomLeftRadius: 20,
               }}>
               {message.message.file.name.match(/.(jpg|jpeg|png|gif)$/i) ? (
-                <FastImage
-                  source={{
-                    uri: pubnub.getFileUrl({
-                      channel: message.channel,
-                      id: message.message.file.id,
-                      name: message.message.file.name,
-                    }),
-                    priority: FastImage.priority.high,
-                  }}
-                  style={[
-                    {
-                      width: 250,
-                      height: 250,
-                      backgroundColor: colors.background_1,
-                      borderTopLeftRadius: 20,
-                      borderTopRightRadius: 20,
-                      borderBottomRightRadius: 20,
-                    },
-                    // currentPracticeId === practice.id && {
-                    //   borderWidth: 1,
-                    //   borderColor: colors.text,
-                    // },
-                  ]}
-                  resizeMode={FastImage.resizeMode.cover}>
-                  {/* {currentPracticeId === practice.id && <Icon
-            name={'primitive-dot'}
-            type={'octicon'}
-            color={colors.text}
-            size={normalize(13)}
-            style={[
-              {
-                right: 5,
-                alignSelf: 'flex-end',
-              },
-            ]}
-          />} */}
-                </FastImage>
-              ) : message.message.file.name.match(/.(mp4)$/i) ? (
-                <>
-                  {/* <Video
-                    source={{
-                      uri: pubnub.getFileUrl({
+                <TouchableOpacity
+                  onPress={() => {
+                    setChatMediaPrev(
+                      pubnub.getFileUrl({
                         channel: message.channel,
                         id: message.message.file.id,
                         name: message.message.file.name,
                       }),
-                    }} // Can be a URL or a local file.
-                    ref={videoRef} // Store reference
-                    //  onBuffer={this.onBuffer}                // Callback when remote video is buffering
-                    //  onError={this.videoError}               // Callback when video cannot be loaded
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      bottom: 0,
-                      right: 0,
-                      alignSelf: 'center',
-                    }}
-                  /> */}
+                    );
+                    setIsVisible(true);
+                  }}>
                   <FastImage
                     source={{
                       uri: pubnub.getFileUrl({
@@ -178,7 +130,7 @@ const ChatBubble = ({
                         backgroundColor: colors.background_1,
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
-                        borderBottomRightRadius: 20,
+                        borderBottomLeftRadius: 20,
                       },
                       // currentPracticeId === practice.id && {
                       //   borderWidth: 1,
@@ -186,14 +138,66 @@ const ChatBubble = ({
                       // },
                     ]}
                     resizeMode={FastImage.resizeMode.cover}>
-                    <Icon
-                      name={'play-circle'}
-                      type={'font-awesome'}
-                      color={colors.text}
-                      size={normalize(55)}
-                      style={[{ alignSelf: 'center', marginTop: '40%' }]}
-                    />
+                    {/* {currentPracticeId === practice.id && <Icon
+            name={'primitive-dot'}
+            type={'octicon'}
+            color={colors.text}
+            size={normalize(13)}
+            style={[
+              {
+                right: 5,
+                alignSelf: 'flex-end',
+              },
+            ]}
+          />} */}
                   </FastImage>
+                </TouchableOpacity>
+              ) : message.message.file.name.match(/.(mp4)$/i) ? (
+                <>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setChatMediaPrev(
+                        pubnub.getFileUrl({
+                          channel: message.channel,
+                          id: message.message.file.id,
+                          name: message.message.file.name,
+                        }),
+                      );
+                      setIsVideoVisible(true);
+                    }}>
+                    <FastImage
+                      source={{
+                        uri: pubnub.getFileUrl({
+                          channel: message.channel,
+                          id: message.message.file.id,
+                          name: message.message.file.name,
+                        }),
+                        priority: FastImage.priority.high,
+                      }}
+                      style={[
+                        {
+                          width: 250,
+                          height: 250,
+                          backgroundColor: colors.background_1,
+                          borderTopLeftRadius: 20,
+                          borderTopRightRadius: 20,
+                          borderBottomLeftRadius: 20,
+                        },
+                        // currentPracticeId === practice.id && {
+                        //   borderWidth: 1,
+                        //   borderColor: colors.text,
+                        // },
+                      ]}
+                      resizeMode={FastImage.resizeMode.cover}>
+                      <Icon
+                        name={'play-circle'}
+                        type={'font-awesome'}
+                        color={colors.text}
+                        size={normalize(55)}
+                        style={[{ alignSelf: 'center', marginTop: '40%' }]}
+                      />
+                    </FastImage>
+                  </TouchableOpacity>
                 </>
               ) : message.message.file.name.match(/.(aac)$/i) ? (
                 <VoiceNoteRecorder
@@ -224,7 +228,7 @@ const ChatBubble = ({
                 justifyContent: 'center',
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
-                borderBottomRightRadius: 20,
+                borderBottomLeftRadius: 20,
                 padding: 15,
               }}>
               <Text
@@ -251,6 +255,7 @@ const ChatBubble = ({
           </Text>
         </View>
       ) : (
+        //NOTE PRACTICE
         <View
           style={{
             flexDirection: 'row',
@@ -448,8 +453,8 @@ const ChatBubble = ({
                           width: 250,
                           height: 220,
                           backgroundColor: colors.background_1,
-                          borderTopLeftRadius: 20,
-                          borderTopRightRadius: 20,
+                          // borderTopLeftRadius: 20,
+                          // borderTopRightRadius: 20,
                           borderBottomRightRadius: 20,
                           marginTop: 10,
                         },

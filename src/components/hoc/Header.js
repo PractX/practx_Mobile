@@ -69,7 +69,7 @@ const Header = ({
         position: searchData && searchData.hideTitle ? 'relative' : 'absolute',
         zIndex: 5000,
         height: subgroups && subgroups.show ? null : 50,
-        width: Math.round(Dimensions.get('window').width),
+        width: '100%',
         borderBottomColor: colors.background_1,
         borderBottomWidth: searchData && searchData.hideBorder ? 0 : 0.8,
         flexDirection: 'column',
@@ -84,6 +84,7 @@ const Header = ({
           justifyContent: 'space-between',
           height: subgroups && subgroups.show ? 50 : '100%',
           width: appwidth,
+          backgroundColor: colors.background,
           // height: 50,
         }}>
         {backArrow && !practice && !group && (

@@ -29,10 +29,11 @@ const VideoModal = ({
   const videoPlayer = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [paused, setPaused] = useState(false);
   const [playerState, setPlayerState] = useState(PLAYER_STATES.PLAYING);
+  const [resizeMode, setResizeMode] = useState(true);
 
   const onSeek = seek => {
     videoPlayer?.current.seek(seek);
@@ -70,32 +71,38 @@ const VideoModal = ({
   const onSeeking = currentTime => setCurrentTime(currentTime);
 
   const handleBackButton = useCallback(() => {
-    if (isFullScreen) {
-      Orientation.lockToPortrait();
-      return true;
-    } else {
-      navigation.goBack();
-      return false;
-    }
+    Orientation.lockToPortrait();
+    // setIsVideoVisible(false);
+    setIsFullScreen(false);
+    setChatMediaPrev('');
+    setIsVideoVisible(false);
+    return false;
   }, [isFullScreen, navigation]);
 
   const handleOrientation = orientation => {
     console.log('Orientation: ', orientation);
-    orientation === 'LANDSCAPE-LEFT' || orientation === 'LANDSCAPE-RIGHT'
-      ? (setIsFullScreen(true), StatusBar.setHidden(true))
-      : (setIsFullScreen(false), StatusBar.setHidden(false));
+    // orientation === 'LANDSCAPE-LEFT' || orientation === 'LANDSCAPE-RIGHT'
+    //   ? (setIsFullScreen(true), StatusBar.setHidden(true))
+    //   : (setIsFullScreen(false), StatusBar.setHidden(false));
   };
 
   const handleFullscreen = () => {
-    isFullScreen ? Orientation.lockToPortrait() : Orientation.lockToLandscape();
+    isFullScreen
+      ? Orientation.lockToPortrait()
+      : Orientation.lockToLandscapeLeft();
   };
 
   useMemo(() => {
+    Orientation.lockToLandscape();
+    StatusBar.setHidden(true);
     Orientation.addOrientationListener(handleOrientation);
     BackHandler.addEventListener('hardwareBackPress', handleBackButton);
     return () => {
       // setState({ play: true, showControls: false, sound: true });
+
       Orientation.removeOrientationListener(handleOrientation);
+      Orientation.lockToPortrait();
+
       // BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
     };
   }, [handleBackButton]);
@@ -103,7 +110,16 @@ const VideoModal = ({
   console.log('Is Full screen', isFullScreen);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        ...styles.container,
+        // height: isFullScreen
+        //   ? Dimensions.get('window').width
+        //   : Dimensions.get('window').height,
+        // width: isFullScreen
+        //   ? Dimensions.get('window').height
+        //   : Dimensions.get('window').width,
+      }}>
       <Video
         onEnd={onEnd}
         onLoad={onLoad}
@@ -111,73 +127,104 @@ const VideoModal = ({
         onProgress={onProgress}
         paused={paused}
         ref={ref => (videoPlayer.current = ref)}
-        fullscreenAutorotate={true}
-        fullscreenOrientation="all"
+        // fullscreenAutorotate={true}
+        fullscreenOrientation="landscape"
         // fullscreen={true}
         // controls={false}
         onTouchCancel={() => {
           Orientation.lockToPortrait();
           // setIsVideoVisible(false);
-          setIsFullScreen(false);
+          // setIsFullScreen(false);
           setChatMediaPrev('');
           setIsVideoVisible(false);
         }}
-        fullscreen={isFullScreen ? true : false}
-        resizeMode="cover"
+        fullscreen={true}
+        resizeMode={resizeMode ? 'contain' : 'cover'}
         source={{
           uri: chatMediaPrev,
         }}
         style={
-          isFullScreen
-            ? [
-                styles.fullMediaPlayer,
-                {
-                  backgroundColor: colors.background,
-                },
-              ]
-            : [
-                styles.mediaPlayer,
-                {
-                  backgroundColor: colors.background,
-                },
-              ]
+          // isFullScreen
+          //   ? [
+          //       styles.fullMediaPlayer,
+          //       {
+          //         backgroundColor: colors.background,
+          //       },
+          //     ]
+          //   :
+          [
+            styles.mediaPlayer,
+            {
+              backgroundColor: colors.background,
+            },
+          ]
         }
         repeat
         // style={styles.mediaPlayer}
-        volume={0.0}
+        // volume={0.0}
       />
-      {!isFullScreen && (
-        <MediaControls
-          isFullScreen={isFullScreen}
-          containerStyle={{}}
-          duration={duration}
-          isLoading={isLoading}
-          mainColor="orange"
-          onFullScreen={() => handleFullscreen()}
-          onPaused={onPaused}
-          onReplay={onReplay}
-          onSeek={onSeek}
-          onSeeking={onSeeking}
-          playerState={playerState}
-          progress={currentTime}>
-          <MediaControls.Toolbar>
-            <TouchableOpacity
-              style={styles.toolbar}
-              onPress={() => setIsVideoVisible(false)}>
-              <Icon
-                name={'x'}
-                type={'feather'}
-                color={colors.text}
-                size={normalize(28)}
-                style={{
-                  color: colors.text,
-                  // alignSelf: 'center',
-                }}
-              />
-            </TouchableOpacity>
-          </MediaControls.Toolbar>
-        </MediaControls>
-      )}
+      {/* {!isFullScreen && ( */}
+      <MediaControls
+        isFullScreen={true}
+        containerStyle={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          // height: '100%',
+          // width: '100%',
+        }}
+        duration={duration}
+        isLoading={isLoading}
+        mainColor="orange"
+        onFullScreen={() => {
+          setResizeMode(!resizeMode);
+          // isFullScreen
+          //   ? Orientation.lockToPortrait()
+          //   : Orientation.lockToLandscape();
+          // setTimeout(() => {
+          //   setIsFullScreen(!isFullScreen);
+          // }, 2000);
+          // handleOrientation();
+        }}
+        onPaused={onPaused}
+        onReplay={onReplay}
+        onSeek={onSeek}
+        onSeeking={onSeeking}
+        playerState={playerState}
+        progress={currentTime}>
+        <MediaControls.Toolbar>
+          <TouchableOpacity
+            style={styles.toolbar}
+            onPress={() => {
+              // isFullScreen ? setIsFullScreen(false) : setIsFullScreen(true);
+              Orientation.lockToPortrait();
+              setIsVideoVisible(false);
+              StatusBar.setHidden(false);
+              // if (isFullScreen) {
+              //   Orientation.lockToPortrait();
+              //   setIsVideoVisible(false);
+              // } else {
+              //   Orientation.lockToPortrait();
+              //   setIsVideoVisible(false);
+              // }
+              //
+            }}>
+            <Icon
+              name={'x'}
+              type={'feather'}
+              color={colors.text}
+              size={normalize(28)}
+              style={{
+                color: colors.text,
+                // alignSelf: 'center',
+              }}
+            />
+          </TouchableOpacity>
+        </MediaControls.Toolbar>
+      </MediaControls>
+      {/* )} */}
     </View>
   );
 };
@@ -185,8 +232,8 @@ const VideoModal = ({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width,
+    width: '100%',
+    height: '100%',
     zIndex: 10000,
     flex: 1,
   },
@@ -200,7 +247,19 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   fullMediaPlayer: {
-    display: 'none',
+    // display: 'none',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    height: Dimensions.get('window').width,
+    width: Dimensions.get('window').height,
+    // width: Dimensions.get('window').height,
+    alignItems: 'center',
+    alignSelf: 'center',
+    // aspectRatio: 2,
+    // backgroundColor: 'white',
   },
   mediaPlayer: {
     position: 'absolute',

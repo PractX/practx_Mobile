@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   StatusBar,
+  Linking,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { Text, Content } from 'native-base';
@@ -1079,6 +1080,8 @@ const ChatScreen = ({
 
   // NOTE
 
+  console.log('All Practice data', practice);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ImageView
@@ -1100,55 +1103,58 @@ const ChatScreen = ({
         />
       )}
       <View style={{ flex: 1 }}>
-        <Header
-          navigation={navigation}
-          // title="Edit Profile"
-          signalType={
-            (getSignal() &&
-              getSignal().message.eventType === 'typing_on' &&
-              getSignal().publisher !== currentUser.chatId) ||
-            (getSignal() &&
-              getSignal().message.eventType === 'recording_on' &&
-              getSignal().publisher !== currentUser.chatId)
-              ? getSignal()
-              : ''
-          }
-          subgroups={{
-            show: groupSuggest,
-            onShow: setGroupSuggest,
-            data: subgroups,
-            practiceDms: practiceDms,
-            groupPractice: practice,
-          }}
-          textImage={true}
-          backArrow={true}
-          headerWithImage={{ chatUser: currentUser, status: 'Active Now' }}
-          chatRight={
-            type === 'dm'
-              ? [
-                  {
-                    name: 'calendar',
-                    type: 'ant-design',
-                    onPress: () =>
-                      navigation.navigate('Appointment', {
-                        to: 'AppointmentBooking',
-                        practice: practice,
-                      }),
-                    buttonType: 'save',
-                  },
-                  {
-                    name: 'ios-call-outline',
-                    type: 'ionicon',
-                    onPress: null,
-                    buttonType: 'save',
-                  },
-                ]
-              : null
-          }
-          practice={practice}
-          group={group}
-          // isLoading={isLoading}
-        />
+        {!isVideoVisible && !showMediaPick ? (
+          <Header
+            navigation={navigation}
+            // title="Edit Profile"
+            hideCancel={true}
+            signalType={
+              (getSignal() &&
+                getSignal().message.eventType === 'typing_on' &&
+                getSignal().publisher !== currentUser.chatId) ||
+              (getSignal() &&
+                getSignal().message.eventType === 'recording_on' &&
+                getSignal().publisher !== currentUser.chatId)
+                ? getSignal()
+                : ''
+            }
+            subgroups={{
+              show: groupSuggest,
+              onShow: setGroupSuggest,
+              data: subgroups,
+              practiceDms: practiceDms,
+              groupPractice: practice,
+            }}
+            textImage={true}
+            backArrow={true}
+            headerWithImage={{ chatUser: currentUser, status: 'Active Now' }}
+            chatRight={
+              type === 'dm'
+                ? [
+                    {
+                      name: 'calendar',
+                      type: 'ant-design',
+                      onPress: () =>
+                        navigation.navigate('Appointment', {
+                          to: 'AppointmentBooking',
+                          practice: practice,
+                        }),
+                      buttonType: 'save',
+                    },
+                    {
+                      name: 'ios-call-outline',
+                      type: 'ionicon',
+                      onPress: () => Linking.openURL(`tel:${'data.mobileNo'}`),
+                      buttonType: 'save',
+                    },
+                  ]
+                : null
+            }
+            practice={practice}
+            group={group}
+            // isLoading={isLoading}
+          />
+        ) : null}
 
         {!loader ? (
           <View style={{ flex: 1, marginTop: 50 }}>

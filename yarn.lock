@@ -1080,6 +1080,13 @@
     "@types/hoist-non-react-statics" "^3.3.1"
     hoist-non-react-statics "^3.3.0"
 
+"@flyerhq/react-native-link-preview@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@flyerhq/react-native-link-preview/-/react-native-link-preview-1.6.0.tgz#c7285ab93a133328edc5d69b011822581bb4414b"
+  integrity sha512-MY2Kxlf3SzLVUAuGU2LXhDU0a2icNBWL7MDCA8BNpmKqsWI+tHjX3mHm5nGpsLweYG5wsajzBd5XS0KCXNPkJA==
+  dependencies:
+    html-entities "^2.3.2"
+
 "@hapi/hoek@^9.0.0":
   version "9.2.1"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.2.1.tgz#9551142a1980503752536b5050fd99f4a7f13b17"
@@ -4480,6 +4487,11 @@ html-encoding-sniffer@^2.0.1:
   integrity sha512-D5JbOMBIR/TVZkubHT+OyT2705QvogUW4IBn6nHd756OwieSF9aDYFj4dv6HHEVGYbHaLETa3WggZYWWMyy3ZQ==
   dependencies:
     whatwg-encoding "^1.0.5"
+
+html-entities@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.3.2.tgz#760b404685cb1d794e4f4b744332e3b00dcfe488"
+  integrity sha512-c3Ab/url5ksaT0WyleslpBEthOzWhrjQbg75y7XUsfSzi3Dgzt0l8w5e7DylRn15MTlMMD58dTfzddNS2kcAjQ==
 
 html-escaper@^2.0.0:
   version "2.0.2"
