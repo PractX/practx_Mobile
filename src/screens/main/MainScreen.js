@@ -84,6 +84,7 @@ const MainScreen = ({
     //     allNotifications?.rows?.filter(it => !it.patientSeen)?.length,
     // );
     Platform.OS === 'ios' &&
+      messageCount &&
       notifee
         .setBadgeCount(
           Object.values(messageCount).reduce(
