@@ -128,17 +128,17 @@ export function* willSearchPractices({ payload: searchData }) {
     yield put(setSearchResult(result.practices));
   } catch (error) {
     console.log(error.response);
-    if (error.response) {
-      showMessage({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: error.message,
-        type: 'danger',
-      });
-    }
+    // if (error.response) {
+    //   showMessage({
+    //     message: error.response.data.message,
+    //     type: 'danger',
+    //   });
+    // } else {
+    //   showMessage({
+    //     message: error.message,
+    //     type: 'danger',
+    //   });
+    // }
     yield put(setSearching(false));
   }
 }
@@ -186,17 +186,17 @@ export function* willJoinPractices({ payload: practiceId }) {
     yield put(setLoading('success'));
   } catch (error) {
     console.log(error.response);
-    if (error.response) {
-      showMessage({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: error.message,
-        type: 'danger',
-      });
-    }
+    // if (error.response) {
+    //   showMessage({
+    //     message: error.response.data.message,
+    //     type: 'danger',
+    //   });
+    // } else {
+    //   showMessage({
+    //     message: error.message,
+    //     type: 'danger',
+    //   });
+    // }
     yield put(setLoading(false));
   }
 }
@@ -218,17 +218,17 @@ export function* willGetPracticesDms() {
     yield put(getPracticesDmsSuccess(result.dms));
   } catch (error) {
     console.log(error.response);
-    if (error.response) {
-      showMessage({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: error.message,
-        type: 'danger',
-      });
-    }
+    // if (error.response) {
+    //   showMessage({
+    //     message: error.response.data.message,
+    //     type: 'danger',
+    //   });
+    // } else {
+    //   showMessage({
+    //     message: error.message,
+    //     type: 'danger',
+    //   });
+    // }
     yield put(setLoading(false));
   }
 }
@@ -254,17 +254,17 @@ export function* willGetPracticeStaff({ payload: practiceId }) {
     yield put(getPracticeStaffSuccess(result.practiceStaffs.staffs));
   } catch (error) {
     console.log(error.response);
-    if (error.response) {
-      showMessage({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: error.message,
-        type: 'danger',
-      });
-    }
+    // if (error.response) {
+    //   showMessage({
+    //     message: error.response.data.message,
+    //     type: 'danger',
+    //   });
+    // } else {
+    //   showMessage({
+    //     message: error.message,
+    //     type: 'danger',
+    //   });
+    // }
     yield put(setLoading(false));
   }
 }
@@ -321,17 +321,17 @@ export function* willGetPracticeSubgroup({ payload: practiceId }) {
     );
   } catch (error) {
     console.log(error.response);
-    if (error.response) {
-      showMessage({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: error.message,
-        type: 'danger',
-      });
-    }
+    // if (error.response) {
+    //   showMessage({
+    //     message: error.response.data.message,
+    //     type: 'danger',
+    //   });
+    // } else {
+    //   showMessage({
+    //     message: error.message,
+    //     type: 'danger',
+    //   });
+    // }
     yield put(setLoading(false));
   }
 }
@@ -355,17 +355,17 @@ async function willChatWithSubgroup(practiceId, subgroupId, token) {
     return result;
   } catch (error) {
     console.log(error.response);
-    if (error.response) {
-      showMessage({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: error.message,
-        type: 'danger',
-      });
-    }
+    // if (error.response) {
+    //   showMessage({
+    //     message: error.response.data.message,
+    //     type: 'danger',
+    //   });
+    // } else {
+    //   showMessage({
+    //     message: error.message,
+    //     type: 'danger',
+    //   });
+    // }
     setLoading(false);
   }
 }
@@ -407,17 +407,17 @@ async function getAllSubgroup(token, practiceId, allSubGroups) {
     }
   } catch (error) {
     console.log(error.response);
-    if (error.response) {
-      showMessage({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: error.message,
-        type: 'danger',
-      });
-    }
+    // if (error.response) {
+    //   showMessage({
+    //     message: error.response.data.message,
+    //     type: 'danger',
+    //   });
+    // } else {
+    //   showMessage({
+    //     message: error.message,
+    //     type: 'danger',
+    //   });
+    // }
     setLoading(false);
   }
 }
@@ -445,17 +445,17 @@ export function* willChatWithPractice({ payload: practiceId }) {
     // yield put(getPracticesDmsSuccess(result.dms));
   } catch (error) {
     console.log(error.response);
-    if (error.response) {
-      showMessage({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: error.message,
-        type: 'danger',
-      });
-    }
+    // if (error.response) {
+    //   showMessage({
+    //     message: error.response.data.message,
+    //     type: 'danger',
+    //   });
+    // } else {
+    //   showMessage({
+    //     message: error.message,
+    //     type: 'danger',
+    //   });
+    // }
     yield put(setLoading(false));
   }
 }
@@ -490,17 +490,17 @@ export function* willLeavePractice({ payload: { practiceId, practiceName } }) {
     // yield put(getPracticeStaffSuccess(result.practiceStaffs.staffs));
   } catch (error) {
     console.log(error.response);
-    if (error.response) {
-      showMessage({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    } else {
-      showMessage({
-        message: error.message,
-        type: 'danger',
-      });
-    }
+    // if (error.response) {
+    //   showMessage({
+    //     message: error.response.data.message,
+    //     type: 'danger',
+    //   });
+    // } else {
+    //   showMessage({
+    //     message: error.message,
+    //     type: 'danger',
+    //   });
+    // }
     yield put(setLoading(false));
   }
 }

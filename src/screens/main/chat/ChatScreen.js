@@ -8,12 +8,11 @@ import React, {
 import {
   View,
   Dimensions,
-  TextInput,
+  Platform,
   StyleSheet,
-  KeyboardAvoidingView,
-  FlatList,
-  StatusBar,
+  SafeAreaView,
   Linking,
+  TouchableOpacity,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { Text, Content } from 'native-base';
@@ -34,17 +33,13 @@ import {
 } from '../../../redux/user/user.selector';
 import { normalize } from 'react-native-elements';
 import { ListItem, Icon, Button } from 'react-native-elements';
-import { ScrollView } from 'react-native';
-import { TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import InputBox from '../../../components/hoc/InputBox';
 import SmallInputBox from '../../../components/hoc/SmallInputBox';
 import { editProfile } from '../../../redux/user/user.actions';
-import { Platform } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import ChatBubble from '../../../components/hoc/ChatBubble';
 import { usePubNub } from 'pubnub-react';
-import { RefreshControl } from 'react-native';
 import {
   selectAllMessages,
   selectCurrentPracticeId,
@@ -75,7 +70,7 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import EmojiBoard from 'react-native-emoji-board';
-import { SafeAreaView } from 'react-navigation';
+import {} from 'react-navigation';
 import moment from 'moment';
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,

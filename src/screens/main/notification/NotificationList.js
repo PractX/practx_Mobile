@@ -56,7 +56,7 @@ const NotificationList = ({
   markNotification,
 }) => {
   const { colors } = useTheme();
-  console.log('NotificationList', item);
+  // console.log('NotificationList', item);
   const actionText = (action, practices) => {
     switch (action) {
       case 'Join request':

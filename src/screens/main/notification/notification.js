@@ -9,8 +9,7 @@ import {
   StyleSheet,
   Dimensions,
   Text,
-  Image,
-  TextInput,
+  SafeAreaView,
   SectionList,
   ScrollView,
 } from 'react-native';
@@ -18,7 +17,6 @@ import NotificationList from './NotificationList';
 import Header from '../../../components/hoc/Header';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { SafeAreaView } from 'react-navigation';
 import { useIsFocused, useTheme } from '@react-navigation/native';
 import { useIsDrawerOpen } from '@react-navigation/drawer';
 import { normalize, Icon, ListItem, Button } from 'react-native-elements';
@@ -111,14 +109,14 @@ const Notification = ({
 
   console.log('Current notification', currentNotification);
 
-  // useEffect(() => {
-  //   if (isFocused) {
-  //   }
-  // }, [isFocused]);
-
   useEffect(() => {
     if (isFocused) {
       getAllPatientNotificationStart();
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (isFocused) {
       setNotificationData(
         convertToArray(datesGroupByComponent(allNotifications.rows, 'D'))
           .map(it => {
@@ -140,7 +138,7 @@ const Notification = ({
           .reverse(),
       );
     }
-  }, [allNotifications]);
+  }, [allNotifications, isFocused]);
 
   // useEffect(() => {
   //   setNotificationData(

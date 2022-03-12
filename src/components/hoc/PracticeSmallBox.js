@@ -91,7 +91,6 @@ const PracticeSmallBox = ({
         if (showOverlay) {
           setShowOverlay(false);
         } else {
-          setShowOverlay(true);
           bottomSheetRef.current.snapTo(0);
           setPracticeData({
             show: true,

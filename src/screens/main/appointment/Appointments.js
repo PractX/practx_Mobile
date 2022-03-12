@@ -4,21 +4,12 @@ import * as Animatable from 'react-native-animatable';
 // import { ThemeContext } from '../context/ThemeContext';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Text,
-  Image,
-  TextInput,
-  ScrollView,
-} from 'react-native';
+import { View, StyleSheet, Dimensions, Text, SafeAreaView } from 'react-native';
 import AppointmentList from './AppointmentList';
 import Header from '../../../components/hoc/Header';
 import moment from 'moment';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { SafeAreaView } from 'react-navigation';
 import { useIsFocused, useTheme } from '@react-navigation/native';
 import { useIsDrawerOpen } from '@react-navigation/drawer';
 import { normalize, Icon } from 'react-native-elements';

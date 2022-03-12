@@ -2,21 +2,14 @@ import React, { useMemo, useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
-  Switch,
   Text,
   InteractionManager,
-  ImageBackground,
   StatusBar,
-  TouchableWithoutFeedback,
-  TextInput,
   ScrollView,
-  Pressable,
+  SafeAreaView,
 } from 'react-native';
 import {
   Avatar as TextAvatar,
-  Title,
-  Caption,
-  Paragraph,
   Drawer,
   TouchableRipple,
 } from 'react-native-paper';
@@ -59,7 +52,6 @@ import InputBox from '../../components/hoc/InputBox';
 import ToggleSwitch from 'toggle-switch-react-native';
 import { Keyboard } from 'react-native';
 import { setFilter } from '../../redux/practices/practices.actions';
-import { SafeAreaView } from 'react-navigation';
 
 const DrawerContent = ({
   navigation,

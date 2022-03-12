@@ -60,7 +60,13 @@ import PracticesBox from './PracticeBox';
 import { usePubNub } from 'pubnub-react';
 import PracticeList from './PracticeList';
 import DmsBox from './DmsBox';
-import { ActivityIndicator } from 'react-native-paper';
+import {
+  Button,
+  Dialog,
+  Paragraph,
+  Portal,
+  ActivityIndicator,
+} from 'react-native-paper';
 import GroupBox from './GroupBox';
 import { removeItem, setItem, getItem } from '../../../utils/storage';
 
@@ -108,6 +114,12 @@ const ChatMessages = ({
   const d = new Date();
   const time = d.getTime();
   const [newMsgAvailable, setNewMsgAvailable] = useState(false);
+
+  const [visible, setVisible] = React.useState(false);
+
+  const showDialog = () => setVisible(true);
+
+  const hideDialog = () => setVisible(false);
 
   const addTime = timetoken => {
     const unixTimestamp = timetoken / 10000000;
@@ -786,7 +798,19 @@ const ChatMessages = ({
             opacity: 0.1,
           },
         ]}>
-        <Header navigation={navigation} title="Messages" notifyIcon={true} />
+        <Header
+          navigation={navigation}
+          title="Messages"
+          notifyIcon={true}
+          textRight={
+            currentPracticeId
+              ? {
+                  title: 'Leave',
+                  press: () => showDialog(),
+                }
+              : null
+          }
+        />
         {/* {appointmentData ? ( */}
 
         {/* ------------------------------ Pactices Lists -----------------------------  */}
@@ -825,25 +849,6 @@ const ChatMessages = ({
                 }}>
                 Direct message
               </Text>
-              <TouchableOpacity
-                style={{}}
-                onPress={() =>
-                  leavePracticeStart({
-                    practiceId: currentPracticeId,
-                    practiceName: joinedPractices.find(
-                      item => item.id === currentPracticeId,
-                    ).practiceName,
-                  })
-                }>
-                <Text
-                  style={{
-                    color: colors.primary,
-                    fontSize: normalize(13),
-                    fontFamily: 'SofiaProRegular',
-                  }}>
-                  Leave
-                </Text>
-              </TouchableOpacity>
             </View>
             {/* SECTION */}
             <DmsBox
@@ -1065,6 +1070,79 @@ const ChatMessages = ({
           </View>
         )}
       </View>
+      <Portal>
+        {/* //TODO */}
+        <Dialog
+          visible={visible}
+          onDismiss={hideDialog}
+          style={{
+            backgroundColor: colors.background,
+            borderColor: colors.background_1,
+            borderWidth: 1,
+          }}>
+          <Dialog.Title
+            style={{
+              color: colors.text,
+              fontSize: normalize(18),
+              fontFamily: 'SofiaProSemiBold',
+            }}>
+            Leave{' '}
+            {
+              joinedPractices.find(item => item.id === currentPracticeId)
+                ?.practiceName
+            }
+          </Dialog.Title>
+          <Dialog.Content>
+            <Paragraph
+              style={{
+                color: colors.text,
+                fontSize: normalize(15),
+                fontFamily: 'SofiaProRegular',
+              }}>
+              Are you sure you want to leave{' '}
+              {
+                joinedPractices.find(item => item.id === currentPracticeId)
+                  ?.practiceName
+              }
+              ?
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              labelStyle={{
+                color: colors.text,
+                alignSelf: 'center',
+                fontSize: normalize(15),
+                fontFamily: 'SofiaProRegular',
+              }}
+              color={colors.shadow2}
+              onPress={hideDialog}>
+              Cancel
+            </Button>
+            <Button
+              labelStyle={{
+                color: colors.text,
+                alignSelf: 'center',
+                fontSize: normalize(15),
+                fontFamily: 'SofiaProRegular',
+              }}
+              color={colors.shadow2}
+              // loading={isDeleteLoading}
+              style={{ marginHorizontal: 8 }}
+              onPress={() => {
+                leavePracticeStart({
+                  practiceId: currentPracticeId,
+                  practiceName: joinedPractices.find(
+                    item => item.id === currentPracticeId,
+                  )?.practiceName,
+                });
+                hideDialog();
+              }}>
+              Yes, Leave!
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </SafeAreaView>
   );
 };

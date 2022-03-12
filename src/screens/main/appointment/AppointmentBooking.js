@@ -318,23 +318,21 @@ const AppointmentBooking = ({
                 description: '',
               }}
               onSubmit={async (values, { resetForm }) => {
-                console.log({
-                  ...values,
-                  practiceId: selectedPractice?.id,
-                  data:
-                    selectedDate &&
-                    new Date(selectedDate?.replaceAll('/', '-')).toISOString(),
-                });
+                const dateTime = selectedDate.split(' ');
+                // console.log(
+                //   'Selected date',
+                //   dateTime[0].concat('T' + dateTime[1] + ':00.000Z'),
+                // );
+                // console.log('Date', new Date(selectedDate).toISOString());
+                // const dates = new Date('2022-03-13').toISOString();
                 bookAppointment({
                   ...values,
                   practiceId: selectedPractice?.id,
-                  date:
-                    selectedDate &&
-                    new Date(selectedDate?.replaceAll('/', '-')).toISOString(),
+                  date: dateTime[0].concat('T' + dateTime[1] + ':00.000Z'),
                   navigation,
                 });
-                // do your stuff
-                resetForm();
+                // // do your stuff
+                // resetForm();
               }}>
               {({ handleChange, handleBlur, handleSubmit, values }) => (
                 <View>
@@ -364,6 +362,7 @@ const AppointmentBooking = ({
                       },
                     }}
                   />
+                  <Text style={{ color: 'red' }}>{selectedDate}</Text>
                   <InputBox
                     handleChange={handleChange}
                     handleBlur={handleBlur}
@@ -405,7 +404,9 @@ const AppointmentBooking = ({
                     }}
                     minimumDate={minimumDate}
                     isGregorian={true}
-                    onSelectedChange={date => setSelectedDate(date)}
+                    onSelectedChange={date =>
+                      setSelectedDate(date.replace(/\//g, '-'))
+                    }
                   />
 
                   <View style={styles.loginButtonView}>

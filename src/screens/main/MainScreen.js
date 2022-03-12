@@ -104,7 +104,7 @@ const MainScreen = ({
       const socket = getSocket(token);
 
       const listener = async data => {
-        const count = await getItem('msgCount');
+        const count = (await getItem('msgCount')) || 0;
         console.log('notification data: ', data);
         switch (data.action) {
           case 'Accept join request':
@@ -227,7 +227,7 @@ const MainScreen = ({
         }
         setItem('msgCount', count + 1);
 
-        console.log('Recent count', count);
+        // console.log('Recent count', count);
         notifee
           .setBadgeCount(count + 1)
           .then(() => console.log('Badge count set!'));
@@ -411,153 +411,153 @@ const MainScreen = ({
   // PushNotification.popInitialNotification((notification) => {
   //   console.log('Initial Notification', notification);
   // });
-  PushNotification.configure({
-    // Called when Token is generated.
-    onRegister: function (token) {
-      console.log('TOKEN:', token);
-      if (token.os === 'ios' && pubnub) {
-        // pubnub.push.addChannels(
-        //   {
-        //     channels: chatChannels,
-        //     device: token.token,
-        //     pushGateway: 'apns2',
-        //     environment: 'production', /// Required for APNS2
-        //     topic: 'com.bcapturetech.practx',
-        //   },
-        //   function (status) {
-        //     console.log('Testing APNS2', status);
-        //   },
-        // );
-        console.log('Date', new Date().getTime());
-        pubnub.push.addChannels(
-          {
-            channels: chatChannels,
-            // channels: ['channel1'],
-            device: token.token,
-            pushGateway: 'apns2',
-            environment: 'development', // Required for APNs2
-            topic: 'com.bcapturetech.practx', // Required for APNs2
-          },
-          function (status) {
-            console.log(status);
-          },
-        );
-        // Send iOS Notification from debug console: {"pn_apns":{"aps":{"alert":"Hello World."}}}
-      } else if (token.os === 'android' && pubnub) {
-        // console.log(pubnub);
-        pubnub.push.addChannels({
-          channels: chatChannels,
-          device: token.token,
-          pushGateway: 'gcm', // apns, gcm, mpns
-        });
-        // Send Android Notification from debug console: {"pn_gcm":{"data":{"message":"Hello World."}}}
-      }
-    },
-    // Something not working?
-    // See: https://support.pubnub.com/hc/en-us/articles/360051495432-How-can-I-troubleshoot-my-push-notification-issues-
-    // Called when a remote or local notification is opened or received.
-    onNotification: async function (notification) {
-      console.log('NOTIFICATION:----REMOTE', notification);
-      // setInitialState('chats');
-      setGroupCha([...new Set([...groupCha, notification.data.channel])]);
-      console.log(notification.data.type);
-      // if (!chaList.includes(notification.data.channel)) {
-      console.log(
-        'test channels',
-        currentChatChannel,
-        ' +----',
-        notification.data.channel,
-      );
-      // }
-      if (!notification.userInteraction) {
-        // notification.data.channel;
-        console.log('I am here 1');
-        if (
-          !notification.foreground ||
-          currentChatChannel !== notification.data.channel
-        ) {
-          console.log('I am here 1a');
-          const count = await getItem('msgCount');
-          // pushLocalNotification({
-          //   id: notification.id ? notification.id : '2',
-          //   data: notification.data,
-          //   groupCha: groupCha,
-          // });
-          onDisplayChatNotification({
-            data: notification.data,
-            groupCha: groupCha,
-          });
-          setItem('msgCount', count + 1);
+  // PushNotification.configure({
+  //   // Called when Token is generated.
+  //   onRegister: function (token) {
+  //     console.log('TOKEN:', token);
+  //     if (token.os === 'ios' && pubnub) {
+  //       // pubnub.push.addChannels(
+  //       //   {
+  //       //     channels: chatChannels,
+  //       //     device: token.token,
+  //       //     pushGateway: 'apns2',
+  //       //     environment: 'production', /// Required for APNS2
+  //       //     topic: 'com.bcapturetech.practx',
+  //       //   },
+  //       //   function (status) {
+  //       //     console.log('Testing APNS2', status);
+  //       //   },
+  //       // );
+  //       console.log('Date', new Date().getTime());
+  //       pubnub.push.addChannels(
+  //         {
+  //           channels: chatChannels,
+  //           // channels: ['channel1'],
+  //           device: token.token,
+  //           pushGateway: 'apns2',
+  //           environment: 'development', // Required for APNs2
+  //           topic: 'com.bcapturetech.practx', // Required for APNs2
+  //         },
+  //         function (status) {
+  //           console.log(status);
+  //         },
+  //       );
+  //       // Send iOS Notification from debug console: {"pn_apns":{"aps":{"alert":"Hello World."}}}
+  //     } else if (token.os === 'android' && pubnub) {
+  //       // console.log(pubnub);
+  //       pubnub.push.addChannels({
+  //         channels: chatChannels,
+  //         device: token.token,
+  //         pushGateway: 'gcm', // apns, gcm, mpns
+  //       });
+  //       // Send Android Notification from debug console: {"pn_gcm":{"data":{"message":"Hello World."}}}
+  //     }
+  //   },
+  //   // Something not working?
+  //   // See: https://support.pubnub.com/hc/en-us/articles/360051495432-How-can-I-troubleshoot-my-push-notification-issues-
+  //   // Called when a remote or local notification is opened or received.
+  //   onNotification: async function (notification) {
+  //     console.log('NOTIFICATION:----REMOTE', notification);
+  //     // setInitialState('chats');
+  //     setGroupCha([...new Set([...groupCha, notification.data.channel])]);
+  //     console.log(notification.data.type);
+  //     // if (!chaList.includes(notification.data.channel)) {
+  //     console.log(
+  //       'test channels',
+  //       currentChatChannel,
+  //       ' +----',
+  //       notification.data.channel,
+  //     );
+  //     // }
+  //     if (!notification.userInteraction) {
+  //       // notification.data.channel;
+  //       console.log('I am here 1');
+  //       if (
+  //         !notification.foreground ||
+  //         currentChatChannel !== notification.data.channel
+  //       ) {
+  //         console.log('I am here 1a');
+  //         const count = await getItem('msgCount');
+  //         // pushLocalNotification({
+  //         //   id: notification.id ? notification.id : '2',
+  //         //   data: notification.data,
+  //         //   groupCha: groupCha,
+  //         // });
+  //         onDisplayChatNotification({
+  //           data: notification.data,
+  //           groupCha: groupCha,
+  //         });
+  //         setItem('msgCount', count + 1);
 
-          console.log('Recent count', count);
-          notifee
-            .setBadgeCount(count + 1)
-            .then(() => console.log('Badge count set!'));
-        }
-      } else {
-        console.log('I am here 2');
-        setGroupCha([]);
-        Linking.openURL(
-          `practx://chatMessages/${
-            notification.data.practiceId +
-            '-' +
-            notification.data.channel +
-            '-' +
-            notification.data.type +
-            '-' +
-            notification.data.groupId
-          }`,
-        );
-        PushNotification.cancelAllLocalNotifications();
-        console.log('NO Push', notification);
-      }
+  //         console.log('Recent count', count);
+  //         notifee
+  //           .setBadgeCount(count + 1)
+  //           .then(() => console.log('Badge count set!'));
+  //       }
+  //     } else {
+  //       console.log('I am here 2');
+  //       setGroupCha([]);
+  //       Linking.openURL(
+  //         `practx://chatMessages/${
+  //           notification.data.practiceId +
+  //           '-' +
+  //           notification.data.channel +
+  //           '-' +
+  //           notification.data.type +
+  //           '-' +
+  //           notification.data.groupId
+  //         }`,
+  //       );
+  //       PushNotification.cancelAllLocalNotifications();
+  //       console.log('NO Push', notification);
+  //     }
 
-      //   .then((url) => console.log('Hello uRl', url))
-      //   .catch((err) => console.log(err));
-      // Do something with the notification.
-      // Required on iOS only (see fetchCompletionHandler docs: https://reactnative.dev/docs/pushnotificationios)
-      notification.finish(PushNotificationIOS.FetchResult.NoData);
-    },
-    // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
-    onAction: function (notification) {
-      console.log('ACTION:', notification.action);
-      console.log('NOTIFICATIONS:', notification);
+  //     //   .then((url) => console.log('Hello uRl', url))
+  //     //   .catch((err) => console.log(err));
+  //     // Do something with the notification.
+  //     // Required on iOS only (see fetchCompletionHandler docs: https://reactnative.dev/docs/pushnotificationios)
+  //     notification.finish(PushNotificationIOS.FetchResult.NoData);
+  //   },
+  //   // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
+  //   onAction: function (notification) {
+  //     console.log('ACTION:', notification.action);
+  //     console.log('NOTIFICATIONS:', notification);
 
-      // PushNotification.getChannels(function (channel_ids) {
-      //   console.log('Channel ID', channel_ids); // ['channel_id_1']
-      // });
+  //     // PushNotification.getChannels(function (channel_ids) {
+  //     //   console.log('Channel ID', channel_ids); // ['channel_id_1']
+  //     // });
 
-      // process the action
-    },
+  //     // process the action
+  //   },
 
-    // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
-    onRegistrationError: function (err) {
-      console.log('THis is the error registering notification', err);
-      console.error(err.message, err);
-    },
+  //   // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
+  //   onRegistrationError: function (err) {
+  //     console.log('THis is the error registering notification', err);
+  //     console.error(err.message, err);
+  //   },
 
-    // IOS ONLY (optional): default: all - Permissions to register.
-    permissions: {
-      alert: true,
-      badge: true,
-      sound: true,
-    },
+  //   // IOS ONLY (optional): default: all - Permissions to register.
+  //   permissions: {
+  //     alert: true,
+  //     badge: true,
+  //     sound: true,
+  //   },
 
-    // Should the initial notification be popped automatically
-    // default: true
-    popInitialNotification: true,
+  //   // Should the initial notification be popped automatically
+  //   // default: true
+  //   popInitialNotification: true,
 
-    /**
-     * (optional) default: true
-     * - Specified if permissions (ios) and token (android and ios) will requested or not,
-     * - if not, you must call PushNotificationsHandler.requestPermissions() later
-     * - if you are not using remote notification or do not have Firebase installed, use this:
-     *     requestPermissions: Platform.OS === 'ios'
-     */
-    requestPermissions: true,
-    // ANDROID: GCM or FCM Sender ID
-    senderID: '732342770141',
-  });
+  //   /**
+  //    * (optional) default: true
+  //    * - Specified if permissions (ios) and token (android and ios) will requested or not,
+  //    * - if not, you must call PushNotificationsHandler.requestPermissions() later
+  //    * - if you are not using remote notification or do not have Firebase installed, use this:
+  //    *     requestPermissions: Platform.OS === 'ios'
+  //    */
+  //   requestPermissions: true,
+  //   // ANDROID: GCM or FCM Sender ID
+  //   senderID: '732342770141',
+  // });
 
   useEffect(() => {
     // WhatsAppNum().then((res) => {

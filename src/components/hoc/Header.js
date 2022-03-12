@@ -50,6 +50,7 @@ const Header = ({
   hideCancel,
   signalType,
   avatar,
+  textRight,
 }) => {
   const { colors } = useTheme();
   const screenWidth = Math.round(Dimensions.get('window').width);
@@ -460,25 +461,29 @@ const Header = ({
             />
           </TouchableOpacity>
         ) : hideCancel ? null : (
-          <TouchableOpacity
-            style={{
-              alignItems: 'center',
-              paddingTop: 5,
-              zIndex: 20,
-              marginLeft: 20,
-            }}
-            onPress={() => null}>
-            <Icon
-              name="x"
-              type="feather"
-              color={colors.background}
-              size={normalize(18)}
-              style={{
-                color: colors.text,
-                // alignSelf: 'center',
-              }}
-            />
-          </TouchableOpacity>
+          <>
+            {textRight ? null : (
+              <TouchableOpacity
+                style={{
+                  alignItems: 'center',
+                  paddingTop: 5,
+                  zIndex: 20,
+                  marginLeft: 20,
+                }}
+                onPress={() => null}>
+                <Icon
+                  name="x"
+                  type="feather"
+                  color={colors.background}
+                  size={normalize(18)}
+                  style={{
+                    color: colors.text,
+                    // alignSelf: 'center',
+                  }}
+                />
+              </TouchableOpacity>
+            )}
+          </>
         )}
         {avatar && (
           <>
@@ -508,6 +513,25 @@ const Header = ({
               />
             )}
           </>
+        )}
+        {textRight && (
+          <Button
+            // onPress={handleSubmit}
+            TouchableComponent={() => {
+              return (
+                <TouchableOpacity onPress={() => textRight.press()}>
+                  <Text
+                    style={{
+                      color: colors.primary,
+                      fontSize: normalize(14),
+                      fontFamily: 'SofiaProSemiBold',
+                    }}>
+                    {textRight.title}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
         )}
         {iconRight1 && (
           <View style={{ flexDirection: 'row' }}>

@@ -57,7 +57,7 @@ export function* isBookAppointment({
     });
     yield delay(1000);
     showMessage({
-      message: result.message,
+      message: result?.message,
       type: 'success',
     });
     yield put(setIsLoading('success'));
@@ -66,7 +66,7 @@ export function* isBookAppointment({
     console.log(error.response);
     yield put(setIsLoading(false));
     let eMsg = '';
-    if (error.response) {
+    if (error?.response) {
       error.response.data.errors.map(function (i, err) {
         if (error.response.data.errors.length > 1) {
           eMsg += err + 1 + '. ' + i + '\n';
