@@ -15,6 +15,7 @@ import {
   DefaultTheme,
   useLinking,
 } from '@react-navigation/native';
+import SplashScreen from 'react-native-splash-screen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ColorList } from './src/utils/color';
 import { selectThemeMode } from './src/redux/settings/settings.selector';
@@ -39,13 +40,6 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import SendReplyMessage from './src/components/hoc/SendReplyMessage';
 import { getSocket, SocketContext } from './src/context/socketContext';
 
-function SplashScreen() {
-  return (
-    <View>
-      <Text>Loading...</Text>
-    </View>
-  );
-}
 const Stack = createStackNavigator();
 const App = ({
   themeMode,
@@ -142,6 +136,11 @@ const App = ({
     setCurrentChatChannel('');
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 500);
+  }, []);
   // useEffect(() => {
   //   const type = 'notification';
   //   PushNotificationIOS.addEventListener(type, onRemoteNotification);

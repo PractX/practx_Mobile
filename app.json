@@ -1,4 +1,8 @@
 {
   "name": "practx_Mobile",
-  "displayName": "Practx"
+  "displayName": "Practx",
+  "androidNavigationBar": {
+    "barStyle": "dark-content",
+    "backgroundColor": "#000000"
+  }
 }

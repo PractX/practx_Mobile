@@ -293,6 +293,8 @@ PODS:
     - React-Core
   - react-native-slider (4.1.1):
     - React-Core
+  - react-native-splash-screen (3.3.0):
+    - React-Core
   - react-native-version-info (1.1.0):
     - React-Core
   - react-native-video (5.1.1):
@@ -484,6 +486,7 @@ DEPENDENCIES:
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-version-info (from `../node_modules/react-native-version-info`)
   - react-native-video (from `../node_modules/react-native-video`)
   - "react-native-viewpager (from `../node_modules/@react-native-community/viewpager`)"
@@ -582,6 +585,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-slider:
     :path: "../node_modules/@react-native-community/slider"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   react-native-version-info:
     :path: "../node_modules/react-native-version-info"
   react-native-video:
@@ -681,6 +686,7 @@ SPEC CHECKSUMS:
   react-native-orientation-locker: 2da91e5391971dace445495821c899c111dcad7a
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   react-native-slider: 4f759d111693442fa662098fded7304fc98fb720
+  react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-version-info: 36490da17d2c6b5cc21321c70e433784dee7ed0b
   react-native-video: 0bb76b6d6b77da3009611586c7dbf817b947f30e
   react-native-viewpager: b99b53127d830885917ef84809c5065edd614a78
@@ -715,6 +721,6 @@ SPEC CHECKSUMS:
   Yoga: 2b4a01651f42a32f82e6cef3830a3ba48088237f
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 4dfb7bb02979f88dc056f86d31b2c65aa69627a6
+PODFILE CHECKSUM: e57f9d75115ab50dc5135a12f75683eb56314983
 
 COCOAPODS: 1.11.2

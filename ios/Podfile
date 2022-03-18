@@ -16,6 +16,8 @@ target 'practx_Mobile' do
   # Tempoary
   pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
 
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
   target 'practx_MobileTests' do
     inherit! :complete
     # Pods for testing
