@@ -4,16 +4,8 @@ import * as Animatable from 'react-native-animatable';
 
 import { Formik } from 'formik';
 
-import {
-  Text,
-  Content,
-  CheckBox,
-  Header,
-  Right,
-  Body,
-  Left,
-} from 'native-base';
-import { Icon, Button } from 'react-native-elements';
+import { Text, Content, Header, Right, Body, Left } from 'native-base';
+import { CheckBox, Icon, Button } from 'react-native-elements';
 import {
   View,
   StyleSheet,
@@ -62,8 +54,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
     }
   }, [colors.mode]);
 
-  const signupPatient = async (values) => {
-    const me = 'Shitboy';
+  const signupPatient = async values => {
     if (!agreeTos) {
       alert('Please agree to our terms and conditions');
     } else {
@@ -178,7 +169,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                   email: '',
                   password: '',
                 }}
-                onSubmit={(values) => {
+                onSubmit={values => {
                   signupPatient(values);
                 }}>
                 {({ handleChange, handleBlur, handleSubmit, values }) => (
@@ -374,11 +365,36 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                       style={styles.bellowFormView}>
                       <View style={styles.bellowFormViewtext}>
                         <CheckBox
+                          center
+                          containerStyle={{ margin: 0, padding: 0 }}
+                          // style={{ margin: 0, padding: 0 }}
+                          checkedIcon={
+                            <Icon
+                              name="ios-checkbox"
+                              type="ionicon"
+                              color={colors.primary}
+                              size={20}
+                              iconStyle={{ marginRight: 5 }}
+                            />
+                          }
+                          uncheckedIcon={
+                            <Icon
+                              name="ios-square-outline"
+                              type="ionicon"
+                              color={colors.primary}
+                              size={20}
+                              iconStyle={{ marginRight: 5 }}
+                            />
+                          }
+                          checked={agreeTos}
+                          onPress={() => setAgreeTos(!agreeTos)}
+                        />
+                        {/* <CheckBox
                           checked={agreeTos}
                           color={colors.primary}
                           style={styles.spacer}
                           onPress={() => setAgreeTos(!agreeTos)}
-                        />
+                        /> */}
                         <Text
                           style={[
                             styles.whiteFont,
@@ -553,7 +569,7 @@ const mapStateToProps = createStructuredSelector({
   user: selectCurrentUser,
   isLoading: selectIsLoading,
 });
-const mapDispatchToProps = (dispatch) => ({
-  signUpStart: (data) => dispatch(signUpStart(data)),
+const mapDispatchToProps = dispatch => ({
+  signUpStart: data => dispatch(signUpStart(data)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SignUpScreen);

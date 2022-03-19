@@ -15,10 +15,16 @@ const INITIAL_STATE = {
   firstLunch: true,
   mont: null,
   wpStat: 0,
+  passRem: null,
 };
 
 const settingsReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case SettingsActionTypes.SET_PASS_REM:
+      return {
+        ...state,
+        passRem: action.payload,
+      };
     case SettingsActionTypes.SET_WP_STAT:
       return {
         ...state,

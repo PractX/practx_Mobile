@@ -14,6 +14,7 @@ const SettingsActionTypes = {
   GET_MONT: 'GET_MONT',
   SET_MONT: 'SET_MONT',
   SET_WP_STAT: 'SET_WP_STAT',
+  SET_PASS_REM: 'SET_PASS_REM',
 };
 
 export default SettingsActionTypes;

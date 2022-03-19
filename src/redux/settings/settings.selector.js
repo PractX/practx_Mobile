@@ -1,66 +1,70 @@
 import { createSelector } from 'reselect';
 
-const selectSettings = (state) => state.settings;
+const selectSettings = state => state.settings;
 
 export const selectThemeMode = createSelector(
   [selectSettings],
-  (settings) => settings.themeMode,
+  settings => settings.themeMode,
 );
 export const selectIntro = createSelector(
   [selectSettings],
-  (settings) => settings.intro,
+  settings => settings.intro,
 );
 export const selectFirstLunch = createSelector(
   [selectSettings],
-  (settings) => settings.firstLunch,
+  settings => settings.firstLunch,
 );
 export const selectOnScroll = createSelector(
   [selectSettings],
-  (settings) => settings.onScroll,
+  settings => settings.onScroll,
 );
 export const selectSpeedDownloadActive = createSelector(
   [selectSettings],
-  (settings) => settings.speedDownloadActive,
+  settings => settings.speedDownloadActive,
 );
 
 export const selectNetState = createSelector(
   [selectSettings],
-  (settings) => settings.netState,
+  settings => settings.netState,
 );
 
 export const selectPlaySound = createSelector(
   [selectSettings],
-  (settings) => settings.playSound,
+  settings => settings.playSound,
 );
 
 export const selectSoundAlert = createSelector(
   [selectSettings],
-  (settings) => settings.soundAlert,
+  settings => settings.soundAlert,
 );
 
 export const selectShowNetState = createSelector(
   [selectSettings],
-  (settings) => settings.showNetState,
+  settings => settings.showNetState,
 );
 export const selectShowDownloadNotify = createSelector(
   [selectSettings],
-  (settings) => settings.showDownloadNotify,
+  settings => settings.showDownloadNotify,
 );
 export const selectShowMusicNotify = createSelector(
   [selectSettings],
-  (settings) => settings.showMusicNotify,
+  settings => settings.showMusicNotify,
 );
 export const selectDownloadStorage = createSelector(
   [selectSettings],
-  (settings) => settings.downloadStorage,
+  settings => settings.downloadStorage,
 );
 export const selectMont = createSelector(
   [selectSettings],
-  (settings) => settings.mont,
+  settings => settings.mont,
 );
 export const selectWpStat = createSelector(
   [selectSettings],
-  (settings) => settings.wpStat,
+  settings => settings.wpStat,
+);
+export const selectPassRem = createSelector(
+  [selectSettings],
+  settings => settings.passRem,
 );
 
 // export const selectToken = createSelector([selectUser], (user) => user.token);

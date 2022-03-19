@@ -17,7 +17,7 @@ import {
   AccessibilityInfo,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { Text, Content, CheckBox } from 'native-base';
+import { Text } from 'native-base';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 // import * as Actions from '../redux/auth/actions';
 import { LOGO, LOGO2 } from '../../../assets/images';
@@ -28,14 +28,23 @@ import {
   selectCurrentUser,
   selectIsLoading,
 } from '../../redux/user/user.selector';
-import { normalize } from 'react-native-elements';
+import { normalize, CheckBox, Icon } from 'react-native-elements';
 import PushNotification from 'react-native-push-notification';
+import { setPassRem } from '../../redux/settings/settings.actions';
+import { selectPassRem } from '../../redux/settings/settings.selector';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const appwidth = windowWidth * 0.8;
 
-const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
+const LogInScreen = ({
+  navigation,
+  signInStart,
+  user,
+  isLoading,
+  setPassRem,
+  passRem,
+}) => {
   const [remember, setRemember] = useState(true);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [logo, setLogo] = useState(LOGO);
@@ -43,7 +52,7 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
   const { colors } = useTheme();
   useScrollToTop(ref);
   // const dispatch = useDispatch();
-  const login = (values) => {
+  const login = values => {
     console.log(values);
     // dispatch(Actions.loginPatient(values.email, values.password));
     signInStart(values.email, values.password);
@@ -106,11 +115,15 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
               initialValues={{
                 // email: 'jaskyparrot@gmail.com',
                 // password: '@Pass1234',
-                email: '',
-                password: '',
+                // email: '',
+                // password: '',
+                email: passRem ? passRem.email : '',
+                password: passRem ? passRem.password : '',
               }}
-              onSubmit={(values) => {
+              onSubmit={values => {
+                console.log('Item Pass Rem', values);
                 login(values);
+                remember && setPassRem(values);
               }}>
               {({ handleChange, handleBlur, handleSubmit, values }) => (
                 <View>
@@ -160,9 +173,28 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
                     style={styles.bellowFormView}>
                     <View style={styles.bellowFormViewtext}>
                       <CheckBox
+                        center
+                        containerStyle={{ margin: 0, padding: 0 }}
+                        // style={{ margin: 0, padding: 0 }}
+                        checkedIcon={
+                          <Icon
+                            name="ios-checkbox"
+                            type="ionicon"
+                            color={colors.primary}
+                            size={20}
+                            iconStyle={{ marginRight: 5 }}
+                          />
+                        }
+                        uncheckedIcon={
+                          <Icon
+                            name="ios-square-outline"
+                            type="ionicon"
+                            color={colors.primary}
+                            size={20}
+                            iconStyle={{ marginRight: 5 }}
+                          />
+                        }
                         checked={remember}
-                        color={colors.primary}
-                        style={styles.spacer}
                         onPress={() => setRemember(!remember)}
                       />
                       <Text
@@ -173,13 +205,15 @@ const LogInScreen = ({ navigation, signInStart, user, isLoading }) => {
 
                     <Pressable
                       hitSlop={{ bottom: 10, top: 10 }}
-                      onPress={() => navigation.navigate('forgotpass')}>
+                      onPress={() => navigation.navigate('forgotpass')}
+                      style={{ justifyContent: 'center' }}>
                       <Text
                         style={[
                           styles.whiteFont,
                           {
                             color: colors.text_1,
                             textDecorationLine: 'underline',
+                            textAlign: 'center',
                           },
                         ]}>
                         Forgot Password
@@ -309,6 +343,7 @@ const styles = StyleSheet.create({
 
   bellowFormViewtext: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
 
@@ -337,10 +372,12 @@ const styles = StyleSheet.create({
 const mapStateToProps = createStructuredSelector({
   user: selectCurrentUser,
   isLoading: selectIsLoading,
+  passRem: selectPassRem,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   signInStart: (email, password) => dispatch(signInStart({ email, password })),
+  setPassRem: data => dispatch(setPassRem(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LogInScreen);
