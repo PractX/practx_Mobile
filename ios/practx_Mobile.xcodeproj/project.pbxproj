@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* practx_MobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* practx_MobileTests.m */; };
 		03D229828EFB45FEA1B3B93D /* SofiaProBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB5B4EA1644346F6B19985FF /* SofiaProBlack.ttf */; };
-		077F85D8284D2CBC00762E14 /* practx_notify.wav in Resources */ = {isa = PBXBuildFile; fileRef = 077F85D7284D2CB600762E14 /* practx_notify.wav */; };
+		075CAEF528457FC0008BBA2D /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		07A5B5CD27DD6DD8008E3DA9 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07A5B5CC27DD6DD7008E3DA9 /* Launch Screen.storyboard */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -71,7 +71,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* practx_MobileTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = practx_MobileTests.m; sourceTree = "<group>"; };
 		01CB60BEA0984CC7B510C00C /* FuturaStd-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FuturaStd-Bold.otf"; path = "../assets/fonts/FuturaStd-Bold.otf"; sourceTree = "<group>"; };
-		077F85D7284D2CB600762E14 /* practx_notify.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = practx_notify.wav; path = ../assets/sound/practx_notify.wav; sourceTree = "<group>"; };
+		078C91322846255700499403 /* practx_notify.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = practx_notify.wav; path = ../assets/sound/practx_notify.wav; sourceTree = "<group>"; };
 		07A5B5CC27DD6DD7008E3DA9 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* practx_Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = practx_Mobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = practx_Mobile/AppDelegate.h; sourceTree = "<group>"; };
@@ -237,7 +237,7 @@
 		02930FC4EF4C429081CF4501 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				077F85D7284D2CB600762E14 /* practx_notify.wav */,
+				078C91322846255700499403 /* practx_notify.wav */,
 				2F5CBA642AF84C6183FD0881 /* Comfortaa-Bold.ttf */,
 				6742235C1B1A4E77843B0187 /* Comfortaa-Light.ttf */,
 				F6E524CC5E3B4816892F1786 /* Comfortaa-Regular.ttf */,
@@ -580,6 +580,7 @@
 				5A53DF8548084BD8A86EF6BA /* SofiaProExtraLight.ttf in Resources */,
 				96DF00AC1EB34ECFB82A14E9 /* SofiaProLight-Italic.ttf in Resources */,
 				CC952C032C904B16B6AA4327 /* SofiaProLight.ttf in Resources */,
+				075CAEF528457FC0008BBA2D /* main.jsbundle in Resources */,
 				F1376D1C663F49B68EC80A06 /* SofiaProMedium-Italic.ttf in Resources */,
 				66B309B402C0490798172141 /* SofiaProMedium.ttf in Resources */,
 				A980D05534774E8FA50604F4 /* SofiaProRegular-Italic.ttf in Resources */,
@@ -612,7 +613,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -1021,6 +1022,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZL992SVF67;
 				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = "";
+				"EXCLUDED_ARCHS[sdk=*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = practx_Mobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -1050,6 +1054,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZL992SVF67;
+				EXCLUDED_ARCHS = "";
+				"EXCLUDED_ARCHS[sdk=*]" = "";
 				INFOPLIST_FILE = practx_Mobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
