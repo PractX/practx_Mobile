@@ -43,7 +43,7 @@ import SendReplyMessage from '../../components/hoc/SendReplyMessage';
 import { SocketContext } from '../../context/socketContext';
 import { getAppointmentStart } from '../../redux/appointment/appointment.actions';
 import { showMessage } from 'react-native-flash-message';
-import Notification from './notification/Notification';
+import Notification from './notification/notification';
 import { Icon } from 'react-native-elements';
 import HelpFeedback from './helpFeedback/HelpFeedback';
 import Settings from './settings/Settings';
