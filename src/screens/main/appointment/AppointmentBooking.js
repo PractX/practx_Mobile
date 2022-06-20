@@ -328,7 +328,7 @@ const AppointmentBooking = ({
                 bookAppointment({
                   ...values,
                   practiceId: selectedPractice?.id,
-                  date: dateTime[0].concat('T' + dateTime[1] + ':00.000Z'),
+                  date: dateTime[0]?.concat('T' + dateTime[1] + ':00.000Z'),
                   navigation,
                 });
                 // // do your stuff

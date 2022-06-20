@@ -76,22 +76,22 @@ const MainScreen = ({
   // setItem('authToken', idToken.jwtToken);
 
   useEffect(() => {
-    // console.log(
-    //   'Message counts---',
-    //   Object.values(messageCount).reduce((partialSum, a) => partialSum + a, 0) +
-    //     allNotifications?.rows?.filter(it => !it.patientSeen)?.length,
-    // );
-    Platform.OS === 'ios' &&
-      messageCount &&
-      notifee
-        .setBadgeCount(
-          Object.values(messageCount).reduce(
-            (partialSum, a) => partialSum + a,
-            0,
-          ) + allNotifications?.rows?.filter(it => !it.patientSeen)?.length ||
-            0,
-        )
-        .then(() => console.log('Badge count set!'));
+    console.log('`Get Message counts---', messageCount);
+    Platform.OS === 'ios' && messageCount
+      ? notifee
+          .setBadgeCount(
+            Object.values(messageCount).reduce(
+              (partialSum, a) => partialSum + a,
+              0,
+            ) + allNotifications?.rows?.filter(it => !it.patientSeen)?.length ||
+              0,
+          )
+          .then(() => console.log('Badge count set!'))
+      : notifee
+          .setBadgeCount(
+            allNotifications?.rows?.filter(it => !it.patientSeen)?.length || 0,
+          )
+          .then(() => console.log('Badge count set!'));
   }, [messageCount, allNotifications]);
 
   useEffect(() => {
@@ -103,6 +103,7 @@ const MainScreen = ({
 
       const listener = async data => {
         const count = (await getItem('msgCount')) || 0;
+        console.log('Hello messgae--', count);
         console.log('notification data: ', data);
         switch (data.action) {
           case 'Accept join request':
@@ -223,7 +224,8 @@ const MainScreen = ({
           // loadPage();
           console.log('New CHanges made from socket');
         }
-        setItem('msgCount', count + 1);
+        setItem('msgCount', `${count + 1}`);
+        console.log('Message Count--', count);
 
         // console.log('Recent count', count);
         notifee
