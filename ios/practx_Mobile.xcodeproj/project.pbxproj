@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* practx_MobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* practx_MobileTests.m */; };
 		03D229828EFB45FEA1B3B93D /* SofiaProBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB5B4EA1644346F6B19985FF /* SofiaProBlack.ttf */; };
-		075CAEF528457FC0008BBA2D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		075CAEF528457FC0008BBA2D /* (null) in Resources */ = {isa = PBXBuildFile; };
 		07A5B5CD27DD6DD8008E3DA9 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07A5B5CC27DD6DD7008E3DA9 /* Launch Screen.storyboard */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -579,7 +579,7 @@
 				5A53DF8548084BD8A86EF6BA /* SofiaProExtraLight.ttf in Resources */,
 				96DF00AC1EB34ECFB82A14E9 /* SofiaProLight-Italic.ttf in Resources */,
 				CC952C032C904B16B6AA4327 /* SofiaProLight.ttf in Resources */,
-				075CAEF528457FC0008BBA2D /* BuildFile in Resources */,
+				075CAEF528457FC0008BBA2D /* (null) in Resources */,
 				F1376D1C663F49B68EC80A06 /* SofiaProMedium-Italic.ttf in Resources */,
 				66B309B402C0490798172141 /* SofiaProMedium.ttf in Resources */,
 				A980D05534774E8FA50604F4 /* SofiaProRegular-Italic.ttf in Resources */,

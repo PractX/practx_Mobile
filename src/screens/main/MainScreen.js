@@ -413,13 +413,13 @@ const MainScreen = ({
   // });
   PushNotification.configure({
     // Called when Token is generated.
-    onRegister: function (token) {
-      console.log('TOKEN:', token);
-      if (token.os === 'ios' && pubnub) {
+    onRegister: function (tokens) {
+      console.log('TOKEN:', tokens);
+      if (tokens.os === 'ios' && pubnub) {
         // pubnub.push.addChannels(
         //   {
         //     channels: chatChannels,
-        //     device: token.token,
+        //     device: tokens.token,
         //     pushGateway: 'apns2',
         //     environment: 'production', /// Required for APNS2
         //     topic: 'com.bcapturetech.practx',
@@ -433,9 +433,9 @@ const MainScreen = ({
           {
             channels: chatChannels,
             // channels: ['channel1'],
-            device: token.token,
+            device: tokens.token,
             pushGateway: 'apns2',
-            environment: 'development', // Required for APNs2
+            environment: process.env.NODE_ENV,
             topic: 'com.bcapturetech.practx', // Required for APNs2
           },
           function (status) {
@@ -443,11 +443,11 @@ const MainScreen = ({
           },
         );
         // Send iOS Notification from debug console: {"pn_apns":{"aps":{"alert":"Hello World."}}}
-      } else if (token.os === 'android' && pubnub) {
+      } else if (tokens.os === 'android' && pubnub) {
         // console.log(pubnub);
         pubnub.push.addChannels({
           channels: chatChannels,
-          device: token.token,
+          device: tokens.token,
           pushGateway: 'gcm', // apns, gcm, mpns
         });
         // Send Android Notification from debug console: {"pn_gcm":{"data":{"message":"Hello World."}}}

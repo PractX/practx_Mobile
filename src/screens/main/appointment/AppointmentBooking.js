@@ -362,7 +362,6 @@ const AppointmentBooking = ({
                       },
                     }}
                   />
-                  <Text style={{ color: 'red' }}>{selectedDate}</Text>
                   <InputBox
                     handleChange={handleChange}
                     handleBlur={handleBlur}
