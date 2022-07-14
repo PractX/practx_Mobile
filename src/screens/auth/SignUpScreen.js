@@ -108,7 +108,10 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
       </Header> */}
       <Content>
         <View
-          style={[styles.container, { backgroundColor: colors.background }]}>
+          style={[
+            styles.container,
+            { backgroundColor: colors.background, marginTop: 20 },
+          ]}>
           <View style={{ width: '80%' }}>
             {/* ------------------- LOGO SECTION --------------------------------------- */}
 
