@@ -40,6 +40,19 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import SendReplyMessage from './src/components/hoc/SendReplyMessage';
 import { getSocket, SocketContext } from './src/context/socketContext';
 
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn:
+    'https://002f7d88c1e945658771fd003abac387@o1348437.ingest.sentry.io/6627719',
+  // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+  // We recommend adjusting this value in production.
+  tracesSampleRate: 1.0,
+  enableAutoPerformanceTracking: true,
+  environment: process.env.NODE_ENV,
+  debug: true,
+});
+
 const Stack = createStackNavigator();
 const App = ({
   themeMode,
@@ -260,4 +273,4 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => ({
   setCurrentChatChannel: data => dispatch(setCurrentChatChannel(data)),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(Sentry.wrap(App));

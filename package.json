@@ -1,6 +1,6 @@
 {
 	"name": "practx",
-	"version": "1.4.3",
+	"version": "1.4.4",
 	"private": true,
 	"scripts": {
 		"android": "react-native run-android",
@@ -25,6 +25,7 @@
 		"@react-navigation/drawer": "^5.11.4",
 		"@react-navigation/native": "^5.8.10",
 		"@react-navigation/stack": "^5.14.4",
+		"@sentry/react-native": "^4.2.2",
 		"axios": "^0.24.0",
 		"babel-plugin-dotenv-import": "^2.1.0",
 		"babel-plugin-inline-import": "^3.0.0",
@@ -106,7 +107,7 @@
 		"react-test-renderer": "17.0.2"
 	},
 	"resolutions": {
-  	"native-base/@codler/react-native-keyboard-aware-scroll-view": "2.0.0"
+		"native-base/@codler/react-native-keyboard-aware-scroll-view": "2.0.0"
 	},
 	"jest": {
 		"preset": "react-native"

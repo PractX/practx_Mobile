@@ -15,6 +15,7 @@ import {
   ScrollView,
   Pressable,
   TouchableOpacity,
+  Linking,
 } from 'react-native';
 
 import { LOGO, LOGO2 } from '../../../assets/images';
@@ -45,6 +46,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
 
   const [passwordVisibility, setPasswordVisibility] = useState(true);
 
+  let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   useEffect(() => {
     if (colors.mode === 'dark') {
       // practxLogo-dark
@@ -328,8 +330,7 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                       iconSize={14}
                       placeholder="Phone"
                       autoCompleteType="tel"
-                      textContentType="telephoneNumber"
-                      keyboardType="number-pad"
+                      keyboardType="phone-pad"
                       autoCapitalize="none"
                       styling={{
                         input: {
@@ -404,11 +405,14 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                             {
                               marginBottom: 30,
                               color: colors.text_1,
-                              width: appwidth,
+                              width: appwidth * 0.8,
                             },
                           ]}>
                           I agree to the
                           <Text
+                            onPress={() =>
+                              Linking.openURL('https://practxs.com/terms')
+                            }
                             style={{
                               fontSize: normalize(12),
                               color: colors.primary,
@@ -420,6 +424,9 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                           </Text>{' '}
                           and{' '}
                           <Text
+                            onPress={() =>
+                              Linking.openURL('https://practxs.com/terms')
+                            }
                             style={{
                               fontSize: normalize(12),
                               color: colors.primary,
@@ -440,6 +447,15 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                       <Button
                         title="Sign Up"
                         onPress={handleSubmit}
+                        disabled={
+                          Object.values(values).some(
+                            x => x === null || x === '',
+                          ) || !emailRegex.test(values.email)
+                        }
+                        disabledStyle={{
+                          backgroundColor: colors.background_1,
+                          opacity: 0.5,
+                        }}
                         rounded
                         buttonStyle={[
                           styles.loginButton,
@@ -550,6 +566,7 @@ const styles = StyleSheet.create({
   bellowFormViewtext: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: appwidth,
   },
 
   loginButtonView: {

@@ -380,25 +380,30 @@ const ChatMessages = ({
           const { channels } = data;
           let allMsgs = [];
           // console.log('C_DATA__', channels);
+          if (allChannels && allChannels?.length > 0) {
+            allChannels?.map(async i => {
+              const msgs = channels[i];
+              const newMsg = msgs.map(item =>
+                Object.assign(item, {
+                  _id: item.timetoken,
+                  user: { _id: item.uuid },
+                  day: addTime(item.timetoken),
+                }),
+              );
+              const lst = newMsg[newMsg.length - 1].timetoken;
+              const fst = newMsg[0].timetoken;
+              // console.log('NEMES', newMsg);
+              allMsgs.push({ channel: i, lst, fst, messages: newMsg });
+              // setAllMessages(allMsgs);
+              // return i;
+            });
+            console.log('NEW_ALL_MESSAGE+++++', allMsgs);
+            setAllMessages(allMsgs);
+          } else {
+            console.log('NEW_ALL_MESSAGE+++++', allMsgs);
+            setAllMessages(allMsgs);
+          }
 
-          allChannels.map(async i => {
-            const msgs = channels[i];
-            const newMsg = msgs.map(item =>
-              Object.assign(item, {
-                _id: item.timetoken,
-                user: { _id: item.uuid },
-                day: addTime(item.timetoken),
-              }),
-            );
-            const lst = newMsg[newMsg.length - 1].timetoken;
-            const fst = newMsg[0].timetoken;
-            // console.log('NEMES', newMsg);
-            allMsgs.push({ channel: i, lst, fst, messages: newMsg });
-            // setAllMessages(allMsgs);
-            // return i;
-          });
-          console.log('NEW_ALL_MESSAGE+++++', allMsgs);
-          setAllMessages(allMsgs);
           // console.log('NEW_ALL_MESSAGE+++++', allMsgs);
           // setAllMessages(allMsgs);
         }

@@ -72,6 +72,7 @@ const LogInScreen = ({
   // useEffect(() => {
   //   notify();
   // }, []);
+  let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   useEffect(() => {
     console.log(colors.mode);
@@ -224,6 +225,13 @@ const LogInScreen = ({
                     <Button
                       title="Log In"
                       onPress={handleSubmit}
+                      disabled={
+                        !emailRegex.test(values.email) || !values.password
+                      }
+                      disabledStyle={{
+                        backgroundColor: colors.background_1,
+                        opacity: 0.5,
+                      }}
                       rounded
                       buttonStyle={[
                         styles.loginButton,
