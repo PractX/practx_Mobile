@@ -245,7 +245,7 @@ const ChatMessages = ({
 
             if (allChannels && allChannels.length) {
               let otherChannels = [];
-              allChannels.map(channel => {
+              allChannels?.map(channel => {
                 if (!channels.find(i => i === channel)) {
                   otherChannels.push(channel);
                 }

@@ -37,7 +37,7 @@ const pubnub = new PubNub({
   // uuid: 'myUniqueUUID',
 });
 
-// YellowBox.ignoreWarnings(['']);
+YellowBox.ignoreWarnings(['']);
 
 // notifee.onBackgroundEvent(async ({ type, detail }) => {
 //   if (type === EventType.PRESS) {

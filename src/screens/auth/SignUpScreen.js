@@ -450,7 +450,9 @@ const SignUpScreen = ({ navigation, signUpStart, user, isLoading }) => {
                         disabled={
                           Object.values(values).some(
                             x => x === null || x === '',
-                          ) || !emailRegex.test(values.email)
+                          ) ||
+                          !emailRegex.test(values.email) ||
+                          !agreeTos
                         }
                         disabledStyle={{
                           backgroundColor: colors.background_1,
