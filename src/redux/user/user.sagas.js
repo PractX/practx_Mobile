@@ -35,10 +35,11 @@ import {
 } from '../../apis/api';
 import { showMessage, hideMessage } from 'react-native-flash-message';
 import { clearPracticeData } from '../practices/practices.actions';
+import { removeItem, setItem } from '../../utils/storage';
 
 // const userActive = state => state.user.currentUser;
-const userToken = (state) => state.user.token.key;
-const userExpire = (state) => state.user.token.expire;
+const userToken = state => state.user.token.key;
+const userExpire = state => state.user.token.expire;
 
 export function* signUp({
   payload: { email, firstname, lastname, dob, mobileNo, password, navigation },
@@ -133,7 +134,8 @@ export function* signIn({ payload: { email, password } }) {
       });
       yield delay(500);
       yield put(setToken(token));
-      yield yield put(signInSuccess(result.patient));
+      setItem('user', JSON.stringify(result.patient));
+      yield put(signInSuccess(result.patient));
     }
   } catch (error) {
     // console.log(error.response.data);
@@ -582,6 +584,7 @@ export function* signOut() {
   try {
     yield delay(2500);
     yield put(signOutSuccess());
+    yield put(removeItem('user'));
     yield put(clearPracticeData());
   } catch (error) {
     yield put(signOutFailure(error));

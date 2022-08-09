@@ -35,12 +35,18 @@ import {
   selectCurrentChatChannel,
 } from './src/redux/practices/practices.selector';
 import { setCurrentChatChannel } from './src/redux/practices/practices.actions';
-import notifee, { EventType } from '@notifee/react-native';
+import notifee, {
+  AndroidImportance,
+  EventType,
+  AndroidGroupAlertBehavior,
+} from '@notifee/react-native';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import SendReplyMessage from './src/components/hoc/SendReplyMessage';
 import { getSocket, SocketContext } from './src/context/socketContext';
+import { setItem, getItem } from './src/utils/storage';
 
 import * as Sentry from '@sentry/react-native';
+import PushNotification from 'react-native-push-notification';
 
 Sentry.init({
   dsn:
@@ -60,6 +66,7 @@ const App = ({
   token,
   chatChannels,
   setCurrentChatChannel,
+  currentChatChannel,
 }) => {
   const pubnub = usePubNub();
   const routeNameRef = React.useRef();

@@ -621,6 +621,7 @@ const ChatScreen = ({
     // console.log('Group_SUGGEST', groupSuggest);
     if (isFocused || (isFocused && type) || (isFocused && group)) {
       setCurrentChatChannel(channelName);
+      setItem('currentChatChannel', channelName);
       // console.log(
       //   'Chat Ref___',
       //   allMessages.find((item) => item.channel === channelName).messages,
@@ -650,6 +651,7 @@ const ChatScreen = ({
       //   : setGroupSuggest(true);
     } else {
       setCurrentChatChannel('');
+      setItem('currentChatChannel', '');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused, type, group]);

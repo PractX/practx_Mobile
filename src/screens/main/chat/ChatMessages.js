@@ -364,8 +364,13 @@ const ChatMessages = ({
     console.log('=== GET MESSAGES FROM ALL CHANNEL =====: ', allChannels);
     if (chatChannels.length) {
       setChatChannels([...new Set([...chatChannels, ...allChannels])]);
+      setItem(
+        'chatChannels',
+        JSON.stringify([...new Set([...chatChannels, ...allChannels])]),
+      );
     } else {
       setChatChannels([...new Set([...allChannels])]);
+      setItem([...new Set([...allChannels])]);
     }
 
     pubnub.fetchMessages(
