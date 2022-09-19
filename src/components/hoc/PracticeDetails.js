@@ -28,6 +28,12 @@ import {
 import { selectIsLoading } from '../../redux/practices/practices.selector';
 import { createStructuredSelector } from 'reselect';
 import BottomSheet from 'reanimated-bottom-sheet';
+import {
+  Dialog,
+  Paragraph,
+  Portal,
+  Button as PButton,
+} from 'react-native-paper';
 
 const Stack = createStackNavigator();
 
@@ -58,6 +64,11 @@ const PracticeDetails = ({
   const { colors } = useTheme();
   const { show, data, type } = practiceData;
   console.log(practiceData);
+  const [visible, setVisible] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
+  const showDialog = () => setVisible(true);
+
+  const hideDialog = () => setVisible(false);
   // const pending = practice.requests;
   // const member = practice.patients.filter((val) => val.id === userId);
   const [loading, setLoading] = useState(false);
@@ -89,6 +100,72 @@ const PracticeDetails = ({
         size={normalize(18)}
         style={[{ alignSelf: 'center' }]}
       /> */}
+      <Portal>
+        <Dialog
+          visible={visible}
+          onDismiss={hideDialog}
+          style={{
+            backgroundColor: colors.background,
+            borderWidth: 2,
+            borderColor: colors.background_1,
+          }}>
+          <Dialog.Title
+            style={{
+              fontFamily: 'SofiaProBold',
+              color: colors.text,
+              fontSize: normalize(16),
+              textAlign: 'center',
+            }}>
+            {`Leaving ${data.practiceName}?`}
+          </Dialog.Title>
+          <Dialog.Content>
+            <Paragraph
+              style={{
+                fontFamily: 'SofiaProRegular',
+                color: colors.text,
+                fontSize: normalize(14),
+              }}>
+              {`Are you sure you want to leave ${data?.practiceName}`}
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <PButton
+              labelStyle={{
+                fontFamily: 'SofiaProRegular',
+                color: colors.text,
+                fontSize: normalize(13),
+              }}
+              color={colors.shadow2}
+              // style={{ marginHorizontal: 12 }}
+              onPress={hideDialog}>
+              Cancel
+            </PButton>
+            <PButton
+              labelStyle={{
+                fontFamily: 'SofiaProRegular',
+                color: colors.danger,
+                fontSize: normalize(13),
+              }}
+              color={colors.shadow2}
+              loading={isLeaving}
+              style={{ marginHorizontal: 8 }}
+              onPress={async () => {
+                setIsLeaving(true);
+                await leavePracticeStart({
+                  practiceId: data.id,
+                  practiceName: data.practiceName,
+                });
+                setTimeout(() => {
+                  bottomSheetRef.current.snapTo(1);
+                  setIsLeaving(false);
+                  hideDialog();
+                }, 5000);
+              }}>
+              Yes Please
+            </PButton>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
       <TouchableOpacity
         style={{
           justifyContent: 'center',
@@ -177,13 +254,15 @@ const PracticeDetails = ({
                     title="Leave"
                     onPress={() => {
                       // console.log('Leaving', data);
-                      leavePracticeStart({
-                        practiceId: data.id,
-                        practiceName: data.practiceName,
-                      });
-                      setTimeout(() => {
-                        bottomSheetRef.current.snapTo(1);
-                      }, 5000);
+                      // leavePracticeStart({
+                      //   practiceId: data.id,
+                      //   practiceName: data.practiceName,
+                      // });
+                      // setTimeout(() => {
+                      //   bottomSheetRef.current.snapTo(1);
+                      // }, 5000);
+
+                      showDialog();
 
                       // await setPracticeId(practice.id);
                       // await navigation.navigate('Chats');

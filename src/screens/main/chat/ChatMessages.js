@@ -1092,15 +1092,17 @@ const ChatMessages = ({
           }}>
           <Dialog.Title
             style={{
+              fontFamily: 'SofiaProBold',
               color: colors.text,
-              fontSize: normalize(18),
-              fontFamily: 'SofiaProSemiBold',
+              fontSize: normalize(16),
+              textAlign: 'center',
             }}>
-            Leave{' '}
+            Leaving{' '}
             {
               joinedPractices.find(item => item.id === currentPracticeId)
                 ?.practiceName
             }
+            ?
           </Dialog.Title>
           <Dialog.Content>
             <Paragraph
@@ -1120,10 +1122,10 @@ const ChatMessages = ({
           <Dialog.Actions>
             <Button
               labelStyle={{
-                color: colors.text,
                 alignSelf: 'center',
-                fontSize: normalize(15),
                 fontFamily: 'SofiaProRegular',
+                color: colors.text,
+                fontSize: normalize(13),
               }}
               color={colors.shadow2}
               onPress={hideDialog}>
@@ -1131,10 +1133,10 @@ const ChatMessages = ({
             </Button>
             <Button
               labelStyle={{
-                color: colors.text,
                 alignSelf: 'center',
-                fontSize: normalize(15),
                 fontFamily: 'SofiaProRegular',
+                color: colors.danger,
+                fontSize: normalize(13),
               }}
               color={colors.shadow2}
               // loading={isDeleteLoading}
