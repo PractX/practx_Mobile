@@ -116,7 +116,7 @@ const PracticeDetails = ({
               fontSize: normalize(16),
               textAlign: 'center',
             }}>
-            {`Leaving ${data.practiceName}?`}
+            {`Leaving ${data?.practiceName}?`}
           </Dialog.Title>
           <Dialog.Content>
             <Paragraph
@@ -152,14 +152,14 @@ const PracticeDetails = ({
               onPress={async () => {
                 setIsLeaving(true);
                 await leavePracticeStart({
-                  practiceId: data.id,
-                  practiceName: data.practiceName,
+                  practiceId: data?.id,
+                  practiceName: data?.practiceName,
                 });
                 setTimeout(() => {
                   bottomSheetRef.current.snapTo(1);
                   setIsLeaving(false);
                   hideDialog();
-                }, 5000);
+                }, 2000);
               }}>
               Yes Please
             </PButton>
@@ -187,7 +187,7 @@ const PracticeDetails = ({
         />
       </TouchableOpacity>
 
-      {practiceData.data && (
+      {practiceData?.data && (
         <View style={{ width: windowWidth }}>
           <View
             style={{
@@ -201,7 +201,7 @@ const PracticeDetails = ({
             }}>
             <FastImage
               source={{
-                uri: data.logo ? data.logo : '',
+                uri: data?.logo ? data?.logo : '',
               }}
               style={{
                 width: 100,
@@ -221,7 +221,7 @@ const PracticeDetails = ({
                 textAlign: 'center',
                 paddingTop: 10,
               }}>
-              {data.practiceName}
+              {data?.practiceName}
             </Text>
             <Text
               style={{
@@ -231,7 +231,7 @@ const PracticeDetails = ({
                 textAlign: 'center',
                 paddingTop: 10,
               }}>
-              {data.email}
+              {data?.email}
             </Text>
             {type === 'pending' ||
             type === 'member' ||
@@ -255,8 +255,8 @@ const PracticeDetails = ({
                     onPress={() => {
                       // console.log('Leaving', data);
                       // leavePracticeStart({
-                      //   practiceId: data.id,
-                      //   practiceName: data.practiceName,
+                      //   practiceId: data?.id,
+                      //   practiceName: data?.practiceName,
                       // });
                       // setTimeout(() => {
                       //   bottomSheetRef.current.snapTo(1);
@@ -301,7 +301,7 @@ const PracticeDetails = ({
                   <Button
                     title="Join"
                     onPress={() => {
-                      joinPractice(data.id);
+                      joinPractice(data?.id);
                       // await setPracticeId(practice.id);
                       // await navigation.navigate('Chats');
                     }}
@@ -357,7 +357,7 @@ const PracticeDetails = ({
                   await bottomSheetRef.current.snapTo(1);
                   setTimeout(() => {
                     setShowOverlay(false);
-                    setPracticeId(data.id);
+                    setPracticeId(data?.id);
                     navigation.navigate('Chats');
                   }, 200);
                 }}>
@@ -380,7 +380,7 @@ const PracticeDetails = ({
                   },
                 ]}
                 //NOTE
-                onPress={() => Linking.openURL(`tel:${data.mobileNo}`)}>
+                onPress={() => Linking.openURL(`tel:${data?.mobileNo}`)}>
                 <Icon
                   name="ios-call"
                   type="ionicon"
@@ -443,7 +443,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.description}
+                  {data?.description}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -470,7 +470,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.specialty}
+                  {data?.specialty}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -497,7 +497,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.mobileNo}
+                  {data?.mobileNo}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -524,7 +524,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.city}
+                  {data?.city}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -551,7 +551,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.street}
+                  {data?.street}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -579,7 +579,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.state}
+                  {data?.state}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -607,7 +607,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.country}
+                  {data?.country}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -635,7 +635,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.zip}
+                  {data?.zip}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -663,7 +663,7 @@ const PracticeDetails = ({
                     fontSize: normalize(12),
                     fontFamily: 'SofiaProRegular',
                   }}>
-                  {data.website}
+                  {data?.website}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />

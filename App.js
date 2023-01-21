@@ -56,7 +56,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
   enableAutoPerformanceTracking: true,
   environment: process.env.NODE_ENV,
-  debug: true,
+  debug: process.env.NODE_ENV === 'development' ? true : false,
 });
 
 const Stack = createStackNavigator();

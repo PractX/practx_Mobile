@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* practx_MobileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* practx_MobileTests.m */; };
 		03D229828EFB45FEA1B3B93D /* SofiaProBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB5B4EA1644346F6B19985FF /* SofiaProBlack.ttf */; };
-		075CAEF528457FC0008BBA2D /* BuildFile in Resources */ = {isa = PBXBuildFile; };
+		075CAEF528457FC0008BBA2D /* (null) in Resources */ = {isa = PBXBuildFile; };
 		07A5B5CD27DD6DD8008E3DA9 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07A5B5CC27DD6DD7008E3DA9 /* Launch Screen.storyboard */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -73,6 +73,7 @@
 		01CB60BEA0984CC7B510C00C /* FuturaStd-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FuturaStd-Bold.otf"; path = "../assets/fonts/FuturaStd-Bold.otf"; sourceTree = "<group>"; };
 		078C91322846255700499403 /* practx_notify.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = practx_notify.wav; path = ../assets/sound/practx_notify.wav; sourceTree = "<group>"; };
 		07A5B5CC27DD6DD7008E3DA9 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		07DC037828E1030400C2C461 /* practx_MobileRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = practx_MobileRelease.entitlements; path = practx_Mobile/practx_MobileRelease.entitlements; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* practx_Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = practx_Mobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = practx_Mobile/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = practx_Mobile/AppDelegate.m; sourceTree = "<group>"; };
@@ -288,6 +289,7 @@
 		13B07FAE1A68108700A75B9A /* practx_Mobile */ = {
 			isa = PBXGroup;
 			children = (
+				07DC037828E1030400C2C461 /* practx_MobileRelease.entitlements */,
 				4179A3332620DD890031F3AD /* practx_Mobile.entitlements */,
 				417F7E18261C5062000DBEFF /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -580,7 +582,7 @@
 				5A53DF8548084BD8A86EF6BA /* SofiaProExtraLight.ttf in Resources */,
 				96DF00AC1EB34ECFB82A14E9 /* SofiaProLight-Italic.ttf in Resources */,
 				CC952C032C904B16B6AA4327 /* SofiaProLight.ttf in Resources */,
-				075CAEF528457FC0008BBA2D /* BuildFile in Resources */,
+				075CAEF528457FC0008BBA2D /* (null) in Resources */,
 				F1376D1C663F49B68EC80A06 /* SofiaProMedium-Italic.ttf in Resources */,
 				66B309B402C0490798172141 /* SofiaProMedium.ttf in Resources */,
 				A980D05534774E8FA50604F4 /* SofiaProRegular-Italic.ttf in Resources */,
@@ -1063,7 +1065,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = practx_Mobile/practx_Mobile.entitlements;
+				CODE_SIGN_ENTITLEMENTS = practx_Mobile/practx_MobileRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
